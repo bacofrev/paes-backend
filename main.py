@@ -1,7 +1,19 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+import db
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await db.abrir_pool()
+    yield
+    await db.cerrar_pool()
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -13,6 +25,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/health")
-def health():
-    return {"status": "ok"}
+async def health():
+    try:
+        async with db.pool.connection() as con:
+            await con.execute("select 1")
+        estado_db = "ok"
+    except Exception as e:
+        estado_db = f"error: {type(e).__name__}"
+    return {"status": "ok", "db": estado_db}
