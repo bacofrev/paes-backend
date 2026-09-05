@@ -1,5 +1,5 @@
-"""Conexión a Postgres. El pool se crea una vez al arrancar la app
-y se cierra al apagarla."""
+"""Postgres connection. The pool is created once on startup
+and closed on shutdown."""
 
 import os
 from psycopg_pool import AsyncConnectionPool
@@ -13,7 +13,7 @@ DATABASE_URL = os.environ["DATABASE_URL"]
 pool: AsyncConnectionPool | None = None
 
 
-async def abrir_pool() -> None:
+async def open_pool() -> None:
     global pool
     pool = AsyncConnectionPool(
         conninfo=DATABASE_URL,
@@ -28,6 +28,6 @@ async def abrir_pool() -> None:
     await pool.open(wait=True, timeout=10)
 
 
-async def cerrar_pool() -> None:
+async def close_pool() -> None:
     if pool is not None:
         await pool.close()
