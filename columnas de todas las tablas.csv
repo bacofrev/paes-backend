@@ -1,0 +1,101 @@
+table_name,ordinal_position,column_name,data_type,is_nullable,column_default
+areas,1,id,bigint,NO,null
+areas,2,code,text,NO,null
+areas,3,name,text,NO,null
+areas,4,position,smallint,NO,null
+areas,5,status,text,NO,'active'::text
+areas,6,created_at,timestamp with time zone,NO,now()
+areas,7,subject_id,bigint,NO,null
+courses,1,id,bigint,NO,null
+courses,2,code,text,NO,null
+courses,3,name,text,NO,null
+courses,4,subject_id,bigint,NO,null
+courses,5,area_id,bigint,YES,null
+courses,6,exam_level,smallint,NO,null
+courses,7,position,smallint,NO,null
+courses,8,status,text,NO,'active'::text
+courses,9,created_at,timestamp with time zone,NO,now()
+item_options,1,id,uuid,NO,gen_random_uuid()
+item_options,2,item_id,uuid,NO,null
+item_options,3,label,text,NO,null
+item_options,4,body,text,NO,null
+item_options,5,is_correct,boolean,NO,false
+item_options,6,misconception_id,bigint,YES,null
+item_options,7,created_at,timestamp with time zone,NO,now()
+items,1,id,uuid,NO,gen_random_uuid()
+items,2,code,text,NO,null
+items,3,stem,text,NO,null
+items,4,author_difficulty,smallint,YES,null
+items,5,source,text,YES,null
+items,6,status,text,NO,'draft'::text
+items,7,created_at,timestamp with time zone,NO,now()
+items,8,retired_at,timestamp with time zone,YES,null
+lesson_nodes,1,lesson_id,bigint,NO,null
+lesson_nodes,2,node_id,bigint,NO,null
+lesson_nodes,3,position,smallint,NO,null
+lesson_nodes,4,anchor,text,YES,null
+lessons,1,id,bigint,NO,null
+lessons,2,code,text,NO,null
+lessons,3,unit_id,bigint,NO,null
+lessons,4,title,text,NO,null
+lessons,5,body,text,NO,null
+lessons,6,position,smallint,NO,null
+lessons,7,version,integer,NO,1
+lessons,8,status,text,NO,'draft'::text
+lessons,9,created_at,timestamp with time zone,NO,now()
+mastery_config,1,version,smallint,NO,null
+mastery_config,2,is_active,boolean,NO,false
+mastery_config,3,p_threshold,numeric,NO,null
+mastery_config,4,min_items,smallint,NO,null
+mastery_config,5,min_difficulty,smallint,NO,null
+mastery_config,6,min_hard_correct,smallint,NO,null
+mastery_config,7,prior_alpha,numeric,NO,1
+mastery_config,8,prior_beta,numeric,NO,1
+mastery_config,9,validity_days,smallint,NO,null
+mastery_config,10,note,text,YES,null
+mastery_config,11,created_at,timestamp with time zone,NO,now()
+misconceptions,1,id,bigint,NO,null
+misconceptions,2,code,text,NO,null
+misconceptions,3,name,text,NO,null
+misconceptions,4,description,text,NO,null
+misconceptions,5,area_id,bigint,YES,null
+misconceptions,6,status,text,NO,'active'::text
+misconceptions,7,merged_into,bigint,YES,null
+misconceptions,8,created_at,timestamp with time zone,NO,now()
+misconceptions,9,node_id,bigint,YES,null
+misconceptions,10,origin,USER-DEFINED,NO,'hipotesis'::misconception_origin
+node_edges,1,prereq_id,bigint,NO,null
+node_edges,2,target_id,bigint,NO,null
+node_edges,3,status,text,NO,'hypothesis'::text
+node_edges,4,note,text,YES,null
+node_edges,5,created_at,timestamp with time zone,NO,now()
+node_items,1,node_id,bigint,NO,null
+node_items,2,item_id,uuid,NO,null
+node_items,3,pool,text,NO,null
+node_items,4,role,text,NO,'primary'::text
+node_mastery,1,student_id,uuid,NO,null
+node_mastery,2,node_id,bigint,NO,null
+node_mastery,3,p_correct,numeric,YES,null
+node_mastery,4,items_answered,smallint,NO,0
+node_mastery,5,items_correct,smallint,NO,0
+node_mastery,6,hard_correct,smallint,NO,0
+node_mastery,7,status,text,NO,'not_started'::text
+node_mastery,8,first_mastered_at,timestamp with time zone,YES,null
+node_mastery,9,last_response_at,timestamp with time zone,YES,null
+node_mastery,10,config_version,smallint,YES,null
+node_mastery,11,computed_at,timestamp with time zone,NO,now()
+nodes,1,id,bigint,NO,null
+nodes,2,code,text,NO,null
+nodes,3,name,text,NO,null
+nodes,4,area_id,bigint,NO,null
+nodes,5,description,text,YES,null
+nodes,6,status,text,NO,'active'::text
+nodes,7,created_at,timestamp with time zone,NO,now()
+nodes,8,unit_id,bigint,NO,null
+nodes,9,exam_level,smallint,NO,0
+remediation_items,1,remediation_id,bigint,NO,null
+remediation_items,2,item_id,uuid,NO,null
+remediation_items,3,position,smallint,NO,null
+remediations,1,id,bigint,NO,null
+remediations,2,code,text,NO,null
+remediations,3,misconception_id,bigint,NO,null

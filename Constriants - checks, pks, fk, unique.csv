@@ -1,0 +1,96 @@
+tabla,conname,tipo,definicion
+-,code_text_check,check,"CHECK ((VALUE ~ '^[A-Z0-9]{2,6}(-[A-Z0-9]+){0,3}$'::text))"
+areas,areas_status_check,check,"CHECK ((status = ANY (ARRAY['active'::text, 'retired'::text])))"
+areas,areas_subject_id_fkey,fk,FOREIGN KEY (subject_id) REFERENCES subjects(id)
+areas,areas_pkey,pk,PRIMARY KEY (id)
+areas,areas_code_key,unique,UNIQUE (code)
+courses,courses_exam_level_check,check,CHECK (((exam_level >= 1) AND (exam_level <= 2)))
+courses,courses_status_check,check,"CHECK ((status = ANY (ARRAY['active'::text, 'retired'::text])))"
+courses,courses_area_id_fkey,fk,FOREIGN KEY (area_id) REFERENCES areas(id)
+courses,courses_subject_id_fkey,fk,FOREIGN KEY (subject_id) REFERENCES subjects(id)
+courses,courses_pkey,pk,PRIMARY KEY (id)
+courses,courses_code_key,unique,UNIQUE (code)
+courses,courses_subject_id_position_key,unique,"UNIQUE (subject_id, ""position"")"
+item_options,item_options_check,check,CHECK ((NOT (is_correct AND (misconception_id IS NOT NULL))))
+item_options,item_options_item_id_fkey,fk,FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE RESTRICT
+item_options,item_options_misconception_id_fkey,fk,FOREIGN KEY (misconception_id) REFERENCES misconceptions(id)
+item_options,item_options_pkey,pk,PRIMARY KEY (id)
+item_options,item_options_item_id_label_key,unique,"UNIQUE (item_id, label)"
+items,items_author_difficulty_check,check,CHECK (((author_difficulty >= 1) AND (author_difficulty <= 5)))
+items,items_status_check,check,"CHECK ((status = ANY (ARRAY['draft'::text, 'active'::text, 'retired'::text])))"
+items,items_pkey,pk,PRIMARY KEY (id)
+items,items_code_key,unique,UNIQUE (code)
+lesson_nodes,lesson_nodes_lesson_id_fkey,fk,FOREIGN KEY (lesson_id) REFERENCES lessons(id) ON DELETE CASCADE
+lesson_nodes,lesson_nodes_node_id_fkey,fk,FOREIGN KEY (node_id) REFERENCES nodes(id)
+lesson_nodes,lesson_nodes_pkey,pk,"PRIMARY KEY (lesson_id, node_id)"
+lessons,lessons_status_check,check,"CHECK ((status = ANY (ARRAY['draft'::text, 'active'::text, 'retired'::text])))"
+lessons,lessons_unit_id_fkey,fk,FOREIGN KEY (unit_id) REFERENCES units(id)
+lessons,lessons_pkey,pk,PRIMARY KEY (id)
+lessons,lessons_code_key,unique,UNIQUE (code)
+lessons,lessons_unit_id_position_key,unique,"UNIQUE (unit_id, ""position"")"
+mastery_config,mastery_config_min_difficulty_check,check,CHECK (((min_difficulty >= 1) AND (min_difficulty <= 5)))
+mastery_config,mastery_config_min_hard_correct_check,check,CHECK ((min_hard_correct >= 0))
+mastery_config,mastery_config_min_items_check,check,CHECK ((min_items >= 1))
+mastery_config,mastery_config_p_threshold_check,check,CHECK (((p_threshold > (0)::numeric) AND (p_threshold < (1)::numeric)))
+mastery_config,mastery_config_prior_alpha_check,check,CHECK ((prior_alpha > (0)::numeric))
+mastery_config,mastery_config_prior_beta_check,check,CHECK ((prior_beta > (0)::numeric))
+mastery_config,mastery_config_validity_days_check,check,CHECK ((validity_days > 0))
+mastery_config,mastery_config_pkey,pk,PRIMARY KEY (version)
+misconceptions,misconceptions_check,check,CHECK (((status = 'merged'::text) = (merged_into IS NOT NULL)))
+misconceptions,misconceptions_check1,check,CHECK (((merged_into IS NULL) OR (merged_into <> id)))
+misconceptions,misconceptions_status_check,check,"CHECK ((status = ANY (ARRAY['active'::text, 'merged'::text, 'deprecated'::text])))"
+misconceptions,misconceptions_area_id_fkey,fk,FOREIGN KEY (area_id) REFERENCES areas(id)
+misconceptions,misconceptions_merged_into_fkey,fk,FOREIGN KEY (merged_into) REFERENCES misconceptions(id)
+misconceptions,misconceptions_node_id_fkey,fk,FOREIGN KEY (node_id) REFERENCES nodes(id)
+misconceptions,misconceptions_pkey,pk,PRIMARY KEY (id)
+misconceptions,misconceptions_code_key,unique,UNIQUE (code)
+node_edges,node_edges_check,check,CHECK ((prereq_id <> target_id))
+node_edges,node_edges_status_check,check,"CHECK ((status = ANY (ARRAY['hypothesis'::text, 'validated'::text, 'rejected'::text])))"
+node_edges,node_edges_prereq_id_fkey,fk,FOREIGN KEY (prereq_id) REFERENCES nodes(id)
+node_edges,node_edges_target_id_fkey,fk,FOREIGN KEY (target_id) REFERENCES nodes(id)
+node_edges,node_edges_pkey,pk,"PRIMARY KEY (prereq_id, target_id)"
+node_items,node_items_pool_check,check,"CHECK ((pool = ANY (ARRAY['curated'::text, 'generated'::text])))"
+node_items,node_items_role_check,check,"CHECK ((role = ANY (ARRAY['primary'::text, 'secondary'::text])))"
+node_items,node_items_item_id_fkey,fk,FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE RESTRICT
+node_items,node_items_node_id_fkey,fk,FOREIGN KEY (node_id) REFERENCES nodes(id)
+node_items,node_items_pkey,pk,"PRIMARY KEY (node_id, item_id)"
+node_mastery,node_mastery_status_check,check,"CHECK ((status = ANY (ARRAY['not_started'::text, 'in_progress'::text, 'mastered'::text])))"
+node_mastery,node_mastery_config_version_fkey,fk,FOREIGN KEY (config_version) REFERENCES mastery_config(version)
+node_mastery,node_mastery_node_id_fkey,fk,FOREIGN KEY (node_id) REFERENCES nodes(id)
+node_mastery,node_mastery_student_id_fkey,fk,FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+node_mastery,node_mastery_pkey,pk,"PRIMARY KEY (student_id, node_id)"
+nodes,nodes_exam_level_check,check,CHECK (((exam_level >= 0) AND (exam_level <= 2)))
+nodes,nodes_status_check,check,"CHECK ((status = ANY (ARRAY['draft'::text, 'active'::text, 'retired'::text])))"
+nodes,nodes_area_id_fkey,fk,FOREIGN KEY (area_id) REFERENCES areas(id)
+nodes,nodes_unit_id_fkey,fk,FOREIGN KEY (unit_id) REFERENCES units(id)
+nodes,nodes_pkey,pk,PRIMARY KEY (id)
+nodes,nodes_code_key,unique,UNIQUE (code)
+remediation_items,remediation_items_item_id_fkey,fk,FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE RESTRICT
+remediation_items,remediation_items_remediation_id_fkey,fk,FOREIGN KEY (remediation_id) REFERENCES remediations(id)
+remediation_items,remediation_items_pkey,pk,"PRIMARY KEY (remediation_id, item_id)"
+remediations,remediations_status_check,check,"CHECK ((status = ANY (ARRAY['draft'::text, 'active'::text, 'retired'::text])))"
+remediations,remediations_misconception_id_fkey,fk,FOREIGN KEY (misconception_id) REFERENCES misconceptions(id)
+remediations,remediations_pkey,pk,PRIMARY KEY (id)
+remediations,remediations_code_key,unique,UNIQUE (code)
+remediations,remediations_misconception_id_key,unique,UNIQUE (misconception_id)
+responses,responses_context_check,check,"CHECK ((context = ANY (ARRAY['diagnostic'::text, 'study'::text, 'practice'::text, 'review'::text, 'remediation'::text, 'mock_exam'::text])))"
+responses,responses_response_time_ms_check,check,CHECK ((response_time_ms >= 0))
+responses,responses_item_id_fkey,fk,FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE RESTRICT
+responses,responses_option_id_fkey,fk,FOREIGN KEY (option_id) REFERENCES item_options(id) ON DELETE RESTRICT
+responses,responses_student_id_fkey,fk,FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+responses,responses_pkey,pk,PRIMARY KEY (id)
+student_courses,student_courses_status_check,check,"CHECK ((status = ANY (ARRAY['active'::text, 'paused'::text, 'finished'::text])))"
+student_courses,student_courses_course_id_fkey,fk,FOREIGN KEY (course_id) REFERENCES courses(id)
+student_courses,student_courses_student_id_fkey,fk,FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE
+student_courses,student_courses_pkey,pk,"PRIMARY KEY (student_id, course_id)"
+students,students_pkey,pk,PRIMARY KEY (id)
+students,students_auth_user_id_key,unique,UNIQUE (auth_user_id)
+subjects,subjects_status_check,check,"CHECK ((status = ANY (ARRAY['active'::text, 'retired'::text])))"
+subjects,subjects_pkey,pk,PRIMARY KEY (id)
+subjects,subjects_code_key,unique,UNIQUE (code)
+subjects,subjects_position_key,unique,"UNIQUE (""position"")"
+units,units_status_check,check,"CHECK ((status = ANY (ARRAY['active'::text, 'retired'::text])))"
+units,units_area_id_fkey,fk,FOREIGN KEY (area_id) REFERENCES areas(id)
+units,units_pkey,pk,PRIMARY KEY (id)
+units,units_area_id_position_key,unique,"UNIQUE (area_id, ""position"")"
+units,units_code_key,unique,UNIQUE (code)

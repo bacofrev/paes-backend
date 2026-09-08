@@ -49,3 +49,9 @@ left join remediations r   on r.misconception_id = m.id
                           and r.status = 'active'
 where o.id = %(option_id)s;
 """
+
+RECOMPUTE_FOR_ITEM = """
+select recompute_node_mastery(%(student_id)s::uuid, ni.node_id)
+from node_items ni
+where ni.item_id = %(item_id)s::uuid
+"""

@@ -1,0 +1,137 @@
+tipo,nombre,definicion
+indice,areas_code_key,CREATE UNIQUE INDEX areas_code_key ON public.areas USING btree (code)
+indice,areas_pkey,CREATE UNIQUE INDEX areas_pkey ON public.areas USING btree (id)
+indice,courses_code_key,CREATE UNIQUE INDEX courses_code_key ON public.courses USING btree (code)
+indice,courses_pkey,CREATE UNIQUE INDEX courses_pkey ON public.courses USING btree (id)
+indice,courses_subject_id_position_key,"CREATE UNIQUE INDEX courses_subject_id_position_key ON public.courses USING btree (subject_id, ""position"")"
+indice,item_options_item,CREATE INDEX item_options_item ON public.item_options USING btree (item_id)
+indice,item_options_item_id_label_key,"CREATE UNIQUE INDEX item_options_item_id_label_key ON public.item_options USING btree (item_id, label)"
+indice,item_options_misconception,CREATE INDEX item_options_misconception ON public.item_options USING btree (misconception_id)
+indice,item_options_pkey,CREATE UNIQUE INDEX item_options_pkey ON public.item_options USING btree (id)
+indice,items_code_key,CREATE UNIQUE INDEX items_code_key ON public.items USING btree (code)
+indice,items_pkey,CREATE UNIQUE INDEX items_pkey ON public.items USING btree (id)
+indice,lesson_nodes_node,CREATE INDEX lesson_nodes_node ON public.lesson_nodes USING btree (node_id)
+indice,lesson_nodes_pkey,"CREATE UNIQUE INDEX lesson_nodes_pkey ON public.lesson_nodes USING btree (lesson_id, node_id)"
+indice,lessons_code_key,CREATE UNIQUE INDEX lessons_code_key ON public.lessons USING btree (code)
+indice,lessons_pkey,CREATE UNIQUE INDEX lessons_pkey ON public.lessons USING btree (id)
+indice,lessons_unit_id_position_key,"CREATE UNIQUE INDEX lessons_unit_id_position_key ON public.lessons USING btree (unit_id, ""position"")"
+indice,mastery_config_one_active,CREATE UNIQUE INDEX mastery_config_one_active ON public.mastery_config USING btree (is_active) WHERE is_active
+indice,mastery_config_pkey,CREATE UNIQUE INDEX mastery_config_pkey ON public.mastery_config USING btree (version)
+indice,misconceptions_code_key,CREATE UNIQUE INDEX misconceptions_code_key ON public.misconceptions USING btree (code)
+indice,misconceptions_node_id_idx,CREATE INDEX misconceptions_node_id_idx ON public.misconceptions USING btree (node_id)
+indice,misconceptions_pkey,CREATE UNIQUE INDEX misconceptions_pkey ON public.misconceptions USING btree (id)
+indice,node_edges_pkey,"CREATE UNIQUE INDEX node_edges_pkey ON public.node_edges USING btree (prereq_id, target_id)"
+indice,node_items_pkey,"CREATE UNIQUE INDEX node_items_pkey ON public.node_items USING btree (node_id, item_id)"
+indice,node_mastery_pkey,"CREATE UNIQUE INDEX node_mastery_pkey ON public.node_mastery USING btree (student_id, node_id)"
+indice,node_mastery_status,CREATE INDEX node_mastery_status ON public.node_mastery USING btree (status)
+indice,node_mastery_student,CREATE INDEX node_mastery_student ON public.node_mastery USING btree (student_id)
+indice,nodes_code_key,CREATE UNIQUE INDEX nodes_code_key ON public.nodes USING btree (code)
+indice,nodes_exam_level_idx,CREATE INDEX nodes_exam_level_idx ON public.nodes USING btree (exam_level)
+indice,nodes_pkey,CREATE UNIQUE INDEX nodes_pkey ON public.nodes USING btree (id)
+indice,one_key_per_item,CREATE UNIQUE INDEX one_key_per_item ON public.item_options USING btree (item_id) WHERE is_correct
+indice,remediation_items_pkey,"CREATE UNIQUE INDEX remediation_items_pkey ON public.remediation_items USING btree (remediation_id, item_id)"
+indice,remediations_code_key,CREATE UNIQUE INDEX remediations_code_key ON public.remediations USING btree (code)
+indice,remediations_misconception_id_key,CREATE UNIQUE INDEX remediations_misconception_id_key ON public.remediations USING btree (misconception_id)
+indice,remediations_pkey,CREATE UNIQUE INDEX remediations_pkey ON public.remediations USING btree (id)
+indice,responses_item,CREATE INDEX responses_item ON public.responses USING btree (item_id)
+indice,responses_pkey,CREATE UNIQUE INDEX responses_pkey ON public.responses USING btree (id)
+indice,responses_session,CREATE INDEX responses_session ON public.responses USING btree (session_id)
+indice,responses_student_created,"CREATE INDEX responses_student_created ON public.responses USING btree (student_id, created_at DESC)"
+indice,student_courses_course,CREATE INDEX student_courses_course ON public.student_courses USING btree (course_id)
+indice,student_courses_pkey,"CREATE UNIQUE INDEX student_courses_pkey ON public.student_courses USING btree (student_id, course_id)"
+indice,students_auth_user_id_key,CREATE UNIQUE INDEX students_auth_user_id_key ON public.students USING btree (auth_user_id)
+indice,students_pkey,CREATE UNIQUE INDEX students_pkey ON public.students USING btree (id)
+indice,subjects_code_key,CREATE UNIQUE INDEX subjects_code_key ON public.subjects USING btree (code)
+indice,subjects_pkey,CREATE UNIQUE INDEX subjects_pkey ON public.subjects USING btree (id)
+indice,subjects_position_key,"CREATE UNIQUE INDEX subjects_position_key ON public.subjects USING btree (""position"")"
+indice,units_area_id_position_key,"CREATE UNIQUE INDEX units_area_id_position_key ON public.units USING btree (area_id, ""position"")"
+indice,units_code_key,CREATE UNIQUE INDEX units_code_key ON public.units USING btree (code)
+indice,units_pkey,CREATE UNIQUE INDEX units_pkey ON public.units USING btree (id)
+vista,v_active_misconceptions," SELECT r.student_id,
+    m.code AS misconception_code,
+    m.name AS misconception_name,
+    count(*) AS occurrences,
+    count(DISTINCT r.item_id) AS distinct_items,
+    count(DISTINCT ni.node_id) AS distinct_nodes,
+    max(r.created_at) AS last_seen
+   FROM (((responses r
+     JOIN item_options o ON ((o.id = r.option_id)))
+     JOIN misconceptions m ON ((m.id = o.misconception_id)))
+     LEFT JOIN node_items ni ON ((ni.item_id = r.item_id)))
+  WHERE (r.created_at > (now() - '30 days'::interval))
+  GROUP BY r.student_id, m.code, m.name
+ HAVING (count(DISTINCT r.item_id) >= 3);"
+vista,v_available_nodes," SELECT st.id AS student_id,
+    n.id AS node_id,
+    n.code,
+    n.name,
+    u.code AS unit_code,
+    n.exam_level,
+    COALESCE(vm.effective_status, 'not_started'::text) AS status,
+    count(*) FILTER (WHERE ((pre.status <> 'rejected'::text) AND (COALESCE(pm.effective_status, 'not_started'::text) <> 'mastered'::text))) AS pending_prereqs
+   FROM (((((((students st
+     CROSS JOIN nodes n)
+     JOIN units u ON ((u.id = n.unit_id)))
+     JOIN areas ar ON ((ar.id = n.area_id)))
+     LEFT JOIN v_node_mastery vm ON (((vm.student_id = st.id) AND ((vm.node_code)::text = (n.code)::text))))
+     LEFT JOIN node_edges pre ON ((pre.target_id = n.id)))
+     LEFT JOIN nodes prn ON ((prn.id = pre.prereq_id)))
+     LEFT JOIN v_node_mastery pm ON (((pm.student_id = st.id) AND ((pm.node_code)::text = (prn.code)::text))))
+  WHERE ((n.status = 'active'::text) AND (EXISTS ( SELECT 1
+           FROM (student_courses sc
+             JOIN courses c ON ((c.id = sc.course_id)))
+          WHERE ((sc.student_id = st.id) AND (sc.status = 'active'::text) AND (c.status = 'active'::text) AND (c.subject_id = ar.subject_id) AND ((c.area_id IS NULL) OR (c.area_id = n.area_id)) AND (n.exam_level <= c.exam_level)))))
+  GROUP BY st.id, n.id, n.code, n.name, u.code, n.exam_level, vm.effective_status;"
+vista,v_node_coverage," SELECT n.code,
+    n.name,
+    u.code AS unit_code,
+    n.exam_level,
+    count(DISTINCT ni.item_id) FILTER (WHERE (ni.pool = 'curated'::text)) AS curated_items,
+    count(DISTINCT ln.lesson_id) AS lessons,
+    count(DISTINCT io.misconception_id) AS covered_misconceptions
+   FROM ((((nodes n
+     JOIN units u ON ((u.id = n.unit_id)))
+     LEFT JOIN node_items ni ON ((ni.node_id = n.id)))
+     LEFT JOIN lesson_nodes ln ON ((ln.node_id = n.id)))
+     LEFT JOIN item_options io ON (((io.item_id = ni.item_id) AND (io.misconception_id IS NOT NULL))))
+  GROUP BY n.code, n.name, u.code, n.exam_level;"
+vista,v_node_mastery," SELECT nm.student_id,
+    n.code AS node_code,
+    n.name AS node_name,
+    a.code AS area_code,
+    nm.p_correct,
+    nm.items_answered,
+    nm.items_correct,
+    nm.hard_correct,
+    nm.status,
+        CASE
+            WHEN ((nm.status = 'mastered'::text) AND (nm.last_response_at < (now() - ((cfg.validity_days || ' days'::text))::interval))) THEN 'lapsed'::text
+            ELSE nm.status
+        END AS effective_status,
+    nm.last_response_at,
+    nm.first_mastered_at,
+    nm.config_version,
+    nm.computed_at
+   FROM (((node_mastery nm
+     JOIN nodes n ON ((n.id = nm.node_id)))
+     JOIN areas a ON ((a.id = n.area_id)))
+     CROSS JOIN LATERAL ( SELECT mastery_config.validity_days
+           FROM mastery_config
+          WHERE (mastery_config.version = nm.config_version)) cfg);"
+vista,v_responses," SELECT r.id,
+    r.student_id,
+    r.created_at,
+    r.context,
+    r.session_id,
+    r.response_time_ms,
+    i.code AS item_code,
+    i.author_difficulty,
+    o.label AS selected_option,
+    COALESCE(o.is_correct, false) AS is_correct,
+    (r.option_id IS NULL) AS omitted,
+    m.code AS misconception_code,
+    m.name AS misconception_name
+   FROM (((responses r
+     JOIN items i ON ((i.id = r.item_id)))
+     LEFT JOIN item_options o ON ((o.id = r.option_id)))
+     LEFT JOIN misconceptions m ON ((m.id = o.misconception_id)));"

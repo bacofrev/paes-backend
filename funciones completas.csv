@@ -1,0 +1,189 @@
+proname,definicion
+check_code_matches_area,"CREATE OR REPLACE FUNCTION public.check_code_matches_area()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+declare v_area text;
+begin
+  select code into v_area from areas where id = new.area_id;
+  if split_part(new.code, '-', 1) <> v_area then
+    raise exception
+      'El código % no empieza con el prefijo del área % (%)',
+      new.code, new.area_id, v_area;
+  end if;
+  return new;
+end
+$function$
+"
+node_edges_no_cycles,"CREATE OR REPLACE FUNCTION public.node_edges_no_cycles()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+begin
+  if exists (
+    with recursive reached(id) as (
+      select new.target_id
+      union
+      select e.target_id
+      from node_edges e
+      join reached r on r.id = e.prereq_id
+      where e.status <> 'rejected'
+    )
+    select 1 from reached where id = new.prereq_id
+  ) then
+    raise exception
+      'La arista % -> % cierra un ciclo en el grafo de prerrequisitos',
+      new.prereq_id, new.target_id;
+  end if;
+  return new;
+end;
+$function$
+"
+recompute_all_mastery,"CREATE OR REPLACE FUNCTION public.recompute_all_mastery()
+ RETURNS integer
+ LANGUAGE plpgsql
+AS $function$
+declare
+  n integer := 0;
+  rec record;
+begin
+  for rec in
+    select distinct r.student_id, ni.node_id
+    from responses r
+    join node_items ni on ni.item_id = r.item_id
+  loop
+    perform recompute_node_mastery(rec.student_id, rec.node_id);
+    n := n + 1;
+  end loop;
+  return n;
+end;
+$function$
+"
+recompute_node_mastery,"CREATE OR REPLACE FUNCTION public.recompute_node_mastery(p_student uuid, p_node bigint)
+ RETURNS void
+ LANGUAGE plpgsql
+AS $function$
+declare
+  cfg             mastery_config%rowtype;
+  v_answered      smallint := 0;
+  v_correct       smallint := 0;
+  v_hard          smallint := 0;
+  v_last          timestamptz;
+  v_p             numeric(5,4);
+  v_status        text;
+  v_prev_mastered timestamptz;
+begin
+  select * into cfg from mastery_config where is_active;
+  if not found then
+    raise exception 'No hay mastery_config activa';
+  end if;
+
+  select first_mastered_at into v_prev_mastered
+  from node_mastery
+  where student_id = p_student and node_id = p_node;
+
+  -- Una fila por ítem distinto: la respuesta más reciente.
+  -- Solo pool de medición, solo rol primario.
+  with ultimas as (
+    select distinct on (r.item_id)
+           r.item_id,
+           r.option_id,
+           r.created_at,
+           i.author_difficulty
+    from responses r
+    join node_items ni on ni.item_id = r.item_id
+                      and ni.node_id = p_node
+                      and ni.pool    = 'curated'      -- <<< 012/025
+                      and ni.role    = 'primary'
+    join items i on i.id = r.item_id
+    where r.student_id = p_student
+    order by r.item_id, r.created_at desc
+  ),
+  evaluadas as (
+    select u.created_at,
+           u.author_difficulty,
+           coalesce(o.is_correct, false) as correcta   -- omitida = incorrecta
+    from ultimas u
+    left join item_options o on o.id = u.option_id
+  )
+  select count(*)::smallint,
+         count(*) filter (where correcta)::smallint,
+         count(*) filter (where correcta
+                            and author_difficulty >= cfg.min_difficulty)::smallint,
+         max(created_at)
+  into v_answered, v_correct, v_hard, v_last
+  from evaluadas;
+
+  -- Suavizado Beta: 3 de 3 da 0.80, no 1.00
+  if v_answered > 0 then
+    v_p := (v_correct + cfg.prior_alpha)
+           / (v_answered + cfg.prior_alpha + cfg.prior_beta);
+  else
+    v_p := null;
+  end if;
+
+  -- Las tres condiciones son conjuntas
+  if v_answered = 0 then
+    v_status := 'not_started';
+  elsif v_p        >= cfg.p_threshold
+    and v_answered >= cfg.min_items
+    and v_hard     >= cfg.min_hard_correct then
+    v_status := 'mastered';
+  else
+    v_status := 'in_progress';
+  end if;
+
+  insert into node_mastery (
+    student_id, node_id, p_correct, items_answered, items_correct,
+    hard_correct, status, first_mastered_at, last_response_at,
+    config_version, computed_at
+  ) values (
+    p_student, p_node, v_p, v_answered, v_correct,
+    v_hard, v_status,
+    case when v_status = 'mastered'
+         then coalesce(v_prev_mastered, v_last) end,
+    v_last, cfg.version, now()
+  )
+  on conflict (student_id, node_id) do update set
+    p_correct         = excluded.p_correct,
+    items_answered    = excluded.items_answered,
+    items_correct     = excluded.items_correct,
+    hard_correct      = excluded.hard_correct,
+    status            = excluded.status,
+    first_mastered_at = excluded.first_mastered_at,
+    last_response_at  = excluded.last_response_at,
+    config_version    = excluded.config_version,
+    computed_at       = now();
+end;
+$function$
+"
+rls_auto_enable,"CREATE OR REPLACE FUNCTION public.rls_auto_enable()
+ RETURNS event_trigger
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'pg_catalog'
+AS $function$
+DECLARE
+  cmd record;
+BEGIN
+  FOR cmd IN
+    SELECT *
+    FROM pg_event_trigger_ddl_commands()
+    WHERE command_tag IN ('CREATE TABLE', 'CREATE TABLE AS', 'SELECT INTO')
+      AND object_type IN ('table','partitioned table')
+  LOOP
+     IF cmd.schema_name IS NOT NULL AND cmd.schema_name IN ('public') AND cmd.schema_name NOT IN ('pg_catalog','information_schema') AND cmd.schema_name NOT LIKE 'pg_toast%' AND cmd.schema_name NOT LIKE 'pg_temp%' THEN
+      BEGIN
+        EXECUTE format('alter table if exists %s enable row level security', cmd.object_identity);
+        RAISE LOG 'rls_auto_enable: enabled RLS on %', cmd.object_identity;
+      EXCEPTION
+        WHEN OTHERS THEN
+          RAISE LOG 'rls_auto_enable: failed to enable RLS on %', cmd.object_identity;
+      END;
+     ELSE
+        RAISE LOG 'rls_auto_enable: skip % (either system schema or not in enforced list: %.)', cmd.object_identity, cmd.schema_name;
+     END IF;
+  END LOOP;
+END;
+$function$
+"
