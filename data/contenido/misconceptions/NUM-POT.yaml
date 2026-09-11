@@ -1,0 +1,512 @@
+# =====================================================================
+# Catálogo de misconceptions — unidad NUM-POT
+# =====================================================================
+# Fuente única de la unidad. Las clases NO declaran misconceptions:
+# solo referencian códigos, y el cargador falla si el código no existe
+# acá. Antes esto vivía dentro de cada archivo de clase y dos clases
+# podían definir el mismo error distinto: ganaba la última cargada,
+# en silencio.
+#
+# origin — de dónde salió el error:
+#   demre      observado en ítems oficiales o clavijero DEMRE
+#   docente    reportado por alguien que hace clases
+#   hipotesis  plausible, sin evidencia todavía
+#
+# El día que haya respuestas, 'hipotesis' es la lista que se poda.
+#
+# nodo — dónde se ENSEÑA el error, no dónde se detecta. Dos entradas
+# apuntan fuera de su clase de origen (POT-CONC-ORDEN a NUM-ENT-PRIOR,
+# POT-CERO-INV a NUM-POT-NEG): es a propósito, y es lo que permite
+# rutear la remediación al lugar correcto.
+#
+# Reconstruido desde Supabase el 2026-09-08. Las descripciones son las
+# de la base, verificadas idénticas a la versión anterior. Los 'example'
+# de CIENT, NEG y RAC se reescribieron: la tabla misconceptions no tiene
+# esa columna, así que no eran recuperables.
+# ---------------------------------------------------------------------
+
+unit: NUM-POT
+
+misconceptions:
+
+  # --- NUM-POT-CONC ----------------------------------------
+
+  - code: POT-CONC-FACTOR
+    name: Cuenta un factor de más
+    nodo: NUM-POT-CONC
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Escribe a^n con n+1 factores. Nace de la frase "multiplicar la base
+      por sí misma n veces", que leída literal da un factor extra. El
+      concepto está bien; el conteo no.
+    example: "2^3 = 2·2·2·2 = 16"
+
+  - code: POT-CONC-INV
+    name: Intercambia base y exponente
+    nodo: NUM-POT-CONC
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Resuelve a^n como n^a. No distingue quién se repite de cuántas veces
+      se repite. Es invisible cuando base y exponente son iguales, y en
+      2^4 = 4^2 coincide por casualidad.
+    example: "2^3 = 3^2 = 9"
+
+  - code: POT-CONC-MULT
+    name: Multiplica la base por el exponente
+    nodo: NUM-POT-CONC
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Resuelve a^n como a·n. Es el error raíz de toda la unidad: si la
+      potencia se lee como una multiplicación, ninguna regla posterior
+      tiene sentido. Se esconde en a^2, donde a·2 y a² a veces coinciden
+      cerca, y en 2^2, donde coinciden exacto.
+    example: "2^3 = 6"
+
+  - code: POT-CONC-SUMA
+    name: Suma la base y el exponente
+    nodo: NUM-POT-CONC
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Resuelve a^n como a+n. Menos frecuente que POT-CONC-MULT pero del
+      mismo tipo: la potencia se lee como una operación entre dos números
+      en vez de como un conteo de factores.
+    example: "2^3 = 5"
+
+  # --- NUM-POT-SIG -----------------------------------------
+
+  - code: POT-SIG-EXP
+    name: Confunde base negativa con exponente negativo
+    nodo: NUM-POT-SIG
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Lee (-a)^n como a^(-n) y responde una fracción. El signo cambia de
+      lugar en la lectura. Cruza con NUM-POT-NEG, que el estudiante
+      todavía no vio.
+    example: "(-2)^3 = 1/8"
+
+  - code: POT-SIG-NEG
+    name: Toda potencia de base negativa es negativa
+    nodo: NUM-POT-SIG
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Arrastra el signo de la base al resultado sin mirar el exponente.
+      Error espejo de POT-SIG-POS, y como aquel, solo se delata en la
+      mitad de los casos: con exponente impar acierta sin entender.
+    example: "(-3)^2 = -9"
+
+  - code: POT-SIG-PAREN
+    name: No distingue -a^n de (-a)^n
+    nodo: NUM-POT-SIG
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Trata el signo como parte de la base aunque no haya paréntesis. Es
+      el caso general de POT-CERO-SIGNO, que quedó registrado aparte
+      porque el exponente cero se remedia por otro camino. Si al revisar
+      datos las dos se disparan juntas, hay que fusionarlas.
+    example: "-2^4 = 16"
+
+  - code: POT-SIG-POS
+    name: Toda potencia de base negativa es positiva
+    nodo: NUM-POT-SIG
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Sobregeneraliza "menos por menos es más" a cualquier exponente. Solo
+      se hace visible con exponente impar: con exponente par la respuesta
+      es correcta por la razón equivocada.
+    example: "(-2)^3 = 8"
+
+  # --- NUM-POT-PROD ----------------------------------------
+
+  - code: POT-BASE-DIST
+    name: Aplica la regla con bases distintas
+    nodo: NUM-POT-PROD
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Usa a^m · b^n = (ab)^(m+n). No reconoce que la regla exige base
+      común. Hace fallar los ítems de varios factores, donde hay que
+      agrupar por base antes de operar.
+    example: "2^3 · 3^2 = 6^5"
+
+  - code: POT-BASE-OPERA
+    name: Opera también las bases
+    nodo: NUM-POT-PROD
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Multiplica o divide las bases además de operar los exponentes. La
+      base no es un factor: es la identidad de la potencia. Cruza producto
+      y cociente, y reaparece en NUM-POT-DIST.
+    example: "2^3 · 2^2 = 4^5"
+
+  - code: POT-COC-DIV
+    name: Divide los exponentes en el cociente
+    nodo: NUM-POT-PROD
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Aplica a^m : a^n = a^(m:n). Traslada la operación de las bases a los
+      exponentes. Es el error más caro porque produce la respuesta
+      correcta cuando m es múltiplo de n y el resultado coincide por azar.
+    example: "5^6 : 5^2 = 5^3"
+
+  - code: POT-COC-ORDEN
+    name: Resta los exponentes al revés
+    nodo: NUM-POT-PROD
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Aplica a^m : a^n = a^(n-m). Conoce la regla pero no el orden. Solo
+      se hace visible cuando el exponente del denominador es mayor, porque
+      con m > n el signo no delata nada.
+    example: "3^2 : 3^5 = 3^3"
+
+  - code: POT-COC-SUMA
+    name: Suma los exponentes en el cociente
+    nodo: NUM-POT-PROD
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Aplica a^m : a^n = a^(m+n). Es el error espejo de POT-PROD-RESTA. Se
+      registran separados a propósito: ocurren en operaciones distintas y
+      un estudiante puede tener uno sin el otro.
+    example: "5^6 : 5^2 = 5^8"
+
+  - code: POT-EXP-UNO
+    name: No reconoce que a es a^1
+    nodo: NUM-POT-PROD
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Trata el factor sin exponente visible como si no participara de la
+      regla. Es un punto ciego de notación, no de concepto.
+    example: "6^4 : 6 = 6^4"
+
+  - code: POT-PROD-MULT
+    name: Multiplica los exponentes en el producto
+    nodo: NUM-POT-PROD
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Aplica a^m · a^n = a^(m·n). Usa la regla de potencia de una potencia
+      donde va la del producto. Es la mitad de un par de reglas
+      invertidas: quien comete este error suele cometer también
+      POT-POT-SUMA.
+    example: "2^3 · 2^2 = 2^6"
+
+  - code: POT-PROD-RESTA
+    name: Resta los exponentes en el producto
+    nodo: NUM-POT-PROD
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Aplica a^m · a^n = a^(m-n). Usa la regla del cociente en el
+      producto. Aparece cuando las dos reglas se enseñaron juntas y solo
+      queda el recuerdo de que "algo se hace con los exponentes".
+    example: "2^3 · 2^2 = 2^1"
+
+  - code: POT-SUMA-PROD
+    name: Trata la suma de potencias como si fuera producto
+    nodo: NUM-POT-PROD
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Aplica la regla del producto a a^m + a^n. Confunde la operación
+      entre potencias con la operación entre exponentes.
+    example: "2^3 + 2^2 = 2^5"
+
+  # --- NUM-POT-POT -----------------------------------------
+
+  - code: POT-POT-BASE
+    name: Opera la base con el exponente externo
+    nodo: NUM-POT-POT
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Multiplica la base por el exponente de afuera en vez de aplicar la
+      regla a los exponentes. Variante de POT-BASE-OPERA dentro del
+      paréntesis.
+    example: "(3^2)^4 = 6^8"
+
+  - code: POT-POT-SUMA
+    name: Suma los exponentes en potencia de una potencia
+    nodo: NUM-POT-POT
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Aplica (a^m)^n = a^(m+n). Es el espejo exacto de POT-PROD-MULT.
+      Quien tiene los dos no tiene dos errores: tiene un solo par de
+      reglas cambiado de lugar, y hay que decírselo así.
+    example: "(2^3)^2 = 2^5"
+
+  - code: POT-POT-TORRE
+    name: Lee la expresión como torre de potencias
+    nodo: NUM-POT-POT
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Interpreta (a^m)^n como a^(m^n). Ignora que el paréntesis cierra la
+      base. Es un error de lectura de la notación, no de la regla.
+    example: "(2^3)^2 = 2^9"
+
+  # --- NUM-POT-CERO ----------------------------------------
+
+  - code: POT-CERO-BASE
+    name: El exponente cero devuelve la base
+    nodo: NUM-POT-CERO
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Cree que a^0 = a. Trata el exponente cero como si no hiciera nada,
+      en vez de reconocer que define un valor distinto.
+    example: "7^0 = 7"
+
+  - code: POT-CERO-NULO
+    name: El exponente cero anula
+    nodo: NUM-POT-CERO
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Cree que a^0 = 0. Traslada la idea de "multiplicar por cero da cero"
+      al exponente. Es el error más frecuente del nodo y aparece cada vez
+      que un cociente de exponentes iguales da 1.
+    example: "7^0 = 0"
+
+  - code: POT-CERO-SIGNO
+    name: Aplica el exponente cero al signo
+    nodo: NUM-POT-CERO
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Resuelve -3^0 como si fuera (-3)^0 y responde 1. No distingue que
+      sin paréntesis el exponente afecta solo al 3. Cruza con POT-SIG y
+      DEMRE lo usa seguido.
+    example: "-3^0 = 1"
+
+  - code: POT-UNO-UNO
+    name: Confunde exponente uno con resultado uno
+    nodo: NUM-POT-CERO
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Cree que a^1 = 1. Mezcla la regla del exponente cero con la del uno.
+      Suele aparecer justo después de aprender que a^0 = 1.
+    example: "8^1 = 1"
+
+  # --- NUM-POT-DIST ----------------------------------------
+
+  - code: POT-DIST-NUM
+    name: Eleva solo el numerador
+    nodo: NUM-POT-DIST
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Resuelve (a/b)^n como a^n/b. Es POT-DIST-UNO en el cociente, pero se
+      registra aparte porque el estudiante que lo tiene suele resolver
+      bien el producto: la fracción esconde el segundo factor.
+    example: "(2/3)^2 = 4/3"
+
+  - code: POT-DIST-SUMA
+    name: Reparte el exponente sobre una suma
+    nodo: NUM-POT-DIST
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Aplica (a+b)^n = a^n + b^n. Extiende a la suma una regla que solo
+      vale para producto y cociente. Es el error más caro del nodo porque
+      sobrevive hasta álgebra y reaparece en ALG-NOT-BIN2.
+    example: "(x + y)^2 = x^2 + y^2"
+
+  - code: POT-DIST-UNO
+    name: Aplica el exponente a un solo factor
+    nodo: NUM-POT-DIST
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Resuelve (a·b)^n elevando solo uno de los factores. Casi siempre
+      deja el número sin elevar y eleva la letra: (3x)^2 = 3x^2. El
+      paréntesis se lee como si no estuviera.
+    example: "(3x)^2 = 3x^2"
+
+  # --- NUM-POT-FRA -----------------------------------------
+
+  - code: POT-FRA-CREC
+    name: Cree que elevar siempre agranda
+    nodo: NUM-POT-FRA
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Generaliza desde los enteros: como 2^3 > 2, supone que (1/2)^3 >
+      1/2. Con base entre 0 y 1 elevar achica, y eso rompe la intuición.
+      Es una creencia sobre el tamaño del resultado, no un error de
+      procedimiento: se detecta con ítems de comparación, no de cálculo.
+    example: "(1/2)^4 > 1/2"
+
+  - code: POT-FRA-DEN
+    name: Eleva solo el denominador
+    nodo: NUM-POT-FRA
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Resuelve (a/b)^n como a/b^n. Error espejo de POT-DIST-NUM. Se
+      esconde cuando el numerador es 1, porque ahí elevar o no elevar da
+      lo mismo: (1/2)^3 = 1/8 por el camino correcto y por el equivocado.
+    example: "(2/3)^2 = 2/9"
+
+  - code: POT-FRA-INV
+    name: Invierte la fracción al elevarla
+    nodo: NUM-POT-FRA
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Da vuelta numerador y denominador antes de elevar. Confunde la regla
+      de la potencia con la del exponente negativo, que todavía no ve.
+      Emparentado con POT-CERO-INV, que hace lo mismo con exponente cero.
+    example: "(2/3)^2 = 9/4"
+
+  # --- NUM-POT-NEG -----------------------------------------
+
+  - code: POT-CERO-INV
+    name: Interpreta el exponente cero como inverso
+    nodo: NUM-POT-NEG
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Responde el recíproco de la base ante un exponente cero,
+      confundiendo la regla con la del exponente negativo. Su nodo de
+      origen es NUM-POT-NEG, que el estudiante todavía no vio.
+    example: "(2/5)^0 = 5/2"
+
+  - code: POT-NEG-INVMULT
+    name: Invierte la base y multiplica por el exponente
+    nodo: NUM-POT-NEG
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Reconoce que el exponente negativo invierte, pero después opera la
+      base con el exponente en vez de elevarla. Mezcla la regla nueva con
+      POT-CONC-MULT.
+    example: "2^-3 = 1/6"
+
+  - code: POT-NEG-MANTIENE
+    name: Invierte la base y conserva el exponente negativo
+    nodo: NUM-POT-NEG
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Da vuelta la fracción pero no cambia el signo del exponente, y queda
+      con una expresión equivalente a la original. El paso está bien
+      aprendido a medias: falta que invertir y cambiar el signo son la
+      misma operación.
+    example: "(2/5)^-3 = (5/2)^-3"
+
+  - code: POT-NEG-RAIZ
+    name: Lee el exponente negativo como raíz
+    nodo: NUM-POT-NEG
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Confunde el exponente negativo con el racional. Aparece cuando las
+      dos reglas se enseñan seguidas y queda el recuerdo de que "el
+      exponente raro no es una multiplicación".
+    example: "8^-3 = raíz cúbica de 8"
+
+  - code: POT-NEG-SIGNO
+    name: El exponente negativo hace negativo el resultado
+    nodo: NUM-POT-NEG
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Traslada el signo del exponente al resultado: a^(-n) = -(a^n). Es el
+      error central del nodo y el que más lejos llega: sobrevive hasta
+      notación científica y función exponencial.
+    example: "2^-3 = -8"
+
+  # --- NUM-POT-CIENT ---------------------------------------
+
+  - code: POT-CIENT-DIR
+    name: Invierte la dirección del exponente
+    nodo: NUM-POT-CIENT
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Asocia exponente negativo con número grande y positivo con número
+      chico, o mueve la coma para el lado contrario. Suele venir
+      arrastrado de POT-NEG-SIGNO.
+    example: "6,5 · 10^-5 = 650 000"
+
+  - code: POT-CIENT-LUGAR
+    name: Cuenta ceros en vez de posiciones
+    nodo: NUM-POT-CIENT
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Determina el exponente contando los ceros del número en vez de los
+      lugares que se mueve la coma. Falla por uno cada vez que hay dígitos
+      distintos de cero después del primero.
+    example: "45 000 = 4,5 · 10^3"
+
+  - code: POT-CIENT-MANT
+    name: Acepta mantisa fuera de 1 a 10
+    nodo: NUM-POT-CIENT
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Escribe el número como producto por una potencia de diez sin exigir
+      que la mantisa tenga un solo dígito antes de la coma. El valor es
+      correcto pero la forma no es notación científica.
+    example: "45 000 = 45 · 10^3"
+
+  # --- NUM-POT-RAC -----------------------------------------
+
+  - code: POT-RAC-ENTERO
+    name: Ignora el denominador del exponente
+    nodo: NUM-POT-RAC
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Se queda solo con el numerador y trata el exponente como entero. La
+      fracción se lee como decoración.
+    example: "8^(2/3) = 64"
+
+  - code: POT-RAC-INV
+    name: Confunde el exponente fraccionario con el negativo
+    nodo: NUM-POT-RAC
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Responde el recíproco ante un exponente fraccionario. Error espejo
+      de POT-NEG-RAIZ: las dos reglas se mezclan en las dos direcciones.
+    example: "8^(1/3) = 1/8"
+
+  - code: POT-RAC-INVERSO
+    name: Intercambia índice y exponente
+    nodo: NUM-POT-RAC
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Lee a^(m/n) como la raíz m-ésima de a^n en vez de la raíz n-ésima de
+      a^m. El numerador y el denominador quedan cambiados de rol.
+    example: "8^(2/3) = raíz cuadrada de 8^3"
+
+  # --- NUM-ENT-PRIOR ---------------------------------------
+
+  - code: POT-CONC-ORDEN
+    name: Opera antes de resolver la potencia
+    nodo: NUM-ENT-PRIOR
+    area: NUM
+    origin: hipotesis
+    description: >-
+      En expresiones mixtas resuelve la multiplicación o la suma antes que
+      la potencia. No es un error de potencias sino de prioridad, y su
+      nodo de origen es NUM-ENT-PRIOR. Se detecta acá porque acá es donde
+      aparece.
+    example: "3 · 2^3 = 6^3 = 216"

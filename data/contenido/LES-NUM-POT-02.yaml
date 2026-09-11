@@ -1,0 +1,921 @@
+# =====================================================================
+# LES-NUM-POT-02 — Reglas de operación con potencias de igual base
+# Cubre NUM-POT-PROD, NUM-POT-POT, NUM-POT-CERO
+# =====================================================================
+# El archivo es por clase, no por nodo: las misconcepciones se comparten
+# entre nodos y el corte por clase es el que refleja cómo se entrega.
+#
+# Orden de escritura: misconceptions -> items -> remediations -> lesson.
+# Registro: español de Chile, tuteo. El cargador rechaza voseo.
+# ---------------------------------------------------------------------
+
+unit: NUM-POT
+
+lesson:
+  code: LES-NUM-POT-02
+  title: Reglas de operación con potencias de igual base
+  position: 2
+  # anchor apunta a la sección del body que corresponde a ese nodo.
+  # Permite abrir la clase completa o solo el pedazo que falta.
+  nodes:
+    - node: NUM-POT-PROD
+      anchor: producto-y-cociente
+    - node: NUM-POT-POT
+      anchor: potencia-de-una-potencia
+    - node: NUM-POT-CERO
+      anchor: exponente-cero-y-uno
+
+
+# ---------------------------------------------------------------------
+# Las misconceptions viven en contenido/misconceptions/NUM-POT.yaml.
+# Acá solo se referencian por código. El cargador falla si un código
+# no existe en el catálogo de la unidad.
+# ---------------------------------------------------------------------
+
+# ---------------------------------------------------------------------
+# 2. ITEMS
+# ---------------------------------------------------------------------
+# node: sobre qué nodo mide principalmente.
+# secondary: qué otros nodos toca. Evidencia débil, pero suficiente para
+#   detectar un prerrequisito flojo sin mover al estudiante de lugar.
+# pool: curated decide dominio; generated nunca.
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== NUM-POT-PROD — curated =======================================
+
+  - code: M1-POT-101
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes expresiones es equivalente a $2^{3} \\cdot 2^{2}$?"
+    options:
+      - {label: A, body: "$2^{5}$", correct: true}
+      - {label: B, body: "$2^{6}$", misconception: POT-PROD-MULT}
+      - {label: C, body: "$2^{1}$", misconception: POT-PROD-RESTA}
+      - {label: D, body: "$4^{5}$", misconception: POT-BASE-OPERA}
+
+  - code: M1-POT-102
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "La expresión $\\dfrac{5^{6}}{5^{2}}$ es equivalente a:"
+    options:
+      - {label: A, body: "$5^{4}$", correct: true}
+      - {label: B, body: "$5^{8}$", misconception: POT-COC-SUMA}
+      - {label: C, body: "$5^{3}$", misconception: POT-COC-DIV}
+      - {label: D, body: "$1^{4}$", misconception: POT-BASE-OPERA}
+
+  - code: M1-POT-103
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 2
+    source: propio
+    secondary: [NUM-POT-POT]
+    stem: "¿Cuál de las siguientes expresiones es igual a $2^{5}$?"
+    options:
+      - {label: A, body: "$2^{3} \\cdot 2^{2}$", correct: true}
+      - {label: B, body: "$2^{3} \\cdot 3^{2}$", misconception: POT-BASE-DIST}
+      - {label: C, body: "$\\left(2^{3}\\right)^{2}$", misconception: POT-POT-SUMA}
+      - {label: D, body: "$2^{3} + 2^{2}$", misconception: POT-SUMA-PROD}
+
+  - code: M1-POT-104
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El valor de $\\dfrac{3^{2}}{3^{5}}$ es:"
+    options:
+      - {label: A, body: "$\\dfrac{1}{3^{3}}$", correct: true}
+      - {label: B, body: "$3^{3}$", misconception: POT-COC-ORDEN}
+      - {label: C, body: "$\\dfrac{1}{3^{7}}$", misconception: POT-COC-SUMA}
+      - {label: D, body: "$1^{3}$", misconception: POT-BASE-OPERA}
+
+  - code: M1-POT-105
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿A qué es igual $\\dfrac{6^{4}}{6}$?"
+    options:
+      - {label: A, body: "$6^{3}$", correct: true}
+      - {label: B, body: "$6^{4}$", misconception: POT-EXP-UNO}
+      - {label: C, body: "$1^{3}$", misconception: POT-BASE-OPERA}
+      - {label: D, body: "$6^{5}$", misconception: POT-COC-SUMA}
+
+  - code: M1-POT-106
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Si $a \\neq 0$, la expresión $\\dfrac{a^{7} \\cdot a^{2}}{a^{3}}$ se reduce a:"
+    options:
+      - {label: A, body: "$a^{6}$", correct: true}
+      - {label: B, body: "$a^{12}$", misconception: POT-COC-SUMA}
+      - {label: C, body: "$a^{42}$", misconception: POT-PROD-MULT}
+      - {label: D, body: "$a^{-6}$", misconception: POT-COC-ORDEN}
+
+  - code: M1-POT-107
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "La expresión $3^{2} \\cdot 3^{4} \\cdot 2^{3}$ es equivalente a:"
+    options:
+      - {label: A, body: "$3^{6} \\cdot 2^{3}$", correct: true}
+      - {label: B, body: "$3^{8} \\cdot 2^{3}$", misconception: POT-PROD-MULT}
+      - {label: C, body: "$3^{9}$", misconception: POT-BASE-DIST}
+      - {label: D, body: "$9^{6} \\cdot 2^{3}$", misconception: POT-BASE-OPERA}
+
+  - code: M1-POT-108
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-CERO]
+    stem: "Si $m \\neq 0$, ¿a qué es igual $\\dfrac{m^{8}}{m^{8}}$?"
+    options:
+      - {label: A, body: "$1$", correct: true}
+      - {label: B, body: "$m$", misconception: POT-COC-DIV}
+      - {label: C, body: "$0$", misconception: POT-CERO-NULO}
+      - {label: D, body: "$m^{16}$", misconception: POT-COC-SUMA}
+
+  - code: M1-POT-109
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-POT]
+    stem: "¿Cuál de las siguientes expresiones es igual a $3^{7}$?"
+    options:
+      - {label: A, body: "$3^{4} \\cdot 3^{3}$", correct: true}
+      - {label: B, body: "$3^{4} + 3^{3}$", misconception: POT-SUMA-PROD}
+      - {label: C, body: "$3^{4} \\cdot 4^{3}$", misconception: POT-BASE-DIST}
+      - {label: D, body: "$\\left(3^{4}\\right)^{3}$", misconception: POT-POT-SUMA}
+
+  - code: M1-POT-110
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Si $y \\neq 0$, la expresión $\\dfrac{y^{6} \\cdot y}{y^{2}}$ se reduce a:"
+    options:
+      - {label: A, body: "$y^{5}$", correct: true}
+      - {label: B, body: "$y^{4}$", misconception: POT-EXP-UNO}
+      - {label: C, body: "$y^{9}$", misconception: POT-COC-SUMA}
+      - {label: D, body: "$y^{-5}$", misconception: POT-COC-ORDEN}
+
+  - code: M1-POT-111
+    node: NUM-POT-PROD
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El valor de $3^{2} + 3^{3}$ es:"
+    options:
+      - {label: A, body: "$36$", correct: true}
+      - {label: B, body: "$3^{5}$", misconception: POT-SUMA-PROD}
+      - {label: C, body: "$6^{5}$", misconception: POT-BASE-OPERA}
+      - {label: D, body: "$3^{6}$", misconception: POT-PROD-MULT}
+
+  # ===== NUM-POT-POT — curated ========================================
+
+  - code: M1-POT-201
+    node: NUM-POT-POT
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el valor de $\\left(2^{3}\\right)^{2}$?"
+    options:
+      - {label: A, body: "$2^{6}$", correct: true}
+      - {label: B, body: "$2^{5}$", misconception: POT-POT-SUMA}
+      - {label: C, body: "$2^{9}$", misconception: POT-POT-TORRE}
+      - {label: D, body: "$4^{6}$", misconception: POT-POT-BASE}
+
+  - code: M1-POT-202
+    node: NUM-POT-POT
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "La expresión $\\left(5^{2}\\right)^{4}$ es equivalente a:"
+    options:
+      - {label: A, body: "$5^{8}$", correct: true}
+      - {label: B, body: "$5^{6}$", misconception: POT-POT-SUMA}
+      - {label: C, body: "$5^{16}$", misconception: POT-POT-TORRE}
+      - {label: D, body: "$10^{8}$", misconception: POT-POT-BASE}
+
+  - code: M1-POT-203
+    node: NUM-POT-POT
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $x \\neq 0$, la expresión $\\left(x^{5}\\right)^{2}$ es igual a:"
+    options:
+      - {label: A, body: "$x^{10}$", correct: true}
+      - {label: B, body: "$x^{7}$", misconception: POT-POT-SUMA}
+      - {label: C, body: "$x^{25}$", misconception: POT-POT-TORRE}
+      - {label: D, body: "$x^{3}$", misconception: POT-PROD-RESTA}
+
+  - code: M1-POT-204
+    node: NUM-POT-POT
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-PROD]
+    stem: "¿Cuál de las siguientes expresiones es igual a $\\left(3^{2}\\right)^{4}$?"
+    options:
+      - {label: A, body: "$3^{4} \\cdot 3^{4}$", correct: true}
+      - {label: B, body: "$3^{2} \\cdot 3^{4}$", misconception: POT-POT-SUMA}
+      - {label: C, body: "$3^{16}$", misconception: POT-POT-TORRE}
+      - {label: D, body: "$6^{8}$", misconception: POT-POT-BASE}
+
+  - code: M1-POT-205
+    node: NUM-POT-POT
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-PROD]
+    stem: "Si $x \\neq 0$, la expresión $\\left(x^{4}\\right)^{3} \\cdot x^{2}$ se reduce a:"
+    options:
+      - {label: A, body: "$x^{14}$", correct: true}
+      - {label: B, body: "$x^{9}$", misconception: POT-POT-SUMA}
+      - {label: C, body: "$x^{24}$", misconception: POT-PROD-MULT}
+      - {label: D, body: "$x^{10}$", misconception: POT-PROD-RESTA}
+
+  # ===== NUM-POT-CERO — curated =======================================
+
+  - code: M1-POT-301
+    node: NUM-POT-CERO
+    pool: curated
+    difficulty: 1
+    source: propio
+    secondary: [NUM-POT-NEG]
+    stem: "¿Cuál es el valor de $\\left(\\dfrac{2}{5}\\right)^{0}$?"
+    options:
+      - {label: A, body: "$1$", correct: true}
+      - {label: B, body: "$0$", misconception: POT-CERO-NULO}
+      - {label: C, body: "$\\dfrac{2}{5}$", misconception: POT-CERO-BASE}
+      - {label: D, body: "$\\dfrac{5}{2}$", misconception: POT-CERO-INV}
+
+  - code: M1-POT-302
+    node: NUM-POT-CERO
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El valor de $-3^{0}$ es:"
+    options:
+      - {label: A, body: "$-1$", correct: true}
+      - {label: B, body: "$1$", misconception: POT-CERO-SIGNO}
+      - {label: C, body: "$0$", misconception: POT-CERO-NULO}
+      - {label: D, body: "$-3$", misconception: POT-CERO-BASE}
+
+  - code: M1-POT-303
+    node: NUM-POT-CERO
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $x \\neq 0$, ¿a qué es igual $x^{0} + x^{1}$?"
+    options:
+      - {label: A, body: "$1 + x$", correct: true}
+      - {label: B, body: "$x$", misconception: POT-CERO-NULO}
+      - {label: C, body: "$2x$", misconception: POT-CERO-BASE}
+      - {label: D, body: "$2$", misconception: POT-UNO-UNO}
+
+  - code: M1-POT-304
+    node: NUM-POT-CERO
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-PROD]
+    stem: "El valor de $\\dfrac{5^{3} \\cdot 5^{2}}{5^{5}}$ es:"
+    options:
+      - {label: A, body: "$1$", correct: true}
+      - {label: B, body: "$0$", misconception: POT-CERO-NULO}
+      - {label: C, body: "$5$", misconception: POT-COC-DIV}
+      - {label: D, body: "$5^{10}$", misconception: POT-COC-SUMA}
+
+  - code: M1-POT-305
+    node: NUM-POT-CERO
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $a \\neq 0$, ¿cuál es el valor de $a^{1} \\cdot a^{0}$?"
+    options:
+      - {label: A, body: "$a$", correct: true}
+      - {label: B, body: "$1$", misconception: POT-UNO-UNO}
+      - {label: C, body: "$0$", misconception: POT-CERO-NULO}
+      - {label: D, body: "$a^{2}$", misconception: POT-CERO-BASE}
+
+  - code: M1-POT-306
+    node: NUM-POT-CERO
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "El valor de $-5^{0} + 5^{1}$ es:"
+    options:
+      - {label: A, body: "$4$", correct: true}
+      - {label: B, body: "$6$", misconception: POT-CERO-SIGNO}
+      - {label: C, body: "$0$", misconception: POT-UNO-UNO}
+      - {label: D, body: "$5$", misconception: POT-CERO-NULO}
+
+  - code: M1-POT-307
+    node: NUM-POT-CERO
+    pool: curated
+    difficulty: 2
+    source: propio
+    secondary: [NUM-POT-NEG]
+    stem: "Si $x \\neq 0$, ¿cuál es el valor de $\\left(\\dfrac{x}{4}\\right)^{0}$?"
+    options:
+      - {label: A, body: "$1$", correct: true}
+      - {label: B, body: "$\\dfrac{4}{x}$", misconception: POT-CERO-INV}
+      - {label: C, body: "$\\dfrac{x}{4}$", misconception: POT-CERO-BASE}
+      - {label: D, body: "$0$", misconception: POT-CERO-NULO}
+
+  # ===== generated ====================================================
+  # Escritos a mano solo para que el bucle tenga munición de práctica.
+  # En producción salen de plantillas paramétricas.
+
+  - code: M1-POT-G01
+    node: NUM-POT-PROD
+    pool: generated
+    difficulty: 1
+    source: plantilla-prod-simple
+    stem: "¿A qué es igual $4^{2} \\cdot 4^{5}$?"
+    options:
+      - {label: A, body: "$4^{7}$", correct: true}
+      - {label: B, body: "$4^{10}$", misconception: POT-PROD-MULT}
+      - {label: C, body: "$16^{7}$", misconception: POT-BASE-OPERA}
+      - {label: D, body: "$4^{3}$", misconception: POT-PROD-RESTA}
+
+  - code: M1-POT-G02
+    node: NUM-POT-PROD
+    pool: generated
+    difficulty: 1
+    source: plantilla-coc-simple
+    stem: "¿A qué es igual $\\dfrac{7^{9}}{7^{4}}$?"
+    options:
+      - {label: A, body: "$7^{5}$", correct: true}
+      - {label: B, body: "$7^{13}$", misconception: POT-COC-SUMA}
+      - {label: C, body: "$1^{5}$", misconception: POT-BASE-OPERA}
+      - {label: D, body: "$7^{-5}$", misconception: POT-COC-ORDEN}
+
+  - code: M1-POT-G03
+    node: NUM-POT-PROD
+    pool: generated
+    difficulty: 2
+    source: plantilla-prod-simple
+    stem: "¿A qué es igual $x \\cdot x^{6}$?"
+    options:
+      - {label: A, body: "$x^{7}$", correct: true}
+      - {label: B, body: "$x^{6}$", misconception: POT-EXP-UNO}
+      - {label: C, body: "$x^{12}$", misconception: POT-PROD-MULT}
+      - {label: D, body: "$x^{5}$", misconception: POT-PROD-RESTA}
+
+  - code: M1-POT-G04
+    node: NUM-POT-POT
+    pool: generated
+    difficulty: 1
+    source: plantilla-pot-simple
+    stem: "¿A qué es igual $\\left(4^{3}\\right)^{2}$?"
+    options:
+      - {label: A, body: "$4^{6}$", correct: true}
+      - {label: B, body: "$4^{5}$", misconception: POT-POT-SUMA}
+      - {label: C, body: "$4^{9}$", misconception: POT-POT-TORRE}
+      - {label: D, body: "$8^{6}$", misconception: POT-POT-BASE}
+
+  - code: M1-POT-G05
+    node: NUM-POT-POT
+    pool: generated
+    difficulty: 2
+    source: plantilla-pot-simple
+    stem: "¿A qué es igual $\\left(m^{6}\\right)^{3}$?"
+    options:
+      - {label: A, body: "$m^{18}$", correct: true}
+      - {label: B, body: "$m^{9}$", misconception: POT-POT-SUMA}
+      - {label: C, body: "$m^{216}$", misconception: POT-POT-TORRE}
+      - {label: D, body: "$m^{3}$", misconception: POT-PROD-RESTA}
+
+  - code: M1-POT-G06
+    node: NUM-POT-CERO
+    pool: generated
+    difficulty: 1
+    source: plantilla-cero-simple
+    stem: "¿Cuál es el valor de $12^{0}$?"
+    options:
+      - {label: A, body: "$1$", correct: true}
+      - {label: B, body: "$0$", misconception: POT-CERO-NULO}
+      - {label: C, body: "$12$", misconception: POT-CERO-BASE}
+      - {label: D, body: "$\\dfrac{1}{12}$", misconception: POT-CERO-INV}
+
+  - code: M1-POT-G07
+    node: NUM-POT-CERO
+    pool: generated
+    difficulty: 2
+    source: plantilla-cero-simple
+    stem: "El valor de $-8^{0}$ es:"
+    options:
+      - {label: A, body: "$-1$", correct: true}
+      - {label: B, body: "$1$", misconception: POT-CERO-SIGNO}
+      - {label: C, body: "$0$", misconception: POT-CERO-NULO}
+      - {label: D, body: "$-8$", misconception: POT-CERO-BASE}
+
+
+# ---------------------------------------------------------------------
+# 3. REMEDIATIONS
+# ---------------------------------------------------------------------
+# Cuelgan del error, no del nodo. No son la clase otra vez más corta.
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-POT-PROD-MULT
+    misconception: POT-PROD-MULT
+    title: Multiplicar potencias no es multiplicar exponentes
+    body: |
+      Cuando multiplicas $2^{3} \cdot 2^{2}$ no hay ninguna regla que
+      inventar. Basta con desarmar las potencias:
+
+      $$2^{3} \cdot 2^{2} = (2 \cdot 2 \cdot 2) \cdot (2 \cdot 2)$$
+
+      Cuenta los factores: hay **cinco** doses. Por eso el resultado es
+      $2^{5}$, y por eso los exponentes se **suman**.
+
+      Si multiplicaras los exponentes obtendrías $2^{6}$, que son seis
+      doses. Pero tú escribiste tres y dos: cinco.
+
+      La regla que estás usando existe, pero es de otra situación:
+      $\left(2^{3}\right)^{2}$ sí da $2^{6}$, porque ahí tienes dos grupos
+      de tres doses cada uno. La diferencia está en el paréntesis.
+    items: [M1-POT-101, M1-POT-103]
+
+  - code: REM-POT-COC-DIV
+    misconception: POT-COC-DIV
+    title: En el cociente los exponentes se restan, no se dividen
+    body: |
+      Este error es peligroso porque a veces da la respuesta correcta por
+      casualidad. En $\dfrac{5^{6}}{5^{2}}$, dividir $6:2$ da $3$ y restar
+      $6-2$ da $4$: son distintos y ahí se nota. Pero en
+      $\dfrac{5^{4}}{5^{2}}$ ambos dan $2$, y el error pasa desapercibido.
+
+      Desármalo una vez y no se te olvida más:
+
+      $$\dfrac{5^{6}}{5^{2}} = \dfrac{5 \cdot 5 \cdot 5 \cdot 5 \cdot 5 \cdot 5}{5 \cdot 5}$$
+
+      Se cancelan dos cincos arriba con dos abajo. Quedan **cuatro**.
+      Cancelar es quitar, y quitar es restar.
+
+      Prueba con $\dfrac{m^{8}}{m^{8}}$: si dividieras los exponentes daría
+      $m^{1}$, o sea $m$. Pero cualquier número dividido por sí mismo da
+      $1$, no $m$.
+    items: [M1-POT-102, M1-POT-108]
+
+  - code: REM-POT-COC-ORDEN
+    misconception: POT-COC-ORDEN
+    title: El de arriba menos el de abajo, siempre en ese orden
+    body: |
+      Tienes la regla correcta, pero invertida. Con $\dfrac{3^{5}}{3^{2}}$
+      el orden no se nota, porque igual te da algo razonable. Con
+      $\dfrac{3^{2}}{3^{5}}$ sí:
+
+      $$\dfrac{3^{2}}{3^{5}} = \dfrac{3 \cdot 3}{3 \cdot 3 \cdot 3 \cdot 3 \cdot 3}$$
+
+      Cancelas los dos de arriba y **quedan tres abajo**: el resultado es
+      $\dfrac{1}{3^{3}}$, un número menor que 1. Si restaras al revés te
+      daría $3^{3} = 27$, que es mayor que 1. Imposible: estás dividiendo
+      un número pequeño por uno grande.
+
+      Ese es el control que te sirve siempre: si el de abajo tiene el
+      exponente más grande, el resultado tiene que ser menor que 1.
+    items: [M1-POT-104]
+
+  - code: REM-POT-BASE-OPERA
+    misconception: POT-BASE-OPERA
+    title: La base no se opera, se conserva
+    body: |
+      En $2^{3} \cdot 2^{2}$ elegiste $4^{5}$. Multiplicaste los dos doses
+      de las bases y sumaste los exponentes. Pero la base no es un factor
+      más: es **qué número se está repitiendo**.
+
+      $$2^{3} \cdot 2^{2} = (2 \cdot 2 \cdot 2) \cdot (2 \cdot 2)$$
+
+      Ahí no hay ningún cuatro. Todos los factores son doses. Lo único que
+      cambia al multiplicar es *cuántos* hay, y eso es el exponente.
+
+      Compruébalo con números: $2^{3} \cdot 2^{2} = 8 \cdot 4 = 32$.
+      Y $2^{5} = 32$. En cambio $4^{5} = 1024$.
+    items: [M1-POT-101, M1-POT-105]
+
+  - code: REM-POT-BASE-DIST
+    misconception: POT-BASE-DIST
+    title: La regla exige que la base sea la misma
+    body: |
+      Sumar exponentes funciona porque los factores son todos iguales y
+      solo hay que contarlos. Si las bases son distintas, no hay nada que
+      contar junto:
+
+      $$2^{3} \cdot 3^{2} = (2 \cdot 2 \cdot 2) \cdot (3 \cdot 3)$$
+
+      Son tres doses y dos treses. No se pueden juntar en una sola
+      potencia. El resultado es $8 \cdot 9 = 72$, y $72$ no es potencia de
+      $6$: $6^{5}$ vale $7776$.
+
+      Cuando hay varias bases mezcladas, agrupa primero por base y después
+      aplica la regla dentro de cada grupo:
+      $3^{2} \cdot 3^{4} \cdot 2^{3} = 3^{6} \cdot 2^{3}$.
+    items: [M1-POT-103, M1-POT-107, M1-POT-109]
+
+  - code: REM-POT-EXP-UNO
+    misconception: POT-EXP-UNO
+    title: Un número solo tiene exponente 1, aunque no se escriba
+    body: |
+      En $\dfrac{6^{4}}{6}$ el $6$ de abajo no está sin exponente: tiene
+      exponente $1$. No se escribe porque sería redundante, igual que no
+      escribimos $1x$ sino $x$.
+
+      Reescríbelo completo y la regla se aplica sola:
+
+      $$\dfrac{6^{4}}{6^{1}} = 6^{4-1} = 6^{3}$$
+
+      El hábito que conviene tomar: cada vez que veas un factor sin
+      exponente en un ejercicio de potencias, escríbele el $1$ arriba antes
+      de operar. Cuesta dos segundos y elimina el error entero.
+    items: [M1-POT-105, M1-POT-110]
+
+  - code: REM-POT-POT-SUMA
+    misconception: POT-POT-SUMA
+    title: Dos reglas cambiadas de lugar
+    body: |
+      Esto no son dos errores distintos: es **un solo par de reglas
+      invertido**. Probablemente también sumas donde hay que multiplicar
+      y multiplicas donde hay que sumar.
+
+      Lo que hay que ver es qué está repetido en cada caso.
+
+      En $2^{3} \cdot 2^{2}$ hay dos grupos de doses puestos uno al lado
+      del otro: tres y dos. Se juntan, son cinco. **Se suman.**
+
+      En $\left(2^{3}\right)^{2}$ hay **dos copias del grupo completo**:
+
+      $$\left(2^{3}\right)^{2} = 2^{3} \cdot 2^{3} = (2 \cdot 2 \cdot 2)(2 \cdot 2 \cdot 2)$$
+
+      Tres doses, dos veces. Seis doses. **Se multiplican.**
+
+      El paréntesis es lo que marca la diferencia: dice que todo lo de
+      adentro se repite. Cuando lo veas, pregúntate cuántas veces se repite
+      el grupo entero, no cuántos factores hay.
+    items: [M1-POT-201, M1-POT-103]
+
+  - code: REM-POT-POT-TORRE
+    misconception: POT-POT-TORRE
+    title: El paréntesis cierra la base
+    body: |
+      Leíste $\left(2^{3}\right)^{2}$ como si fuera $2^{3^{2}}$, o sea
+      $2^{9}$. Son expresiones distintas y el paréntesis es lo que las
+      separa.
+
+      Cuando el paréntesis encierra a $2^{3}$, esa potencia completa pasa a
+      ser la base:
+
+      $$\left(2^{3}\right)^{2} = 2^{3} \cdot 2^{3} = 2^{6} = 64$$
+
+      Sin paréntesis, el exponente de arriba se resuelve primero y el
+      resultado es enorme:
+
+      $$2^{3^{2}} = 2^{9} = 512$$
+
+      En la PAES casi siempre vas a ver la primera forma. La regla práctica:
+      si hay paréntesis, los exponentes se multiplican. Si no hay, se
+      resuelve de arriba hacia abajo.
+    items: [M1-POT-201, M1-POT-202]
+
+  - code: REM-POT-POT-BASE
+    misconception: POT-POT-BASE
+    title: El exponente de afuera no toca la base
+    body: |
+      En $\left(3^{2}\right)^{4}$ elegiste algo con base $6$: multiplicaste
+      $3 \cdot 2$. Pero el exponente nunca se mezcla con la base.
+
+      El paréntesis dice que $3^{2}$ se repite cuatro veces:
+
+      $$\left(3^{2}\right)^{4} = 3^{2} \cdot 3^{2} \cdot 3^{2} \cdot 3^{2}$$
+
+      Todos los factores siguen siendo treses. Contándolos hay ocho, así
+      que el resultado es $3^{8}$. En ningún momento aparece un seis.
+
+      Compruébalo: $3^{2} = 9$, y $9^{4} = 6561$. Y $3^{8} = 6561$
+      también. En cambio $6^{8}$ es más de un millón y medio.
+    items: [M1-POT-202, M1-POT-204]
+
+  - code: REM-POT-CERO-NULO
+    misconception: POT-CERO-NULO
+    title: Exponente cero no es multiplicar por cero
+    body: |
+      Estás trasladando "multiplicar por cero da cero" al exponente, pero
+      el exponente no multiplica: **cuenta**.
+
+      La forma más clara de verlo es bajando de a uno:
+
+      $$2^{3} = 8 \qquad 2^{2} = 4 \qquad 2^{1} = 2 \qquad 2^{0} = ?$$
+
+      Cada vez que el exponente baja en uno, el resultado se divide por
+      $2$. Después de $2$ viene $1$, no $0$.
+
+      La otra forma de verlo sale del cociente, que ya conoces:
+
+      $$\dfrac{5^{3}}{5^{3}} = 5^{3-3} = 5^{0}$$
+
+      Pero cualquier número dividido por sí mismo da $1$. Entonces
+      $5^{0} = 1$. Y esto vale para cualquier base distinta de cero.
+    items: [M1-POT-301, M1-POT-304]
+
+  - code: REM-POT-CERO-BASE
+    misconception: POT-CERO-BASE
+    title: El exponente cero no deja la base como estaba
+    body: |
+      Respondiste que $7^{0}$ es $7$, como si el exponente cero no hiciera
+      nada. Pero el exponente que "no hace nada" es el $1$:
+
+      $$7^{1} = 7 \qquad 7^{0} = 1$$
+
+      Míralo en la secuencia, que baja dividiendo por $7$ cada vez:
+
+      $$7^{3} = 343 \qquad 7^{2} = 49 \qquad 7^{1} = 7 \qquad 7^{0} = 1$$
+
+      Después de $7$ viene $7:7$, que es $1$.
+
+      Dos exponentes, dos resultados distintos: el $1$ devuelve la base, el
+      $0$ devuelve $1$ sea cual sea la base.
+    items: [M1-POT-301, M1-POT-303]
+
+  - code: REM-POT-CERO-SIGNO
+    misconception: POT-CERO-SIGNO
+    title: Sin paréntesis, el signo se queda afuera
+    body: |
+      Resolviste $-3^{0}$ como si fuera $\left(-3\right)^{0}$. Son cosas
+      distintas y en la PAES aparece seguido.
+
+      Sin paréntesis, el exponente afecta **solo al 3**. El signo menos se
+      aplica después, al resultado:
+
+      $$-3^{0} = -\left(3^{0}\right) = -1$$
+
+      Con paréntesis, el exponente afecta a todo lo de adentro, signo
+      incluido:
+
+      $$\left(-3\right)^{0} = 1$$
+
+      La regla de lectura vale para cualquier exponente, no solo el cero:
+      $-3^{2} = -9$, mientras que $\left(-3\right)^{2} = 9$. Antes de
+      operar, fíjate si el signo está dentro del paréntesis o no.
+    items: [M1-POT-302, M1-POT-306]
+
+  - code: REM-POT-UNO-UNO
+    misconception: POT-UNO-UNO
+    title: Exponente uno y exponente cero dan cosas distintas
+    body: |
+      Se te mezclaron las dos reglas. Es normal: se aprenden juntas y las
+      dos tienen un $1$ dando vueltas.
+
+      $$a^{1} = a \qquad a^{0} = 1$$
+
+      El exponente dice **cuántas veces aparece la base**. Si aparece una
+      vez, el resultado es la base misma:
+
+      $$8^{1} = 8$$
+
+      Si aparece cero veces no queda nada multiplicándose, y el resultado
+      es el neutro de la multiplicación, que es $1$:
+
+      $$8^{0} = 1$$
+
+      Una forma de no confundirlas: el resultado $1$ va con el exponente
+      $0$, que es el que "no deja nada". El exponente $1$ deja la base.
+    items: [M1-POT-303, M1-POT-305, M1-POT-306]
+
+  - code: REM-POT-PROD-RESTA
+    misconception: POT-PROD-RESTA
+    title: Restar exponentes es de la división, no de la multiplicación
+    body: |
+      Para $2^{3} \cdot 2^{2}$ elegiste $2^{1}$: restaste $3 - 2$. Esa resta
+      existe, pero pertenece a otra operación.
+
+      Multiplicar es **juntar** factores. Desármalo y cuenta:
+
+      $$2^{3} \cdot 2^{2} = (2 \cdot 2 \cdot 2) \cdot (2 \cdot 2)$$
+
+      Quedan cinco doses, así que el resultado es $2^{5}$. Nunca sacaste
+      nada: solo juntaste.
+
+      La resta aparece al dividir, porque ahí sí se cancelan factores:
+
+      $$\dfrac{2^{3}}{2^{2}} = \dfrac{2 \cdot 2 \cdot 2}{2 \cdot 2} = 2^{1}$$
+
+      Las dos reglas, lado a lado:
+
+      $$a^{m} \cdot a^{n} = a^{m+n} \qquad \dfrac{a^{m}}{a^{n}} = a^{m-n}$$
+
+      Multiplicar agrega factores y suma. Dividir los quita y resta.
+
+      El control más rápido es de tamaño: $2^{3} \cdot 2^{2} = 8 \cdot 4 = 32$.
+      Tu respuesta, $2^{1}$, es $2$. Multiplicar por un número mayor que $1$
+      no puede achicar el resultado.
+    items: [M1-POT-101, M1-POT-203]
+
+  - code: REM-POT-COC-SUMA
+    misconception: POT-COC-SUMA
+    title: Dividir quita factores, y quitar es restar
+    body: |
+      Para $\dfrac{5^{6}}{5^{2}}$ elegiste $5^{8}$: sumaste los exponentes.
+      Esa suma es la regla del producto, aplicada en el cociente.
+
+      Escribe la división completa y mira qué pasa:
+
+      $$\dfrac{5^{6}}{5^{2}} = \dfrac{5 \cdot 5 \cdot 5 \cdot 5 \cdot 5 \cdot 5}{5 \cdot 5}$$
+
+      Dos cincos de arriba se cancelan con los dos de abajo. Quedan
+      **cuatro**: el resultado es $5^{4}$.
+
+      $$a^{m} \cdot a^{n} = a^{m+n} \qquad \dfrac{a^{m}}{a^{n}} = a^{m-n}$$
+
+      Hay un control que descarta este error sin calcular nada. Dividir por
+      un número mayor que $1$ tiene que dar algo **más chico** que el de
+      arriba. $5^{8}$ es mucho más grande que $5^{6}$: solo por eso ya
+      queda descartado.
+
+      Ese control te sirve en cualquier cociente de potencias. Antes de
+      elegir, pregúntate si el resultado debería crecer o achicarse.
+    items: [M1-POT-102, M1-POT-106]
+
+  - code: REM-POT-SUMA-PROD
+    misconception: POT-SUMA-PROD
+    title: Cuando las potencias se suman, no hay regla de exponentes
+    body: |
+      Elegiste $2^{3} + 2^{2}$ como equivalente a $2^{5}$. Las reglas de
+      exponentes sirven para multiplicar y dividir potencias, no para
+      sumarlas.
+
+      Compruébalo con números:
+
+      $$2^{3} + 2^{2} = 8 + 4 = 12 \qquad 2^{5} = 32$$
+
+      No son lo mismo, y ni siquiera se parecen.
+
+      La razón es que en $2^{3} \cdot 2^{2}$ todos los doses quedan dentro
+      de una sola multiplicación, así que se pueden contar juntos. En
+      $2^{3} + 2^{2}$ hay dos números separados sumándose: no hay factores
+      que juntar, no hay nada que contar.
+
+      Lo único que se puede hacer con una suma de potencias es sacar factor
+      común:
+
+      $$2^{3} + 2^{2} = 2^{2}\left(2 + 1\right) = 2^{2} \cdot 3 = 12$$
+
+      Regla práctica para la prueba: si entre las potencias hay un $+$ o un
+      $-$, ninguna regla de exponentes aplica. Calcula cada potencia por
+      separado y opera los resultados.
+    items: [M1-POT-103, M1-POT-109, M1-POT-111]
+
+  - code: REM-POT-CERO-INV
+    misconception: POT-CERO-INV
+    title: El exponente cero no da vuelta la fracción
+    body: |
+      Para $\left(\dfrac{2}{5}\right)^{0}$ respondiste $\dfrac{5}{2}$:
+      diste vuelta la fracción. Dar vuelta la base es lo que hace el
+      exponente $-1$, no el $0$.
+
+      El exponente cero entrega $1$ para cualquier base, y una fracción
+      también es una base:
+
+      $$\left(\dfrac{2}{5}\right)^{0} = 1$$
+
+      Míralo bajando el exponente de a uno. Cada paso divide por la base:
+
+      $$\left(\dfrac{2}{5}\right)^{2} = \dfrac{4}{25} \qquad \left(\dfrac{2}{5}\right)^{1} = \dfrac{2}{5} \qquad \left(\dfrac{2}{5}\right)^{0} = 1$$
+
+      Después de $\dfrac{2}{5}$ viene $\dfrac{2}{5} : \dfrac{2}{5}$, que da
+      $1$.
+
+      El exponente que invierte es el negativo, y lo vas a ver más
+      adelante. Por ahora basta con separarlos: el cero siempre entrega
+      $1$, sin importar cómo se vea la base.
+    items: [M1-POT-301, M1-POT-307]
+
+
+# ---------------------------------------------------------------------
+# 4. LESSON BODY
+# ---------------------------------------------------------------------
+# Los títulos de nivel 2 tienen que coincidir con los anchor declarados
+# arriba. El cargador lo verifica.
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Todas las reglas de esta clase salen de una sola idea: una potencia es
+  una multiplicación repetida, y el exponente cuenta cuántas veces se
+  repite la base. No hay nada que memorizar. Si alguna vez dudas, desarma
+  la potencia y cuenta.
+
+  ## Producto y cociente
+
+  Cuando multiplicas dos potencias de la misma base, estás juntando
+  factores:
+
+  $$2^{3} \cdot 2^{2} = \underbrace{(2 \cdot 2 \cdot 2)}_{3} \cdot \underbrace{(2 \cdot 2)}_{2} = 2^{5}$$
+
+  Tres doses y dos doses son cinco doses:
+
+  $$a^{m} \cdot a^{n} = a^{m+n}$$
+
+  Al dividir pasa lo mismo, pero cancelando:
+
+  $$\dfrac{5^{6}}{5^{2}} = \dfrac{5 \cdot 5 \cdot 5 \cdot 5 \cdot 5 \cdot 5}{5 \cdot 5} = 5^{4}$$
+
+  Quitas dos cincos. Quitar es restar:
+
+  $$\dfrac{a^{m}}{a^{n}} = a^{m-n}$$
+
+  **La base tiene que ser la misma.** $2^{3} \cdot 3^{2}$ no se reduce a
+  una sola potencia: son tres doses y dos treses, no hay nada que contar
+  junto. Si hay varias bases mezcladas, se agrupa por base:
+
+  $$3^{2} \cdot 3^{4} \cdot 2^{3} = 3^{6} \cdot 2^{3}$$
+
+  **La base se conserva.** Lo único que cambia es el exponente. La
+  respuesta de $2^{3} \cdot 2^{2}$ es $2^{5}$, nunca $4^{5}$: todos los
+  factores siguen siendo doses.
+
+  Dos detalles que hacen fallar. Un número sin exponente visible tiene
+  exponente $1$:
+
+  $$\dfrac{6^{4}}{6} = \dfrac{6^{4}}{6^{1}} = 6^{3}$$
+
+  Y en la división el orden importa, **arriba menos abajo**. Si el
+  denominador tiene el exponente más grande, el resultado es menor que 1:
+
+  $$\dfrac{3^{2}}{3^{5}} = \dfrac{1}{3^{3}}$$
+
+  ## Potencia de una potencia
+
+  Acá aparece el error más común de todo el tema, así que conviene ir
+  despacio.
+
+  El paréntesis dice que **todo lo de adentro se repite**:
+
+  $$\left(2^{3}\right)^{2} = 2^{3} \cdot 2^{3} = (2 \cdot 2 \cdot 2)(2 \cdot 2 \cdot 2) = 2^{6}$$
+
+  Tres doses, dos veces: seis doses. Los exponentes se **multiplican**:
+
+  $$\left(a^{m}\right)^{n} = a^{m \cdot n}$$
+
+  Compara las dos situaciones lado a lado, porque es exactamente donde se
+  cruzan las reglas:
+
+  $$a^{m} \cdot a^{n} = a^{m+n} \qquad \left(a^{m}\right)^{n} = a^{m \cdot n}$$
+
+  A la izquierda hay dos grupos distintos que se juntan: se suman. A la
+  derecha hay un grupo que se repite: se multiplican. El paréntesis es lo
+  que marca cuál de las dos estás mirando.
+
+  Dos advertencias. El paréntesis cierra la base, así que
+  $\left(2^{3}\right)^{2}$ no es $2^{3^{2}}$: la primera vale $64$ y la
+  segunda $512$. Y el exponente de afuera no toca la base:
+  $\left(3^{2}\right)^{4}$ es $3^{8}$, no algo con base $6$.
+
+  ## Exponente cero y uno
+
+  Estas dos salen solas de la regla del cociente.
+
+  Si divides una potencia por sí misma, el resultado es $1$ porque
+  cualquier número dividido por sí mismo da $1$. Pero por la regla de la
+  resta, el exponente queda en cero:
+
+  $$\dfrac{5^{3}}{5^{3}} = 5^{3-3} = 5^{0} \qquad \text{y también} \qquad \dfrac{5^{3}}{5^{3}} = 1$$
+
+  Entonces $5^{0} = 1$. Y lo mismo para cualquier base distinta de cero:
+
+  $$a^{0} = 1 \quad \text{si } a \neq 0$$
+
+  Otra forma de verlo es bajar el exponente de a uno. Cada paso divide por
+  la base:
+
+  $$2^{3} = 8 \qquad 2^{2} = 4 \qquad 2^{1} = 2 \qquad 2^{0} = 1$$
+
+  Ahí se ve también el exponente $1$: deja la base tal como está. Son dos
+  reglas distintas y conviene no mezclarlas.
+
+  $$a^{1} = a \qquad a^{0} = 1$$
+
+  Un último detalle que la PAES usa seguido: sin paréntesis, el signo se
+  queda afuera.
+
+  $$-3^{0} = -\left(3^{0}\right) = -1 \qquad \left(-3\right)^{0} = 1$$
+
+  ## El control que sirve siempre
+
+  Si dudas de una regla, reemplaza por números pequeños y calcula los dos
+  lados. $2^{3} \cdot 2^{2} = 8 \cdot 4 = 32$. ¿Es $2^{5} = 32$? Sí. ¿Es
+  $2^{6} = 64$? No. ¿Es $4^{5} = 1024$? Tampoco.
+
+  Treinta segundos de aritmética resuelven cualquier duda de regla, y en
+  la prueba los tienes.

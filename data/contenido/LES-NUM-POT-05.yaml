@@ -1,0 +1,291 @@
+# =====================================================================
+# LES-NUM-POT-05 — Exponente racional
+# Cubre NUM-POT-RAC
+# =====================================================================
+# Último nodo de la unidad. Depende de NUM-POT-NEG y de NUM-POT-FRA, y
+# sale hacia NUM-RAI-EQ y ALG-FEX-CONC: es el puente entre potencias y
+# raíces. El error de acá viaja a toda la unidad de raíces.
+# ---------------------------------------------------------------------
+# Las misconceptions viven en contenido/misconceptions/NUM-POT.yaml.
+# ---------------------------------------------------------------------
+
+unit: NUM-POT
+
+lesson:
+  code: LES-NUM-POT-05
+  title: Exponente racional
+  position: 5
+  nodes:
+    - node: NUM-POT-RAC
+      anchor: exponente-racional
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== NUM-POT-RAC — curated ========================================
+
+  - code: M1-POT-701
+    node: NUM-POT-RAC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el valor de $8^{\\frac{1}{3}}$?"
+    options:
+      - {label: A, body: "$2$", correct: true}
+      - {label: B, body: "$\\dfrac{8}{3}$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$\\dfrac{1}{8}$", misconception: POT-RAC-INV}
+      - {label: D, body: "$8$", misconception: POT-RAC-ENTERO}
+
+  - code: M1-POT-702
+    node: NUM-POT-RAC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El valor de $16^{\\frac{1}{2}}$ es:"
+    options:
+      - {label: A, body: "$4$", correct: true}
+      - {label: B, body: "$8$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$\\dfrac{1}{16}$", misconception: POT-RAC-INV}
+      - {label: D, body: "$16$", misconception: POT-RAC-ENTERO}
+
+  - code: M1-POT-703
+    node: NUM-POT-RAC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $a > 0$, la expresión $a^{\\frac{2}{3}}$ es equivalente a:"
+    options:
+      - {label: A, body: "$\\sqrt[3]{a^{2}}$", correct: true}
+      - {label: B, body: "$\\sqrt{a^{3}}$", misconception: POT-RAC-INVERSO}
+      - {label: C, body: "$a^{2}$", misconception: POT-RAC-ENTERO}
+      - {label: D, body: "$\\dfrac{1}{a^{2}}$", misconception: POT-RAC-INV}
+
+  - code: M1-POT-704
+    node: NUM-POT-RAC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "El valor de $8^{\\frac{2}{3}}$ es:"
+    options:
+      - {label: A, body: "$4$", correct: true}
+      - {label: B, body: "$64$", misconception: POT-RAC-ENTERO}
+      - {label: C, body: "$\\sqrt{512}$", misconception: POT-RAC-INVERSO}
+      - {label: D, body: "$\\dfrac{1}{4}$", misconception: POT-RAC-INV}
+
+  - code: M1-POT-705
+    node: NUM-POT-RAC
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-NEG]
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$27^{\\frac{1}{3}} = 3$", correct: true}
+      - {label: B, body: "$27^{\\frac{1}{3}} = \\dfrac{1}{27}$", misconception: POT-RAC-INV}
+      - {label: C, body: "$27^{\\frac{2}{3}} = \\sqrt{27^{3}}$", misconception: POT-RAC-INVERSO}
+      - {label: D, body: "$27^{-\\frac{1}{3}} = -3$", misconception: POT-NEG-SIGNO}
+
+  - code: M1-POT-706
+    node: NUM-POT-RAC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Si $x > 0$, la expresión $\\sqrt[5]{x^{3}}$ escrita como potencia es:"
+    options:
+      - {label: A, body: "$x^{\\frac{3}{5}}$", correct: true}
+      - {label: B, body: "$x^{\\frac{5}{3}}$", misconception: POT-RAC-INVERSO}
+      - {label: C, body: "$x^{3}$", misconception: POT-RAC-ENTERO}
+      - {label: D, body: "$x^{-\\frac{3}{5}}$", misconception: POT-RAC-INV}
+
+  - code: M1-POT-707
+    node: NUM-POT-RAC
+    pool: curated
+    difficulty: 2
+    source: propio
+    secondary: [NUM-POT-DIST]
+    stem: "La expresión $\\left(\\dfrac{9}{4}\\right)^{\\frac{1}{2}}$ es igual a:"
+    options:
+      - {label: A, body: "$\\dfrac{3}{2}$", correct: true}
+      - {label: B, body: "$\\dfrac{9}{8}$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$\\dfrac{4}{9}$", misconception: POT-RAC-INV}
+      - {label: D, body: "$\\dfrac{3}{4}$", misconception: POT-DIST-NUM}
+
+  - code: M1-POT-708
+    node: NUM-POT-RAC
+    pool: curated
+    difficulty: 2
+    source: propio
+    secondary: [NUM-POT-NEG]
+    stem: "El valor de $4^{-\\frac{1}{2}}$ es:"
+    options:
+      - {label: A, body: "$\\dfrac{1}{2}$", correct: true}
+      - {label: B, body: "$-2$", misconception: POT-NEG-SIGNO}
+      - {label: C, body: "$\\dfrac{1}{4}$", misconception: POT-RAC-ENTERO}
+      - {label: D, body: "$2$", misconception: POT-RAC-INV}
+
+  # ===== NUM-POT-RAC — generated ======================================
+
+  - code: M1-POT-G16
+    node: NUM-POT-RAC
+    pool: generated
+    difficulty: 1
+    source: generado
+    stem: "¿Cuál es el valor de $25^{\\frac{1}{2}}$?"
+    options:
+      - {label: A, body: "$5$", correct: true}
+      - {label: B, body: "$12{,}5$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$\\dfrac{1}{25}$", misconception: POT-RAC-INV}
+      - {label: D, body: "$25$", misconception: POT-RAC-ENTERO}
+
+  - code: M1-POT-G17
+    node: NUM-POT-RAC
+    pool: generated
+    difficulty: 2
+    source: generado
+    stem: "Si $y > 0$, la expresión $\\sqrt[4]{y^{3}}$ escrita como potencia es:"
+    options:
+      - {label: A, body: "$y^{\\frac{3}{4}}$", correct: true}
+      - {label: B, body: "$y^{\\frac{4}{3}}$", misconception: POT-RAC-INVERSO}
+      - {label: C, body: "$y^{3}$", misconception: POT-RAC-ENTERO}
+      - {label: D, body: "$y^{-\\frac{3}{4}}$", misconception: POT-RAC-INV}
+
+
+# ---------------------------------------------------------------------
+# REMEDIATIONS
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-POT-RAC-INVERSO
+    misconception: POT-RAC-INVERSO
+    title: El de abajo es la raíz, el de arriba es el exponente
+    body: |
+      Cambiaste de rol el numerador y el denominador. La regla es:
+
+      $$a^{\frac{m}{n}} = \sqrt[n]{a^{m}}$$
+
+      El **denominador** del exponente es el índice de la raíz. El
+      **numerador** es el exponente de la base.
+
+      $$8^{\frac{2}{3}} = \sqrt[3]{8^{2}} = \sqrt[3]{64} = 4$$
+
+      No $\sqrt{8^{3}} = \sqrt{512}$, que es otro número.
+
+      La forma de recordarlo sin memorizar el orden: el caso más simple es
+      $a^{\frac{1}{n}}$, y ahí el $n$ está abajo y es la raíz.
+
+      $$9^{\frac{1}{2}} = \sqrt{9} = 3$$
+
+      Si el $2$ de abajo manda la raíz cuadrada cuando arriba hay un $1$,
+      sigue mandándola cuando arriba hay cualquier otra cosa.
+    items: [M1-POT-703, M1-POT-704, M1-POT-706]
+
+  - code: REM-POT-RAC-ENTERO
+    misconception: POT-RAC-ENTERO
+    title: El denominador es la parte que hace el trabajo
+    body: |
+      Te quedaste solo con el numerador y trataste el exponente como si
+      fuera entero. El denominador no es decoración: es el que saca la
+      raíz.
+
+      $$8^{\frac{2}{3}} = \sqrt[3]{8^{2}} = 4$$
+
+      Si lo ignoras te queda $8^{2} = 64$, que es dieciséis veces más
+      grande.
+
+      Una comprobación de tamaño que sirve siempre: cuando la base es mayor
+      que 1 y el exponente está entre 0 y 1, **el resultado es menor que la
+      base**.
+
+      $$8^{\frac{2}{3}} = 4 < 8$$
+
+      Si tu respuesta salió más grande que la base, el denominador se te
+      quedó afuera.
+    items: [M1-POT-701, M1-POT-704, M1-POT-706]
+
+  - code: REM-POT-RAC-INV
+    misconception: POT-RAC-INV
+    title: El exponente fraccionario no invierte
+    body: |
+      Diste vuelta la base. Eso lo hace el exponente **negativo**, no el
+      fraccionario. Son dos cosas distintas y se pueden combinar, pero hay
+      que separarlas.
+
+      El **signo** decide arriba o abajo:
+
+      $$8^{-1} = \frac{1}{8}$$
+
+      El **denominador** decide qué raíz:
+
+      $$8^{\frac{1}{3}} = \sqrt[3]{8} = 2$$
+
+      Cuando aparecen los dos juntos, se aplican los dos, en cualquier
+      orden:
+
+      $$8^{-\frac{1}{3}} = \frac{1}{8^{\frac{1}{3}}} = \frac{1}{2}$$
+
+      Chequeo rápido: si el exponente no tiene signo menos, la respuesta no
+      puede ser una fracción con la base abajo.
+    items: [M1-POT-701, M1-POT-703, M1-POT-708]
+
+
+# ---------------------------------------------------------------------
+# LESSON BODY
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Este es el último nodo de potencias y el que conecta con raíces. Todo lo
+  que sigue —ecuaciones exponenciales, logaritmos, función exponencial— usa
+  esta escritura.
+
+  ## Exponente racional
+
+  Hasta ahora los exponentes eran enteros: positivos, cero, negativos. La
+  pregunta natural es qué pasaría si el exponente fuera una fracción, y la
+  respuesta sale de exigir que las reglas que ya tienes sigan funcionando.
+
+  Supongamos que $9^{\frac{1}{2}}$ tiene algún valor. Por la regla de
+  potencia de una potencia:
+
+  $$\left(9^{\frac{1}{2}}\right)^{2} = 9^{\frac{1}{2} \cdot 2} = 9^{1} = 9$$
+
+  O sea, $9^{\frac{1}{2}}$ es el número que elevado al cuadrado da 9. Ese
+  número es $3$, la raíz cuadrada de 9. No hay nada que inventar: la
+  definición se deduce.
+
+  $$a^{\frac{1}{n}} = \sqrt[n]{a}$$
+
+  Y en general:
+
+  $$a^{\frac{m}{n}} = \sqrt[n]{a^{m}} \qquad (a > 0)$$
+
+  **El denominador es el índice de la raíz. El numerador es el exponente de
+  la base.** Ese es el punto donde se equivoca casi todo el mundo, y la
+  forma de fijarlo es mirar el caso simple: en $9^{\frac{1}{2}}$ el $2$
+  está abajo y manda la raíz cuadrada. Sigue mandándola aunque arriba haya
+  otra cosa.
+
+  $$8^{\frac{2}{3}} = \sqrt[3]{8^{2}} = \sqrt[3]{64} = 4$$
+
+  También se puede sacar primero la raíz y elevar después, que suele salir
+  con números más chicos:
+
+  $$8^{\frac{2}{3}} = \left(\sqrt[3]{8}\right)^{2} = 2^{2} = 4$$
+
+  Los dos caminos dan lo mismo. Elige el que te deje números manejables.
+
+  Una revisión de tamaño que ahorra errores: si la base es mayor que 1 y el
+  exponente está entre 0 y 1, el resultado es **menor que la base**. Si te
+  quedó más grande, ignoraste el denominador.
+
+  Y cuando el exponente es fraccionario **y** negativo, se aplican las dos
+  reglas, en el orden que prefieras:
+
+  $$4^{-\frac{1}{2}} = \frac{1}{4^{\frac{1}{2}}} = \frac{1}{2}$$
+
+  El signo manda arriba o abajo. El denominador manda qué raíz. Son
+  preguntas separadas y conviene contestarlas por separado.

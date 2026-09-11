@@ -1,0 +1,526 @@
+# =====================================================================
+# LES-NUM-POT-03 — Potencia de un producto, de un cociente y de una fracción
+# Cubre NUM-POT-DIST, NUM-POT-FRA
+# =====================================================================
+# DIST → FRA en el grafo, y FRA además depende de NUM-FRA-MUL. Es la
+# clase donde aparece el error que más lejos llega: repartir el exponente
+# sobre una suma. Sobrevive hasta ALG-NOT-BIN2 y ALG-CUA.
+# ---------------------------------------------------------------------
+# Las misconceptions viven en contenido/misconceptions/NUM-POT.yaml.
+# ---------------------------------------------------------------------
+
+unit: NUM-POT
+
+lesson:
+  code: LES-NUM-POT-03
+  title: Potencia de un producto, de un cociente y de una fracción
+  position: 3
+  nodes:
+    - node: NUM-POT-DIST
+      anchor: producto-y-cociente-dentro-del-parentesis
+    - node: NUM-POT-FRA
+      anchor: base-fraccionaria
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== NUM-POT-DIST — curated =======================================
+
+  - code: M1-POT-401
+    node: NUM-POT-DIST
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El valor de $\\left(2 \\cdot 3\\right)^{2}$ es:"
+    options:
+      - {label: A, body: "$36$", correct: true}
+      - {label: B, body: "$18$", misconception: POT-DIST-UNO}
+      - {label: C, body: "$12$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$13$", misconception: POT-DIST-SUMA}
+
+  - code: M1-POT-402
+    node: NUM-POT-DIST
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "La expresión $\\left(3x\\right)^{2}$ es equivalente a:"
+    options:
+      - {label: A, body: "$9x^{2}$", correct: true}
+      - {label: B, body: "$3x^{2}$", misconception: POT-DIST-UNO}
+      - {label: C, body: "$6x^{2}$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$9 + x^{2}$", misconception: POT-DIST-SUMA}
+
+  - code: M1-POT-403
+    node: NUM-POT-DIST
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $b \\neq 0$, la expresión $\\left(\\dfrac{a}{b}\\right)^{4}$ es equivalente a:"
+    options:
+      - {label: A, body: "$\\dfrac{a^{4}}{b^{4}}$", correct: true}
+      - {label: B, body: "$\\dfrac{a^{4}}{b}$", misconception: POT-DIST-NUM}
+      - {label: C, body: "$\\dfrac{a}{b^{4}}$", misconception: POT-FRA-DEN}
+      - {label: D, body: "$\\dfrac{4a}{4b}$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-404
+    node: NUM-POT-DIST
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [ALG-NOT-BIN2]
+    stem: "La expresión $\\left(x + y\\right)^{2}$ es equivalente a:"
+    options:
+      - {label: A, body: "$x^{2} + 2xy + y^{2}$", correct: true}
+      - {label: B, body: "$x^{2} + y^{2}$", misconception: POT-DIST-SUMA}
+      - {label: C, body: "$2x + 2y$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$x^{2}y^{2}$", misconception: POT-SUMA-PROD}
+
+  - code: M1-POT-405
+    node: NUM-POT-DIST
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-POT]
+    stem: "Si $x \\neq 0$, la expresión $\\left(2x^{3}\\right)^{2}$ se reduce a:"
+    options:
+      - {label: A, body: "$4x^{6}$", correct: true}
+      - {label: B, body: "$2x^{6}$", misconception: POT-DIST-UNO}
+      - {label: C, body: "$4x^{5}$", misconception: POT-POT-SUMA}
+      - {label: D, body: "$4x^{9}$", misconception: POT-POT-TORRE}
+
+  - code: M1-POT-406
+    node: NUM-POT-DIST
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$\\left(2 \\cdot 7\\right)^{3} = 2^{3} \\cdot 7^{3}$", correct: true}
+      - {label: B, body: "$\\left(2 + 7\\right)^{3} = 2^{3} + 7^{3}$", misconception: POT-DIST-SUMA}
+      - {label: C, body: "$\\left(2 \\cdot 7\\right)^{3} = 2 \\cdot 7^{3}$", misconception: POT-DIST-UNO}
+      - {label: D, body: "$\\left(\\dfrac{2}{7}\\right)^{3} = \\dfrac{2^{3}}{7}$", misconception: POT-DIST-NUM}
+
+  - code: M1-POT-407
+    node: NUM-POT-DIST
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Un cuadrado tiene lado $2a$. Su área es:"
+    options:
+      - {label: A, body: "$4a^{2}$", correct: true}
+      - {label: B, body: "$2a^{2}$", misconception: POT-DIST-UNO}
+      - {label: C, body: "$4a$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$4 + a^{2}$", misconception: POT-DIST-SUMA}
+
+  # ===== NUM-POT-FRA — curated ========================================
+
+  - code: M1-POT-411
+    node: NUM-POT-FRA
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el valor de $\\left(\\dfrac{2}{3}\\right)^{2}$?"
+    options:
+      - {label: A, body: "$\\dfrac{4}{9}$", correct: true}
+      - {label: B, body: "$\\dfrac{4}{3}$", misconception: POT-DIST-NUM}
+      - {label: C, body: "$\\dfrac{2}{9}$", misconception: POT-FRA-DEN}
+      - {label: D, body: "$\\dfrac{9}{4}$", misconception: POT-FRA-INV}
+
+  - code: M1-POT-412
+    node: NUM-POT-FRA
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El valor de $\\left(\\dfrac{2}{3}\\right)^{3}$ es:"
+    options:
+      - {label: A, body: "$\\dfrac{8}{27}$", correct: true}
+      - {label: B, body: "$\\dfrac{8}{3}$", misconception: POT-DIST-NUM}
+      - {label: C, body: "$\\dfrac{2}{27}$", misconception: POT-FRA-DEN}
+      - {label: D, body: "$\\dfrac{27}{8}$", misconception: POT-FRA-INV}
+
+  - code: M1-POT-413
+    node: NUM-POT-FRA
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Si $0 < a < 1$, entonces $a^{3}$ es:"
+    options:
+      - {label: A, body: "menor que $a$", correct: true}
+      - {label: B, body: "mayor que $a$", misconception: POT-FRA-CREC}
+      - {label: C, body: "mayor que $1$", misconception: POT-FRA-INV}
+      - {label: D, body: "igual a $3a$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-414
+    node: NUM-POT-FRA
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-SIG]
+    stem: "El valor de $\\left(-\\dfrac{1}{2}\\right)^{4}$ es:"
+    options:
+      - {label: A, body: "$\\dfrac{1}{16}$", correct: true}
+      - {label: B, body: "$-\\dfrac{1}{16}$", misconception: POT-SIG-NEG}
+      - {label: C, body: "$\\dfrac{1}{32}$", misconception: POT-CONC-FACTOR}
+      - {label: D, body: "$16$", misconception: POT-FRA-INV}
+
+  - code: M1-POT-415
+    node: NUM-POT-FRA
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-POT]
+    stem: "Si $x \\neq 0$, la expresión $\\left(\\dfrac{x^{2}}{3}\\right)^{2}$ es equivalente a:"
+    options:
+      - {label: A, body: "$\\dfrac{x^{4}}{9}$", correct: true}
+      - {label: B, body: "$\\dfrac{x^{4}}{3}$", misconception: POT-DIST-NUM}
+      - {label: C, body: "$\\dfrac{x^{2}}{9}$", misconception: POT-FRA-DEN}
+      - {label: D, body: "$\\dfrac{x^{4}}{6}$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-416
+    node: NUM-POT-FRA
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el valor de $\\left(\\dfrac{10}{2}\\right)^{2}$?"
+    options:
+      - {label: A, body: "$25$", correct: true}
+      - {label: B, body: "$\\dfrac{100}{2}$", misconception: POT-DIST-NUM}
+      - {label: C, body: "$\\dfrac{10}{4}$", misconception: POT-FRA-DEN}
+      - {label: D, body: "$\\dfrac{4}{100}$", misconception: POT-FRA-INV}
+
+  - code: M1-POT-417
+    node: NUM-POT-FRA
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es verdadera?"
+    options:
+      - {label: A, body: "$\\left(\\dfrac{1}{2}\\right)^{4} < \\dfrac{1}{2}$", correct: true}
+      - {label: B, body: "$\\left(\\dfrac{1}{2}\\right)^{4} > \\dfrac{1}{2}$", misconception: POT-FRA-CREC}
+      - {label: C, body: "$\\left(\\dfrac{1}{2}\\right)^{4} = \\dfrac{4}{8}$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$\\left(\\dfrac{1}{2}\\right)^{4} = 16$", misconception: POT-FRA-INV}
+
+  - code: M1-POT-418
+    node: NUM-POT-FRA
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál de las siguientes expresiones tiene el menor valor?"
+    options:
+      - {label: A, body: "$\\left(\\dfrac{2}{3}\\right)^{4}$", correct: true}
+      - {label: B, body: "$\\left(\\dfrac{2}{3}\\right)^{2}$", misconception: POT-FRA-CREC}
+      - {label: C, body: "$\\left(\\dfrac{3}{2}\\right)^{4}$", misconception: POT-FRA-INV}
+      - {label: D, body: "$\\dfrac{2 \\cdot 4}{3 \\cdot 4}$", misconception: POT-CONC-MULT}
+
+  # ===== generated ====================================================
+
+  - code: M1-POT-G21
+    node: NUM-POT-DIST
+    pool: generated
+    difficulty: 2
+    source: plantilla-dist-producto
+    stem: "La expresión $\\left(5x\\right)^{2}$ es equivalente a:"
+    options:
+      - {label: A, body: "$25x^{2}$", correct: true}
+      - {label: B, body: "$5x^{2}$", misconception: POT-DIST-UNO}
+      - {label: C, body: "$10x^{2}$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$25 + x^{2}$", misconception: POT-DIST-SUMA}
+
+  - code: M1-POT-G22
+    node: NUM-POT-DIST
+    pool: generated
+    difficulty: 2
+    source: plantilla-dist-cociente
+    stem: "Si $b \\neq 0$, la expresión $\\left(\\dfrac{a}{b}\\right)^{3}$ es equivalente a:"
+    options:
+      - {label: A, body: "$\\dfrac{a^{3}}{b^{3}}$", correct: true}
+      - {label: B, body: "$\\dfrac{a^{3}}{b}$", misconception: POT-DIST-NUM}
+      - {label: C, body: "$\\dfrac{a}{b^{3}}$", misconception: POT-FRA-DEN}
+      - {label: D, body: "$\\dfrac{3a}{3b}$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-G23
+    node: NUM-POT-FRA
+    pool: generated
+    difficulty: 1
+    source: plantilla-fra-valor
+    stem: "¿Cuál es el valor de $\\left(\\dfrac{3}{4}\\right)^{2}$?"
+    options:
+      - {label: A, body: "$\\dfrac{9}{16}$", correct: true}
+      - {label: B, body: "$\\dfrac{9}{4}$", misconception: POT-DIST-NUM}
+      - {label: C, body: "$\\dfrac{3}{16}$", misconception: POT-FRA-DEN}
+      - {label: D, body: "$\\dfrac{16}{9}$", misconception: POT-FRA-INV}
+
+  - code: M1-POT-G24
+    node: NUM-POT-FRA
+    pool: generated
+    difficulty: 2
+    source: plantilla-fra-valor
+    stem: "El valor de $\\left(\\dfrac{2}{5}\\right)^{3}$ es:"
+    options:
+      - {label: A, body: "$\\dfrac{8}{125}$", correct: true}
+      - {label: B, body: "$\\dfrac{6}{15}$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$\\dfrac{125}{8}$", misconception: POT-FRA-INV}
+      - {label: D, body: "$\\dfrac{2}{125}$", misconception: POT-FRA-DEN}
+
+
+# ---------------------------------------------------------------------
+# REMEDIATIONS
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-POT-DIST-UNO
+    misconception: POT-DIST-UNO
+    title: El exponente afecta a todo lo que está dentro del paréntesis
+    body: |
+      En $\left(3x\right)^{2}$ elevaste solo la $x$ y dejaste el $3$ como
+      estaba. El paréntesis dice que **todo lo de adentro** se repite, y
+      adentro hay dos factores.
+
+      $$\left(3x\right)^{2} = \left(3x\right)\left(3x\right) = 3 \cdot 3 \cdot x \cdot x = 9x^{2}$$
+
+      Hay dos treses y dos equis. Los dos factores se elevan:
+
+      $$\left(a \cdot b\right)^{n} = a^{n} \cdot b^{n}$$
+
+      Compruébalo con un número. Si $x = 2$, entonces $3x = 6$ y
+      $6^{2} = 36$. Tu respuesta, $3x^{2}$, daría $3 \cdot 4 = 12$. La
+      correcta, $9x^{2}$, da $9 \cdot 4 = 36$.
+
+      El control de lectura: mira qué queda encerrado por el paréntesis.
+      Si el $3$ está adentro, se eleva. En $3x^{2}$, sin paréntesis, el
+      exponente toca solo a la $x$ y ahí sí el $3$ se queda quieto.
+
+      Son expresiones distintas: $\left(3x\right)^{2} = 9x^{2}$ y
+      $3x^{2} = 3x^{2}$.
+    items: [M1-POT-402, M1-POT-407]
+
+  - code: REM-POT-DIST-SUMA
+    misconception: POT-DIST-SUMA
+    title: El exponente se reparte sobre productos, nunca sobre sumas
+    body: |
+      Escribiste $\left(x + y\right)^{2} = x^{2} + y^{2}$. Es el error más
+      persistente de todo el temario y conviene matarlo con números.
+
+      Toma $x = 3$ e $y = 4$:
+
+      $$\left(3 + 4\right)^{2} = 7^{2} = 49 \qquad 3^{2} + 4^{2} = 9 + 16 = 25$$
+
+      $49$ y $25$. No se parecen.
+
+      La razón es que el paréntesis hace que se repita **la suma completa**:
+
+      $$\left(x + y\right)^{2} = \left(x + y\right)\left(x + y\right) = x^{2} + 2xy + y^{2}$$
+
+      Ese $2xy$ del medio es justo lo que se pierde al repartir. Con
+      $x = 3$ e $y = 4$ vale $24$, y $25 + 24 = 49$. Ahí calza.
+
+      La regla que estás usando existe, pero es del producto:
+
+      $$\left(a \cdot b\right)^{n} = a^{n} \cdot b^{n} \qquad \text{pero} \qquad \left(a + b\right)^{n} \neq a^{n} + b^{n}$$
+
+      Antes de repartir un exponente, mira el signo de adentro. Si es
+      $\cdot$ o $:$, se reparte. Si es $+$ o $-$, no.
+    items: [M1-POT-404, M1-POT-406]
+
+  - code: REM-POT-DIST-NUM
+    misconception: POT-DIST-NUM
+    title: En una fracción se elevan los dos, arriba y abajo
+    body: |
+      Para $\left(\dfrac{2}{3}\right)^{2}$ elevaste el $2$ y dejaste el $3$
+      intacto. La fracción entera está dentro del paréntesis, así que la
+      fracción entera se repite.
+
+      $$\left(\dfrac{2}{3}\right)^{2} = \dfrac{2}{3} \cdot \dfrac{2}{3} = \dfrac{2 \cdot 2}{3 \cdot 3} = \dfrac{4}{9}$$
+
+      Al multiplicar fracciones se multiplica arriba con arriba y abajo con
+      abajo. Por eso los dos terminan elevados:
+
+      $$\left(\dfrac{a}{b}\right)^{n} = \dfrac{a^{n}}{b^{n}}$$
+
+      Hay un control de tamaño que delata este error al tiro.
+      $\dfrac{2}{3}$ es menor que $1$. Al multiplicarlo por sí mismo tiene
+      que salir algo **más chico** todavía. Tu respuesta, $\dfrac{4}{3}$,
+      es mayor que $1$: imposible.
+
+      La respuesta correcta, $\dfrac{4}{9}$, sí es menor que $\dfrac{2}{3}$.
+    items: [M1-POT-403, M1-POT-411]
+
+  - code: REM-POT-FRA-DEN
+    misconception: POT-FRA-DEN
+    title: El numerador también se eleva
+    body: |
+      Para $\left(\dfrac{2}{3}\right)^{2}$ elevaste el $3$ de abajo y
+      dejaste el $2$ de arriba. Es el error espejo de elevar solo el
+      numerador, y sale del mismo lugar: el paréntesis encierra la
+      fracción completa.
+
+      $$\left(\dfrac{2}{3}\right)^{2} = \dfrac{2}{3} \cdot \dfrac{2}{3} = \dfrac{4}{9}$$
+
+      Arriba con arriba, abajo con abajo:
+
+      $$\left(\dfrac{a}{b}\right)^{n} = \dfrac{a^{n}}{b^{n}}$$
+
+      Ojo con una trampa. Cuando el numerador es $1$, este error da la
+      respuesta correcta:
+
+      $$\left(\dfrac{1}{2}\right)^{3} = \dfrac{1}{8}$$
+
+      Elevando solo el denominador sale $\dfrac{1}{8}$ también, porque
+      $1^{3} = 1$. Por eso conviene probarte siempre con un numerador
+      distinto de $1$: ahí se nota.
+    items: [M1-POT-411, M1-POT-415]
+
+  - code: REM-POT-FRA-INV
+    misconception: POT-FRA-INV
+    title: Elevar no da vuelta la fracción
+    body: |
+      Para $\left(\dfrac{2}{3}\right)^{2}$ respondiste $\dfrac{9}{4}$:
+      diste vuelta la fracción y después elevaste. Elevar no invierte
+      nada. Lo que invierte es el exponente negativo, que todavía no ves.
+
+      $$\left(\dfrac{2}{3}\right)^{2} = \dfrac{2}{3} \cdot \dfrac{2}{3} = \dfrac{4}{9}$$
+
+      El $2$ sigue arriba y el $3$ sigue abajo. Lo único que cambia es que
+      ahora cada uno está elevado.
+
+      El control de tamaño lo resuelve solo. $\dfrac{2}{3}$ es menor que
+      $1$, y multiplicar dos números menores que $1$ da algo todavía más
+      chico. $\dfrac{9}{4}$ es mayor que $2$: fue en la dirección
+      contraria.
+
+      Antes de responder, pregúntate si la base es mayor o menor que $1$.
+      Si es menor, el resultado tiene que achicarse.
+    items: [M1-POT-411, M1-POT-416]
+
+  - code: REM-POT-FRA-CREC
+    misconception: POT-FRA-CREC
+    title: Con base entre 0 y 1, elevar achica
+    body: |
+      Estás trayendo una idea que aprendiste con enteros: como $2^{3} = 8$
+      es mayor que $2$, parece que elevar siempre agranda. Con fracciones
+      menores que $1$ pasa lo contrario.
+
+      Míralo paso a paso:
+
+      $$\dfrac{1}{2} \qquad \left(\dfrac{1}{2}\right)^{2} = \dfrac{1}{4} \qquad \left(\dfrac{1}{2}\right)^{3} = \dfrac{1}{8} \qquad \left(\dfrac{1}{2}\right)^{4} = \dfrac{1}{16}$$
+
+      Cada paso lo deja en la mitad. Mientras más grande el exponente, más
+      chico el resultado.
+
+      La razón es simple: elevar es multiplicar por la base una y otra
+      vez. Si multiplicas por algo mayor que $1$, creces. Si multiplicas
+      por algo menor que $1$, achicas. Y $\dfrac{1}{2}$ es menor que $1$.
+
+      $$2 \cdot 2 = 4 \quad \text{(crece)} \qquad \dfrac{1}{2} \cdot \dfrac{1}{2} = \dfrac{1}{4} \quad \text{(achica)}$$
+
+      La regla completa, que te sirve para ordenar de mayor a menor sin
+      calcular nada:
+
+      - Base **mayor que 1**: a mayor exponente, mayor resultado.
+      - Base **entre 0 y 1**: a mayor exponente, **menor** resultado.
+    items: [M1-POT-413, M1-POT-417, M1-POT-418]
+
+
+# ---------------------------------------------------------------------
+# LESSON BODY
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Hasta ahora las potencias que viste tenían un solo número como base.
+  Acá la base es una expresión completa: un producto, un cociente, una
+  fracción. La idea de fondo no cambia — el paréntesis dice qué se
+  repite — pero hay una trampa que cuesta cara y conviene mirarla de
+  frente.
+
+  ## Producto y cociente dentro del paréntesis
+
+  Cuando dentro del paréntesis hay una multiplicación, el exponente
+  alcanza a **todos** los factores:
+
+  $$\left(2 \cdot 3\right)^{2} = \left(2 \cdot 3\right)\left(2 \cdot 3\right) = 2 \cdot 2 \cdot 3 \cdot 3 = 2^{2} \cdot 3^{2}$$
+
+  Hay dos doses y dos treses. De ahí sale la regla:
+
+  $$\left(a \cdot b\right)^{n} = a^{n} \cdot b^{n}$$
+
+  Con el cociente pasa exactamente lo mismo:
+
+  $$\left(\dfrac{a}{b}\right)^{n} = \dfrac{a^{n}}{b^{n}}$$
+
+  **Todos los factores, no uno.** El error más común acá es elevar la
+  letra y dejar el número quieto:
+
+  $$\left(3x\right)^{2} = 9x^{2} \qquad \text{no } 3x^{2}$$
+
+  El $3$ está dentro del paréntesis, así que también se repite. Fíjate en
+  la diferencia con $3x^{2}$, donde no hay paréntesis y el exponente toca
+  solo a la $x$. Son expresiones distintas.
+
+  ### La trampa: esto no funciona con sumas
+
+  $$\left(a + b\right)^{n} \neq a^{n} + b^{n}$$
+
+  Este es el error que más lejos llega de todo el temario: aparece acá y
+  sigue apareciendo en álgebra, en cuadráticas y en funciones. Mátalo con
+  números y no vuelve.
+
+  $$\left(3 + 4\right)^{2} = 7^{2} = 49 \qquad 3^{2} + 4^{2} = 9 + 16 = 25$$
+
+  Cuarenta y nueve contra veinticinco. La regla de repartir vale para
+  producto y cociente, y para nada más.
+
+  Si desarrollas la suma se ve qué se perdió:
+
+  $$\left(x + y\right)^{2} = \left(x + y\right)\left(x + y\right) = x^{2} + 2xy + y^{2}$$
+
+  Ese $2xy$ del medio es lo que desaparece al repartir mal.
+
+  **Control de lectura:** antes de repartir un exponente, mira el signo
+  que hay dentro del paréntesis. Si es $\cdot$ o $:$, se reparte. Si es
+  $+$ o $-$, no se reparte.
+
+  ## Base fraccionaria
+
+  Una fracción es una base como cualquier otra. Lo único que hay que
+  recordar es que **arriba y abajo se elevan los dos**:
+
+  $$\left(\dfrac{2}{3}\right)^{2} = \dfrac{2}{3} \cdot \dfrac{2}{3} = \dfrac{4}{9}$$
+
+  Sale de cómo se multiplican fracciones: numerador con numerador,
+  denominador con denominador.
+
+  $$\left(\dfrac{a}{b}\right)^{n} = \dfrac{a^{n}}{b^{n}} \qquad b \neq 0$$
+
+  Elevar solo el de arriba o solo el de abajo son los dos errores del
+  nodo, y los dos se detectan con el mismo control, que viene ahora.
+
+  ### Elevar una fracción menor que 1 la achica
+
+  Con enteros, elevar agranda: $2^{3} = 8$. Con fracciones entre $0$ y
+  $1$, pasa lo contrario:
+
+  $$\dfrac{1}{2} \qquad \left(\dfrac{1}{2}\right)^{2} = \dfrac{1}{4} \qquad \left(\dfrac{1}{2}\right)^{3} = \dfrac{1}{8}$$
+
+  Tiene sentido: elevar es multiplicar por la base varias veces, y
+  multiplicar por algo menor que $1$ siempre achica.
+
+  Esto te sirve como control de tamaño en cualquier ítem:
+
+  - Base **mayor que 1**: a mayor exponente, mayor resultado.
+  - Base **entre 0 y 1**: a mayor exponente, **menor** resultado.
+
+  Si calculas $\left(\dfrac{2}{3}\right)^{2}$ y te da algo mayor que $1$,
+  te equivocaste sin necesidad de revisar la cuenta.
+
+  ## Lo que hay que llevarse
+
+  1. El exponente alcanza a todo lo que está dentro del paréntesis.
+  2. Se reparte sobre productos y cocientes. Nunca sobre sumas ni restas.
+  3. En una fracción se elevan numerador y denominador.
+  4. Si la base está entre $0$ y $1$, el resultado se achica. Úsalo para
+     descartar alternativas antes de calcular.

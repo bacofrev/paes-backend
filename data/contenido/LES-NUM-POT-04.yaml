@@ -1,0 +1,528 @@
+# =====================================================================
+# LES-NUM-POT-04 — Exponente negativo y notación científica
+# Cubre NUM-POT-NEG, NUM-POT-CIENT
+# =====================================================================
+# NEG cuelga de CERO y es prerrequisito de RAC y de CIENT. CIENT además
+# depende de PROD, así que los dos prerrequisitos están cubiertos.
+# Se enseñan juntas porque la notación científica es exponente negativo
+# aplicado: el error de signo que aparece en NEG reaparece intacto acá.
+# ---------------------------------------------------------------------
+# Las misconceptions viven en contenido/misconceptions/NUM-POT.yaml.
+# Acá solo se referencian por código.
+# ---------------------------------------------------------------------
+
+unit: NUM-POT
+
+lesson:
+  code: LES-NUM-POT-04
+  title: Exponente negativo y notación científica
+  position: 4
+  nodes:
+    - node: NUM-POT-NEG
+      anchor: exponente-negativo
+    - node: NUM-POT-CIENT
+      anchor: notacion-cientifica
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== NUM-POT-NEG — curated ========================================
+
+  - code: M1-POT-501
+    node: NUM-POT-NEG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el valor de $2^{-3}$?"
+    options:
+      - {label: A, body: "$\\dfrac{1}{8}$", correct: true}
+      - {label: B, body: "$-8$", misconception: POT-NEG-SIGNO}
+      - {label: C, body: "$\\dfrac{1}{6}$", misconception: POT-NEG-INVMULT}
+      - {label: D, body: "$-6$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-502
+    node: NUM-POT-NEG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "La expresión $\\left(\\dfrac{7}{3}\\right)^{-1}$ es equivalente a:"
+    options:
+      - {label: A, body: "$\\dfrac{3}{7}$", correct: true}
+      - {label: B, body: "$\\left(\\dfrac{3}{7}\\right)^{-1}$", misconception: POT-NEG-MANTIENE}
+      - {label: C, body: "$-\\dfrac{7}{3}$", misconception: POT-NEG-SIGNO}
+      - {label: D, body: "$\\sqrt{\\dfrac{7}{3}}$", misconception: POT-NEG-RAIZ}
+
+  - code: M1-POT-503
+    node: NUM-POT-NEG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $x \\neq 0$, la expresión $x^{-4}$ es igual a:"
+    options:
+      - {label: A, body: "$\\dfrac{1}{x^{4}}$", correct: true}
+      - {label: B, body: "$-x^{4}$", misconception: POT-NEG-SIGNO}
+      - {label: C, body: "$\\sqrt[4]{x}$", misconception: POT-NEG-RAIZ}
+      - {label: D, body: "$\\dfrac{1}{4x}$", misconception: POT-NEG-INVMULT}
+
+  - code: M1-POT-504
+    node: NUM-POT-NEG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "La expresión $\\left(\\dfrac{2}{5}\\right)^{-2}$ es equivalente a:"
+    options:
+      - {label: A, body: "$\\dfrac{25}{4}$", correct: true}
+      - {label: B, body: "$\\left(\\dfrac{5}{2}\\right)^{-2}$", misconception: POT-NEG-MANTIENE}
+      - {label: C, body: "$-\\dfrac{4}{25}$", misconception: POT-NEG-SIGNO}
+      - {label: D, body: "$\\sqrt{\\dfrac{2}{5}}$", misconception: POT-NEG-RAIZ}
+
+  - code: M1-POT-505
+    node: NUM-POT-NEG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$3^{-2} = \\dfrac{1}{9}$", correct: true}
+      - {label: B, body: "$3^{-2} = -9$", misconception: POT-NEG-SIGNO}
+      - {label: C, body: "$3^{0} = \\dfrac{1}{3}$", misconception: POT-CERO-INV}
+      - {label: D, body: "$3^{-2} = \\sqrt{3}$", misconception: POT-NEG-RAIZ}
+
+  - code: M1-POT-506
+    node: NUM-POT-NEG
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-PROD]
+    stem: "Si $a \\neq 0$, la expresión $\\dfrac{a^{3}}{a^{7}}$ se reduce a:"
+    options:
+      - {label: A, body: "$\\dfrac{1}{a^{4}}$", correct: true}
+      - {label: B, body: "$a^{4}$", misconception: POT-COC-ORDEN}
+      - {label: C, body: "$-a^{4}$", misconception: POT-NEG-SIGNO}
+      - {label: D, body: "$a^{10}$", misconception: POT-COC-SUMA}
+
+  - code: M1-POT-507
+    node: NUM-POT-NEG
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-DIST]
+    stem: "Si $a \\neq 0$ y $b \\neq 0$, la expresión $\\left(\\dfrac{a}{b}\\right)^{-3}$ es equivalente a:"
+    options:
+      - {label: A, body: "$\\dfrac{b^{3}}{a^{3}}$", correct: true}
+      - {label: B, body: "$\\left(\\dfrac{b}{a}\\right)^{-3}$", misconception: POT-NEG-MANTIENE}
+      - {label: C, body: "$-\\dfrac{a^{3}}{b^{3}}$", misconception: POT-NEG-SIGNO}
+      - {label: D, body: "$\\dfrac{b^{3}}{a}$", misconception: POT-DIST-NUM}
+
+  - code: M1-POT-508
+    node: NUM-POT-NEG
+    pool: curated
+    difficulty: 2
+    source: propio
+    secondary: [NUM-POT-CIENT]
+    stem: "El grosor de una lámina metálica es $10^{-4}$ metros. Escrito en forma decimal, ese grosor es:"
+    options:
+      - {label: A, body: "$0{,}0001$", correct: true}
+      - {label: B, body: "$-10\\,000$", misconception: POT-NEG-SIGNO}
+      - {label: C, body: "$0{,}00001$", misconception: POT-CIENT-LUGAR}
+      - {label: D, body: "$\\dfrac{1}{40}$", misconception: POT-NEG-INVMULT}
+
+  # ===== NUM-POT-NEG — generated ======================================
+
+  - code: M1-POT-G08
+    node: NUM-POT-NEG
+    pool: generated
+    difficulty: 1
+    source: generado
+    stem: "¿Cuál es el valor de $4^{-2}$?"
+    options:
+      - {label: A, body: "$\\dfrac{1}{16}$", correct: true}
+      - {label: B, body: "$-16$", misconception: POT-NEG-SIGNO}
+      - {label: C, body: "$\\dfrac{1}{8}$", misconception: POT-NEG-INVMULT}
+      - {label: D, body: "$\\sqrt{4}$", misconception: POT-NEG-RAIZ}
+
+  - code: M1-POT-G09
+    node: NUM-POT-NEG
+    pool: generated
+    difficulty: 2
+    source: generado
+    stem: "La expresión $\\left(\\dfrac{5}{9}\\right)^{-1}$ es equivalente a:"
+    options:
+      - {label: A, body: "$\\dfrac{9}{5}$", correct: true}
+      - {label: B, body: "$\\left(\\dfrac{9}{5}\\right)^{-1}$", misconception: POT-NEG-MANTIENE}
+      - {label: C, body: "$-\\dfrac{5}{9}$", misconception: POT-NEG-SIGNO}
+      - {label: D, body: "$\\dfrac{1}{45}$", misconception: POT-NEG-INVMULT}
+
+  # ===== NUM-POT-CIENT — curated ======================================
+
+  - code: M1-POT-601
+    node: NUM-POT-CIENT
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "El número $3{,}4 \\cdot 10^{3}$ escrito en forma decimal es:"
+    options:
+      - {label: A, body: "$3\\,400$", correct: true}
+      - {label: B, body: "$0{,}0034$", misconception: POT-CIENT-DIR}
+      - {label: C, body: "$34\\,000$", misconception: POT-CIENT-LUGAR}
+      - {label: D, body: "$10{,}2$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-602
+    node: NUM-POT-CIENT
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El número $0{,}00052$ escrito en notación científica es:"
+    options:
+      - {label: A, body: "$5{,}2 \\cdot 10^{-4}$", correct: true}
+      - {label: B, body: "$5{,}2 \\cdot 10^{4}$", misconception: POT-CIENT-DIR}
+      - {label: C, body: "$5{,}2 \\cdot 10^{-3}$", misconception: POT-CIENT-LUGAR}
+      - {label: D, body: "$52 \\cdot 10^{-5}$", misconception: POT-CIENT-MANT}
+
+  - code: M1-POT-603
+    node: NUM-POT-CIENT
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El número $86\\,000$ escrito en notación científica es:"
+    options:
+      - {label: A, body: "$8{,}6 \\cdot 10^{4}$", correct: true}
+      - {label: B, body: "$86 \\cdot 10^{3}$", misconception: POT-CIENT-MANT}
+      - {label: C, body: "$8{,}6 \\cdot 10^{3}$", misconception: POT-CIENT-LUGAR}
+      - {label: D, body: "$8{,}6 \\cdot 10^{-4}$", misconception: POT-CIENT-DIR}
+
+  - code: M1-POT-604
+    node: NUM-POT-CIENT
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-PROD]
+    stem: "El valor de $\\left(2 \\cdot 10^{3}\\right) \\cdot \\left(4 \\cdot 10^{2}\\right)$ es:"
+    options:
+      - {label: A, body: "$8 \\cdot 10^{5}$", correct: true}
+      - {label: B, body: "$8 \\cdot 10^{6}$", misconception: POT-PROD-MULT}
+      - {label: C, body: "$8 \\cdot 10^{1}$", misconception: POT-PROD-RESTA}
+      - {label: D, body: "$80 \\cdot 10^{5}$", misconception: POT-CIENT-MANT}
+
+  - code: M1-POT-605
+    node: NUM-POT-CIENT
+    pool: curated
+    difficulty: 3
+    source: propio
+    secondary: [NUM-POT-PROD]
+    stem: "El valor de $\\dfrac{6 \\cdot 10^{8}}{3 \\cdot 10^{5}}$ es:"
+    options:
+      - {label: A, body: "$2 \\cdot 10^{3}$", correct: true}
+      - {label: B, body: "$2 \\cdot 10^{13}$", misconception: POT-COC-SUMA}
+      - {label: C, body: "$2 \\cdot 10^{-3}$", misconception: POT-COC-ORDEN}
+      - {label: D, body: "$0{,}2 \\cdot 10^{4}$", misconception: POT-CIENT-MANT}
+
+  - code: M1-POT-606
+    node: NUM-POT-CIENT
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál es la escritura correcta de $0{,}045$ en notación científica?"
+    options:
+      - {label: A, body: "$4{,}5 \\cdot 10^{-2}$", correct: true}
+      - {label: B, body: "$4{,}5 \\cdot 10^{2}$", misconception: POT-CIENT-DIR}
+      - {label: C, body: "$4{,}5 \\cdot 10^{-3}$", misconception: POT-CIENT-LUGAR}
+      - {label: D, body: "$45 \\cdot 10^{-3}$", misconception: POT-CIENT-MANT}
+
+  - code: M1-POT-607
+    node: NUM-POT-CIENT
+    pool: curated
+    difficulty: 2
+    source: propio
+    secondary: [NUM-POT-NEG]
+    stem: "La masa de un grano de arena es aproximadamente $6{,}5 \\cdot 10^{-5}$ kilogramos. Esa masa, escrita en forma decimal, es:"
+    options:
+      - {label: A, body: "$0{,}000065$", correct: true}
+      - {label: B, body: "$650\\,000$", misconception: POT-CIENT-DIR}
+      - {label: C, body: "$0{,}00065$", misconception: POT-CIENT-LUGAR}
+      - {label: D, body: "$-650\\,000$", misconception: POT-NEG-SIGNO}
+
+  - code: M1-POT-608
+    node: NUM-POT-CIENT
+    pool: curated
+    difficulty: 2
+    source: propio
+    secondary: [NUM-POT-NEG]
+    stem: "El número $1{,}2 \\cdot 10^{-1}$ es igual a:"
+    options:
+      - {label: A, body: "$0{,}12$", correct: true}
+      - {label: B, body: "$12$", misconception: POT-CIENT-DIR}
+      - {label: C, body: "$0{,}012$", misconception: POT-CIENT-LUGAR}
+      - {label: D, body: "$-12$", misconception: POT-NEG-SIGNO}
+
+  # ===== NUM-POT-CIENT — generated ====================================
+
+  - code: M1-POT-G10
+    node: NUM-POT-CIENT
+    pool: generated
+    difficulty: 1
+    source: generado
+    stem: "El número $7{,}1 \\cdot 10^{2}$ escrito en forma decimal es:"
+    options:
+      - {label: A, body: "$710$", correct: true}
+      - {label: B, body: "$0{,}071$", misconception: POT-CIENT-DIR}
+      - {label: C, body: "$7\\,100$", misconception: POT-CIENT-LUGAR}
+      - {label: D, body: "$14{,}2$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-G15
+    node: NUM-POT-CIENT
+    pool: generated
+    difficulty: 2
+    source: generado
+    stem: "El número $0{,}0091$ escrito en notación científica es:"
+    options:
+      - {label: A, body: "$9{,}1 \\cdot 10^{-3}$", correct: true}
+      - {label: B, body: "$9{,}1 \\cdot 10^{3}$", misconception: POT-CIENT-DIR}
+      - {label: C, body: "$9{,}1 \\cdot 10^{-2}$", misconception: POT-CIENT-LUGAR}
+      - {label: D, body: "$91 \\cdot 10^{-4}$", misconception: POT-CIENT-MANT}
+
+
+# ---------------------------------------------------------------------
+# REMEDIATIONS
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-POT-NEG-SIGNO
+    misconception: POT-NEG-SIGNO
+    title: El signo del exponente no es el signo del resultado
+    body: |
+      Pasaste el signo del exponente al resultado. El exponente negativo no
+      dice **negativo**: dice **invertido**.
+
+      $$a^{-n} = \frac{1}{a^{n}}$$
+
+      $$2^{-3} = \frac{1}{2^{3}} = \frac{1}{8}$$
+
+      De dónde sale: al dividir potencias los exponentes se restan, y nada
+      impide que la resta dé negativo.
+
+      $$\frac{2^{2}}{2^{5}} = 2^{-3}$$
+
+      Pero mira el mismo cociente cancelando factores:
+
+      $$\frac{2 \cdot 2}{2 \cdot 2 \cdot 2 \cdot 2 \cdot 2} = \frac{1}{2^{3}} = \frac{1}{8}$$
+
+      Es un número positivo y menor que 1. Nunca negativo. De hecho, si la
+      base es positiva, **ninguna** potencia suya puede dar negativo, tenga
+      el exponente que tenga.
+    items: [M1-POT-501, M1-POT-505, M1-POT-506]
+
+  - code: REM-POT-NEG-INVMULT
+    misconception: POT-NEG-INVMULT
+    title: Después de invertir hay que elevar, no multiplicar
+    body: |
+      Diste vuelta la base, que era el paso correcto, y después operaste la
+      base con el exponente en vez de elevarla.
+
+      $$2^{-3} = \frac{1}{2^{3}}$$
+
+      El $3$ de abajo es un **exponente**, no un factor. Entonces:
+
+      $$\frac{1}{2^{3}} = \frac{1}{2 \cdot 2 \cdot 2} = \frac{1}{8}$$
+
+      No $\dfrac{1}{2 \cdot 3} = \dfrac{1}{6}$.
+
+      La regla del exponente negativo cambia dónde va la potencia, no qué
+      significa la potencia. Sigue contando factores.
+    items: [M1-POT-501, M1-POT-503, M1-POT-508]
+
+  - code: REM-POT-NEG-RAIZ
+    misconception: POT-NEG-RAIZ
+    title: El exponente negativo invierte, el fraccionario saca raíz
+    body: |
+      Leíste el exponente negativo como si fuera una raíz. Son dos reglas
+      distintas y conviene separarlas de entrada, porque después se usan
+      juntas.
+
+      El signo del exponente decide **arriba o abajo**:
+
+      $$2^{-3} = \frac{1}{2^{3}} = \frac{1}{8}$$
+
+      El denominador del exponente decide **qué raíz**:
+
+      $$2^{\frac{1}{3}} = \sqrt[3]{2}$$
+
+      Fíjate en la diferencia de tamaño: $\dfrac{1}{8}$ es menor que 1, y
+      $\sqrt[3]{2}$ está entre 1 y 2. Si tu respuesta cae en el rango
+      equivocado, ahí está el error.
+    items: [M1-POT-502, M1-POT-503, M1-POT-505]
+
+  - code: REM-POT-NEG-MANTIENE
+    misconception: POT-NEG-MANTIENE
+    title: Invertir y cambiar el signo son el mismo paso
+    body: |
+      Diste vuelta la fracción pero dejaste el exponente negativo. El
+      resultado es una expresión equivalente a la que tenías: no avanzaste.
+
+      $$\left(\frac{2}{5}\right)^{-2} = \left(\frac{5}{2}\right)^{2} = \frac{25}{4}$$
+
+      Invertir la base **es** lo que hace el signo negativo. Una vez que
+      inviertes, el signo ya se usó y el exponente queda positivo. Si lo
+      dejas negativo, estás aplicando la regla dos veces y vuelves al punto
+      de partida:
+
+      $$\left(\frac{5}{2}\right)^{-2} = \left(\frac{2}{5}\right)^{2}$$
+
+      Revisión rápida: si tu respuesta todavía tiene un exponente negativo,
+      te falta un paso.
+    items: [M1-POT-502, M1-POT-504, M1-POT-507]
+
+  - code: REM-POT-CIENT-DIR
+    misconception: POT-CIENT-DIR
+    title: Exponente positivo agranda, negativo achica
+    body: |
+      Moviste la coma para el lado contrario. La dirección la manda el
+      signo del exponente, y no hay excepciones:
+
+      $$3{,}4 \cdot 10^{3} = 3\,400 \qquad \text{(exponente positivo, número grande)}$$
+
+      $$3{,}4 \cdot 10^{-3} = 0{,}0034 \qquad \text{(exponente negativo, número chico)}$$
+
+      La razón es la misma de siempre: $10^{-3} = \dfrac{1}{1000}$, y
+      multiplicar por $\dfrac{1}{1000}$ achica.
+
+      Antes de escribir la respuesta, pregúntate si el número que te quedó
+      debería ser más grande o más chico que la mantisa. Con eso descartas
+      la mitad de las alternativas.
+    items: [M1-POT-601, M1-POT-602, M1-POT-607]
+
+  - code: REM-POT-CIENT-MANT
+    misconception: POT-CIENT-MANT
+    title: La mantisa va entre 1 y 10
+    body: |
+      El valor que escribiste es correcto, pero la forma no es notación
+      científica. La notación exige **un solo dígito distinto de cero antes
+      de la coma**:
+
+      $$1 \le \text{mantisa} < 10$$
+
+      Por eso $86\,000$ se escribe así:
+
+      $$8{,}6 \cdot 10^{4}$$
+
+      y no $86 \cdot 10^{3}$, aunque las dos den el mismo número. La regla
+      existe para que cada número tenga una sola escritura y se puedan
+      comparar de un vistazo.
+
+      Si tu mantisa quedó con dos dígitos antes de la coma, córrela un
+      lugar y súbele uno al exponente. Si quedó menor que 1, al revés.
+    items: [M1-POT-602, M1-POT-603, M1-POT-606]
+
+  - code: REM-POT-CIENT-LUGAR
+    misconception: POT-CIENT-LUGAR
+    title: Cuenta lugares, no ceros
+    body: |
+      Contaste los ceros del número. El exponente cuenta **cuántos lugares
+      se mueve la coma**, que no es lo mismo apenas hay dígitos distintos de
+      cero después del primero.
+
+      En $0{,}00034$ hay cuatro ceros después de la coma, pero la coma se
+      mueve cuatro lugares para llegar entre el $3$ y el $4$:
+
+      $$0{,}00034 = 3{,}4 \cdot 10^{-4}$$
+
+      La forma segura de contarlo: pon la coma justo después del primer
+      dígito distinto de cero y cuenta los saltos desde donde estaba.
+
+      Comprobación: multiplica de vuelta. Si $3{,}4 \cdot 10^{-4}$ no te
+      devuelve el número original, contaste mal.
+    items: [M1-POT-602, M1-POT-603, M1-POT-608]
+
+
+# ---------------------------------------------------------------------
+# LESSON BODY
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Esta clase junta dos cosas que en la prueba aparecen separadas pero que
+  son la misma regla: el exponente negativo, y la forma de escribir
+  números muy grandes o muy chicos usando potencias de diez.
+
+  ## Exponente negativo
+
+  Ya sabes que al dividir potencias de igual base los exponentes se
+  restan. Nada impide que esa resta dé un número negativo:
+
+  $$\frac{2^{2}}{2^{5}} = 2^{2-5} = 2^{-3}$$
+
+  Y también sabes resolver ese cociente cancelando factores:
+
+  $$\frac{2 \cdot 2}{2 \cdot 2 \cdot 2 \cdot 2 \cdot 2} = \frac{1}{2^{3}} = \frac{1}{8}$$
+
+  Los dos caminos tienen que dar lo mismo, así que:
+
+  $$2^{-3} = \frac{1}{2^{3}} = \frac{1}{8}$$
+
+  De ahí sale la regla, y no hay que memorizarla suelta:
+
+  $$a^{-n} = \frac{1}{a^{n}} \qquad (a \neq 0)$$
+
+  **El signo negativo del exponente no hace negativo el resultado.** Dice
+  dónde va la potencia: abajo en vez de arriba. Si la base es positiva, el
+  resultado es positivo siempre, tenga el exponente el signo que tenga.
+
+  Con base fraccionaria la regla se ve más corta: el exponente negativo da
+  vuelta la fracción.
+
+  $$\left(\frac{2}{5}\right)^{-2} = \left(\frac{5}{2}\right)^{2} = \frac{25}{4}$$
+
+  Y ojo con esto: invertir la fracción **es** lo que hace el signo. Una vez
+  que inviertes, el exponente queda positivo. Si tu respuesta todavía tiene
+  el exponente negativo, te falta un paso.
+
+  Esto cierra la escalera de exponentes que venías construyendo:
+
+  $$2^{3} = 8 \qquad 2^{2} = 4 \qquad 2^{1} = 2 \qquad 2^{0} = 1 \qquad 2^{-1} = \frac{1}{2} \qquad 2^{-2} = \frac{1}{4}$$
+
+  Cada paso hacia la izquierda multiplica por 2, cada paso hacia la derecha
+  divide por 2. El exponente cero y los negativos son la continuación
+  natural de esa tabla, no reglas aparte.
+
+  ## Notación científica
+
+  Escribir $0{,}000000000934$ es incómodo y se presta para errores de
+  conteo. La notación científica escribe cualquier número como una mantisa
+  multiplicada por una potencia de diez:
+
+  $$m \cdot 10^{n} \qquad \text{con } 1 \le m < 10$$
+
+  Esa condición sobre la mantisa es parte de la definición, no un detalle
+  de estilo: obliga a que haya **un solo dígito distinto de cero antes de
+  la coma**. Por eso $86\,000$ se escribe $8{,}6 \cdot 10^{4}$, y no
+  $86 \cdot 10^{3}$, aunque los dos valgan lo mismo.
+
+  El exponente dice cuántos lugares se mueve la coma, y su signo dice para
+  qué lado:
+
+  $$8{,}6 \cdot 10^{4} = 86\,000 \qquad \text{positivo, número grande}$$
+
+  $$5{,}2 \cdot 10^{-4} = 0{,}00052 \qquad \text{negativo, número chico}$$
+
+  Es el mismo exponente negativo de la primera parte: $10^{-4}$ es
+  $\dfrac{1}{10\,000}$, y multiplicar por eso achica.
+
+  Cuenta **lugares, no ceros**. En $0{,}00052$ hay tres ceros después de la
+  coma, pero la coma se mueve cuatro lugares para quedar entre el $5$ y el
+  $2$. Contar ceros funciona cuando el número es $0{,}0001$ y falla apenas
+  aparece otro dígito.
+
+  Para operar, las reglas de potencias que ya tienes se aplican tal cual a
+  la potencia de diez:
+
+  $$\left(2 \cdot 10^{3}\right) \cdot \left(4 \cdot 10^{2}\right) = 8 \cdot 10^{5}$$
+
+  $$\frac{6 \cdot 10^{8}}{3 \cdot 10^{5}} = 2 \cdot 10^{3}$$
+
+  Se opera por un lado la mantisa y por otro la potencia de diez. Y al
+  final, si la mantisa quedó fuera del rango de 1 a 10, hay que corregirla:
+  $80 \cdot 10^{5}$ no es una respuesta terminada, es $8 \cdot 10^{6}$.
