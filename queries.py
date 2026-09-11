@@ -6,7 +6,6 @@ select i.id,
        i.code,
        i.stem,
        i.author_difficulty,
-       ni.pool,
        json_agg(
          json_build_object('id', o.id, 'label', o.label, 'body', o.body)
          order by o.label
@@ -16,17 +15,17 @@ join node_items ni on ni.item_id = i.id
 join nodes n       on n.id = ni.node_id
 join item_options o on o.item_id = i.id
 where n.code = %(node_code)s
-  and ni.role = 'primary'
   and i.status = 'active'
   and not exists (
     select 1 from responses r
     where r.item_id = i.id
       and r.student_id = %(student_id)s
   )
-group by i.id, i.code, i.stem, i.author_difficulty, ni.pool
-order by (ni.pool = 'generated'), i.author_difficulty, i.code
+group by i.id, i.code, i.stem, i.author_difficulty
+order by i.author_difficulty, i.code
 limit 1;
 """
+
 INSERT_RESPONSE = """
 insert into responses
   (student_id, item_id, option_id, context, session_id, response_time_ms)
@@ -56,6 +55,10 @@ from node_items ni
 where ni.item_id = %(item_id)s::uuid
 """
 
+SESSION_STATE = """
+select mode, status, student_id from sessions where id = %(session_id)s::uuid
+"""
+
 CURRENT_SESSION = """
 select s.id, s.mode, s.status, s.started_at, s.target_node_id,
        n.code as node_code,
@@ -77,4 +80,10 @@ insert into sessions (student_id, mode, target_node_id, planned_item_count)
 values (%(student_id)s::uuid, %(mode)s, %(target_node_id)s,
         %(planned_item_count)s)
 returning id, mode, status, started_at
+"""
+
+ABANDON_SESSION = """
+update sessions
+set status = 'abandoned', ended_at = now()
+where id = %(session_id)s
 """

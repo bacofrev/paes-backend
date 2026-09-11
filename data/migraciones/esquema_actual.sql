@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict xRFElkhtOZvXUZt2Py6mdUgteXWi4dE7oDwhCkIHHG8U64MPcFaAV1rOcs6ovaF
+\restrict QLTLmgsutIzB7K37V87gbS5fcci4LARypmhsGsbH1tiYEO3J6ntewx4Nqvp3zJx
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 18.6
@@ -5587,6 +5587,20 @@ CREATE INDEX responses_item ON public.responses USING btree (item_id);
 
 
 --
+-- Name: responses_one_per_session_item; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX responses_one_per_session_item ON public.responses USING btree (session_id, item_id);
+
+
+--
+-- Name: INDEX responses_one_per_session_item; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON INDEX public.responses_one_per_session_item IS 'Un item, una respuesta, por sesion. No impide repetirlo en otra sesion: eso es lo que review necesita para que FSRS funcione.';
+
+
+--
 -- Name: responses_session; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -6557,5 +6571,5 @@ CREATE EVENT TRIGGER pgrst_drop_watch ON sql_drop
 -- PostgreSQL database dump complete
 --
 
-\unrestrict xRFElkhtOZvXUZt2Py6mdUgteXWi4dE7oDwhCkIHHG8U64MPcFaAV1rOcs6ovaF
+\unrestrict QLTLmgsutIzB7K37V87gbS5fcci4LARypmhsGsbH1tiYEO3J6ntewx4Nqvp3zJx
 
