@@ -36,8 +36,6 @@ lesson:
 # 2. ITEMS
 # ---------------------------------------------------------------------
 # node: sobre qué nodo mide principalmente.
-# secondary: qué otros nodos toca. Evidencia débil, pero suficiente para
-#   detectar un prerrequisito flojo sin mover al estudiante de lugar.
 # pool: curated decide dominio; generated nunca.
 # ---------------------------------------------------------------------
 
@@ -74,7 +72,6 @@ items:
     pool: curated
     difficulty: 2
     source: propio
-    secondary: [NUM-POT-POT]
     stem: "¿Cuál de las siguientes expresiones es igual a $2^{5}$?"
     options:
       - {label: A, body: "$2^{3} \\cdot 2^{2}$", correct: true}
@@ -135,7 +132,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-CERO]
     stem: "Si $m \\neq 0$, ¿a qué es igual $\\dfrac{m^{8}}{m^{8}}$?"
     options:
       - {label: A, body: "$1$", correct: true}
@@ -148,7 +144,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-POT]
     stem: "¿Cuál de las siguientes expresiones es igual a $3^{7}$?"
     options:
       - {label: A, body: "$3^{4} \\cdot 3^{3}$", correct: true}
@@ -223,7 +218,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-PROD]
     stem: "¿Cuál de las siguientes expresiones es igual a $\\left(3^{2}\\right)^{4}$?"
     options:
       - {label: A, body: "$3^{4} \\cdot 3^{4}$", correct: true}
@@ -236,7 +230,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-PROD]
     stem: "Si $x \\neq 0$, la expresión $\\left(x^{4}\\right)^{3} \\cdot x^{2}$ se reduce a:"
     options:
       - {label: A, body: "$x^{14}$", correct: true}
@@ -251,7 +244,6 @@ items:
     pool: curated
     difficulty: 1
     source: propio
-    secondary: [NUM-POT-NEG]
     stem: "¿Cuál es el valor de $\\left(\\dfrac{2}{5}\\right)^{0}$?"
     options:
       - {label: A, body: "$1$", correct: true}
@@ -288,7 +280,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-PROD]
     stem: "El valor de $\\dfrac{5^{3} \\cdot 5^{2}}{5^{5}}$ es:"
     options:
       - {label: A, body: "$1$", correct: true}
@@ -325,7 +316,6 @@ items:
     pool: curated
     difficulty: 2
     source: propio
-    secondary: [NUM-POT-NEG]
     stem: "Si $x \\neq 0$, ¿cuál es el valor de $\\left(\\dfrac{x}{4}\\right)^{0}$?"
     options:
       - {label: A, body: "$1$", correct: true}

@@ -1,0 +1,619 @@
+# =====================================================================
+# LES-NUM-POT-01 — Qué es una potencia y qué pasa con el signo
+# Cubre NUM-POT-CONC, NUM-POT-SIG
+# =====================================================================
+# Es la clase base de la unidad y la que faltaba: NUM-POT-CONC es
+# prerrequisito de NUM-POT-PROD, que se escribió antes. Además CONC sale
+# de la unidad hacia RAI, LOG, ALG-CUA y varias de GEO, así que un
+# estudiante flojo acá arrastra el problema a media prueba.
+# ---------------------------------------------------------------------
+# Las misconceptions viven en contenido/misconceptions/NUM-POT.yaml.
+# Acá solo se referencian por código.
+# ---------------------------------------------------------------------
+
+unit: NUM-POT
+
+lesson:
+  code: LES-NUM-POT-01
+  title: Qué es una potencia y qué pasa con el signo
+  position: 1
+  nodes:
+    - node: NUM-POT-CONC
+      anchor: que-significa-una-potencia
+    - node: NUM-POT-SIG
+      anchor: base-negativa-y-paridad
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== NUM-POT-CONC — curated =======================================
+
+  - code: M1-POT-001
+    node: NUM-POT-CONC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el valor de $2^{3}$?"
+    options:
+      - {label: A, body: "$8$", correct: true}
+      - {label: B, body: "$6$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$5$", misconception: POT-CONC-SUMA}
+      - {label: D, body: "$9$", misconception: POT-CONC-INV}
+
+  - code: M1-POT-002
+    node: NUM-POT-CONC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes expresiones es igual a $5^{4}$?"
+    options:
+      - {label: A, body: "$5 \\cdot 5 \\cdot 5 \\cdot 5$", correct: true}
+      - {label: B, body: "$5 \\cdot 4$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$5 \\cdot 5 \\cdot 5 \\cdot 5 \\cdot 5$", misconception: POT-CONC-FACTOR}
+      - {label: D, body: "$4 \\cdot 4 \\cdot 4 \\cdot 4 \\cdot 4$", misconception: POT-CONC-INV}
+
+  - code: M1-POT-003
+    node: NUM-POT-CONC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El valor de $3^{4}$ es:"
+    options:
+      - {label: A, body: "$81$", correct: true}
+      - {label: B, body: "$12$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$243$", misconception: POT-CONC-FACTOR}
+      - {label: D, body: "$64$", misconception: POT-CONC-INV}
+
+  - code: M1-POT-004
+    node: NUM-POT-CONC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el valor de $3 \\cdot 2^{3}$?"
+    options:
+      - {label: A, body: "$24$", correct: true}
+      - {label: B, body: "$216$", misconception: POT-CONC-ORDEN}
+      - {label: C, body: "$18$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$48$", misconception: POT-CONC-FACTOR}
+
+  - code: M1-POT-005
+    node: NUM-POT-CONC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "La expresión $7 \\cdot 7 \\cdot 7$ se escribe como:"
+    options:
+      - {label: A, body: "$7^{3}$", correct: true}
+      - {label: B, body: "$3^{7}$", misconception: POT-CONC-INV}
+      - {label: C, body: "$7^{4}$", misconception: POT-CONC-FACTOR}
+      - {label: D, body: "$21$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-006
+    node: NUM-POT-CONC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál es el valor de $2^{4} + 3^{2}$?"
+    options:
+      - {label: A, body: "$25$", correct: true}
+      - {label: B, body: "$14$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$24$", misconception: POT-CONC-INV}
+      - {label: D, body: "$59$", misconception: POT-CONC-FACTOR}
+
+  - code: M1-POT-007
+    node: NUM-POT-CONC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El volumen de un cubo de arista $3$ cm se calcula como $3^{3}$. ¿Cuánto mide?"
+    options:
+      - {label: A, body: "$27 \\text{ cm}^{3}$", correct: true}
+      - {label: B, body: "$9 \\text{ cm}^{3}$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$81 \\text{ cm}^{3}$", misconception: POT-CONC-FACTOR}
+      - {label: D, body: "$6 \\text{ cm}^{3}$", misconception: POT-CONC-SUMA}
+
+  - code: M1-POT-008
+    node: NUM-POT-CONC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál es el valor de $2 + 3^{2}$?"
+    options:
+      - {label: A, body: "$11$", correct: true}
+      - {label: B, body: "$25$", misconception: POT-CONC-ORDEN}
+      - {label: C, body: "$8$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$7$", misconception: POT-CONC-SUMA}
+
+  - code: M1-POT-009
+    node: NUM-POT-CONC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "El valor de $5 \\cdot 2^{3} - 3$ es:"
+    options:
+      - {label: A, body: "$37$", correct: true}
+      - {label: B, body: "$997$", misconception: POT-CONC-ORDEN}
+      - {label: C, body: "$27$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$77$", misconception: POT-CONC-FACTOR}
+
+  # ===== NUM-POT-SIG — curated ========================================
+
+  - code: M1-POT-011
+    node: NUM-POT-SIG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el valor de $\\left(-2\\right)^{3}$?"
+    options:
+      - {label: A, body: "$-8$", correct: true}
+      - {label: B, body: "$8$", misconception: POT-SIG-POS}
+      - {label: C, body: "$-6$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$\\dfrac{1}{8}$", misconception: POT-SIG-EXP}
+
+  - code: M1-POT-012
+    node: NUM-POT-SIG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el valor de $\\left(-3\\right)^{2}$?"
+    options:
+      - {label: A, body: "$9$", correct: true}
+      - {label: B, body: "$-9$", misconception: POT-SIG-NEG}
+      - {label: C, body: "$-6$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$\\dfrac{1}{9}$", misconception: POT-SIG-EXP}
+
+  - code: M1-POT-013
+    node: NUM-POT-SIG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El valor de $-2^{4}$ es:"
+    options:
+      - {label: A, body: "$-16$", correct: true}
+      - {label: B, body: "$16$", misconception: POT-SIG-PAREN}
+      - {label: C, body: "$-8$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$-32$", misconception: POT-CONC-FACTOR}
+
+  - code: M1-POT-014
+    node: NUM-POT-SIG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Si $n$ es un número par, entonces $\\left(-4\\right)^{n}$ es:"
+    options:
+      - {label: A, body: "un número positivo", correct: true}
+      - {label: B, body: "un número negativo", misconception: POT-SIG-NEG}
+      - {label: C, body: "igual a $-4^{n}$", misconception: POT-SIG-PAREN}
+      - {label: D, body: "un número entre $0$ y $1$", misconception: POT-SIG-EXP}
+
+  - code: M1-POT-015
+    node: NUM-POT-SIG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$\\left(-2\\right)^{4} = 16$", correct: true}
+      - {label: B, body: "$-2^{4} = 16$", misconception: POT-SIG-PAREN}
+      - {label: C, body: "$\\left(-2\\right)^{3} = 8$", misconception: POT-SIG-POS}
+      - {label: D, body: "$\\left(-2\\right)^{4} = -16$", misconception: POT-SIG-NEG}
+
+  - code: M1-POT-016
+    node: NUM-POT-SIG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "El valor de $\\left(-1\\right)^{7} + \\left(-1\\right)^{8}$ es:"
+    options:
+      - {label: A, body: "$0$", correct: true}
+      - {label: B, body: "$2$", misconception: POT-SIG-POS}
+      - {label: C, body: "$-2$", misconception: POT-SIG-NEG}
+      - {label: D, body: "$-15$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-017
+    node: NUM-POT-SIG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "El valor de $\\left(-3\\right)^{2} + \\left(-3\\right)^{3}$ es:"
+    options:
+      - {label: A, body: "$-18$", correct: true}
+      - {label: B, body: "$-36$", misconception: POT-SIG-NEG}
+      - {label: C, body: "$36$", misconception: POT-SIG-POS}
+      - {label: D, body: "$-15$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-018
+    node: NUM-POT-SIG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el valor de $-\\left(-4\\right)^{2}$?"
+    options:
+      - {label: A, body: "$-16$", correct: true}
+      - {label: B, body: "$16$", misconception: POT-SIG-POS}
+      - {label: C, body: "$-8$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$-\\dfrac{1}{16}$", misconception: POT-SIG-EXP}
+
+  # ===== generated ====================================================
+
+  - code: M1-POT-G11
+    node: NUM-POT-CONC
+    pool: generated
+    difficulty: 1
+    source: plantilla-conc-valor
+    stem: "¿Cuál es el valor de $4^{3}$?"
+    options:
+      - {label: A, body: "$64$", correct: true}
+      - {label: B, body: "$12$", misconception: POT-CONC-MULT}
+      - {label: C, body: "$256$", misconception: POT-CONC-FACTOR}
+      - {label: D, body: "$81$", misconception: POT-CONC-INV}
+
+  - code: M1-POT-G12
+    node: NUM-POT-CONC
+    pool: generated
+    difficulty: 1
+    source: plantilla-conc-escritura
+    stem: "La expresión $6 \\cdot 6 \\cdot 6 \\cdot 6$ se escribe como:"
+    options:
+      - {label: A, body: "$6^{4}$", correct: true}
+      - {label: B, body: "$4^{6}$", misconception: POT-CONC-INV}
+      - {label: C, body: "$6^{5}$", misconception: POT-CONC-FACTOR}
+      - {label: D, body: "$24$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-G13
+    node: NUM-POT-SIG
+    pool: generated
+    difficulty: 1
+    source: plantilla-sig-valor
+    stem: "¿Cuál es el valor de $\\left(-5\\right)^{2}$?"
+    options:
+      - {label: A, body: "$25$", correct: true}
+      - {label: B, body: "$-25$", misconception: POT-SIG-NEG}
+      - {label: C, body: "$-10$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$\\dfrac{1}{25}$", misconception: POT-SIG-EXP}
+
+  - code: M1-POT-G14
+    node: NUM-POT-SIG
+    pool: generated
+    difficulty: 2
+    source: plantilla-sig-paren
+    stem: "El valor de $-4^{2}$ es:"
+    options:
+      - {label: A, body: "$-16$", correct: true}
+      - {label: B, body: "$16$", misconception: POT-SIG-PAREN}
+      - {label: C, body: "$-8$", misconception: POT-CONC-MULT}
+      - {label: D, body: "$-64$", misconception: POT-CONC-FACTOR}
+
+
+# ---------------------------------------------------------------------
+# REMEDIATIONS
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-POT-CONC-MULT
+    misconception: POT-CONC-MULT
+    title: El exponente no multiplica, cuenta
+    body: |
+      Para $2^{3}$ elegiste $6$: multiplicaste $2 \cdot 3$. El exponente no
+      es un factor, es un **contador**. Dice cuántas veces se repite la
+      base.
+
+      $$2^{3} = 2 \cdot 2 \cdot 2 = 8$$
+
+      El $3$ no entra nunca en la multiplicación. Solo indica cuántos
+      doses hay que escribir.
+
+      Mira la diferencia en el mismo caso:
+
+      $$2 \cdot 3 = 6 \qquad 2^{3} = 8$$
+
+      Este error es difícil de pillar solo porque hay un caso donde los
+      dos caminos dan lo mismo: $2^{2} = 2 \cdot 2 = 4$. Ahí no te vas a
+      dar cuenta nunca. Por eso conviene revisarlo siempre con un
+      exponente distinto de $2$.
+
+      Antes de calcular, di la potencia en voz alta: "dos, tres veces".
+      Después escribe los tres doses y multiplica.
+    items: [M1-POT-001, M1-POT-003]
+
+  - code: REM-POT-CONC-SUMA
+    misconception: POT-CONC-SUMA
+    title: La potencia no es una suma entre dos números
+    body: |
+      Para $2^{3}$ elegiste $5$: sumaste $2 + 3$. La potencia no es una
+      operación entre la base y el exponente. Los dos números tienen
+      papeles distintos.
+
+      La base es **qué** se repite. El exponente es **cuántas veces**.
+
+      $$2^{3} = \underbrace{2 \cdot 2 \cdot 2}_{\text{tres doses}} = 8$$
+
+      Una forma de no confundirlos: el exponente nunca aparece en el
+      resultado de la multiplicación. Solo te dice cuántos factores
+      escribir y después desaparece.
+
+      Compara los tres caminos con los mismos números:
+
+      $$2 + 3 = 5 \qquad 2 \cdot 3 = 6 \qquad 2^{3} = 8$$
+    items: [M1-POT-001, M1-POT-007, M1-POT-008]
+
+  - code: REM-POT-CONC-FACTOR
+    misconception: POT-CONC-FACTOR
+    title: El exponente dice cuántos factores hay, no cuántas multiplicaciones
+    body: |
+      Tienes el concepto correcto y el conteo corrido en uno. Escribiste
+      un factor de más.
+
+      Casi siempre viene de la frase "multiplicar la base por sí misma
+      tres veces". Si la lees literal, empiezas con un $2$ y lo
+      multiplicas tres veces más: cuatro doses. Pero la definición cuenta
+      **factores**, no multiplicaciones.
+
+      $$2^{3} = \underbrace{2 \cdot 2 \cdot 2}_{3 \text{ factores}}$$
+
+      En $2^{3}$ hay tres doses y solo dos signos de multiplicación. El
+      exponente cuenta los doses.
+
+      Truco de control: el número de signos $\cdot$ siempre es uno menos
+      que el exponente. Si escribes $2^{3}$ y te quedan tres signos, te
+      sobra un factor.
+
+      Compruébalo con un caso chico: $5^{1} = 5$. Un solo factor, ninguna
+      multiplicación.
+    items: [M1-POT-002, M1-POT-003]
+
+  - code: REM-POT-CONC-INV
+    misconception: POT-CONC-INV
+    title: Arriba va cuántas veces, abajo va qué se repite
+    body: |
+      Para $2^{3}$ respondiste $9$, que es $3^{2}$. Diste vuelta los dos
+      números.
+
+      El de abajo, el grande, es la **base**: es el número que se repite.
+      El de arriba, el chico, es el **exponente**: dice cuántas veces.
+
+      $$2^{3} = 2 \cdot 2 \cdot 2 = 8 \qquad 3^{2} = 3 \cdot 3 = 9$$
+
+      Son distintos, y la diferencia crece rápido:
+
+      $$2^{5} = 32 \qquad 5^{2} = 25 \qquad 2^{10} = 1024 \qquad 10^{2} = 100$$
+
+      Ojo con un caso traicionero: $2^{4} = 16$ y $4^{2} = 16$. Es la única
+      coincidencia con números chicos, y si te apoyas en ella te va a
+      fallar en todos los demás.
+
+      Al leer, parte por el de abajo: "el dos, tres veces".
+    items: [M1-POT-001, M1-POT-005]
+
+  - code: REM-POT-CONC-ORDEN
+    misconception: POT-CONC-ORDEN
+    title: La potencia se resuelve primero
+    body: |
+      En $3 \cdot 2^{3}$ elegiste $216$: primero multiplicaste $3 \cdot 2$
+      y después elevaste. El exponente afecta **solo al número que tiene
+      pegado abajo**, no a todo lo que está delante.
+
+      $$3 \cdot 2^{3} = 3 \cdot 8 = 24$$
+
+      El $3$ espera afuera hasta que la potencia esté resuelta.
+
+      Si el $3$ tuviera que entrar, la expresión llevaría paréntesis, y
+      son cosas muy distintas:
+
+      $$3 \cdot 2^{3} = 24 \qquad \left(3 \cdot 2\right)^{3} = 6^{3} = 216$$
+
+      El orden de operaciones pone las potencias antes que la
+      multiplicación y la división, y esas antes que la suma y la resta:
+
+      $$2 + 3^{2} = 2 + 9 = 11$$
+
+      No es $\left(2+3\right)^{2} = 25$. Sin paréntesis, el $2$ no entra.
+
+      Regla de lectura: busca el exponente y mira qué tiene inmediatamente
+      abajo. Eso, y nada más, es la base.
+    items: [M1-POT-004, M1-POT-008, M1-POT-009]
+
+  - code: REM-POT-SIG-POS
+    misconception: POT-SIG-POS
+    title: Menos por menos es más, pero hay que contar los menos
+    body: |
+      Para $\left(-2\right)^{3}$ respondiste $8$. Estás usando "menos por
+      menos es más", que es cierto, pero solo cuando los menos se pueden
+      juntar de a pares.
+
+      Desarma la potencia y sigue los signos:
+
+      $$\left(-2\right)^{3} = \left(-2\right)\left(-2\right)\left(-2\right)$$
+
+      Los dos primeros se emparejan y dan $+4$. Queda un $-2$ suelto, sin
+      pareja, y ese vuelve el resultado negativo: $-8$.
+
+      De ahí sale la regla:
+
+      - Exponente **par**: todos los menos tienen pareja, el resultado es
+        positivo.
+      - Exponente **impar**: sobra un menos, el resultado es negativo.
+
+      $$\left(-2\right)^{2} = 4 \qquad \left(-2\right)^{3} = -8 \qquad \left(-2\right)^{4} = 16$$
+
+      Fíjate en algo importante: con exponente par tu respuesta habría
+      sido correcta. Por eso este error puede pasar mucho tiempo sin que
+      nadie lo note. Antes de responder, mira si el exponente es par o
+      impar.
+    items: [M1-POT-011, M1-POT-015]
+
+  - code: REM-POT-SIG-NEG
+    misconception: POT-SIG-NEG
+    title: La base negativa no arrastra el signo al resultado
+    body: |
+      Para $\left(-3\right)^{2}$ respondiste $-9$: dejaste el signo de la
+      base pegado al resultado. Pero el signo participa de la
+      multiplicación como cualquier otro factor.
+
+      $$\left(-3\right)^{2} = \left(-3\right)\left(-3\right) = 9$$
+
+      Dos negativos multiplicados dan positivo. El resultado es $9$, sin
+      menos.
+
+      La regla depende del exponente, no de la base:
+
+      - Exponente **par**: los menos se emparejan, resultado positivo.
+      - Exponente **impar**: sobra uno, resultado negativo.
+
+      $$\left(-3\right)^{2} = 9 \qquad \left(-3\right)^{3} = -27 \qquad \left(-3\right)^{4} = 81$$
+
+      Como con el error espejo, con exponente impar tu respuesta habría
+      salido bien. Mirar la paridad antes de responder resuelve los dos
+      casos de una vez.
+    items: [M1-POT-012, M1-POT-016]
+
+  - code: REM-POT-SIG-PAREN
+    misconception: POT-SIG-PAREN
+    title: El paréntesis decide si el signo es parte de la base
+    body: |
+      Resolviste $-2^{4}$ como si fuera $\left(-2\right)^{4}$. Son dos
+      expresiones distintas y la PAES las usa a propósito.
+
+      **Sin paréntesis**, el exponente afecta solo al $2$. El menos se
+      aplica al final, al resultado:
+
+      $$-2^{4} = -\left(2^{4}\right) = -16$$
+
+      **Con paréntesis**, el exponente afecta a todo lo de adentro, signo
+      incluido:
+
+      $$\left(-2\right)^{4} = \left(-2\right)\left(-2\right)\left(-2\right)\left(-2\right) = 16$$
+
+      Mismo número, mismo exponente, resultados opuestos.
+
+      El control es de lectura, no de cálculo: antes de operar, mira si
+      hay paréntesis alrededor del signo. Si no lo hay, el menos se queda
+      afuera esperando.
+
+      Con exponente impar los dos caminos dan negativo y el error no se
+      nota. Con exponente par se nota siempre.
+    items: [M1-POT-013, M1-POT-015]
+
+  - code: REM-POT-SIG-EXP
+    misconception: POT-SIG-EXP
+    title: El signo está en la base, no en el exponente
+    body: |
+      Respondiste una fracción a $\left(-2\right)^{3}$. Leíste el menos
+      como si estuviera arriba, en el exponente, y son lugares distintos.
+
+      Acá el menos es parte de la base. Lo que se repite es $-2$:
+
+      $$\left(-2\right)^{3} = \left(-2\right)\left(-2\right)\left(-2\right) = -8$$
+
+      Un número entero elevado a un exponente entero positivo da un
+      entero, nunca una fracción. Si tu respuesta es menor que $1$, algo
+      se leyó mal.
+
+      Mira dónde está cada signo:
+
+      $$\left(-2\right)^{3} \quad \text{el menos va con el } 2 \text{ de abajo}$$
+
+      El exponente negativo existe y lo vas a ver más adelante. Por ahora
+      basta con la lectura: si el menos está dentro del paréntesis o
+      pegado a la base, es parte de la base.
+    items: [M1-POT-011, M1-POT-014]
+
+
+# ---------------------------------------------------------------------
+# LESSON BODY
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Esta clase es la base de toda la unidad. Todo lo que viene después —
+  las reglas del producto, el exponente cero, el negativo, las raíces —
+  sale de entender bien una sola cosa: qué significa el número chiquitito
+  de arriba.
+
+  ## Qué significa una potencia
+
+  Una potencia es una multiplicación repetida escrita corta.
+
+  $$2^{3} = 2 \cdot 2 \cdot 2 = 8$$
+
+  Hay dos números y hacen cosas distintas:
+
+  - La **base** es el $2$ de abajo. Es el número que se repite.
+  - El **exponente** es el $3$ de arriba. Dice **cuántas veces** aparece
+    la base.
+
+  El exponente no se multiplica ni se suma con nada. Solo cuenta. Después
+  de escribir los factores, desaparece.
+
+  Compara los tres resultados posibles con los mismos dos números:
+
+  $$2 + 3 = 5 \qquad 2 \cdot 3 = 6 \qquad 2^{3} = 8$$
+
+  **Cuenta factores, no multiplicaciones.** En $2^{3}$ hay tres doses y
+  dos signos de multiplicación. Si te quedan cuatro doses, te corriste en
+  uno. El control es simple: los signos $\cdot$ son siempre uno menos que
+  el exponente.
+
+  **El orden importa.** $2^{3}$ y $3^{2}$ no son lo mismo:
+
+  $$2^{3} = 8 \qquad 3^{2} = 9 \qquad 2^{5} = 32 \qquad 5^{2} = 25$$
+
+  Hay una sola coincidencia con números chicos, $2^{4} = 4^{2} = 16$, y
+  es pura casualidad. No te apoyes en ella.
+
+  **La potencia se resuelve antes que la multiplicación y la suma.** El
+  exponente afecta solo al número que tiene pegado abajo:
+
+  $$3 \cdot 2^{3} = 3 \cdot 8 = 24$$
+
+  No es $\left(3 \cdot 2\right)^{3} = 216$. Sin paréntesis, el $3$ espera
+  afuera. Lo mismo con la suma:
+
+  $$2 + 3^{2} = 2 + 9 = 11$$
+
+  ## Base negativa y paridad
+
+  Cuando la base es negativa, el signo se multiplica como cualquier otro
+  factor. Sigue los menos uno por uno:
+
+  $$\left(-2\right)^{3} = \left(-2\right)\left(-2\right)\left(-2\right)$$
+
+  Los dos primeros se emparejan y dan $+4$. Queda un menos suelto, y ese
+  manda: el resultado es $-8$.
+
+  De ahí sale toda la regla, y depende del **exponente**, no de la base:
+
+  - Exponente **par**: los menos se emparejan todos, resultado
+    **positivo**.
+  - Exponente **impar**: sobra un menos, resultado **negativo**.
+
+  $$\left(-2\right)^{2} = 4 \qquad \left(-2\right)^{3} = -8 \qquad \left(-2\right)^{4} = 16$$
+
+  ### El paréntesis cambia todo
+
+  Este es el detalle que la PAES usa una y otra vez.
+
+  $$-2^{4} = -\left(2^{4}\right) = -16 \qquad \left(-2\right)^{4} = 16$$
+
+  Sin paréntesis, el exponente afecta **solo al 2** y el menos se aplica
+  al final, al resultado. Con paréntesis, el exponente afecta a todo lo de
+  adentro, signo incluido.
+
+  Mismo número, mismo exponente, resultados opuestos. Antes de calcular,
+  mira si hay paréntesis alrededor del signo.
+
+  ## El control que sirve siempre
+
+  Si dudas, desarma la potencia y escribe los factores. Treinta segundos
+  de aritmética resuelven cualquier duda, y en la prueba los tienes.
+
+  Dos preguntas antes de responder cualquier ítem de esta clase:
+
+  1. ¿Cuántos factores estoy escribiendo? Tienen que ser tantos como diga
+     el exponente.
+  2. ¿El exponente es par o impar, y el signo está dentro o fuera del
+     paréntesis?

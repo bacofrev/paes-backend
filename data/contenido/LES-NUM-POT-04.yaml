@@ -97,7 +97,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-PROD]
     stem: "Si $a \\neq 0$, la expresión $\\dfrac{a^{3}}{a^{7}}$ se reduce a:"
     options:
       - {label: A, body: "$\\dfrac{1}{a^{4}}$", correct: true}
@@ -110,7 +109,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-DIST]
     stem: "Si $a \\neq 0$ y $b \\neq 0$, la expresión $\\left(\\dfrac{a}{b}\\right)^{-3}$ es equivalente a:"
     options:
       - {label: A, body: "$\\dfrac{b^{3}}{a^{3}}$", correct: true}
@@ -123,7 +121,6 @@ items:
     pool: curated
     difficulty: 2
     source: propio
-    secondary: [NUM-POT-CIENT]
     stem: "El grosor de una lámina metálica es $10^{-4}$ metros. Escrito en forma decimal, ese grosor es:"
     options:
       - {label: A, body: "$0{,}0001$", correct: true}
@@ -200,7 +197,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-PROD]
     stem: "El valor de $\\left(2 \\cdot 10^{3}\\right) \\cdot \\left(4 \\cdot 10^{2}\\right)$ es:"
     options:
       - {label: A, body: "$8 \\cdot 10^{5}$", correct: true}
@@ -213,7 +209,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-PROD]
     stem: "El valor de $\\dfrac{6 \\cdot 10^{8}}{3 \\cdot 10^{5}}$ es:"
     options:
       - {label: A, body: "$2 \\cdot 10^{3}$", correct: true}
@@ -238,7 +233,6 @@ items:
     pool: curated
     difficulty: 2
     source: propio
-    secondary: [NUM-POT-NEG]
     stem: "La masa de un grano de arena es aproximadamente $6{,}5 \\cdot 10^{-5}$ kilogramos. Esa masa, escrita en forma decimal, es:"
     options:
       - {label: A, body: "$0{,}000065$", correct: true}
@@ -251,7 +245,6 @@ items:
     pool: curated
     difficulty: 2
     source: propio
-    secondary: [NUM-POT-NEG]
     stem: "El número $1{,}2 \\cdot 10^{-1}$ es igual a:"
     options:
       - {label: A, body: "$0{,}12$", correct: true}

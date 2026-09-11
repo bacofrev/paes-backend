@@ -71,7 +71,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [ALG-NOT-BIN2]
     stem: "La expresión $\\left(x + y\\right)^{2}$ es equivalente a:"
     options:
       - {label: A, body: "$x^{2} + 2xy + y^{2}$", correct: true}
@@ -84,7 +83,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-POT]
     stem: "Si $x \\neq 0$, la expresión $\\left(2x^{3}\\right)^{2}$ se reduce a:"
     options:
       - {label: A, body: "$4x^{6}$", correct: true}
@@ -159,7 +157,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-SIG]
     stem: "El valor de $\\left(-\\dfrac{1}{2}\\right)^{4}$ es:"
     options:
       - {label: A, body: "$\\dfrac{1}{16}$", correct: true}
@@ -172,7 +169,6 @@ items:
     pool: curated
     difficulty: 3
     source: propio
-    secondary: [NUM-POT-POT]
     stem: "Si $x \\neq 0$, la expresión $\\left(\\dfrac{x^{2}}{3}\\right)^{2}$ es equivalente a:"
     options:
       - {label: A, body: "$\\dfrac{x^{4}}{9}$", correct: true}
