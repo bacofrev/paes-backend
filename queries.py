@@ -55,3 +55,26 @@ select recompute_node_mastery(%(student_id)s::uuid, ni.node_id)
 from node_items ni
 where ni.item_id = %(item_id)s::uuid
 """
+
+CURRENT_SESSION = """
+select s.id, s.mode, s.status, s.started_at, s.target_node_id,
+       n.code as node_code,
+       count(r.id) as answered
+from sessions s
+left join nodes n on n.id = s.target_node_id
+left join responses r on r.session_id = s.id
+where s.student_id = %(student_id)s::uuid
+  and s.status = 'in_progress'
+group by s.id, n.code
+"""
+
+NODE_ID_BY_CODE = """
+select id from nodes where code = %(node_code)s and status = 'active'
+"""
+
+CREATE_SESSION = """
+insert into sessions (student_id, mode, target_node_id, planned_item_count)
+values (%(student_id)s::uuid, %(mode)s, %(target_node_id)s,
+        %(planned_item_count)s)
+returning id, mode, status, started_at
+"""
