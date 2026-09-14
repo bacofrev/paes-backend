@@ -56,7 +56,10 @@ where ni.item_id = %(item_id)s::uuid
 """
 
 SESSION_BY_ID = """
-select mode, status, student_id,id, started_at, ended_at from sessions where id = %(session_id)s::uuid
+select id, student_id, mode, status, started_at, ended_at,
+       planned_item_count
+from sessions
+where id = %(session_id)s::uuid
 """
 
 CURRENT_SESSION = """
@@ -87,5 +90,37 @@ update sessions
 set status = %(status)s, ended_at = now()
 where id = %(session_id)s::uuid
   and status = 'in_progress'
-returning id, student_id, mode, status, started_at, ended_at
+returning id, student_id, mode, status, started_at, ended_at,
+          planned_item_count
+"""
+
+SESSION_RESPONSE_COUNT = """
+select count(*) as answered
+from responses
+where session_id = %(session_id)s::uuid
+"""
+
+SESSION_REPORT_NODES = """
+select n.id as node_id,
+       n.code as node_code,
+       n.name as node_name,
+       nm.status,
+       nm.p_correct,
+       nm.items_answered,
+       nm.items_correct,
+       nm.hard_correct,
+       mc.min_items,
+       mc.p_threshold,
+       mc.min_hard_correct
+from (
+    select distinct ni.node_id
+    from responses r
+    join node_items ni on ni.item_id = r.item_id
+    where r.session_id = %(session_id)s::uuid
+) touched
+join nodes n on n.id = touched.node_id
+left join node_mastery nm
+    on nm.student_id = %(student_id)s::uuid and nm.node_id = n.id
+left join mastery_config mc
+    on mc.version = nm.config_version
 """

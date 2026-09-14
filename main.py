@@ -301,3 +301,56 @@ async def end_session(session_id: str, response: Response):
             closed = await cur.fetchone()
 
     return serialize_session(closed)
+
+
+def node_report(row) -> dict:
+    status = row["status"] or "in_progress"
+    blocked_by = None
+
+    if status == "in_progress":
+        if row["min_items"] is None or (row["items_answered"] or 0) < row["min_items"]:
+            blocked_by = "min_items"
+        elif row["p_correct"] is not None and row["p_correct"] < row["p_threshold"]:
+            blocked_by = "p_threshold"
+        elif (row["hard_correct"] or 0) < row["min_hard_correct"]:
+            blocked_by = "min_hard_correct"
+
+    return {
+        "node_id": row["node_id"],
+        "node_code": row["node_code"],
+        "node_name": row["node_name"],
+        "status": status,
+        "p_correct": row["p_correct"],
+        "items_answered": row["items_answered"],
+        "items_correct": row["items_correct"],
+        "hard_correct": row["hard_correct"],
+        "blocked_by": blocked_by,
+    }
+
+
+@app.get("/sessions/{session_id}/report")
+async def session_report(session_id: str):
+    async with db.pool.connection() as con:
+        cur = await con.execute(queries.SESSION_BY_ID, {"session_id": session_id})
+        session = await cur.fetchone()
+
+        if session is None:
+            raise HTTPException(status_code=404, detail="session_not_found")
+
+        cur = await con.execute(
+            queries.SESSION_RESPONSE_COUNT, {"session_id": session_id}
+        )
+        answered = (await cur.fetchone())["answered"]
+
+        cur = await con.execute(
+            queries.SESSION_REPORT_NODES,
+            {"session_id": session_id, "student_id": session["student_id"]},
+        )
+        rows = await cur.fetchall()
+
+    return {
+        **serialize_session(session),
+        "planned_item_count": session["planned_item_count"],
+        "answered": answered,
+        "nodes": [node_report(row) for row in rows],
+    }
