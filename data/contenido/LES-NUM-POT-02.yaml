@@ -237,6 +237,42 @@ items:
       - {label: C, body: "$x^{24}$", misconception: POT-PROD-MULT}
       - {label: D, body: "$x^{10}$", misconception: POT-PROD-RESTA}
 
+  - code: M1-POT-206
+    node: NUM-POT-POT
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$\\left(4^{3}\\right)^{2} = 4^{6}$", correct: true}
+      - {label: B, body: "$\\left(4^{3}\\right)^{2} = 4^{5}$", misconception: POT-POT-SUMA}
+      - {label: C, body: "$\\left(4^{3}\\right)^{2} = 4^{9}$", misconception: POT-POT-TORRE}
+      - {label: D, body: "$\\left(4^{3}\\right)^{2} = 8^{6}$", misconception: POT-POT-BASE}
+
+  - code: M1-POT-207
+    node: NUM-POT-POT
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Un cubo tiene arista $a^{2}$, con $a \\neq 0$. Su volumen es:"
+    options:
+      - {label: A, body: "$a^{6}$", correct: true}
+      - {label: B, body: "$a^{5}$", misconception: POT-POT-SUMA}
+      - {label: C, body: "$a^{8}$", misconception: POT-POT-TORRE}
+      - {label: D, body: "$3a^{2}$", misconception: POT-CONC-MULT}
+
+  - code: M1-POT-208
+    node: NUM-POT-POT
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El valor de $\\left(2^{3}\\right)^{2}$ es:"
+    options:
+      - {label: A, body: "$64$", correct: true}
+      - {label: B, body: "$32$", misconception: POT-POT-SUMA}
+      - {label: C, body: "$512$", misconception: POT-POT-TORRE}
+      - {label: D, body: "$36$", misconception: POT-CONC-MULT}
+
   # ===== NUM-POT-CERO — curated =======================================
 
   - code: M1-POT-301
@@ -322,6 +358,18 @@ items:
       - {label: B, body: "$\\dfrac{4}{x}$", misconception: POT-CERO-INV}
       - {label: C, body: "$\\dfrac{x}{4}$", misconception: POT-CERO-BASE}
       - {label: D, body: "$0$", misconception: POT-CERO-NULO}
+
+  - code: M1-POT-308
+    node: NUM-POT-CERO
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $a = 6$, el valor de $a^{1} \\cdot a^{0}$ es:"
+    options:
+      - {label: A, body: "$6$", correct: true}
+      - {label: B, body: "$1$", misconception: POT-UNO-UNO}
+      - {label: C, body: "$0$", misconception: POT-CERO-NULO}
+      - {label: D, body: "$36$", misconception: POT-CERO-BASE}
 
   # ===== generated ====================================================
   # Escritos a mano solo para que el bucle tenga munición de práctica.

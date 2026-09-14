@@ -554,10 +554,43 @@ def emitir(doc: dict, origen: str) -> str:
     w("$verif$;")
     w("")
 
-    curated = sum(1 for it in items if it["pool"] == "curated")
-    w(f"-- {n_items} ítems ({curated} curated), {n_opts} alternativas, "
+    curados = [it["code"] for it in items if it["pool"] == "curated"]
+    generados = [it["code"] for it in items if it["pool"] != "curated"]
+
+    w(f"-- {n_items} ítems ({len(curados)} curated), {n_opts} alternativas, "
       f"{len(mcs_ref)} misconceptions referenciadas,")
     w(f"-- {len(rems)} remediaciones, 1 clase sobre {len(les['nodes'])} nodos.")
+    w("")
+
+    # --- publicación: paso aparte, a propósito -------------------------
+    w("-- =====================================================================")
+    w("-- PUBLICACIÓN — no corre con la carga. Descomentar cuando decidas.")
+    w("-- =====================================================================")
+    w("-- Todo lo de arriba entra como 'draft'. NEXT_ITEM solo sirve 'active',")
+    w("-- así que hasta que corras esto el estudiante no ve nada de esta clase.")
+    w("-- Cargar no es publicar: publicar es una decisión y queda registrada")
+    w("-- en el archivo que corriste.")
+    w("")
+    w(f"-- {len(curados)} ítems curated -> active:")
+    w("-- update items set status = 'active'")
+    w(f"--  where code in ({lista(curados)});")
+    w("")
+    if generados:
+        w(f"-- {len(generados)} generated quedan en draft: "
+          f"{', '.join(generados)}")
+        w("-- No se publican sin validar que cada distractor corresponda")
+        w("-- exactamente a su misconception (§4.5).")
+        w("")
+    w("-- update remediations set status = 'active'")
+    w(f"--  where code in ({lista(r['code'] for r in rems)});"
+      if rems else "-- (esta clase no trae remediaciones)")
+    w("")
+    w("-- update lessons set status = 'active'")
+    w(f"--  where code = {q(les['code'])};")
+    w("")
+    w("-- Verificar después de publicar:")
+    w("--   select status, count(*) from items")
+    w(f"--    where code in ({lista(codes_items)}) group by 1;")
 
     return "\n".join(o)
 
