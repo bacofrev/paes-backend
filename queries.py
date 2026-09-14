@@ -55,8 +55,8 @@ from node_items ni
 where ni.item_id = %(item_id)s::uuid
 """
 
-SESSION_STATE = """
-select mode, status, student_id from sessions where id = %(session_id)s::uuid
+SESSION_BY_ID = """
+select mode, status, student_id,id, started_at, ended_at from sessions where id = %(session_id)s::uuid
 """
 
 CURRENT_SESSION = """
@@ -82,8 +82,10 @@ values (%(student_id)s::uuid, %(mode)s, %(target_node_id)s,
 returning id, mode, status, started_at
 """
 
-ABANDON_SESSION = """
+CLOSE_SESSION = """
 update sessions
-set status = 'abandoned', ended_at = now()
-where id = %(session_id)s
+set status = %(status)s, ended_at = now()
+where id = %(session_id)s::uuid
+  and status = 'in_progress'
+returning id, student_id, mode, status, started_at, ended_at
 """

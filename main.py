@@ -76,7 +76,7 @@ async def create_response(payload: ResponseIn):
         # server-side so a client can't open mock_exam and answer as
         # practice to dodge deferred feedback.
         cur = await con.execute(
-            queries.SESSION_STATE, {"session_id": payload.session_id}
+            queries.SESSION_BY_ID, {"session_id": payload.session_id}
         )
         session = await cur.fetchone()
 
@@ -146,6 +146,16 @@ SESSION_TTL = {
     "mock_exam": timedelta(hours=3),
     "diagnostic": timedelta(hours=3),
 }
+
+
+def serialize_session(row) -> dict:
+    return {
+        "session_id": str(row["id"]),
+        "mode": row["mode"],
+        "status": row["status"],
+        "started_at": row["started_at"],
+        "ended_at": row["ended_at"],
+    }
 
 
 class SessionIn(BaseModel):
@@ -243,7 +253,7 @@ async def current_session(student_id: str, response: Response):
         age = datetime.now(timezone.utc) - session["started_at"]
         if age > SESSION_TTL[session["mode"]]:
             await con.execute(
-                queries.ABANDON_SESSION, {"session_id": session["id"]}
+                queries.CLOSE_SESSION, {"session_id": session["id"], "status": "abandoned"}
             )
             response.status_code = 204
             return
@@ -255,3 +265,39 @@ async def current_session(student_id: str, response: Response):
         "started_at": session["started_at"],
         "answered": session["answered"],
     }
+
+@app.post("/sessions/{session_id}/end")
+async def end_session(session_id: str, response: Response):
+    async with db.pool.connection() as con:
+        cur = await con.execute(
+            queries.SESSION_BY_ID, {"session_id": session_id}
+        )
+        session = await cur.fetchone()
+
+        if session is None:
+            response.status_code = 404
+            return {"reason": "session_not_found"}
+
+        # A retry after a timeout is indistinguishable from a double click,
+        # and the client's next move is the same either way.
+        if session["status"] != "in_progress":
+            return serialize_session(session)
+
+        # The button can arrive on a session that expired hours ago. Both
+        # doors must agree on how it closed, so the TTL decides here too.
+        age = datetime.now(timezone.utc) - session["started_at"]
+        status = "abandoned" if age > SESSION_TTL[session["mode"]] else "completed"
+
+        cur = await con.execute(
+            queries.CLOSE_SESSION, {"session_id": session_id, "status": status}
+        )
+        closed = await cur.fetchone()
+
+        # Lost a race against another end. Re-read instead of 500.
+        if closed is None:
+            cur = await con.execute(
+                queries.SESSION_BY_ID, {"session_id": session_id}
+            )
+            closed = await cur.fetchone()
+
+    return serialize_session(closed)

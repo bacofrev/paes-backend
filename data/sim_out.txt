@@ -1,0 +1,129 @@
+BEGIN
+     bloque      | version | p_threshold | min_items | min_difficulty | min_hard_correct 
+-----------------+---------+-------------+-----------+----------------+------------------
+ CRITERIO ACTIVO |       1 |       0.700 |         8 |              3 |                2
+(1 row)
+
+                                     funcion_actual                                      
+-----------------------------------------------------------------------------------------
+ CREATE OR REPLACE FUNCTION public.recompute_node_mastery(p_student uuid, p_node bigint)+
+  RETURNS void                                                                          +
+  LANGUAGE plpgsql                                                                      +
+ AS $function$                                                                          +
+ declare                                                                                +
+   cfg             mastery_config%rowtype;                                              +
+   v_answered      smallint := 0;                                                       +
+   v_correct       smallint := 0;                                                       +
+   v_hard          smallint := 0;                                                       +
+   v_last          timestamptz;                                                         +
+   v_p             numeric(5,4);                                                        +
+   v_status        text;                                                                +
+   v_prev_mastered timestamptz;                                                         +
+ begin                                                                                  +
+   select * into cfg from mastery_config where is_active;                               +
+   if not found then                                                                    +
+     raise exception 'No hay mastery_config activa';                                    +
+   end if;                                                                              +
+                                                                                        +
+   select first_mastered_at into v_prev_mastered                                        +
+   from node_mastery                                                                    +
+   where student_id = p_student and node_id = p_node;                                   +
+                                                                                        +
+   -- Una fila por ítem distinto: la respuesta más reciente.                            +
+   -- Un ítem mide un nodo: no hay pool ni role que filtrar.                            +
+   with ultimas as (                                                                    +
+     select distinct on (r.item_id)                                                     +
+            r.item_id,                                                                  +
+            r.option_id,                                                                +
+            r.created_at,                                                               +
+            i.author_difficulty                                                         +
+     from responses r                                                                   +
+     join node_items ni on ni.item_id = r.item_id                                       +
+                       and ni.node_id = p_node                                          +
+     join items i on i.id = r.item_id                                                   +
+     where r.student_id = p_student                                                     +
+     order by r.item_id, r.created_at desc                                              +
+   ),                                                                                   +
+   evaluadas as (                                                                       +
+     select u.created_at,                                                               +
+            u.author_difficulty,                                                        +
+            coalesce(o.is_correct, false) as correcta   -- omitida = incorrecta         +
+     from ultimas u                                                                     +
+     left join item_options o on o.id = u.option_id                                     +
+   )                                                                                    +
+   select count(*)::smallint,                                                           +
+          count(*) filter (where correcta)::smallint,                                   +
+          count(*) filter (where correcta                                               +
+                             and author_difficulty >= cfg.min_difficulty)::smallint,    +
+          max(created_at)                                                               +
+   into v_answered, v_correct, v_hard, v_last                                           +
+   from evaluadas;                                                                      +
+                                                                                        +
+   -- Suavizado Beta: 3 de 3 da 0.80, no 1.00                                           +
+   if v_answered > 0 then                                                               +
+     v_p := (v_correct + cfg.prior_alpha)                                               +
+            / (v_answered + cfg.prior_alpha + cfg.prior_beta);                          +
+   else                                                                                 +
+     v_p := null;                                                                       +
+   end if;                                                                              +
+                                                                                        +
+   if v_answered = 0 then                                                               +
+     v_status := 'not_started';                                                         +
+   elsif v_p        >= cfg.p_threshold                                                  +
+     and v_answered >= cfg.min_items                                                    +
+     and v_hard     >= cfg.min_hard_correct then                                        +
+     v_status := 'mastered';                                                            +
+   else                                                                                 +
+     v_status := 'in_progress';                                                         +
+   end if;                                                                              +
+                                                                                        +
+   insert into node_mastery (                                                           +
+     student_id, node_id, p_correct, items_answered, items_correct,                     +
+     hard_correct, status, first_mastered_at, last_response_at,                         +
+     config_version, computed_at                                                        +
+   ) values (                                                                           +
+     p_student, p_node, v_p, v_answered, v_correct,                                     +
+     v_hard, v_status,                                                                  +
+     case when v_status = 'mastered'                                                    +
+          then coalesce(v_prev_mastered, v_last) end,                                   +
+     v_last, cfg.version, now()                                                         +
+   )                                                                                    +
+   on conflict (student_id, node_id) do update set                                      +
+     p_correct         = excluded.p_correct,                                            +
+     items_answered    = excluded.items_answered,                                       +
+     items_correct     = excluded.items_correct,                                        +
+     hard_correct      = excluded.hard_correct,                                         +
+     status            = excluded.status,                                               +
+     first_mastered_at = excluded.first_mastered_at,                                    +
+     last_response_at  = excluded.last_response_at,                                     +
+     config_version    = excluded.config_version,                                       +
+     computed_at       = now();                                                         +
+ end;                                                                                   +
+ $function$                                                                             +
+ 
+(1 row)
+
+SELECT 1
+DO
+    bloque    |     code     |               name                
+--------------+--------------+-----------------------------------
+ NODO ELEGIDO | NUM-POT-PROD | Producto y cociente de igual base
+(1 row)
+
+SELECT 14
+CREATE TABLE
+INSERT 0 4
+INSERT 0 4
+DO
+SELECT 29
+INSERT 0 29
+DO
+      code      | condicion_probada | respondidos | correctos | dificiles_ok | p_correct |  esperado   |  obtenido   | veredicto 
+----------------+-------------------+-------------+-----------+--------------+-----------+-------------+-------------+-----------
+ A-solo-faciles | min_hard_correct  |           8 |         8 |            0 |    0.9000 | in_progress | in_progress | PASA
+ B-pocos-items  | min_items         |           5 |         5 |            2 |    0.8571 | in_progress | in_progress | PASA
+ C-tasa-baja    | p_threshold       |           8 |         4 |            2 |    0.5000 | in_progress | in_progress | PASA
+ D-cumple       | ninguna           |           8 |         7 |            2 |    0.8000 | mastered    | mastered    | PASA
+(4 rows)
+
+ROLLBACK
