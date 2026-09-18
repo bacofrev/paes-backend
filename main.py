@@ -1,3 +1,4 @@
+import logging
 from contextlib import asynccontextmanager
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException, Response
@@ -8,6 +9,8 @@ from datetime import datetime, timedelta, timezone
 
 import db
 import queries
+
+logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
@@ -41,22 +44,76 @@ async def health():
     return {"status": "ok", "db": db_status}
 
 
+# Modes without immediate feedback: no remediation lane is possible
+# there (sessions.mode: "there is no remediation mode — remediation is
+# a stretch WITHIN a session with immediate feedback"), so it's never
+# even queried. Used by both /next (to skip that branch) and
+# /responses (to skip computing VERDICT or touching the lane).
+NO_FEEDBACK = {"diagnostic", "mock_exam"}
+
+
 @app.get("/students/{student_id}/nodes/{node_code}/next")
-async def next_item(student_id: str, node_code: str):
+async def next_item(student_id: str, node_code: str, session_id: str):
     async with db.pool.connection() as con:
         cur = await con.execute(
-            queries.NEXT_ITEM,
-            {"student_id": student_id, "node_code": node_code},
+            queries.SESSION_BY_ID, {"session_id": session_id}
         )
-        item = await cur.fetchone()
+        session = await cur.fetchone()
+
+        # Same checks as POST /responses: exists, is in_progress, is
+        # yours. This endpoint didn't validate that — gap noted in
+        # bitacora-2026-09-15-next-item.md — and it's no longer
+        # acceptable now that someone else's session_id could also
+        # silence another student's lane (bitacora-2026-09-17-carril-next.md §2.3).
+        if session is None:
+            raise HTTPException(status_code=404, detail="session_not_found")
+        if session["status"] != "in_progress":
+            raise HTTPException(
+                status_code=409, detail="session_not_in_progress"
+            )
+        if str(session["student_id"]) != student_id:
+            raise HTTPException(status_code=403, detail="session_not_yours")
+
+        item = None
+        source = "pool"
+        if session["mode"] not in NO_FEEDBACK:
+            cur = await con.execute(
+                queries.NEXT_LANE_ITEM,
+                {
+                    "student_id": student_id,
+                    "session_id": session_id,
+                    "node_code": node_code,
+                },
+            )
+            item = await cur.fetchone()
+            if item is not None:
+                source = "lane"
+
+        if item is None:
+            cur = await con.execute(
+                queries.NEXT_ITEM,
+                {"session_id": session_id, "node_code": node_code},
+            )
+            item = await cur.fetchone()
 
     if item is None:
         raise HTTPException(status_code=404, detail="sin_items")
 
-    return item
+    result = {
+        "id": item["id"],
+        "code": item["code"],
+        "stem": item["stem"],
+        "author_difficulty": item["author_difficulty"],
+        "options": item["options"],
+        "source": source,
+    }
+    # Data only, no prebuilt text: the frontend decides what to say.
+    # Omitted when the lane item turns out to be from the same node —
+    # nothing to explain there.
+    if source == "lane" and item["node_code"] != node_code:
+        result["item_node_code"] = item["node_code"]
 
-
-NO_FEEDBACK = {"diagnostic", "mock_exam"}
+    return result
 
 
 class ResponseIn(BaseModel):
@@ -67,14 +124,115 @@ class ResponseIn(BaseModel):
     response_time_ms: int | None = None
 
 
+async def _active_lane_item(con, student_id, item_id):
+    """Does the answered item belong to the remediation of this
+    student's lane in turn (the oldest 'active' one by entered_at)? It
+    no longer has to be one specific remediation_item: any item from
+    that remediation counts, because NEXT_LANE_ITEM can now serve any
+    of them depending on the node. Used both to decide
+    responses.context and to advance the lane — a single query, not
+    two, so the two reads can never disagree."""
+    cur = await con.execute(
+        queries.ACTIVE_LANE_ITEM,
+        {"student_id": student_id, "item_id": item_id},
+    )
+    return await cur.fetchone()
+
+
+async def _advance_lane(con, student_id, lane, is_correct):
+    """The answered item belongs to the remediation of the lane in
+    turn: resolves or locks ITS misconception depending on whether it
+    was correct and whether any remediation_item is still unanswered
+    in this pass. There's no pointer to move anymore — if at least one
+    item is still unanswered, the lane stays 'active' with no write at
+    all; the next item to serve is recomputed from scratch on the next
+    NEXT_LANE_ITEM call. Decides nothing about other misconceptions —
+    that's _trigger_misconception's job, separately."""
+    misconception_id = lane["misconception_id"]
+
+    if is_correct:
+        await con.execute(
+            queries.LANE_RESOLVE,
+            {"student_id": student_id, "misconception_id": misconception_id},
+        )
+        return
+
+    cur = await con.execute(
+        queries.LANE_HAS_UNANSWERED_ITEM,
+        {
+            "student_id": student_id,
+            "misconception_id": misconception_id,
+            "entered_at": lane["entered_at"],
+        },
+    )
+    has_unanswered = (await cur.fetchone()) is not None
+    if not has_unanswered:
+        await con.execute(
+            queries.LANE_LOCK,
+            {"student_id": student_id, "misconception_id": misconception_id},
+        )
+
+
+async def _trigger_misconception(con, student_id, misconception_id):
+    """A named error triggers its own lane, no matter which item it
+    appeared on — even if that same item was the current-turn lane
+    item for ANOTHER misconception and was already handled in
+    _advance_lane. LANE_TRIGGER decides on its own whether to insert,
+    re-enter, or do nothing (see queries.py) for THIS specific
+    misconception."""
+    cur = await con.execute(
+        queries.MISCONCEPTION_REMEDIATION_READY,
+        {"misconception_id": misconception_id},
+    )
+    ready = (await cur.fetchone()) is not None
+
+    if not ready:
+        # A content signal, not a bug: the misconception exists and is
+        # being diagnosed, but nobody has written its remediation yet
+        # (or wrote it and never published it). Without this log
+        # there's no way to know which remediation is missing until
+        # someone notices by hand.
+        logger.warning(
+            "misconception %s triggered with no active remediation "
+            "and items: not creating/re-entering the lane",
+            misconception_id,
+        )
+        return
+
+    await con.execute(
+        queries.LANE_TRIGGER,
+        {"student_id": student_id, "misconception_id": misconception_id},
+    )
+
+
+async def _update_misconception_lane(con, student_id, verdict, lane):
+    """A student can have several 'active' lanes at once, one per
+    misconception: failing the current-turn item of one doesn't stop
+    the chosen distractor from triggering another, different one, in
+    parallel. That's why the two things are independent — the second
+    doesn't depend on whether there was a lane in turn or which
+    misconception it belonged to. Does nothing on its own with
+    p_correct/node_mastery: that's still derived by
+    recompute_node_mastery from responses, without distinguishing by
+    context."""
+    if lane is not None:
+        await _advance_lane(con, student_id, lane, verdict["is_correct"])
+
+    if verdict["is_correct"] or verdict["misconception_id"] is None:
+        return
+
+    await _trigger_misconception(con, student_id, verdict["misconception_id"])
+
+
 @app.post("/responses")
 async def create_response(payload: ResponseIn):
     data = payload.model_dump()
 
     async with db.pool.connection() as con:
-        # context is not client input: it is the session's mode, read
-        # server-side so a client can't open mock_exam and answer as
-        # practice to dodge deferred feedback.
+        # We need the mode server-side either way: to not trust the
+        # client (a mock_exam can't answer as practice to dodge
+        # deferred feedback) and because it decides whether the
+        # remediation lane needs to be checked further down.
         cur = await con.execute(
             queries.SESSION_BY_ID, {"session_id": payload.session_id}
         )
@@ -91,7 +249,18 @@ async def create_response(payload: ResponseIn):
         if str(session["student_id"]) != payload.student_id:
             raise HTTPException(status_code=403, detail="session_not_yours")
 
-        data["context"] = session["mode"]
+        # context isn't client input either, at this point: it's
+        # 'remediation' if the served item is the one that belongs to
+        # an active lane for some misconception, otherwise the
+        # session's mode. NO_FEEDBACK (diagnostic/mock_exam) has no
+        # immediate feedback, so no lane is possible there and it's
+        # never even queried.
+        lane = None
+        if session["mode"] not in NO_FEEDBACK:
+            lane = await _active_lane_item(
+                con, data["student_id"], data["item_id"]
+            )
+        data["context"] = "remediation" if lane is not None else session["mode"]
 
         try:
             await con.execute(queries.INSERT_RESPONSE, data)
@@ -112,6 +281,8 @@ async def create_response(payload: ResponseIn):
             queries.VERDICT, {"option_id": payload.option_id}
         )
         v = await cur.fetchone()
+
+        await _update_misconception_lane(con, data["student_id"], v, lane)
 
     return {
         "recorded": True,
