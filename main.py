@@ -44,6 +44,18 @@ async def health():
     return {"status": "ok", "db": db_status}
 
 
+@app.get("/nodes/{node_code}")
+async def get_node(node_code: str):
+    async with db.pool.connection() as con:
+        cur = await con.execute(queries.NODE_BY_CODE, {"node_code": node_code})
+        node = await cur.fetchone()
+
+    if node is None:
+        raise HTTPException(status_code=404, detail="node_not_found")
+
+    return {"code": node["code"], "name": node["name"]}
+
+
 # Modes without immediate feedback: no remediation lane is possible
 # there (sessions.mode: "there is no remediation mode — remediation is
 # a stretch WITHIN a session with immediate feedback"), so it's never
@@ -112,6 +124,7 @@ async def next_item(student_id: str, node_code: str, session_id: str):
     # nothing to explain there.
     if source == "lane" and item["node_code"] != node_code:
         result["item_node_code"] = item["node_code"]
+        result["item_node_name"] = item["item_node_name"]
 
     return result
 
@@ -295,6 +308,10 @@ async def create_response(payload: ResponseIn):
             "code": v["remediation_code"],
             "title": v["remediation_title"],
             "body": v["remediation_body"],
+        },
+        "correct_option": {
+            "id": v["correct_option_id"],
+            "label": v["correct_option_label"],
         },
     }
 

@@ -42,11 +42,14 @@ select coalesce(o.is_correct, false) as is_correct,
        m.name  as misconception_name,
        r.code  as remediation_code,
        r.title as remediation_title,
-       r.body  as remediation_body
+       r.body  as remediation_body,
+       co.id    as correct_option_id,
+       co.label as correct_option_label
 from item_options o
 left join misconceptions m on m.id = o.misconception_id
 left join remediations r   on r.misconception_id = m.id
                           and r.status = 'active'
+join item_options co on co.item_id = o.item_id and co.is_correct = true
 where o.id = %(option_id)s;
 """
 
@@ -119,6 +122,7 @@ select i.id,
        i.stem,
        i.author_difficulty,
        n.code as node_code,
+       n.name as item_node_name,
        json_agg(
          json_build_object('id', o.id, 'label', o.label, 'body', o.body)
          order by o.label
@@ -144,7 +148,7 @@ and not exists (
   where r.item_id = i.id
     and r.session_id = %(session_id)s
 )
-group by i.id, i.code, i.stem, i.author_difficulty, n.code, ri.position
+group by i.id, i.code, i.stem, i.author_difficulty, n.code, n.name, ri.position
 order by (n.code = %(node_code)s) desc, ri.position asc, i.id asc
 limit 1
 """
@@ -259,6 +263,10 @@ group by s.id, n.code
 
 NODE_ID_BY_CODE = """
 select id from nodes where code = %(node_code)s and status = 'active'
+"""
+
+NODE_BY_CODE = """
+select code, name from nodes where code = %(node_code)s and status = 'active'
 """
 
 CREATE_SESSION = """
