@@ -20,14 +20,10 @@ async def lifespan(app: FastAPI):
     await db.close_pool()
 
 
-app = FastAPI(lifespan=lifespan)
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://paes-frontend.vercel.app",
-    ],
+    allow_origins=["http://localhost:3000", "https://paes-backend.vercel.app"],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_methods=["*"],
     allow_headers=["*"],
 )
