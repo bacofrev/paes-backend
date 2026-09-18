@@ -244,7 +244,7 @@ where student_misconceptions.status = 'resolved'
 
 SESSION_BY_ID = """
 select id, student_id, mode, status, started_at, ended_at,
-       planned_item_count
+       planned_item_count, active_device_id
 from sessions
 where id = %(session_id)s::uuid
 """
@@ -261,6 +261,18 @@ where s.student_id = %(student_id)s::uuid
 group by s.id, n.code
 """
 
+# Claims a session for the calling device — run whenever POST /sessions
+# finds an already-open session (first contact from a second device, or
+# "Retomar acá" from a device that had been locked out). Whoever calls
+# POST /sessions last becomes the active device; no separate claim
+# endpoint needed.
+CLAIM_SESSION = """
+update sessions
+set active_device_id = %(device_id)s
+where id = %(session_id)s::uuid and status = 'in_progress'
+returning id
+"""
+
 NODE_ID_BY_CODE = """
 select id from nodes where code = %(node_code)s and status = 'active'
 """
@@ -270,9 +282,10 @@ select code, name from nodes where code = %(node_code)s and status = 'active'
 """
 
 CREATE_SESSION = """
-insert into sessions (student_id, mode, target_node_id, planned_item_count)
+insert into sessions (student_id, mode, target_node_id, planned_item_count,
+                       active_device_id)
 values (%(student_id)s::uuid, %(mode)s, %(target_node_id)s,
-        %(planned_item_count)s)
+        %(planned_item_count)s, %(device_id)s)
 returning id, mode, status, started_at
 """
 

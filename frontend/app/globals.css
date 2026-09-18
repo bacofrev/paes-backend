@@ -183,6 +183,12 @@ button.primary:disabled {
   margin: 0 0 20px;
 }
 
+.button-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 /* Wide LaTeX formulas (rendered by KaTeX inside stem/options/remediation)
    scroll horizontally instead of overflowing the 390px card. */
 .katex-display {

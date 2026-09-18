@@ -7,6 +7,24 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const STUDENT_ID = "0f514ac7-c5f7-49ac-a1c4-4b0f401490ea";
 const NODE_CODE = "NUM-POT-PROD";
 
+// Identifies this browser/device so the backend can tell two devices on
+// the same (hardcoded) student apart. Persisted so reloads and other
+// tabs on the same device don't look like a new one; falls back to an
+// in-memory id for this page load if localStorage is unavailable.
+function getDeviceId(): string {
+  if (typeof window === "undefined") return "";
+  try {
+    const key = "paes_device_id";
+    const existing = window.localStorage.getItem(key);
+    if (existing) return existing;
+    const created = crypto.randomUUID();
+    window.localStorage.setItem(key, created);
+    return created;
+  } catch {
+    return crypto.randomUUID();
+  }
+}
+
 type Option = { id: string; label: string; body: string };
 
 type NextItem = {
@@ -32,7 +50,7 @@ type ResponseResult = {
   correct_option: CorrectOption;
 };
 
-type Screen = "start" | "item" | "empty" | "closed";
+type Screen = "start" | "item" | "empty" | "closed" | "taken_over";
 
 async function errorDetail(res: Response): Promise<string | null> {
   try {
@@ -47,6 +65,7 @@ async function errorDetail(res: Response): Promise<string | null> {
 }
 
 export default function Home() {
+  const [deviceId] = useState(getDeviceId);
   const [screen, setScreen] = useState<Screen>("start");
   const [nodeName, setNodeName] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -85,7 +104,7 @@ export default function Home() {
 
   async function fetchNext(sid: string) {
     const res = await fetch(
-      `${API_URL}/students/${STUDENT_ID}/nodes/${NODE_CODE}/next?session_id=${sid}`
+      `${API_URL}/students/${STUDENT_ID}/nodes/${NODE_CODE}/next?session_id=${sid}&device_id=${deviceId}`
     );
 
     if (res.ok) {
@@ -103,6 +122,10 @@ export default function Home() {
       setScreen("empty");
       return;
     }
+    if (detail === "session_taken_over") {
+      setScreen("taken_over");
+      return;
+    }
     // session_not_found / session_not_in_progress / session_not_yours
     setScreen("closed");
   }
@@ -117,19 +140,36 @@ export default function Home() {
           student_id: STUDENT_ID,
           mode: "practice",
           node_code: NODE_CODE,
+          device_id: deviceId,
         }),
       });
 
-      if (!res.ok) {
-        // Covers 409 session_already_open, per product decision: same
-        // screen as a session that closed mid-loop.
-        setScreen("closed");
+      if (res.ok) {
+        const session = await res.json();
+        setSessionId(session.session_id);
+        await fetchNext(session.session_id);
         return;
       }
 
-      const session = await res.json();
-      setSessionId(session.session_id);
-      await fetchNext(session.session_id);
+      if (res.status === 409) {
+        // Same student already has a session open — e.g. they opened
+        // this on a second device. If it's the same practice/node we'd
+        // have started, pick it up instead of dead-ending; otherwise
+        // fall through to the generic "closed" screen below.
+        const body = await res.json().catch(() => null);
+        const existing = body?.detail;
+        if (
+          existing?.session_id &&
+          existing.mode === "practice" &&
+          existing.node_code === NODE_CODE
+        ) {
+          setSessionId(existing.session_id);
+          await fetchNext(existing.session_id);
+          return;
+        }
+      }
+
+      setScreen("closed");
     } finally {
       setIsStarting(false);
     }
@@ -152,10 +192,23 @@ export default function Home() {
           option_id: selectedOptionId,
           session_id: sessionId,
           response_time_ms,
+          device_id: deviceId,
         }),
       });
 
       if (!res.ok) {
+        const detail = await errorDetail(res);
+        if (detail === "item_already_answered_in_session") {
+          // The session is still alive — another device (or an old tab)
+          // already answered this exact item. Not a dead session, just
+          // a stale screen: pull a fresh item instead of dead-ending.
+          await fetchNext(sessionId);
+          return;
+        }
+        if (detail === "session_taken_over") {
+          setScreen("taken_over");
+          return;
+        }
         setScreen("closed");
         return;
       }
@@ -221,6 +274,26 @@ export default function Home() {
           <button className="primary" onClick={handleEmpezarDeNuevo}>
             Empezar de nuevo
           </button>
+        </div>
+      </main>
+    );
+  }
+
+  if (screen === "taken_over") {
+    return (
+      <main className="screen">
+        <div className="card">
+          <p className="screen-message">
+            Tienes esta sesión abierta en otro dispositivo.
+          </p>
+          <div className="button-stack">
+            <button className="primary" onClick={handleEmpezar} disabled={isStarting}>
+              Seguir acá
+            </button>
+            <button className="primary" onClick={handleTerminarSesion}>
+              Empezar de nuevo
+            </button>
+          </div>
         </div>
       </main>
     );

@@ -63,7 +63,7 @@ NO_FEEDBACK = {"diagnostic", "mock_exam"}
 
 
 @app.get("/students/{student_id}/nodes/{node_code}/next")
-async def next_item(student_id: str, node_code: str, session_id: str):
+async def next_item(student_id: str, node_code: str, session_id: str, device_id: str):
     async with db.pool.connection() as con:
         cur = await con.execute(
             queries.SESSION_BY_ID, {"session_id": session_id}
@@ -83,6 +83,12 @@ async def next_item(student_id: str, node_code: str, session_id: str):
             )
         if str(session["student_id"]) != student_id:
             raise HTTPException(status_code=403, detail="session_not_yours")
+        # Same session, different device (e.g. opened on a second
+        # device, or never claimed by anyone yet — active_device_id
+        # starts NULL and only a NULL never blocks, so a session that
+        # predates this check can't lock its own device out).
+        if session["active_device_id"] is not None and session["active_device_id"] != device_id:
+            raise HTTPException(status_code=403, detail="session_taken_over")
 
         item = None
         source = "pool"
@@ -133,6 +139,7 @@ class ResponseIn(BaseModel):
     option_id: str | None = None
     session_id: str
     response_time_ms: int | None = None
+    device_id: str
 
 
 async def _active_lane_item(con, student_id, item_id):
@@ -259,6 +266,11 @@ async def create_response(payload: ResponseIn):
             )
         if str(session["student_id"]) != payload.student_id:
             raise HTTPException(status_code=403, detail="session_not_yours")
+        if (
+            session["active_device_id"] is not None
+            and session["active_device_id"] != payload.device_id
+        ):
+            raise HTTPException(status_code=403, detail="session_taken_over")
 
         # context isn't client input either, at this point: it's
         # 'remediation' if the served item is the one that belongs to
@@ -349,6 +361,7 @@ class SessionIn(BaseModel):
     mode: MODES
     node_code: str | None = None
     planned_item_count: int | None = None
+    device_id: str
 
 
 @app.post("/sessions", status_code=201)
@@ -369,6 +382,18 @@ async def create_session(payload: SessionIn):
         open_session = await cur.fetchone()
 
         if open_session is not None:
+            # Whoever calls POST /sessions — first contact from a second
+            # device, or "Retomar acá" from one that got locked out —
+            # becomes the active device for this session. No separate
+            # claim endpoint: this IS the claim. Committed explicitly —
+            # the HTTPException raised right below would otherwise leave
+            # this write inside the same transaction and roll it back
+            # when the connection's context manager exits on exception.
+            await con.execute(
+                queries.CLAIM_SESSION,
+                {"session_id": open_session["id"], "device_id": payload.device_id},
+            )
+            await con.commit()
             raise HTTPException(
                 status_code=409,
                 detail={
@@ -404,6 +429,7 @@ async def create_session(payload: SessionIn):
                     "mode": payload.mode,
                     "target_node_id": target_node_id,
                     "planned_item_count": payload.planned_item_count,
+                    "device_id": payload.device_id,
                 },
             )
             session = await cur.fetchone()
