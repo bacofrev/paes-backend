@@ -189,6 +189,47 @@ button.primary:disabled {
   gap: 12px;
 }
 
+.field {
+  width: 100%;
+  height: 52px;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 0 16px;
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--card);
+}
+
+.field:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.field-error {
+  color: #b3402f;
+  font-size: 14px;
+  margin: -4px 0 0;
+}
+
+.top-bar {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--text-2);
+  font-family: var(--font-manrope), sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px;
+}
+
 /* Wide LaTeX formulas (rendered by KaTeX inside stem/options/remediation)
    scroll horizontally instead of overflowing the 390px card. */
 .katex-display {

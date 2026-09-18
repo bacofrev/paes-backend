@@ -1,11 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { Session } from "@supabase/supabase-js";
 import MathText from "./MathText";
+import LoginScreen from "./LoginScreen";
+import { createClient } from "../lib/supabase/client";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const STUDENT_ID = "0f514ac7-c5f7-49ac-a1c4-4b0f401490ea";
 const NODE_CODE = "NUM-POT-PROD";
+
+const supabase = createClient();
 
 // Identifies this browser/device so the backend can tell two devices on
 // the same (hardcoded) student apart. Persisted so reloads and other
@@ -66,6 +70,7 @@ async function errorDetail(res: Response): Promise<string | null> {
 
 export default function Home() {
   const [deviceId] = useState(getDeviceId);
+  const [session, setSession] = useState<Session | null | undefined>(undefined);
   const [screen, setScreen] = useState<Screen>("start");
   const [nodeName, setNodeName] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -76,6 +81,16 @@ export default function Home() {
   const [resultShownAt, setResultShownAt] = useState<number | null>(null);
   const [isStarting, setIsStarting] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSession(data.session));
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -92,6 +107,15 @@ export default function Home() {
     };
   }, []);
 
+  function authHeaders(extra?: Record<string, string>) {
+    return { Authorization: `Bearer ${session?.access_token}`, ...extra };
+  }
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    resetToStart();
+  }
+
   function resetToStart() {
     setScreen("start");
     setSessionId(null);
@@ -104,7 +128,8 @@ export default function Home() {
 
   async function fetchNext(sid: string) {
     const res = await fetch(
-      `${API_URL}/students/${STUDENT_ID}/nodes/${NODE_CODE}/next?session_id=${sid}&device_id=${deviceId}`
+      `${API_URL}/nodes/${NODE_CODE}/next?session_id=${sid}&device_id=${deviceId}`,
+      { headers: authHeaders() }
     );
 
     if (res.ok) {
@@ -135,9 +160,8 @@ export default function Home() {
     try {
       const res = await fetch(`${API_URL}/sessions`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({
-          student_id: STUDENT_ID,
           mode: "practice",
           node_code: NODE_CODE,
           device_id: deviceId,
@@ -185,9 +209,8 @@ export default function Home() {
       const response_time_ms = Math.round(Date.now() - itemShownAt);
       const res = await fetch(`${API_URL}/responses`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({
-          student_id: STUDENT_ID,
           item_id: currentItem.id,
           option_id: selectedOptionId,
           session_id: sessionId,
@@ -231,7 +254,10 @@ export default function Home() {
 
   async function handleTerminarSesion() {
     if (sessionId) {
-      await fetch(`${API_URL}/sessions/${sessionId}/end`, { method: "POST" });
+      await fetch(`${API_URL}/sessions/${sessionId}/end`, {
+        method: "POST",
+        headers: authHeaders(),
+      });
     }
     resetToStart();
   }
@@ -240,9 +266,22 @@ export default function Home() {
     resetToStart();
   }
 
+  if (session === undefined) {
+    return null;
+  }
+
+  if (session === null) {
+    return <LoginScreen supabase={supabase} />;
+  }
+
   if (screen === "start") {
     return (
       <main className="screen">
+        <div className="top-bar">
+          <button className="link-button" onClick={handleSignOut}>
+            Cerrar sesión
+          </button>
+        </div>
         <div className="card">
           <h1 className="node-name">{nodeName ?? NODE_CODE}</h1>
           <button className="primary" onClick={handleEmpezar} disabled={isStarting}>

@@ -1,7 +1,7 @@
 import logging
 from contextlib import asynccontextmanager
 from pydantic import BaseModel
-from fastapi import FastAPI, HTTPException, Response
+from fastapi import Depends, FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Literal
 from psycopg.errors import UniqueViolation
@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, timezone
 
 import db
 import queries
+from auth import get_current_student
 
 logger = logging.getLogger(__name__)
 
@@ -62,8 +63,13 @@ async def get_node(node_code: str):
 NO_FEEDBACK = {"diagnostic", "mock_exam"}
 
 
-@app.get("/students/{student_id}/nodes/{node_code}/next")
-async def next_item(student_id: str, node_code: str, session_id: str, device_id: str):
+@app.get("/nodes/{node_code}/next")
+async def next_item(
+    node_code: str,
+    session_id: str,
+    device_id: str,
+    student_id: str = Depends(get_current_student),
+):
     async with db.pool.connection() as con:
         cur = await con.execute(
             queries.SESSION_BY_ID, {"session_id": session_id}
@@ -134,7 +140,6 @@ async def next_item(student_id: str, node_code: str, session_id: str, device_id:
 
 
 class ResponseIn(BaseModel):
-    student_id: str
     item_id: str
     option_id: str | None = None
     session_id: str
@@ -243,8 +248,11 @@ async def _update_misconception_lane(con, student_id, verdict, lane):
 
 
 @app.post("/responses")
-async def create_response(payload: ResponseIn):
+async def create_response(
+    payload: ResponseIn, student_id: str = Depends(get_current_student)
+):
     data = payload.model_dump()
+    data["student_id"] = student_id
 
     async with db.pool.connection() as con:
         # We need the mode server-side either way: to not trust the
@@ -264,7 +272,7 @@ async def create_response(payload: ResponseIn):
             raise HTTPException(
                 status_code=409, detail="session_not_in_progress"
             )
-        if str(session["student_id"]) != payload.student_id:
+        if str(session["student_id"]) != student_id:
             raise HTTPException(status_code=403, detail="session_not_yours")
         if (
             session["active_device_id"] is not None
@@ -357,7 +365,6 @@ def serialize_session(row) -> dict:
 
 
 class SessionIn(BaseModel):
-    student_id: str
     mode: MODES
     node_code: str | None = None
     planned_item_count: int | None = None
@@ -365,7 +372,9 @@ class SessionIn(BaseModel):
 
 
 @app.post("/sessions", status_code=201)
-async def create_session(payload: SessionIn):
+async def create_session(
+    payload: SessionIn, student_id: str = Depends(get_current_student)
+):
     if payload.mode in NODE_REQUIRED and payload.node_code is None:
         raise HTTPException(
             status_code=422,
@@ -377,7 +386,7 @@ async def create_session(payload: SessionIn):
         # This pre-check turns the common case into a readable 409 that
         # carries enough data for the frontend to offer "resume or drop".
         cur = await con.execute(
-            queries.CURRENT_SESSION, {"student_id": payload.student_id}
+            queries.CURRENT_SESSION, {"student_id": student_id}
         )
         open_session = await cur.fetchone()
 
@@ -425,7 +434,7 @@ async def create_session(payload: SessionIn):
             cur = await con.execute(
                 queries.CREATE_SESSION,
                 {
-                    "student_id": payload.student_id,
+                    "student_id": student_id,
                     "mode": payload.mode,
                     "target_node_id": target_node_id,
                     "planned_item_count": payload.planned_item_count,
@@ -448,8 +457,10 @@ async def create_session(payload: SessionIn):
     }
 
 
-@app.get("/students/{student_id}/sessions/current", status_code=200)
-async def current_session(student_id: str, response: Response):
+@app.get("/sessions/current", status_code=200)
+async def current_session(
+    response: Response, student_id: str = Depends(get_current_student)
+):
     async with db.pool.connection() as con:
         cur = await con.execute(
             queries.CURRENT_SESSION, {"student_id": student_id}
@@ -479,7 +490,11 @@ async def current_session(student_id: str, response: Response):
     }
 
 @app.post("/sessions/{session_id}/end")
-async def end_session(session_id: str, response: Response):
+async def end_session(
+    session_id: str,
+    response: Response,
+    student_id: str = Depends(get_current_student),
+):
     async with db.pool.connection() as con:
         cur = await con.execute(
             queries.SESSION_BY_ID, {"session_id": session_id}
@@ -489,6 +504,8 @@ async def end_session(session_id: str, response: Response):
         if session is None:
             response.status_code = 404
             return {"reason": "session_not_found"}
+        if str(session["student_id"]) != student_id:
+            raise HTTPException(status_code=403, detail="session_not_yours")
 
         # A retry after a timeout is indistinguishable from a double click,
         # and the client's next move is the same either way.
@@ -541,13 +558,17 @@ def node_report(row) -> dict:
 
 
 @app.get("/sessions/{session_id}/report")
-async def session_report(session_id: str):
+async def session_report(
+    session_id: str, student_id: str = Depends(get_current_student)
+):
     async with db.pool.connection() as con:
         cur = await con.execute(queries.SESSION_BY_ID, {"session_id": session_id})
         session = await cur.fetchone()
 
         if session is None:
             raise HTTPException(status_code=404, detail="session_not_found")
+        if str(session["student_id"]) != student_id:
+            raise HTTPException(status_code=403, detail="session_not_yours")
 
         cur = await con.execute(
             queries.SESSION_RESPONSE_COUNT, {"session_id": session_id}
