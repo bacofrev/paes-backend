@@ -8,6 +8,9 @@ import jwt
 from fastapi import Header, HTTPException
 from jwt import PyJWKClient
 
+import db
+import queries
+
 logger = logging.getLogger(__name__)
 
 SUPABASE_JWKS_URL = os.environ["SUPABASE_JWKS_URL"]
@@ -42,4 +45,19 @@ async def get_current_student(authorization: str | None = Header(default=None)) 
         logger.info("token rejected: %s", type(e).__name__)
         raise HTTPException(status_code=401, detail="invalid_token")
 
-    return payload["sub"]
+    student_id = payload["sub"]
+
+    # A valid token doesn't mean an active student: deleted_at survives
+    # the token's own expiry window, and students_id_fkey no longer
+    # cascades a delete away (migration 035) — soft delete is now the
+    # only door, and this is what makes it mean something.
+    async with db.pool.connection() as con:
+        cur = await con.execute(
+            queries.STUDENT_DELETED_AT, {"student_id": student_id}
+        )
+        row = await cur.fetchone()
+
+    if row is not None and row["deleted_at"] is not None:
+        raise HTTPException(status_code=403, detail="student_deleted")
+
+    return student_id

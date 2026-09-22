@@ -44,7 +44,7 @@ async def health():
 
 
 @app.get("/nodes/{node_code}")
-async def get_node(node_code: str):
+async def get_node(node_code: str, student_id: str = Depends(get_current_student)):
     async with db.pool.connection() as con:
         cur = await con.execute(queries.NODE_BY_CODE, {"node_code": node_code})
         node = await cur.fetchone()

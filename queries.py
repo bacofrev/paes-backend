@@ -1,6 +1,14 @@
 """SQL lives here. When item selection moves to IRT,
 the diff is this file, not the endpoints."""
 
+# Run on every request, inside get_current_student: a signed-in student
+# can still be soft-deleted (deleted_at set, students_id_fkey no longer
+# cascades that away). No row at all is not this function's problem —
+# the auth.users trigger guarantees one exists for a real signup.
+STUDENT_DELETED_AT = """
+select deleted_at from students where id = %(student_id)s::uuid
+"""
+
 NEXT_ITEM = """
 select i.id,
        i.code,
