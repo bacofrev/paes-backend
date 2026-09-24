@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict QLTLmgsutIzB7K37V87gbS5fcci4LARypmhsGsbH1tiYEO3J6ntewx4Nqvp3zJx
+\restrict SwA975ZjdULHaXTuiOd1dleso3Sxf4LaxS5nJFG1sNNuS57pqJPtXp5Vn5IksXK
 
 -- Dumped from database version 17.6
 -- Dumped by pg_dump version 18.6
@@ -169,7 +169,8 @@ CREATE TYPE auth.factor_status AS ENUM (
 CREATE TYPE auth.factor_type AS ENUM (
     'totp',
     'webauthn',
-    'phone'
+    'phone',
+    'recovery_code'
 );
 
 
@@ -781,6 +782,30 @@ $$;
 
 
 --
+-- Name: handle_new_user(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.handle_new_user() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+begin
+  insert into public.students (id, display_name)
+  values (new.id, new.raw_user_meta_data ->> 'display_name')
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+
+--
+-- Name: FUNCTION handle_new_user(); Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON FUNCTION public.handle_new_user() IS 'Trigger de alta: crea la fila en students al crearse la cuenta en auth.users. security definer porque el rol que dispara el trigger (el de Supabase Auth) no tiene permisos sobre public.students por sí solo — sin esto el alta entera falla. on conflict (id) do nothing para que sea idempotente (reintentos, o una fila ya creada a mano antes de que este trigger existiera).';
+
+
+--
 -- Name: node_edges_no_cycles(); Type: FUNCTION; Schema: public; Owner: -
 --
 
@@ -848,56 +873,88 @@ declare
   v_p             numeric(5,4);
   v_status        text;
   v_prev_mastered timestamptz;
+  v_window_start  timestamptz;
+  v_streak_hit    boolean;
 begin
   select * into cfg from mastery_config where is_active;
   if not found then
     raise exception 'No hay mastery_config activa';
   end if;
- 
+
   select first_mastered_at into v_prev_mastered
   from node_mastery
   where student_id = p_student and node_id = p_node;
- 
+
   -- Una fila por ítem distinto: la respuesta más reciente.
   -- Un ítem mide un nodo: no hay pool ni role que filtrar.
+  -- SIN CAMBIOS respecto de antes de la 036: sigue ignorando context a
+  -- propósito (ver 031_student_misconceptions.sql). No confundir con
+  -- la lectura de la racha más abajo, que sí filtra por context y NO
+  -- colapsa a la última respuesta por ítem.
   with ultimas as (
     select distinct on (r.item_id)
-           r.item_id,
-           r.option_id,
-           r.created_at,
-           i.author_difficulty
+           r.item_id, r.option_id, r.created_at, i.author_difficulty
     from responses r
-    join node_items ni on ni.item_id = r.item_id
-                      and ni.node_id = p_node
+    join node_items ni on ni.item_id = r.item_id and ni.node_id = p_node
     join items i on i.id = r.item_id
     where r.student_id = p_student
     order by r.item_id, r.created_at desc
   ),
   evaluadas as (
-    select u.created_at,
-           u.author_difficulty,
+    select u.created_at, u.author_difficulty,
            coalesce(o.is_correct, false) as correcta   -- omitida = incorrecta
     from ultimas u
     left join item_options o on o.id = u.option_id
   )
   select count(*)::smallint,
          count(*) filter (where correcta)::smallint,
-         count(*) filter (where correcta
-                            and author_difficulty >= cfg.min_difficulty)::smallint,
+         count(*) filter (where correcta and author_difficulty >= cfg.min_difficulty)::smallint,
          max(created_at)
   into v_answered, v_correct, v_hard, v_last
   from evaluadas;
- 
-  -- Suavizado Beta: 3 de 3 da 0.80, no 1.00
+
   if v_answered > 0 then
-    v_p := (v_correct + cfg.prior_alpha)
-           / (v_answered + cfg.prior_alpha + cfg.prior_beta);
+    v_p := (v_correct + cfg.prior_alpha) / (v_answered + cfg.prior_alpha + cfg.prior_beta);
   else
     v_p := null;
   end if;
- 
+
+  -- Racha de N incorrectas consecutivas. Lectura CRUDA de responses,
+  -- sin distinct on: la racha se mide en el orden real en que ocurrió,
+  -- colapsar a la última respuesta por ítem destruiría el dato. context
+  -- <> 'remediation': los ítems del carril no cuentan. Ventana: todo lo
+  -- posterior al lesson_viewed/streak_reset más reciente de este
+  -- (alumno, nodo); sin ninguno, la ventana es todo el historial.
+  -- "Las últimas N son todas incorrectas" es equivalente a "la racha
+  -- final de incorrectas consecutivas mide >= N": si las últimas N son
+  -- todas incorrectas, la racha final mide al menos N; si la racha
+  -- final mide >= N, en particular las últimas N (subconjunto de esa
+  -- racha) son incorrectas. Por eso alcanza con mirar las últimas N.
+  select max(created_at) into v_window_start
+  from student_node_events
+  where student_id = p_student
+    and node_id = p_node
+    and event_type in ('lesson_viewed', 'streak_reset');
+
+  with racha as (
+    select coalesce(o.is_correct, false) as correcta
+    from responses r
+    join node_items ni on ni.item_id = r.item_id and ni.node_id = p_node
+    left join item_options o on o.id = r.option_id
+    where r.student_id = p_student
+      and r.context <> 'remediation'
+      and (v_window_start is null or r.created_at > v_window_start)
+    order by r.created_at desc
+    limit cfg.revisit_streak
+  )
+  select coalesce(count(*) = cfg.revisit_streak and bool_and(not correcta), false)
+  into v_streak_hit
+  from racha;
+
   if v_answered = 0 then
     v_status := 'not_started';
+  elsif v_streak_hit then
+    v_status := 'revisit';
   elsif v_p        >= cfg.p_threshold
     and v_answered >= cfg.min_items
     and v_hard     >= cfg.min_hard_correct then
@@ -905,7 +962,7 @@ begin
   else
     v_status := 'in_progress';
   end if;
- 
+
   insert into node_mastery (
     student_id, node_id, p_correct, items_answered, items_correct,
     hard_correct, status, first_mastered_at, last_response_at,
@@ -918,15 +975,11 @@ begin
     v_last, cfg.version, now()
   )
   on conflict (student_id, node_id) do update set
-    p_correct         = excluded.p_correct,
-    items_answered    = excluded.items_answered,
-    items_correct     = excluded.items_correct,
-    hard_correct      = excluded.hard_correct,
-    status            = excluded.status,
-    first_mastered_at = excluded.first_mastered_at,
-    last_response_at  = excluded.last_response_at,
-    config_version    = excluded.config_version,
-    computed_at       = now();
+    p_correct = excluded.p_correct, items_answered = excluded.items_answered,
+    items_correct = excluded.items_correct, hard_correct = excluded.hard_correct,
+    status = excluded.status, first_mastered_at = excluded.first_mastered_at,
+    last_response_at = excluded.last_response_at, config_version = excluded.config_version,
+    computed_at = now();
 end;
 $$;
 
@@ -1817,10 +1870,19 @@ begin
         '{}'
     ) from unnest(new.filters) f;
 
-    new.selected_columns = (
-        select array_agg(c order by c)
-        from unnest(new.selected_columns) c
-    );
+    -- Normalize selected_columns order so ARRAY['a','b'] and ARRAY['b','a'] are treated
+    -- as the same subscription group in apply_rls. Preserve an empty array as '{}'
+    -- ("primary keys only") so it stays distinct from NULL ("all columns"); array_agg
+    -- over an empty set would otherwise collapse '{}' back to NULL.
+    if new.selected_columns is not null then
+        new.selected_columns = coalesce(
+            (
+                select array_agg(c order by c)
+                from unnest(new.selected_columns) c
+            ),
+            '{}'::text[]
+        );
+    end if;
 
     return new;
 end;
@@ -3025,6 +3087,35 @@ COMMENT ON COLUMN auth.mfa_factors.last_webauthn_challenge_data IS 'Stores the l
 
 
 --
+-- Name: mfa_recovery_code_sets; Type: TABLE; Schema: auth; Owner: -
+--
+
+CREATE TABLE auth.mfa_recovery_code_sets (
+    id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    mfa_factor_id uuid NOT NULL,
+    failed_verification_count integer DEFAULT 0 NOT NULL,
+    verification_locked_until timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT mfa_recovery_code_sets_failed_verification_count_check CHECK ((failed_verification_count >= 0))
+);
+
+
+--
+-- Name: mfa_recovery_codes; Type: TABLE; Schema: auth; Owner: -
+--
+
+CREATE TABLE auth.mfa_recovery_codes (
+    id uuid NOT NULL,
+    mfa_recovery_code_set_id uuid NOT NULL,
+    code_hash text NOT NULL,
+    consumed_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
 -- Name: oauth_authorizations; Type: TABLE; Schema: auth; Owner: -
 --
 
@@ -3130,6 +3221,7 @@ CREATE TABLE auth.one_time_tokens (
     relates_to text NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     updated_at timestamp without time zone DEFAULT now() NOT NULL,
+    expires_at timestamp with time zone,
     CONSTRAINT one_time_tokens_token_hash_check CHECK ((char_length(token_hash) > 0))
 );
 
@@ -3242,6 +3334,43 @@ CREATE TABLE auth.schema_migrations (
 --
 
 COMMENT ON TABLE auth.schema_migrations IS 'Auth: Manages updates to the auth system.';
+
+
+--
+-- Name: scim_tokens; Type: TABLE; Schema: auth; Owner: -
+--
+
+CREATE TABLE auth.scim_tokens (
+    id uuid NOT NULL,
+    sso_provider_id uuid NOT NULL,
+    token_hash text NOT NULL,
+    prefix text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    expires_at timestamp with time zone,
+    revoked_at timestamp with time zone,
+    last_used_at timestamp with time zone,
+    CONSTRAINT scim_tokens_expires_at_future CHECK (((expires_at IS NULL) OR (expires_at > created_at))),
+    CONSTRAINT scim_tokens_revoked_after_created CHECK (((revoked_at IS NULL) OR (revoked_at >= created_at))),
+    CONSTRAINT scim_tokens_token_hash_check CHECK ((token_hash ~ '^[0-9a-f]{64}$'::text))
+);
+
+
+--
+-- Name: scim_users; Type: TABLE; Schema: auth; Owner: -
+--
+
+CREATE TABLE auth.scim_users (
+    id uuid NOT NULL,
+    sso_provider_id uuid NOT NULL,
+    user_id uuid,
+    resource jsonb NOT NULL,
+    user_name text GENERATED ALWAYS AS (lower((resource ->> 'userName'::text))) STORED NOT NULL,
+    external_id text GENERATED ALWAYS AS ((resource ->> 'externalId'::text)) STORED,
+    active boolean GENERATED ALWAYS AS (COALESCE(((resource ->> 'active'::text))::boolean, true)) STORED NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    deleted_at timestamp with time zone
+);
 
 
 --
@@ -3639,14 +3768,23 @@ CREATE TABLE public.mastery_config (
     validity_days smallint NOT NULL,
     note text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
+    revisit_streak smallint DEFAULT 3 NOT NULL,
     CONSTRAINT mastery_config_min_difficulty_check CHECK (((min_difficulty >= 1) AND (min_difficulty <= 5))),
     CONSTRAINT mastery_config_min_hard_correct_check CHECK ((min_hard_correct >= 0)),
     CONSTRAINT mastery_config_min_items_check CHECK ((min_items >= 1)),
     CONSTRAINT mastery_config_p_threshold_check CHECK (((p_threshold > (0)::numeric) AND (p_threshold < (1)::numeric))),
     CONSTRAINT mastery_config_prior_alpha_check CHECK ((prior_alpha > (0)::numeric)),
     CONSTRAINT mastery_config_prior_beta_check CHECK ((prior_beta > (0)::numeric)),
+    CONSTRAINT mastery_config_revisit_streak_check CHECK ((revisit_streak > 0)),
     CONSTRAINT mastery_config_validity_days_check CHECK ((validity_days > 0))
 );
+
+
+--
+-- Name: COLUMN mastery_config.revisit_streak; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.mastery_config.revisit_streak IS 'N de respuestas incorrectas consecutivas (sin colapsar por ítem, context <> ''remediation'', dentro de la ventana abierta por el último lesson_viewed/streak_reset del nodo) que disparan node_mastery.status = ''revisit''. Gana sobre el criterio de dominio: se evalúa antes que mastered en recompute_node_mastery. Cambiar N sí exige una fila nueva versionada, como cualquier otro umbral de esta tabla — el default de esta columna es solo para no dejar la fila activa actual sin valor.';
 
 
 --
@@ -3761,7 +3899,7 @@ CREATE TABLE public.node_mastery (
     last_response_at timestamp with time zone,
     config_version smallint,
     computed_at timestamp with time zone DEFAULT now() NOT NULL,
-    CONSTRAINT node_mastery_status_check CHECK ((status = ANY (ARRAY['not_started'::text, 'in_progress'::text, 'mastered'::text])))
+    CONSTRAINT node_mastery_status_check CHECK ((status = ANY (ARRAY['not_started'::text, 'in_progress'::text, 'mastered'::text, 'revisit'::text])))
 );
 
 
@@ -3769,7 +3907,7 @@ CREATE TABLE public.node_mastery (
 -- Name: COLUMN node_mastery.status; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.node_mastery.status IS 'lapsed NO se guarda acá: caduca por paso del tiempo, no por un evento nuevo. Guardarlo obligaría a un cron. Se calcula al leer, en v_node_mastery.';
+COMMENT ON COLUMN public.node_mastery.status IS 'lapsed NO se guarda acá: caduca por paso del tiempo, no por un evento nuevo. Se calcula al leer, en v_node_mastery. revisit SÍ se guarda: lo dispara una racha de respuestas (ver mastery_config.revisit_streak), no el tiempo, y gana sobre mastered en recompute_node_mastery. Eje independiente de lapsed: un nodo puede entrar en revisit sin haber estado nunca mastered.';
 
 
 --
@@ -3935,6 +4073,7 @@ CREATE TABLE public.sessions (
     status text DEFAULT 'in_progress'::text NOT NULL,
     started_at timestamp with time zone DEFAULT now() NOT NULL,
     ended_at timestamp with time zone,
+    active_device_id text,
     CONSTRAINT sessions_cierre_coherente CHECK (((status = 'in_progress'::text) = (ended_at IS NULL))),
     CONSTRAINT sessions_mode_check CHECK ((mode = ANY (ARRAY['diagnostic'::text, 'mock_exam'::text, 'study'::text, 'practice'::text, 'review'::text]))),
     CONSTRAINT sessions_planned_item_count_check CHECK ((planned_item_count > 0)),
@@ -3991,22 +4130,146 @@ COMMENT ON TABLE public.student_courses IS 'Un estudiante puede tener varios cur
 
 
 --
--- Name: students; Type: TABLE; Schema: public; Owner: -
+-- Name: student_misconceptions; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE public.students (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    display_name text,
-    auth_user_id uuid,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+CREATE TABLE public.student_misconceptions (
+    student_id uuid NOT NULL,
+    misconception_id bigint NOT NULL,
+    status text DEFAULT 'active'::text NOT NULL,
+    times_triggered smallint DEFAULT 1 NOT NULL,
+    entered_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT student_misconceptions_status_check CHECK ((status = ANY (ARRAY['active'::text, 'resolved'::text, 'locked'::text])))
 );
 
 
 --
--- Name: COLUMN students.auth_user_id; Type: COMMENT; Schema: public; Owner: -
+-- Name: TABLE student_misconceptions; Type: COMMENT; Schema: public; Owner: -
 --
 
-COMMENT ON COLUMN public.students.auth_user_id IS 'Nullable a propósito: permite estudiante anónimo que prueba antes de registrarse, y permite insertar datos de prueba hoy sin auth.';
+COMMENT ON TABLE public.student_misconceptions IS 'Estado del carril de remediación por (alumno, misconception). No cuelga de node_mastery: la misconception cruza nodos y el carril es uno solo, sin importar en qué nodo se disparó. Un alumno puede tener varias filas ''active'' a la vez, una por misconception distinta: un error con nombre dispara su carril sin importar en qué ítem apareció. Solo una sirve ítems a la vez — la de entered_at más antiguo; las demás esperan su turno.';
+
+
+--
+-- Name: COLUMN student_misconceptions.status; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.student_misconceptions.status IS 'active: queda al menos un remediation_item de esta misconception sin responder en el pase actual (ver entered_at); cuál se sirve primero se decide en cada GET /next, prefiriendo el nodo de la sesión y desempatando por remediation_items.position. resolved: acertó uno de esos ítems y salió; puede volver a active si la misconception se dispara de nuevo — es el caso esperado. locked: respondió todos los remediation_items disponibles en este pase sin acertar ninguno; deja de generar carril aunque el alumno siga cayendo en ella. La única salida de locked pensada hoy es que el alumno vuelva al nodo donde se trabó y revise la clase — ese disparador no existe todavía en el backend, así que locked no tiene salida automática por ahora.';
+
+
+--
+-- Name: COLUMN student_misconceptions.times_triggered; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.student_misconceptions.times_triggered IS 'Disparos separados del carril en el tiempo: la primera vez, y cada reingreso desde resolved. No cuenta las respuestas dentro de un mismo pase activo — eso se deriva de responses, no se guarda acá.';
+
+
+--
+-- Name: COLUMN student_misconceptions.entered_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.student_misconceptions.entered_at IS 'Cuándo arrancó el pase actual del carril (inserción o el último reingreso desde resolved). Dos roles: (1) decide el turno cuando hay más de una fila active para el mismo alumno — sirve ítems la de entered_at más antiguo; (2) es el corte que separa "respondido en este pase" de "respondido en un pase anterior" al calcular qué remediation_items quedan sin probar (responses.created_at >= entered_at). Se resetea en cada reingreso a propósito: un pase nuevo arranca con la lista de ítems limpia.';
+
+
+--
+-- Name: student_node_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.student_node_events (
+    id bigint NOT NULL,
+    student_id uuid NOT NULL,
+    node_id bigint NOT NULL,
+    event_type text NOT NULL,
+    lesson_id bigint,
+    lesson_version integer,
+    remediation_id bigint,
+    remediation_version integer,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT student_node_events_content_check CHECK (
+CASE event_type
+    WHEN 'lesson_viewed'::text THEN ((lesson_id IS NOT NULL) AND (lesson_version IS NOT NULL) AND (remediation_id IS NULL) AND (remediation_version IS NULL))
+    WHEN 'remediation_read'::text THEN ((remediation_id IS NOT NULL) AND (remediation_version IS NOT NULL) AND (lesson_id IS NULL) AND (lesson_version IS NULL))
+    WHEN 'streak_reset'::text THEN ((lesson_id IS NULL) AND (lesson_version IS NULL) AND (remediation_id IS NULL) AND (remediation_version IS NULL))
+    ELSE NULL::boolean
+END),
+    CONSTRAINT student_node_events_event_type_check CHECK ((event_type = ANY (ARRAY['lesson_viewed'::text, 'remediation_read'::text, 'streak_reset'::text])))
+);
+
+
+--
+-- Name: TABLE student_node_events; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.student_node_events IS 'Eventos server-side que acotan la ventana de la racha de revisit y miden contenido versionado. Node-scoped a propósito: cada fila lleva su node_id explícito, decidido por quien llama al endpoint. Una clase que cubre 3 nodos (lesson_nodes) exige 3 llamadas separadas si la intención es salir de revisit en las 3 — no hay fan-out automático. "La clase como agrupador" sigue sin resolverse.';
+
+
+--
+-- Name: COLUMN student_node_events.event_type; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.student_node_events.event_type IS 'lesson_viewed: terminó el contenido de la clase del nodo (botón explícito de fin de clase, nunca scroll/tiempo). Única forma de salir de revisit. remediation_read: terminó de leer una remediación — se guarda solo para analítica de versión de contenido, NO corta la ventana de la racha. streak_reset: pide reiniciar la ventana sin tocar responses/p_correct; solo permitido si el nodo NO está en revisit hoy (chequeo server-side contra node_mastery.status antes de aceptar el evento — no hay manera de expresar esto como constraint de esta tabla sola, porque depende del estado en OTRA tabla en el momento del insert).';
+
+
+--
+-- Name: COLUMN student_node_events.lesson_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.student_node_events.lesson_version IS 'Snapshot de lessons.version al momento del evento, no una FK: lessons no tiene una fila por versión, la versión vive como columna mutable en la misma fila. Guardarla acá es lo que permite medir si reescribir una clase cambió el resultado, aunque lessons.version siga avanzando después.';
+
+
+--
+-- Name: COLUMN student_node_events.remediation_version; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.student_node_events.remediation_version IS 'Mismo criterio que lesson_version: snapshot de remediations.version al momento del evento.';
+
+
+--
+-- Name: student_node_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+ALTER TABLE public.student_node_events ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.student_node_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: students; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.students (
+    id uuid NOT NULL,
+    display_name text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    deleted_at timestamp with time zone
+);
+
+
+--
+-- Name: TABLE students; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON TABLE public.students IS 'Un alumno = una cuenta de Supabase Auth. Fila creada a mano hoy (no hay todavía un trigger de alta automática en el signup); el id se copia de auth.users.id, nunca se genera acá.';
+
+
+--
+-- Name: COLUMN students.id; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.students.id IS 'Mismo uuid que auth.users.id. No hay traducción entre ids: este ES el id de la cuenta de Supabase Auth, no una referencia externa a ella.';
+
+
+--
+-- Name: COLUMN students.deleted_at; Type: COMMENT; Schema: public; Owner: -
+--
+
+COMMENT ON COLUMN public.students.deleted_at IS 'Nula = alumno activo. Timestamp, no boolean: interesa saber cuándo. El rechazo real pasa en auth.get_current_student() (403 si está seteada) — sin ese chequeo esta columna es decorativa.';
 
 
 --
@@ -4529,6 +4792,38 @@ ALTER TABLE ONLY auth.mfa_factors
 
 
 --
+-- Name: mfa_recovery_code_sets mfa_recovery_code_sets_mfa_factor_id_key; Type: CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.mfa_recovery_code_sets
+    ADD CONSTRAINT mfa_recovery_code_sets_mfa_factor_id_key UNIQUE (mfa_factor_id);
+
+
+--
+-- Name: mfa_recovery_code_sets mfa_recovery_code_sets_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.mfa_recovery_code_sets
+    ADD CONSTRAINT mfa_recovery_code_sets_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: mfa_recovery_code_sets mfa_recovery_code_sets_user_id_key; Type: CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.mfa_recovery_code_sets
+    ADD CONSTRAINT mfa_recovery_code_sets_user_id_key UNIQUE (user_id);
+
+
+--
+-- Name: mfa_recovery_codes mfa_recovery_codes_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.mfa_recovery_codes
+    ADD CONSTRAINT mfa_recovery_codes_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: oauth_authorizations oauth_authorizations_authorization_code_key; Type: CONSTRAINT; Schema: auth; Owner: -
 --
 
@@ -4638,6 +4933,22 @@ ALTER TABLE ONLY auth.saml_relay_states
 
 ALTER TABLE ONLY auth.schema_migrations
     ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: scim_tokens scim_tokens_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.scim_tokens
+    ADD CONSTRAINT scim_tokens_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: scim_users scim_users_pkey; Type: CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.scim_users
+    ADD CONSTRAINT scim_users_pkey PRIMARY KEY (id);
 
 
 --
@@ -4921,11 +5232,19 @@ ALTER TABLE ONLY public.student_courses
 
 
 --
--- Name: students students_auth_user_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: student_misconceptions student_misconceptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY public.students
-    ADD CONSTRAINT students_auth_user_id_key UNIQUE (auth_user_id);
+ALTER TABLE ONLY public.student_misconceptions
+    ADD CONSTRAINT student_misconceptions_pkey PRIMARY KEY (student_id, misconception_id);
+
+
+--
+-- Name: student_node_events student_node_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.student_node_events
+    ADD CONSTRAINT student_node_events_pkey PRIMARY KEY (id);
 
 
 --
@@ -5258,6 +5577,13 @@ CREATE INDEX mfa_factors_user_id_idx ON auth.mfa_factors USING btree (user_id);
 
 
 --
+-- Name: mfa_recovery_codes_set_id_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX mfa_recovery_codes_set_id_idx ON auth.mfa_recovery_codes USING btree (mfa_recovery_code_set_id);
+
+
+--
 -- Name: oauth_auth_pending_exp_idx; Type: INDEX; Schema: auth; Owner: -
 --
 
@@ -5388,6 +5714,97 @@ CREATE INDEX saml_relay_states_for_email_idx ON auth.saml_relay_states USING btr
 --
 
 CREATE INDEX saml_relay_states_sso_provider_id_idx ON auth.saml_relay_states USING btree (sso_provider_id);
+
+
+--
+-- Name: scim_tokens_expires_at_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX scim_tokens_expires_at_idx ON auth.scim_tokens USING btree (expires_at);
+
+
+--
+-- Name: scim_tokens_revoked_at_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX scim_tokens_revoked_at_idx ON auth.scim_tokens USING btree (revoked_at);
+
+
+--
+-- Name: scim_tokens_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX scim_tokens_sso_provider_id_idx ON auth.scim_tokens USING btree (sso_provider_id);
+
+
+--
+-- Name: scim_tokens_token_hash_key; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE UNIQUE INDEX scim_tokens_token_hash_key ON auth.scim_tokens USING btree (token_hash);
+
+
+--
+-- Name: scim_users_created_at_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX scim_users_created_at_idx ON auth.scim_users USING btree (sso_provider_id, created_at, id) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: scim_users_deleted_at_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX scim_users_deleted_at_idx ON auth.scim_users USING btree (deleted_at);
+
+
+--
+-- Name: scim_users_external_id_key; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE UNIQUE INDEX scim_users_external_id_key ON auth.scim_users USING btree (sso_provider_id, external_id) WHERE ((external_id IS NOT NULL) AND (deleted_at IS NULL));
+
+
+--
+-- Name: scim_users_id_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX scim_users_id_idx ON auth.scim_users USING btree (sso_provider_id, id) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: scim_users_sso_provider_id_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX scim_users_sso_provider_id_idx ON auth.scim_users USING btree (sso_provider_id);
+
+
+--
+-- Name: scim_users_updated_at_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX scim_users_updated_at_idx ON auth.scim_users USING btree (sso_provider_id, updated_at, id) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: scim_users_user_id_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX scim_users_user_id_idx ON auth.scim_users USING btree (user_id);
+
+
+--
+-- Name: scim_users_user_name_idx; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE INDEX scim_users_user_name_idx ON auth.scim_users USING btree (sso_provider_id, user_name COLLATE "C", id) WHERE (deleted_at IS NULL);
+
+
+--
+-- Name: scim_users_user_name_key; Type: INDEX; Schema: auth; Owner: -
+--
+
+CREATE UNIQUE INDEX scim_users_user_name_key ON auth.scim_users USING btree (sso_provider_id, user_name) WHERE (deleted_at IS NULL);
 
 
 --
@@ -5636,6 +6053,34 @@ CREATE INDEX student_courses_course ON public.student_courses USING btree (cours
 
 
 --
+-- Name: student_misconceptions_status; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX student_misconceptions_status ON public.student_misconceptions USING btree (status);
+
+
+--
+-- Name: student_node_events_lesson; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX student_node_events_lesson ON public.student_node_events USING btree (lesson_id, lesson_version) WHERE (lesson_id IS NOT NULL);
+
+
+--
+-- Name: student_node_events_remediation; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX student_node_events_remediation ON public.student_node_events USING btree (remediation_id, remediation_version) WHERE (remediation_id IS NOT NULL);
+
+
+--
+-- Name: student_node_events_window; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX student_node_events_window ON public.student_node_events USING btree (student_id, node_id, event_type, created_at DESC);
+
+
+--
 -- Name: ix_realtime_subscription_entity; Type: INDEX; Schema: realtime; Owner: -
 --
 
@@ -5734,6 +6179,13 @@ CREATE UNIQUE INDEX vector_indexes_name_bucket_id_idx ON storage.vector_indexes 
 
 
 --
+-- Name: users on_auth_user_created; Type: TRIGGER; Schema: auth; Owner: -
+--
+
+CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+
+--
 -- Name: node_edges node_edges_acyclic; Type: TRIGGER; Schema: public; Owner: -
 --
 
@@ -5822,6 +6274,30 @@ ALTER TABLE ONLY auth.mfa_factors
 
 
 --
+-- Name: mfa_recovery_code_sets mfa_recovery_code_sets_mfa_factor_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.mfa_recovery_code_sets
+    ADD CONSTRAINT mfa_recovery_code_sets_mfa_factor_id_fkey FOREIGN KEY (mfa_factor_id) REFERENCES auth.mfa_factors(id) ON DELETE CASCADE;
+
+
+--
+-- Name: mfa_recovery_code_sets mfa_recovery_code_sets_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.mfa_recovery_code_sets
+    ADD CONSTRAINT mfa_recovery_code_sets_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: mfa_recovery_codes mfa_recovery_codes_mfa_recovery_code_set_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.mfa_recovery_codes
+    ADD CONSTRAINT mfa_recovery_codes_mfa_recovery_code_set_id_fkey FOREIGN KEY (mfa_recovery_code_set_id) REFERENCES auth.mfa_recovery_code_sets(id) ON DELETE CASCADE;
+
+
+--
 -- Name: oauth_authorizations oauth_authorizations_client_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
 --
 
@@ -5891,6 +6367,30 @@ ALTER TABLE ONLY auth.saml_relay_states
 
 ALTER TABLE ONLY auth.saml_relay_states
     ADD CONSTRAINT saml_relay_states_sso_provider_id_fkey FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE;
+
+
+--
+-- Name: scim_tokens scim_tokens_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.scim_tokens
+    ADD CONSTRAINT scim_tokens_sso_provider_id_fkey FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE;
+
+
+--
+-- Name: scim_users scim_users_sso_provider_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.scim_users
+    ADD CONSTRAINT scim_users_sso_provider_id_fkey FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id) ON DELETE CASCADE;
+
+
+--
+-- Name: scim_users scim_users_user_id_fkey; Type: FK CONSTRAINT; Schema: auth; Owner: -
+--
+
+ALTER TABLE ONLY auth.scim_users
+    ADD CONSTRAINT scim_users_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE SET NULL;
 
 
 --
@@ -6182,6 +6682,62 @@ ALTER TABLE ONLY public.student_courses
 
 
 --
+-- Name: student_misconceptions student_misconceptions_misconception_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.student_misconceptions
+    ADD CONSTRAINT student_misconceptions_misconception_id_fkey FOREIGN KEY (misconception_id) REFERENCES public.misconceptions(id);
+
+
+--
+-- Name: student_misconceptions student_misconceptions_student_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.student_misconceptions
+    ADD CONSTRAINT student_misconceptions_student_id_fkey FOREIGN KEY (student_id) REFERENCES public.students(id) ON DELETE CASCADE;
+
+
+--
+-- Name: student_node_events student_node_events_lesson_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.student_node_events
+    ADD CONSTRAINT student_node_events_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES public.lessons(id);
+
+
+--
+-- Name: student_node_events student_node_events_node_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.student_node_events
+    ADD CONSTRAINT student_node_events_node_id_fkey FOREIGN KEY (node_id) REFERENCES public.nodes(id);
+
+
+--
+-- Name: student_node_events student_node_events_remediation_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.student_node_events
+    ADD CONSTRAINT student_node_events_remediation_id_fkey FOREIGN KEY (remediation_id) REFERENCES public.remediations(id);
+
+
+--
+-- Name: student_node_events student_node_events_student_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.student_node_events
+    ADD CONSTRAINT student_node_events_student_id_fkey FOREIGN KEY (student_id) REFERENCES public.students(id) ON DELETE CASCADE;
+
+
+--
+-- Name: students students_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.students
+    ADD CONSTRAINT students_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE RESTRICT;
+
+
+--
 -- Name: units units_area_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -6428,6 +6984,18 @@ ALTER TABLE public.sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.student_courses ENABLE ROW LEVEL SECURITY;
 
 --
+-- Name: student_misconceptions; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.student_misconceptions ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: student_node_events; Type: ROW SECURITY; Schema: public; Owner: -
+--
+
+ALTER TABLE public.student_node_events ENABLE ROW LEVEL SECURITY;
+
+--
 -- Name: students; Type: ROW SECURITY; Schema: public; Owner: -
 --
 
@@ -6571,5 +7139,5 @@ CREATE EVENT TRIGGER pgrst_drop_watch ON sql_drop
 -- PostgreSQL database dump complete
 --
 
-\unrestrict QLTLmgsutIzB7K37V87gbS5fcci4LARypmhsGsbH1tiYEO3J6ntewx4Nqvp3zJx
+\unrestrict SwA975ZjdULHaXTuiOd1dleso3Sxf4LaxS5nJFG1sNNuS57pqJPtXp5Vn5IksXK
 

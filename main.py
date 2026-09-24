@@ -96,6 +96,20 @@ async def next_item(
         if session["active_device_id"] is not None and session["active_device_id"] != device_id:
             raise HTTPException(status_code=403, detail="session_taken_over")
 
+        # A node in revisit blocks EVERY item — pool or lane — until
+        # lesson_viewed fires. Checked before either query runs: this
+        # codebase never trusts the client to self-gate (see how
+        # mode/context are always server-derived), and it can't be
+        # folded into NEXT_ITEM/NEXT_LANE_ITEM's WHERE without changing
+        # what "no item found" means for every other caller.
+        cur = await con.execute(
+            queries.NODE_MASTERY_STATUS_BY_CODE,
+            {"student_id": student_id, "node_code": node_code},
+        )
+        node_mastery = await cur.fetchone()
+        if node_mastery is not None and node_mastery["status"] == "revisit":
+            raise HTTPException(status_code=409, detail="node_in_revisit")
+
         item = None
         source = "pool"
         if session["mode"] not in NO_FEEDBACK:
@@ -331,6 +345,137 @@ async def create_response(
             "id": v["correct_option_id"],
             "label": v["correct_option_label"],
         },
+    }
+
+
+# ---------------------------------------------------------------------
+# Node events (revisit streak window)
+# ---------------------------------------------------------------------
+
+EVENT_TYPES = Literal["lesson_viewed", "remediation_read", "streak_reset"]
+
+# Only these two change what counts as "inside the streak window" —
+# remediation_read is recorded for content analytics only and never
+# touches node_mastery. Recomputing synchronously in the same
+# transaction as the event insert is what prevents a deadlock: /next
+# blocks every item while status='revisit', and answering items is the
+# only other place recompute_node_mastery runs — so if lesson_viewed
+# didn't also recompute inline, nothing would ever clear the status.
+WINDOW_RESETTING_EVENTS = {"lesson_viewed", "streak_reset"}
+
+
+class NodeEventIn(BaseModel):
+    event_type: EVENT_TYPES
+    session_id: str
+    device_id: str
+    lesson_code: str | None = None
+    remediation_code: str | None = None
+
+
+@app.post("/nodes/{node_code}/events", status_code=201)
+async def create_node_event(
+    node_code: str,
+    payload: NodeEventIn,
+    student_id: str = Depends(get_current_student),
+):
+    # Shape of the content fields per event_type, checked before
+    # touching the DB.
+    if payload.event_type == "lesson_viewed":
+        if payload.lesson_code is None or payload.remediation_code is not None:
+            raise HTTPException(status_code=422, detail="lesson_code_required")
+    elif payload.event_type == "remediation_read":
+        if payload.remediation_code is None or payload.lesson_code is not None:
+            raise HTTPException(status_code=422, detail="remediation_code_required")
+    else:  # streak_reset
+        if payload.lesson_code is not None or payload.remediation_code is not None:
+            raise HTTPException(status_code=422, detail="streak_reset_takes_no_content")
+
+    async with db.pool.connection() as con:
+        # Same checks as POST /responses and GET /next: exists, is
+        # open, is yours, is this device.
+        cur = await con.execute(queries.SESSION_BY_ID, {"session_id": payload.session_id})
+        session = await cur.fetchone()
+
+        if session is None:
+            raise HTTPException(status_code=404, detail="session_not_found")
+        if session["status"] != "in_progress":
+            raise HTTPException(status_code=409, detail="session_not_in_progress")
+        if str(session["student_id"]) != student_id:
+            raise HTTPException(status_code=403, detail="session_not_yours")
+        if (
+            session["active_device_id"] is not None
+            and session["active_device_id"] != payload.device_id
+        ):
+            raise HTTPException(status_code=403, detail="session_taken_over")
+
+        cur = await con.execute(queries.NODE_ID_BY_CODE, {"node_code": node_code})
+        node = await cur.fetchone()
+        if node is None:
+            raise HTTPException(status_code=404, detail="node_not_found")
+        node_id = node["id"]
+
+        lesson_id = lesson_version = remediation_id = remediation_version = None
+
+        if payload.lesson_code is not None:
+            cur = await con.execute(
+                queries.LESSON_ID_VERSION_BY_CODE, {"lesson_code": payload.lesson_code}
+            )
+            lesson = await cur.fetchone()
+            if lesson is None:
+                raise HTTPException(status_code=404, detail="lesson_not_found")
+            lesson_id, lesson_version = lesson["id"], lesson["version"]
+
+        if payload.remediation_code is not None:
+            cur = await con.execute(
+                queries.REMEDIATION_ID_VERSION_BY_CODE,
+                {"remediation_code": payload.remediation_code},
+            )
+            remediation = await cur.fetchone()
+            if remediation is None:
+                raise HTTPException(status_code=404, detail="remediation_not_found")
+            remediation_id, remediation_version = remediation["id"], remediation["version"]
+
+        # Only door while NOT in revisit; once there, lesson_viewed is
+        # the only way out. Depends on node_mastery.status at this
+        # moment, a different table, so it can't be a constraint.
+        if payload.event_type == "streak_reset":
+            cur = await con.execute(
+                queries.NODE_MASTERY_STATUS_BY_ID,
+                {"student_id": student_id, "node_id": node_id},
+            )
+            mastery = await cur.fetchone()
+            if mastery is not None and mastery["status"] == "revisit":
+                raise HTTPException(status_code=409, detail="cannot_reset_in_revisit")
+
+        await con.execute(
+            queries.INSERT_NODE_EVENT,
+            {
+                "student_id": student_id,
+                "node_id": node_id,
+                "event_type": payload.event_type,
+                "lesson_id": lesson_id,
+                "lesson_version": lesson_version,
+                "remediation_id": remediation_id,
+                "remediation_version": remediation_version,
+            },
+        )
+
+        if payload.event_type in WINDOW_RESETTING_EVENTS:
+            await con.execute(
+                queries.RECOMPUTE_FOR_NODE,
+                {"student_id": student_id, "node_id": node_id},
+            )
+
+        cur = await con.execute(
+            queries.NODE_MASTERY_STATUS_BY_ID,
+            {"student_id": student_id, "node_id": node_id},
+        )
+        mastery = await cur.fetchone()
+
+    return {
+        "recorded": True,
+        "event_type": payload.event_type,
+        "node_status": mastery["status"] if mastery is not None else "not_started",
     }
 
 

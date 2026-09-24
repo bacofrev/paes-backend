@@ -336,3 +336,58 @@ left join node_mastery nm
 left join mastery_config mc
     on mc.version = nm.config_version
 """
+
+# ---------------------------------------------------------------------
+# revisit: node_mastery.status lookups and streak-window events
+# ---------------------------------------------------------------------
+
+# GET /next needs this before it queries NEXT_LANE_ITEM or NEXT_ITEM — a
+# single joined query keyed by node_code, since that's all /next has in
+# scope. LEFT JOIN on purpose: a node with no node_mastery row yet
+# (not_started) must not look like it's in revisit. Zero rows for an
+# unknown/retired node_code, same as NEXT_ITEM/NEXT_LANE_ITEM today —
+# that falls through to the existing sin_items 404 unchanged.
+NODE_MASTERY_STATUS_BY_CODE = """
+select nm.status
+from nodes n
+left join node_mastery nm
+    on nm.student_id = %(student_id)s::uuid and nm.node_id = n.id
+where n.code = %(node_code)s and n.status = 'active'
+"""
+
+# Same lookup keyed by node_id, for the events endpoint: it already has
+# node_id (resolved via NODE_ID_BY_CODE), and needs this twice — once to
+# guard streak_reset, once to report the post-recompute status back.
+NODE_MASTERY_STATUS_BY_ID = """
+select status from node_mastery
+where student_id = %(student_id)s::uuid and node_id = %(node_id)s::bigint
+"""
+
+# Mirrors NODE_ID_BY_CODE's shape. status = 'active' matches how VERDICT
+# already filters remediations.
+LESSON_ID_VERSION_BY_CODE = """
+select id, version from lessons
+where code = %(lesson_code)s and status = 'active'
+"""
+
+REMEDIATION_ID_VERSION_BY_CODE = """
+select id, version from remediations
+where code = %(remediation_code)s and status = 'active'
+"""
+
+INSERT_NODE_EVENT = """
+insert into student_node_events
+  (student_id, node_id, event_type, lesson_id, lesson_version,
+   remediation_id, remediation_version)
+values
+  (%(student_id)s::uuid, %(node_id)s::bigint, %(event_type)s,
+   %(lesson_id)s, %(lesson_version)s,
+   %(remediation_id)s, %(remediation_version)s)
+returning id, created_at
+"""
+
+# Direct call keyed by node_id — unlike RECOMPUTE_FOR_ITEM, the caller
+# already knows the node, no fan-out via node_items needed.
+RECOMPUTE_FOR_NODE = """
+select recompute_node_mastery(%(student_id)s::uuid, %(node_id)s::bigint)
+"""
