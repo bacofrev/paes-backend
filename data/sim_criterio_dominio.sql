@@ -95,8 +95,13 @@ insert into sim_students values
                     '00000000-0000-4000-8000-0000000000fd',
   'ninguna',         'mastered');
 
--- Si students tiene columnas NOT NULL sin default, agregarlas acá.
-insert into students (id) select student_id from sim_students;
+-- students.id references auth.users(id) on delete restrict since 035
+-- (on_auth_user_created trigger creates the students row from here —
+-- inserting into students directly fails the FK).
+insert into auth.users (id, email, raw_app_meta_data, raw_user_meta_data, aud, role)
+select ss.student_id, ss.code || '@sim-criterio.local', '{}'::jsonb, '{}'::jsonb,
+       'authenticated', 'authenticated'
+from sim_students ss;
 
 -- sessions puede no existir todavía según el estado de la 027.
 do $$

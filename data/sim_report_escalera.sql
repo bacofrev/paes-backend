@@ -55,6 +55,17 @@ where id in (
   '00000000-0000-4000-8000-00000000000d'
 );
 
+-- students_id_fkey pasó a "on delete restrict" en 035
+-- (trigger_signup_soft_delete): esta fila solo se puede borrar después
+-- de students, nunca junto ni antes.
+delete from auth.users
+where id in (
+  '00000000-0000-4000-8000-00000000000a',
+  '00000000-0000-4000-8000-00000000000b',
+  '00000000-0000-4000-8000-00000000000c',
+  '00000000-0000-4000-8000-00000000000d'
+);
+
 
 -- ---------------------------------------------------------------------
 -- 1. Contra qué estamos probando
@@ -132,7 +143,13 @@ insert into sim_students values
                     '00000000-0000-4000-8000-0000000000fd',
   'mastered', null);
 
-insert into students (id) select student_id from sim_students;
+-- students.id references auth.users(id) on delete restrict since 035
+-- (on_auth_user_created trigger creates the students row from here —
+-- inserting into students directly fails the FK).
+insert into auth.users (id, email, raw_app_meta_data, raw_user_meta_data, aud, role)
+select ss.student_id, ss.code || '@sim-report.local', '{}'::jsonb, '{}'::jsonb,
+       'authenticated', 'authenticated'
+from sim_students ss;
 
 insert into sessions (id, student_id, mode, started_at)
 select ss.session_id, ss.student_id, 'practice', now()

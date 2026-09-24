@@ -9,7 +9,13 @@
 --   node_mastery  (student_id, node_id)      -> students, nodes
 --   responses     (student_id, item_id, session_id) -> students, items, sessions
 --   sessions      (student_id)               -> students
---   students      (id)
+--   students      (id)                       -> auth.users (035: on delete restrict)
+--   auth.users    (id)
+--
+-- students_id_fkey pasó a "on delete restrict" en 035
+-- (trigger_signup_soft_delete): borrar auth.users mientras students
+-- todavía referencia esa fila revienta, por eso auth.users se borra
+-- último, después de students, no junto con students como antes.
 --
 -- Idempotente: si no hay filas, borra cero y no falla.
 --
@@ -50,10 +56,19 @@ where id in (
   '00000000-0000-4000-8000-00000000000d'
 );
 
+delete from auth.users
+where id in (
+  '00000000-0000-4000-8000-00000000000a',
+  '00000000-0000-4000-8000-00000000000b',
+  '00000000-0000-4000-8000-00000000000c',
+  '00000000-0000-4000-8000-00000000000d'
+);
+
 select 'VERIFICACION' as bloque,
   (select count(*) from node_mastery where student_id::text like '00000000-0000-4000-8000-00000000000%') as node_mastery,
   (select count(*) from responses    where student_id::text like '00000000-0000-4000-8000-00000000000%') as responses,
   (select count(*) from sessions     where student_id::text like '00000000-0000-4000-8000-00000000000%') as sessions,
-  (select count(*) from students     where id::text like '00000000-0000-4000-8000-00000000000%') as students;
+  (select count(*) from students     where id::text like '00000000-0000-4000-8000-00000000000%') as students,
+  (select count(*) from auth.users   where id::text like '00000000-0000-4000-8000-00000000000%') as auth_users;
 
 commit;
