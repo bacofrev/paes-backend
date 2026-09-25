@@ -112,10 +112,10 @@ items:
     pool: curated
     difficulty: 2
     source: propio
+    figure: FIG-ENT-REC-01
     stem: >-
-      En una recta numérica, las marcas están separadas de 2 en 2 y el $0$
-      está sobre una de ellas. ¿Qué número corresponde a la tercera marca
-      a la izquierda del $0$?
+      En la recta numérica de la figura, ¿qué número corresponde a la
+      tercera marca a la izquierda del $0$?
     options:
       - {label: A, body: "$-3$", misconception: ENT-REC-ESCALA}
       - {label: B, body: "$-6$", correct: true}
@@ -190,11 +190,10 @@ items:
     pool: curated
     difficulty: 3
     source: propio
+    figure: FIG-ENT-REC-02
     stem: >-
-      En una recta numérica las marcas están separadas de 5 en 5 y el $0$
-      está sobre una de ellas. El punto $P$ está 4 marcas a la izquierda
-      del $0$ y el punto $Q$ está 1 marca a la derecha del $0$. ¿Cuántas
-      unidades hay entre $P$ y $Q$?
+      En la recta numérica de la figura, ¿cuántas unidades hay entre $P$
+      y $Q$?
     options:
       - {label: A, body: "$5$", misconception: ENT-REC-ESCALA}
       - {label: B, body: "$30$", misconception: ENT-REC-CONTEO}
@@ -268,10 +267,10 @@ items:
     pool: curated
     difficulty: 1
     source: propio
+    figure: FIG-ENT-REC-03
     stem: >-
-      En una recta numérica, las marcas están separadas de 10 en 10 y el
-      $0$ está sobre una de ellas. ¿Qué número corresponde a la segunda
-      marca a la izquierda del $0$?
+      En la recta numérica de la figura, ¿qué número corresponde a la
+      segunda marca a la izquierda del $0$?
     options:
       - {label: A, body: "$-2$", misconception: ENT-REC-ESCALA}
       - {label: B, body: "$-10$", misconception: ENT-REC-CONTEO}
@@ -297,10 +296,10 @@ items:
     pool: curated
     difficulty: 2
     source: propio
+    figure: FIG-ENT-REC-04
     stem: >-
-      En una recta numérica, las marcas están separadas de 3 en 3. El
-      punto $A$ está sobre la marca del $-9$. ¿Qué número está 2 marcas a
-      la derecha de $A$?
+      En la recta numérica de la figura, ¿qué número está 2 marcas a la
+      derecha de $A$?
     options:
       - {label: A, body: "$-3$", correct: true}
       - {label: B, body: "$-7$", misconception: ENT-REC-ESCALA}
@@ -362,10 +361,9 @@ items:
     pool: curated
     difficulty: 3
     source: propio
+    figure: FIG-ENT-REC-05
     stem: >-
-      Un termómetro tiene marcas cada 2 °C. En la mañana marcaba $0$ °C y
-      durante la noche la temperatura bajó hasta quedar 7 marcas bajo el
-      $0$. ¿Qué temperatura marcaba en la noche?
+      ¿Qué temperatura marca el termómetro de la figura?
     options:
       - {label: A, body: "$-7$ °C", misconception: ENT-REC-ESCALA}
       - {label: B, body: "$-12$ °C", misconception: ENT-REC-CONTEO}

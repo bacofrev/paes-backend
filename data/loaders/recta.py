@@ -38,7 +38,9 @@ Y_EJE = 36
 MARCA = 7         # media altura de una marca
 Y_ROTULO = 64
 Y_NOMBRE = 18
-RADIO = 5
+RADIO = 4.5
+TRAZO = 1.3      # guía de figuras: 1.1 a 1.4 px, extremos redondeados
+FUENTE = "Manrope, Verdana, sans-serif"
 
 
 def _num(v: Fraction) -> str:
@@ -116,13 +118,16 @@ def recta(minimo, maximo, paso, rotulos=None, puntos=None,
                 _num(v).replace("−", "-") for v in sin_nombre))
         descripcion = ". ".join(partes)
 
+    # width/height intrínsecos: en pantalla ancha no se agranda más allá de
+    # su tamaño natural; en un celular, max-width: 100% la achica.
     L = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {ancho} {ALTO}" '
+         f'width="{ancho}" height="{ALTO}" '
          f'role="img" aria-label="{_attr(descripcion)}" fill="currentColor" '
-         f'font-family="inherit" font-size="15">']
+         f'font-family="{FUENTE}" font-size="15" stroke-linecap="round">']
     # Eje con flecha en ambos extremos: la recta sigue.
     x0, x1 = 6, ancho - 6
     L.append(f'  <line class="eje" x1="{x0 + 8}" y1="{Y_EJE}" x2="{x1 - 8}" '
-             f'y2="{Y_EJE}" stroke="currentColor" stroke-width="2"/>')
+             f'y2="{Y_EJE}" stroke="currentColor" stroke-width="{TRAZO}"/>')
     L.append(f'  <polygon points="{x0},{Y_EJE} {x0 + 10},{Y_EJE - 5} '
              f'{x0 + 10},{Y_EJE + 5}"/>')
     L.append(f'  <polygon points="{x1},{Y_EJE} {x1 - 10},{Y_EJE - 5} '
@@ -130,7 +135,7 @@ def recta(minimo, maximo, paso, rotulos=None, puntos=None,
     for m in marcas:
         L.append(f'  <line class="marca" data-valor="{m}" x1="{_px(x(m))}" '
                  f'y1="{Y_EJE - MARCA}" x2="{_px(x(m))}" y2="{Y_EJE + MARCA}" '
-                 f'stroke="currentColor" stroke-width="2"/>')
+                 f'stroke="currentColor" stroke-width="{TRAZO}"/>')
     for r in rot:
         L.append(f'  <text class="rotulo" data-valor="{r}" x="{_px(x(r))}" '
                  f'y="{Y_ROTULO}" text-anchor="middle">{_num(r)}</text>')

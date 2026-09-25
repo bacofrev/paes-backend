@@ -199,7 +199,8 @@ def codigos_presentes(directorio: Path) -> tuple[list[str], list[str]]:
         return [], []
     codigos, fallas = [], []
     for f in sorted(directorio.iterdir()):
-        if f.name.startswith("."):
+        # El script que regenera las figuras vive junto a ellas.
+        if f.name.startswith(".") or f.suffix == ".py" or f.name == "__pycache__":
             continue
         if f.suffix != ".svg" or not FIG_RE.match(f.stem):
             fallas.append(f"figuras/{f.name}: nombre inválido, se espera "
