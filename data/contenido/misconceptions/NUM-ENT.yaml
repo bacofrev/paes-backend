@@ -104,3 +104,18 @@ misconceptions:
       cero", "deuda" o "retroceso" quedan como positivos. Después compara
       bien, pero sobre números con el signo equivocado.
     example: "5 m bajo el nivel del mar = +5"
+
+  - code: ENT-REC-DIRECCION
+    name: Invierte izquierda y derecha al moverse en la recta
+    nodo: NUM-ENT-REC
+    area: NUM
+    origin: docente
+    description: >-
+      Al desplazarse en la recta se mueve hacia el lado contrario: trata
+      "a la izquierda" como aumentar. A diferencia de ENT-REC-SUCESOR,
+      ocurre también con puros positivos ("3 a la izquierda de 5" = 8), y
+      a diferencia de ENT-REC-SINSIGNO no tiene que ver con comparar sino
+      con moverse. Con negativos y sucesor/antecesor da la misma
+      respuesta que SUCESOR; los ítems que buscan distinguirlos usan
+      desplazamientos, no sucesores.
+    example: "3 unidades a la izquierda de 1 = 4"
