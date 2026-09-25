@@ -1,0 +1,677 @@
+# =====================================================================
+# LES-NUM-ENT-01 — Los enteros en la recta y su orden
+# Cubre NUM-ENT-REC
+# =====================================================================
+# Primera clase del eje NUM. NUM-ENT-REC es raíz del grafo: no hay nodo
+# debajo al que bajar al estudiante, así que las remediaciones se
+# sostienen solas y el cuerpo de la clase no asume nada más que contar.
+#
+# Alcance (cerrado 24 sep 2026):
+#   entra   ubicar en la recta (incluye escala distinta de 1), comparar
+#           y ordenar con foco en negativos, antecesor y sucesor con
+#           negativos, comparar en contexto. N se muestra dentro de Z.
+#   fuera   operatoria (ENT-ADI, ENT-MUL), PAPOMUDAS (ENT-PRIOR), valor
+#           absoluto (ENT-ABS, M2; aparece solo como recurso en el
+#           texto, nunca se evalúa), Q en la recta (NUM-RAC-RECTA),
+#           clasificación de conjuntos (NUM-REA-CLAS).
+#
+# Niveles:
+#   1  comparar o ubicar en un paso
+#   2  ordenar listas, antecesor y sucesor, recta con escala
+#   3  contexto y formato PAES (afirmaciones, escala que cruza el 0)
+# ---------------------------------------------------------------------
+# Las misconceptions viven en contenido/misconceptions/NUM-ENT.yaml.
+# Acá solo se referencian por código.
+# ---------------------------------------------------------------------
+
+unit: NUM-ENT
+
+lesson:
+  code: LES-NUM-ENT-01
+  title: Los enteros en la recta y su orden
+  position: 1
+  nodes:
+    - node: NUM-ENT-REC
+      anchor: los-enteros-en-la-recta-y-su-orden
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== nivel 1 ======================================================
+
+  - code: M1-ENT-001
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes desigualdades es verdadera?"
+    options:
+      - {label: A, body: "$-9 > -2$", misconception: ENT-REC-MAGN}
+      - {label: B, body: "$-6 > 4$", misconception: ENT-REC-SINSIGNO}
+      - {label: C, body: "$0 < -5$", misconception: ENT-REC-CERO}
+      - {label: D, body: "$-3 > -7$", correct: true}
+
+  - code: M1-ENT-002
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "En la recta numérica, ¿qué número está 3 unidades a la izquierda de $1$?"
+    options:
+      - {label: A, body: "$-1$", misconception: ENT-REC-CONTEO}
+      - {label: B, body: "$-2$", correct: true}
+      - {label: C, body: "$4$", misconception: ENT-REC-DIRECCION}
+      - {label: D, body: "$0$", misconception: ENT-REC-CERO}
+
+  - code: M1-ENT-003
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es verdadera?"
+    options:
+      - {label: A, body: "El sucesor de $-5$ es $-6$", misconception: ENT-REC-SUCESOR}
+      - {label: B, body: "El $0$ no tiene antecesor en los enteros", misconception: ENT-REC-CERO}
+      - {label: C, body: "El sucesor de $-5$ es $-4$", correct: true}
+      - {label: D, body: "$-10$ es mayor que $-1$", misconception: ENT-REC-MAGN}
+
+  - code: M1-ENT-004
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Una noche la temperatura fue de 5 °C bajo cero. ¿Qué número
+      representa esa temperatura y cuál es su sucesor?
+    options:
+      - {label: A, body: "$5$, y su sucesor es $6$", misconception: ENT-REC-CTXSIGNO}
+      - {label: B, body: "$-5$, y su sucesor es $-6$", misconception: ENT-REC-SUCESOR}
+      - {label: C, body: "$-5$, y su sucesor es $-4$, que es menor que $-5$", misconception: ENT-REC-MAGN}
+      - {label: D, body: "$-5$, y su sucesor es $-4$", correct: true}
+
+  # ===== nivel 2 ======================================================
+
+  - code: M1-ENT-005
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Al ordenar los números $-4$, $2$, $-9$ y $0$ de menor a mayor, se obtiene:"
+    options:
+      - {label: A, body: "$-4,\\ -9,\\ 0,\\ 2$", misconception: ENT-REC-MAGN}
+      - {label: B, body: "$0,\\ 2,\\ -4,\\ -9$", misconception: ENT-REC-SINSIGNO}
+      - {label: C, body: "$-9,\\ -4,\\ 0,\\ 2$", correct: true}
+      - {label: D, body: "$0,\\ -9,\\ -4,\\ 2$", misconception: ENT-REC-CERO}
+
+  - code: M1-ENT-006
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      En una recta numérica, las marcas están separadas de 2 en 2 y el $0$
+      está sobre una de ellas. ¿Qué número corresponde a la tercera marca
+      a la izquierda del $0$?
+    options:
+      - {label: A, body: "$-3$", misconception: ENT-REC-ESCALA}
+      - {label: B, body: "$-6$", correct: true}
+      - {label: C, body: "$-4$", misconception: ENT-REC-CONTEO}
+      - {label: D, body: "$6$", misconception: ENT-REC-DIRECCION}
+
+  - code: M1-ENT-007
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "En la recta numérica, ¿qué número está 7 unidades a la izquierda de $3$?"
+    options:
+      - {label: A, body: "$-3$", misconception: ENT-REC-CONTEO}
+      - {label: B, body: "$10$", misconception: ENT-REC-DIRECCION}
+      - {label: C, body: "$0$", misconception: ENT-REC-CERO}
+      - {label: D, body: "$-4$", correct: true}
+
+  - code: M1-ENT-008
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el antecesor del antecesor de $-8$?"
+    options:
+      - {label: A, body: "$-10$, que es menor que $-8$", correct: true}
+      - {label: B, body: "$-6$, que es mayor que $-8$", misconception: ENT-REC-SUCESOR}
+      - {label: C, body: "$-9$, que es menor que $-8$", misconception: ENT-REC-CONTEO}
+      - {label: D, body: "$-10$, que es mayor que $-8$", misconception: ENT-REC-MAGN}
+
+  # ===== nivel 3 ======================================================
+
+  - code: M1-ENT-009
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Considerando el nivel del mar como $0$, un buzo está a 15 m bajo el
+      nivel del mar, un pez está a 20 m bajo el nivel del mar y un pelícano
+      vuela a 8 m sobre el nivel del mar. ¿Cuál de las siguientes
+      afirmaciones es verdadera?
+    options:
+      - {label: A, body: "La posición del buzo es $15$", misconception: ENT-REC-CTXSIGNO}
+      - {label: B, body: "La posición del pez es $-20$ y está más abajo que el buzo", correct: true}
+      - {label: C, body: "El pez está más arriba que el buzo, porque $-20 > -15$", misconception: ENT-REC-MAGN}
+      - {label: D, body: "El pelícano está más abajo que el buzo, porque $8 < 15$", misconception: ENT-REC-SINSIGNO}
+
+  - code: M1-ENT-010
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Considera las siguientes afirmaciones:
+
+      I) $-12 < -5$
+
+      II) El sucesor de $-10$ es $-11$
+
+      III) $0 > -3$
+
+      ¿Cuál(es) es(son) verdadera(s)?
+    options:
+      - {label: A, body: "I, II y III", misconception: ENT-REC-SUCESOR}
+      - {label: B, body: "Solo I y III", correct: true}
+      - {label: C, body: "Solo III", misconception: ENT-REC-MAGN}
+      - {label: D, body: "Solo I", misconception: ENT-REC-CERO}
+
+  - code: M1-ENT-011
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En una recta numérica las marcas están separadas de 5 en 5 y el $0$
+      está sobre una de ellas. El punto $P$ está 4 marcas a la izquierda
+      del $0$ y el punto $Q$ está 1 marca a la derecha del $0$. ¿Cuántas
+      unidades hay entre $P$ y $Q$?
+    options:
+      - {label: A, body: "$5$", misconception: ENT-REC-ESCALA}
+      - {label: B, body: "$30$", misconception: ENT-REC-CONTEO}
+      - {label: C, body: "$25$", correct: true}
+      - {label: D, body: "$15$", misconception: ENT-REC-SINSIGNO}
+
+  - code: M1-ENT-012
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un bote flota en la superficie del mar. Tres submarinos están a 40 m,
+      120 m y 75 m bajo la superficie. Si la superficie es $0$ y se
+      representan las cuatro posiciones con enteros, ¿cuál es el orden de
+      menor a mayor?
+    options:
+      - {label: A, body: "$-120,\\ -75,\\ -40,\\ 0$", correct: true}
+      - {label: B, body: "$-40,\\ -75,\\ -120,\\ 0$", misconception: ENT-REC-MAGN}
+      - {label: C, body: "$0,\\ -120,\\ -75,\\ -40$", misconception: ENT-REC-CERO}
+      - {label: D, body: "$0,\\ 40,\\ 75,\\ 120$", misconception: ENT-REC-CTXSIGNO}
+
+
+  # ===== segunda tanda (13-24) ========================================
+  # Mismos tres niveles, 4 ítems por nivel. Existe para que cada
+  # remediación tenga el doble de ítems de práctica.
+
+  # --- nivel 1 ---
+
+  - code: M1-ENT-013
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de los siguientes números es menor que $-4$?"
+    options:
+      - {label: A, body: "$-2$", misconception: ENT-REC-MAGN}
+      - {label: B, body: "$3$", misconception: ENT-REC-SINSIGNO}
+      - {label: C, body: "$-6$", correct: true}
+      - {label: D, body: "$0$", misconception: ENT-REC-CERO}
+
+  - code: M1-ENT-014
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "En la recta numérica, ¿qué número está 6 unidades a la izquierda de $2$?"
+    options:
+      - {label: A, body: "$-4$", correct: true}
+      - {label: B, body: "$8$", misconception: ENT-REC-DIRECCION}
+      - {label: C, body: "$-3$", misconception: ENT-REC-CONTEO}
+      - {label: D, body: "$0$", misconception: ENT-REC-CERO}
+
+  - code: M1-ENT-015
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      En un edificio, la calle es el piso $0$. El auto de Ana está en el
+      tercer subterráneo y el de Luis en el primer subterráneo. ¿Cuál
+      afirmación es correcta?
+    options:
+      - {label: A, body: "El auto de Ana está más abajo, porque $-3 < -1$", correct: true}
+      - {label: B, body: "El auto de Luis está más abajo, porque $-1 < -3$", misconception: ENT-REC-MAGN}
+      - {label: C, body: "El auto de Luis está más abajo, porque $1 < 3$", misconception: ENT-REC-CTXSIGNO}
+      - {label: D, body: "Entre los dos autos hay 3 pisos de diferencia", misconception: ENT-REC-CONTEO}
+
+  - code: M1-ENT-016
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      En una recta numérica, las marcas están separadas de 10 en 10 y el
+      $0$ está sobre una de ellas. ¿Qué número corresponde a la segunda
+      marca a la izquierda del $0$?
+    options:
+      - {label: A, body: "$-2$", misconception: ENT-REC-ESCALA}
+      - {label: B, body: "$-10$", misconception: ENT-REC-CONTEO}
+      - {label: C, body: "$20$", misconception: ENT-REC-DIRECCION}
+      - {label: D, body: "$-20$", correct: true}
+
+  # --- nivel 2 ---
+
+  - code: M1-ENT-017
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Al ordenar los números $-3$, $-11$, $5$, $0$ y $-7$ de mayor a menor, se obtiene:"
+    options:
+      - {label: A, body: "$5,\\ 0,\\ -11,\\ -7,\\ -3$", misconception: ENT-REC-MAGN}
+      - {label: B, body: "$-11,\\ -7,\\ 5,\\ -3,\\ 0$", misconception: ENT-REC-SINSIGNO}
+      - {label: C, body: "$5,\\ -3,\\ -7,\\ -11,\\ 0$", misconception: ENT-REC-CERO}
+      - {label: D, body: "$5,\\ 0,\\ -3,\\ -7,\\ -11$", correct: true}
+
+  - code: M1-ENT-018
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      En una recta numérica, las marcas están separadas de 3 en 3. El
+      punto $A$ está sobre la marca del $-9$. ¿Qué número está 2 marcas a
+      la derecha de $A$?
+    options:
+      - {label: A, body: "$-3$", correct: true}
+      - {label: B, body: "$-7$", misconception: ENT-REC-ESCALA}
+      - {label: C, body: "$-15$", misconception: ENT-REC-DIRECCION}
+      - {label: D, body: "$-6$", misconception: ENT-REC-CONTEO}
+
+  - code: M1-ENT-019
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $a$ es el sucesor de $-13$ y $b$ es el antecesor de $-13$, ¿cuál afirmación es correcta?"
+    options:
+      - {label: A, body: "$a = -14$ y $b = -12$", misconception: ENT-REC-SUCESOR}
+      - {label: B, body: "$a = -12$ y $b = -14$, por lo que $a > b$", correct: true}
+      - {label: C, body: "$a = -12$ y $b = -14$, que están a 3 unidades entre sí", misconception: ENT-REC-CONTEO}
+      - {label: D, body: "$a = -12$ y $b = -14$, por lo que $a < b$", misconception: ENT-REC-MAGN}
+
+  - code: M1-ENT-020
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Sofía debe 8 mil pesos y Tomás debe 3 mil pesos. Si se representan
+      sus saldos con enteros, en miles de pesos, ¿cuál afirmación es
+      correcta?
+    options:
+      - {label: A, body: "El saldo de Tomás es menor, porque $-3 < -8$", misconception: ENT-REC-MAGN}
+      - {label: B, body: "El saldo de Sofía es $-8$ y es menor que el de Tomás", correct: true}
+      - {label: C, body: "El saldo de Tomás es menor, porque $3 < 8$", misconception: ENT-REC-CTXSIGNO}
+      - {label: D, body: "La diferencia entre ambos saldos es de 6 mil pesos", misconception: ENT-REC-CONTEO}
+
+  # --- nivel 3 ---
+
+  - code: M1-ENT-021
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Considera las siguientes afirmaciones:
+
+      I) $-1 > -20$
+
+      II) El antecesor de $-7$ es $-6$
+
+      III) El número que está 5 unidades a la izquierda de $2$ es $-3$
+
+      ¿Cuál(es) es(son) verdadera(s)?
+    options:
+      - {label: A, body: "I, II y III", misconception: ENT-REC-SUCESOR}
+      - {label: B, body: "Solo III", misconception: ENT-REC-MAGN}
+      - {label: C, body: "Solo I y III", correct: true}
+      - {label: D, body: "Solo I", misconception: ENT-REC-CONTEO}
+
+  - code: M1-ENT-022
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un termómetro tiene marcas cada 2 °C. En la mañana marcaba $0$ °C y
+      durante la noche la temperatura bajó hasta quedar 7 marcas bajo el
+      $0$. ¿Qué temperatura marcaba en la noche?
+    options:
+      - {label: A, body: "$-7$ °C", misconception: ENT-REC-ESCALA}
+      - {label: B, body: "$-12$ °C", misconception: ENT-REC-CONTEO}
+      - {label: C, body: "$-14$ °C", correct: true}
+      - {label: D, body: "$14$ °C", misconception: ENT-REC-CTXSIGNO}
+
+  - code: M1-ENT-023
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un minero trabaja a 350 m bajo la superficie, otro trabaja a 120 m
+      bajo la superficie y una topógrafa está en un cerro a 200 m sobre la
+      superficie. Si la superficie es $0$, ¿cuál de las siguientes
+      desigualdades ordena correctamente sus posiciones?
+    options:
+      - {label: A, body: "$-350 < -120 < 200$", correct: true}
+      - {label: B, body: "$-120 < -350 < 200$", misconception: ENT-REC-MAGN}
+      - {label: C, body: "$-120 < 200 < -350$", misconception: ENT-REC-SINSIGNO}
+      - {label: D, body: "$120 < 200 < 350$", misconception: ENT-REC-CTXSIGNO}
+
+  - code: M1-ENT-024
+    node: NUM-ENT-REC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sean $p$ y $q$ enteros tales que $p$ está a la izquierda de $q$ en
+      la recta numérica. ¿Cuál de las siguientes afirmaciones es siempre
+      verdadera?
+    options:
+      - {label: A, body: "Si $p$ y $q$ son negativos, entonces $p > q$", misconception: ENT-REC-MAGN}
+      - {label: B, body: "Si $p = -9$ y $q = 4$, entonces $p > q$", misconception: ENT-REC-SINSIGNO}
+      - {label: C, body: "Si $q$ es el sucesor de $p$ y $p = -6$, entonces $q = -7$", misconception: ENT-REC-SUCESOR}
+      - {label: D, body: "$p < q$, cualesquiera sean sus signos", correct: true}
+
+
+# ---------------------------------------------------------------------
+# REMEDIATIONS
+# ---------------------------------------------------------------------
+# ENT-REC es raíz: ninguna remediación puede decir "repasa X". Cada una
+# se explica desde la recta y nada más.
+
+remediations:
+
+  - code: REM-ENT-REC-MAGN
+    misconception: ENT-REC-MAGN
+    title: Con negativos, el número más grande a la vista es el menor
+    body: |
+      Elegiste como mayor al negativo con el número más grande, como si
+      $-8$ fuera mayor que $-5$ porque $8 > 5$. Con los negativos pasa
+      justo al revés.
+
+      La regla de la recta es una sola y sirve para todos los enteros:
+      **el que está más a la derecha es el mayor**.
+
+      $$-8 \quad -7 \quad -6 \quad -5 \quad -4 \quad -3 \quad -2 \quad -1 \quad 0$$
+
+      El $-5$ está más a la derecha que el $-8$. Entonces $-5 > -8$.
+
+      Piénsalo con temperaturas: $-8$ °C es más frío que $-5$ °C. Más
+      frío significa menos temperatura, así que $-8$ es menor.
+
+      Un control rápido: entre dos negativos, el mayor es el que está
+      **más cerca del $0$**.
+    items: [M1-ENT-001, M1-ENT-005, M1-ENT-012, M1-ENT-013, M1-ENT-017, M1-ENT-023]
+
+  - code: REM-ENT-REC-SINSIGNO
+    misconception: ENT-REC-SINSIGNO
+    title: El signo menos no se puede borrar
+    body: |
+      Trabajaste con los números como si no tuvieran signo: miraste el $8$
+      de $-8$ y lo comparaste o lo contaste como un $8$ positivo. Pero $-8$
+      y $8$ son números distintos, que están en lados opuestos de la recta.
+
+      $$-8 \quad \cdots \quad -1 \quad 0 \quad 1 \quad \cdots \quad 8$$
+
+      Todo negativo está a la izquierda del $0$. Todo positivo está a la
+      derecha. Por eso **cualquier negativo es menor que cualquier
+      positivo**, sin importar los dígitos:
+
+      $$-8 < 5 \qquad -100 < 1$$
+
+      Antes de comparar o contar, ubica cada número en su lado de la
+      recta. Recién después miras los dígitos.
+    items: [M1-ENT-001, M1-ENT-005, M1-ENT-009, M1-ENT-013, M1-ENT-017, M1-ENT-023]
+
+  - code: REM-ENT-REC-CERO
+    misconception: ENT-REC-CERO
+    title: El 0 no es el piso
+    body: |
+      Trataste el $0$ como si fuera el número más chico de todos. En los
+      números que usas para contar ($0, 1, 2, 3, \ldots$) sí lo es, pero
+      los enteros siguen hacia la izquierda: $-1, -2, -3, \ldots$ sin
+      terminar nunca.
+
+      $$\cdots \quad -3 \quad -2 \quad -1 \quad 0 \quad 1 \quad 2 \quad 3 \quad \cdots$$
+
+      Como cualquier negativo está a la izquierda del $0$, **todo negativo
+      es menor que $0$**:
+
+      $$-1 < 0 \qquad -50 < 0$$
+
+      Si te sirve, piensa en un termómetro: bajo cero existen
+      temperaturas, y son más frías que $0$ °C.
+    items: [M1-ENT-001, M1-ENT-002, M1-ENT-005, M1-ENT-010, M1-ENT-012, M1-ENT-013]
+
+  - code: REM-ENT-REC-SUCESOR
+    misconception: ENT-REC-SUCESOR
+    title: El sucesor siempre está a la derecha
+    body: |
+      Para el sucesor de un negativo te alejaste del $0$: diste como
+      sucesor un número más lejos del $0$, como si el sucesor de $-16$
+      fuera $-17$. Con los positivos "el que sigue" coincide
+      con "el de número más grande", y por eso la costumbre engaña.
+
+      La definición no mira los dígitos, mira la recta:
+
+      - El **sucesor** es el entero que está justo **a la derecha**.
+      - El **antecesor** es el entero que está justo **a la izquierda**.
+
+      $$-17 \quad \underbrace{-16}_{\text{número}} \quad -15$$
+
+      El antecesor de $-16$ es $-17$ y su sucesor es $-15$.
+
+      Un control que no falla: el sucesor siempre es **mayor** que el
+      número. Como $-15 > -16$, el sucesor de $-16$ es $-15$.
+    items: [M1-ENT-003, M1-ENT-004, M1-ENT-008, M1-ENT-010, M1-ENT-019, M1-ENT-024]
+
+  - code: REM-ENT-REC-ESCALA
+    misconception: ENT-REC-ESCALA
+    title: Cada marca vale lo que dice la escala
+    body: |
+      Contaste las marcas de la recta como si cada una valiera $1$. Cuando
+      las marcas van de 4 en 4, cada salto vale $4$, no $1$.
+
+      $$\underset{-16}{|} \quad \underset{-12}{|} \quad \underset{-8}{|} \quad \underset{-4}{|} \quad \underset{0}{|} \quad \underset{4}{|}$$
+
+      La cuarta marca a la izquierda del $0$ está a cuatro saltos, y cada
+      salto vale $4$: $4$ saltos de $4$ son $16$ unidades. Por eso es
+      $-16$, no $-4$.
+
+      Antes de leer un punto, busca dos marcas con número y mira cuánto
+      cambia entre una y la siguiente. Ese es el valor de cada salto.
+    items: [M1-ENT-006, M1-ENT-011, M1-ENT-016, M1-ENT-018, M1-ENT-022]
+
+  - code: REM-ENT-REC-CONTEO
+    misconception: ENT-REC-CONTEO
+    title: Se cuentan saltos, no números
+    body: |
+      Al moverte en la recta contaste el número de partida como si fuera
+      un paso. Por eso te sobra una unidad.
+
+      Para ir de $-4$ a $2$ no importa cuántos números tocas, importa
+      cuántos **saltos** das:
+
+      $$-4 \to -3 \to -2 \to -1 \to 0 \to 1 \to 2$$
+
+      Son $7$ números, pero solo $6$ flechas. La distancia es $6$.
+
+      Lo mismo al moverte desde un punto: "4 a la izquierda de $2$"
+      significa cuatro saltos, y el primer salto termina en $1$, no en
+      $2$: $2 \to 1 \to 0 \to -1 \to -2$.
+
+      Cuenta las flechas, nunca los puntos.
+    items: [M1-ENT-002, M1-ENT-007, M1-ENT-008, M1-ENT-014, M1-ENT-020, M1-ENT-021]
+
+  - code: REM-ENT-REC-DIRECCION
+    misconception: ENT-REC-DIRECCION
+    title: A la izquierda se baja, a la derecha se sube
+    body: |
+      Te moviste hacia el lado contrario: para ir a la izquierda
+      sumaste, como si "4 a la izquierda de 6" fuera $10$.
+
+      En la recta los números crecen hacia la derecha. Por eso:
+
+      - Moverse a la **derecha** es ir hacia números **mayores**.
+      - Moverse a la **izquierda** es ir hacia números **menores**.
+
+      $$2 \leftarrow 3 \leftarrow 4 \leftarrow 5 \leftarrow 6$$
+
+      Cuatro saltos a la izquierda de $6$ llegan a $2$, no a $10$.
+
+      Esto no cambia al cruzar el cero. Dos a la izquierda de $1$ es $-1$:
+      sigues bajando, aunque ahora aparezca el signo menos.
+
+      Un control rápido: si te moviste a la izquierda, tu respuesta tiene
+      que ser **menor** que el punto de partida.
+    items: [M1-ENT-002, M1-ENT-006, M1-ENT-007, M1-ENT-014, M1-ENT-016, M1-ENT-018]
+
+  - code: REM-ENT-REC-CTXSIGNO
+    misconception: ENT-REC-CTXSIGNO
+    title: Bajo cero, bajo el mar y deuda son negativos
+    body: |
+      Escribiste como positiva una cantidad que en el problema estaba
+      "bajo" algo. Todo lo que queda bajo el punto de referencia se
+      escribe con signo menos:
+
+      - 7 °C **bajo cero** es $-7$.
+      - 30 m **bajo el nivel del mar** es $-30$.
+      - Una **deuda** de 12 mil pesos es $-12000$.
+
+      Lo que está sobre la referencia (sobre cero, sobre el nivel del mar,
+      a favor) es positivo.
+
+      El orden correcto es primero **escribir el entero con su signo** y
+      recién después comparar. Si comparas antes de poner el signo,
+      comparas otros números.
+    items: [M1-ENT-004, M1-ENT-009, M1-ENT-012, M1-ENT-015, M1-ENT-020, M1-ENT-022]
+
+
+# ---------------------------------------------------------------------
+# LESSON BODY
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Esta es la primera clase de todo el eje de números. Todo lo que viene
+  después (sumar, restar, multiplicar con signos, las fracciones en la
+  recta) se apoya en una sola idea: dónde está cada número y cuál es
+  mayor.
+
+  ## Los enteros en la recta y su orden
+
+  ### De los naturales a los enteros
+
+  Los números que usas para contar son los **naturales**: $1, 2, 3,
+  \ldots$ Si les agregas el $0$, en la recta quedan todos del $0$ hacia
+  la derecha.
+
+  Pero hay situaciones que se quedan cortas con eso: una temperatura bajo
+  cero, un piso subterráneo, una deuda. Para ellas la recta sigue hacia
+  la izquierda del $0$ con los **negativos**: $-1, -2, -3, \ldots$
+
+  Los naturales, el $0$ y los negativos juntos forman los **números
+  enteros**, que se escriben $\mathbb{Z}$.
+
+  $$\cdots \quad -4 \quad -3 \quad -2 \quad -1 \quad 0 \quad 1 \quad 2 \quad 3 \quad 4 \quad \cdots$$
+
+  Todo natural es entero, pero no todo entero es natural: $-3$ es entero
+  y no es natural.
+
+  ### La regla del orden
+
+  En la recta hay una sola regla, y sirve para todos los enteros:
+
+  **El que está más a la derecha es el mayor.**
+
+  Por lo mismo, moverse a la derecha es ir a números mayores y moverse a
+  la izquierda es ir a números menores, crucen o no el $0$.
+
+  De ahí salen tres consecuencias:
+
+  - Cualquier positivo es mayor que $0$.
+  - Cualquier negativo es menor que $0$. El $0$ no es el piso.
+  - Cualquier negativo es menor que cualquier positivo: $-100 < 1$.
+
+  ### Comparar dos negativos
+
+  Este es el caso que más se equivoca. Entre $-8$ y $-5$, el $8$ parece
+  "más grande", pero en la recta el $-8$ está más a la izquierda:
+
+  $$-8 \quad -7 \quad -6 \quad -5 \quad -4 \quad -3 \quad -2 \quad -1 \quad 0$$
+
+  Entonces $-8 < -5$.
+
+  Una forma de verlo: entre dos negativos, el mayor es el que está **más
+  cerca del $0$**. Con temperaturas es natural: $-8$ °C es más frío que
+  $-5$ °C.
+
+  ### Antecesor y sucesor
+
+  - El **sucesor** de un entero es el que está justo a su derecha.
+  - El **antecesor** es el que está justo a su izquierda.
+
+  Con positivos no hay sorpresa: el sucesor de $4$ es $5$. Con negativos
+  hay que mirar la recta, no los dígitos:
+
+  $$\text{antecesor de } -16 = -17 \qquad \text{sucesor de } -16 = -15$$
+
+  El sucesor siempre es mayor que el número. Si tu sucesor te dio menor,
+  te moviste hacia el lado equivocado.
+
+  ### Leer una recta con escala
+
+  No todas las rectas van de 1 en 1. Antes de leer un punto, busca dos
+  marcas con número y mira cuánto cambia de una a la siguiente:
+
+  $$\underset{-75}{|} \quad \underset{-50}{|} \quad \underset{-25}{|} \quad \underset{0}{|} \quad \underset{25}{|} \quad \underset{50}{|}$$
+
+  Aquí cada salto vale $25$. La tercera marca a la izquierda del $0$ es
+  $-75$, no $-3$.
+
+  Para medir cuántas unidades hay entre dos puntos, **cuenta saltos, no
+  números**. De $-3$ a $4$ hay ocho números pero siete saltos, así que la
+  distancia es $7$.
+
+  ### Enteros en contexto
+
+  En los problemas los números vienen escritos con palabras. Primero
+  traduce cada dato a un entero con su signo, y recién después compara.
+
+  - Bajo cero, bajo el nivel del mar, subterráneo, deuda: **negativo**.
+  - Sobre cero, sobre el nivel del mar, a favor: **positivo**.
+  - La referencia (el cero, la superficie, la calle): **$0$**.
+
+  Si una ancla está a 10 m bajo el mar y una roca a 25 m bajo el mar, sus
+  posiciones son $-10$ y $-25$. Como $-25 < -10$, la roca está más
+  abajo.

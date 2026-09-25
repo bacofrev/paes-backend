@@ -1,0 +1,106 @@
+# =====================================================================
+# Catálogo de misconceptions — unidad NUM-ENT
+# =====================================================================
+# Fuente única de la unidad. Las clases NO declaran misconceptions:
+# solo referencian códigos, y el cargador falla si el código no existe
+# acá.
+#
+# origin — de dónde salió el error:
+#   demre      observado en ítems oficiales o clavijero DEMRE
+#   docente    reportado por alguien que hace clases
+#   hipotesis  plausible, sin evidencia todavía
+#
+# Estado: solo NUM-ENT-REC. ADI, MUL y el resto se agregan al llegar a
+# su clase.
+#
+# NUM-ENT-REC es raíz del grafo: no hay nodo debajo al que bajar al
+# estudiante. Las remediaciones de estos errores deben sostenerse solas.
+# ---------------------------------------------------------------------
+
+unit: NUM-ENT
+
+misconceptions:
+
+  # --- NUM-ENT-REC ----------------------------------------------------
+
+  - code: ENT-REC-MAGN
+    name: Compara negativos por su magnitud
+    nodo: NUM-ENT-REC
+    area: NUM
+    origin: docente
+    description: >-
+      Entre dos negativos elige como mayor el de mayor número "visible".
+      Traslada el orden de los naturales a los negativos sin invertirlo:
+      como 7 > 3, concluye que -7 > -3. Es el error central del nodo y
+      debe aparecer como distractor en la mayoría de los ítems de
+      comparación.
+    example: "-7 > -3"
+
+  - code: ENT-REC-SINSIGNO
+    name: Ignora el signo al comparar negativo con positivo
+    nodo: NUM-ENT-REC
+    area: NUM
+    origin: docente
+    description: >-
+      Compara un negativo con un positivo mirando solo los dígitos. Se
+      registra separado de ENT-REC-MAGN a propósito: MAGN ocurre entre dos
+      negativos y este cruza el cero. Un estudiante puede ordenar bien
+      -7 < -3 y aun así decir que -8 > 5.
+    example: "-8 > 5"
+
+  - code: ENT-REC-CERO
+    name: Cree que 0 es el menor de los enteros
+    nodo: NUM-ENT-REC
+    area: NUM
+    origin: docente
+    description: >-
+      Arrastra la idea de los naturales de que el 0 es el piso: "no hay
+      nada menos que cero". Ubica los negativos por encima del 0 o los
+      trata como mayores que él.
+    example: "0 < -2"
+
+  - code: ENT-REC-SUCESOR
+    name: Invierte antecesor y sucesor con negativos
+    nodo: NUM-ENT-REC
+    area: NUM
+    origin: docente
+    description: >-
+      Para el sucesor de un negativo se aleja del 0 en vez de moverse a la
+      derecha. Usa "sucesor = el número que sigue al leer" (4, 5, 6...) y
+      lo aplica a la magnitud. Con positivos no se nota, solo aparece con
+      negativos.
+    example: "sucesor de -4 = -5"
+
+  - code: ENT-REC-ESCALA
+    name: Lee cada marca de la recta como una unidad
+    nodo: NUM-ENT-REC
+    area: NUM
+    origin: hipotesis
+    description: >-
+      En una recta cuya escala no es 1 (de 2 en 2, de 5 en 5), cuenta
+      marcas en vez de leer su valor: asigna 1, 2, 3... a las marcas
+      sucesivas aunque cada una valga más. Sin observación en aula; se
+      mantiene porque la PAES usa rectas con escala.
+    example: "escala de 2 en 2 desde 0: lee la 3ª marca como 3 (vale 6)"
+
+  - code: ENT-REC-CONTEO
+    name: Cuenta el punto de partida al medir en la recta
+    nodo: NUM-ENT-REC
+    area: NUM
+    origin: docente
+    description: >-
+      Al contar cuántas unidades hay entre dos enteros cuenta los números
+      (incluyendo el de partida) en vez de los saltos. Da siempre una
+      unidad de más. Es más frecuente cuando el recorrido cruza el cero.
+    example: "de -2 a 3 cuenta 6 unidades (son 5)"
+
+  - code: ENT-REC-CTXSIGNO
+    name: Asigna mal el signo en un contexto
+    nodo: NUM-ENT-REC
+    area: NUM
+    origin: docente
+    description: >-
+      Traduce mal una situación a entero: "bajo el nivel del mar", "bajo
+      cero", "deuda" o "retroceso" quedan como positivos. Después compara
+      bien, pero sobre números con el signo equivocado.
+    example: "5 m bajo el nivel del mar = +5"
