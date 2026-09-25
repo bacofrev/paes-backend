@@ -18,7 +18,10 @@ primer paso es ubicarlo en su clase.
 1. **Tres puntos de control. En cada uno te detienes y esperas la aprobación
    explícita de Ben.** No avances "mientras tanto". No interpretes silencio
    ni un "ok" ambiguo sobre otra cosa como aprobación.
-2. **Nunca cargas nada en producción.** Generas migraciones; Ben las corre.
+2. **Solo cargas en producción si Ben lo pide explícitamente** para esa
+   migración ("aplícala", "súbela"). La aprobación del control 3 no alcanza, y
+   un permiso anterior no vale para una migración nueva. Si no lo pide,
+   generas las migraciones y Ben las corre. Cómo aplicarla, en el paso 4.
 3. **Una sesión por unidad a la vez.** Antes de empezar, corre `git status`.
    Si hay cambios sin commitear en el catálogo de la unidad
    (`data/contenido/misconceptions/<UNIDAD>.yaml`) o en otra clase de la misma
@@ -127,7 +130,23 @@ autorrevisión.
 
 **DETENTE.** Entrega a Ben: archivos creados, orden de carga y las queries de
 verificación (misconceptions, ítems activos con 4 alternativas y 1 correcta,
-remediaciones con sus ítems, clase con su anchor, nodo activo). **No cargues.**
+remediaciones con sus ítems, clase con su anchor, nodo activo). **No cargues**
+a menos que Ben lo pida explícitamente.
+
+**Si Ben pide aplicarla:**
+
+1. Antes, consulta el estado de la base. ¿Ya se aplicaron las migraciones
+   anteriores? Si la migración modifica ítems ya cargados, confirma que
+   tengan 0 respuestas. Si algo no calza, detente y avisa.
+2. Aplica cada migración en orden, con la URL de `data/.env` (el pooler de
+   sesión, puerto 5432; no el de la raíz, que es el de la app):
+   `psql "$DATABASE_URL" -X -v ON_ERROR_STOP=1 -1 -f data/migraciones/<archivo>.sql`.
+   Nunca desde el editor SQL de Supabase: no respeta la transacción.
+3. Si falla, no reintentes a ciegas ni edites la migración para forzarla:
+   muestra el error y detente. Con `-1` no queda nada a medias.
+4. Después, corre las queries de verificación y muéstrale los resultados.
+5. `main` despliega con cada push: la migración va a la base **antes** de
+   subir código que la necesite. Commit y push solo si Ben los pide.
 
 ### Paso 5 — Bitácora
 
