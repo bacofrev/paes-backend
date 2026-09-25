@@ -71,6 +71,24 @@ body {
   white-space: pre-wrap;
 }
 
+/* SVG figures draw everything in currentColor: they take the color of
+   the text around them, so they follow any theme. */
+.figure {
+  display: block;
+  color: inherit;
+  margin: 0 0 20px;
+}
+
+.figure svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.remediation-body .figure {
+  margin: 8px 0;
+}
+
 .options {
   display: flex;
   flex-direction: column;

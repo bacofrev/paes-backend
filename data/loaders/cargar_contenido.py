@@ -27,6 +27,8 @@ from pathlib import Path
 
 import yaml
 
+import figuras
+
 # code_text: ^[A-Z0-9]{2,6}(-[A-Z0-9]+){0,3}$  — máximo 4 segmentos
 CODE_RE = re.compile(r"^[A-Z0-9]{2,6}(-[A-Z0-9]+){0,3}$")
 
@@ -160,9 +162,15 @@ def remediaciones_de_la_unidad(unit: str, ruta: Path) -> dict[str, str]:
 
 def validar(doc: dict, catalogo: dict[str, dict],
             rem_unidad: dict[str, str],
-            ajenos: dict[str, str] | None = None) -> list[str]:
+            ajenos: dict[str, str] | None = None,
+            dir_fig: Path | None = None,
+            usos_ajenos: tuple[dict, dict] | None = None) -> list[str]:
     fallas: list[str] = []
     ajenos = ajenos or {}
+
+    def chk_md(texto, donde, permitir_figuras=False):
+        f, _ = figuras.validar_markdown(texto, donde, permitir_figuras)
+        fallas.extend(f)
 
     def chk_code(valor, donde):
         if not CODE_RE.match(valor or ""):
@@ -210,6 +218,8 @@ def validar(doc: dict, catalogo: dict[str, dict],
 
     fallas += revisar_registro(les.get("title"), "lesson title")
     fallas += revisar_registro(body, "lesson body")
+    chk_md(les.get("title"), "lesson title")
+    chk_md(body, "lesson body", permitir_figuras=True)
 
     # --- misconceptions: solo referencia, la fuente es el catálogo ------
     mcs = catalogo
@@ -246,6 +256,17 @@ def validar(doc: dict, catalogo: dict[str, dict],
         if not it.get("stem"):
             fallas.append(f"item {code}: falta stem")
         fallas += revisar_registro(it.get("stem"), f"item {code} stem")
+        chk_md(it.get("stem"), f"item {code} stem")
+
+        fig = it.get("figure")
+        if fig is not None:
+            # FIG-<unidad>-<nodo>-<NN>: la figura de un ítem es de su nodo.
+            # NUM-ENT-REC -> FIG-ENT-REC-NN
+            if (figuras.FIG_RE.match(str(fig))
+                    and str(fig).split("-")[1:3] != str(nodo).split("-")[-2:]):
+                fallas.append(f"item {code}: figura {fig} no corresponde al "
+                              f"nodo {nodo} (se espera "
+                              f"FIG-{'-'.join(str(nodo).split('-')[-2:])}-NN)")
 
         dif = it.get("difficulty")
         if dif is None or not (1 <= dif <= 5):
@@ -266,6 +287,7 @@ def validar(doc: dict, catalogo: dict[str, dict],
         for o in opts:
             etq = o.get("label")
             fallas += revisar_registro(o.get("body"), f"item {code} alt {etq}")
+            chk_md(o.get("body"), f"item {code} alt {etq}")
             if not o.get("body"):
                 fallas.append(f"item {code} alt {etq}: falta body")
             if o.get("correct"):
@@ -324,6 +346,8 @@ def validar(doc: dict, catalogo: dict[str, dict],
                 fallas.append(f"remediation {code}: falta '{campo}'")
             fallas += revisar_registro(rem.get(campo),
                                        f"remediation {code} {campo}")
+            chk_md(rem.get(campo), f"remediation {code} {campo}",
+                   permitir_figuras=(campo == "body"))
         for ref in rem.get("items") or []:
             if ref not in items:
                 fallas.append(f"remediation {code}: ítem '{ref}' no existe "
@@ -339,6 +363,31 @@ def validar(doc: dict, catalogo: dict[str, dict],
         fallas.append(
             f"errores detectables sin remediación en toda la unidad "
             f"{doc['unit']}: {sin_rem}")
+
+    # --- figuras ----------------------------------------------------------
+    de_items, de_cuerpos = figuras.refs_de_doc(doc)
+    if dir_fig is not None:
+        for cod in sorted(set(de_items) | set(de_cuerpos)):
+            _, f = figuras.leer_figura(cod, dir_fig)
+            fallas += f
+
+    # Una figura de ítem en una clase o remediación le muestra al
+    # estudiante la figura del ítem antes de que lo responda. Se mira todo
+    # el contenido, no solo este archivo ni esta unidad.
+    ajenos_items, ajenos_cuerpos = usos_ajenos or ({}, {})
+    todos_items = {c: list(v) for c, v in ajenos_items.items()}
+    todos_cuerpos = {c: list(v) for c, v in ajenos_cuerpos.items()}
+    for c, v in de_items.items():
+        todos_items.setdefault(c, []).extend(v)
+    for c, v in de_cuerpos.items():
+        todos_cuerpos.setdefault(c, []).extend(v)
+    for cod in sorted(set(todos_items) & set(todos_cuerpos)):
+        if cod in de_items or cod in de_cuerpos:
+            fallas.append(
+                f"figura {cod}: la usa {', '.join(todos_items[cod])} y "
+                f"también aparece en {', '.join(todos_cuerpos[cod])}. La "
+                f"figura de un ítem no puede aparecer en una clase ni "
+                f"remediación: filtra la respuesta")
 
     return fallas
 
@@ -363,9 +412,19 @@ def lista(codes) -> str:
     return ", ".join(q(c) for c in codes)
 
 
-def emitir(doc: dict, origen: str) -> str:
+# fig:CODIGO dentro de un body, del lado de Postgres. Mismo patrón que
+# figuras.FIG_IMG.
+FIG_RE_SQL = r"!\[\]\(fig:([A-Z0-9-]+)\)"
+
+
+def emitir(doc: dict, origen: str, svgs: dict[str, str] | None = None,
+           presentes: list[str] | None = None) -> str:
+    """svgs: las figuras que usa esta clase, código -> SVG ya validado.
+    presentes: todos los códigos en contenido/figuras/ al generar."""
     o: list[str] = []
     w = o.append
+    svgs = svgs or {}
+    presentes = presentes or []
 
     les = doc["lesson"]
     body = doc["lesson_body"]
@@ -387,17 +446,34 @@ def emitir(doc: dict, origen: str) -> str:
     # Las misconceptions no se emiten acá: las carga
     # cargar_misconceptions.py desde el catálogo de la unidad.
 
-    # 2. items
+    # 0. figures
+    if svgs:
+        w("-- 0. figures ---------------------------------------------------------")
+        w("-- El código no cambia nunca; si cambió el SVG, se actualiza.")
+        w("insert into figures (code, svg)")
+        w("values")
+        w(",\n".join(f"  ({q(c)}, {q(svgs[c])})" for c in sorted(svgs)))
+        w("on conflict (code) do update")
+        w("  set svg = excluded.svg, updated_at = now()")
+        w("  where figures.svg is distinct from excluded.svg;")
+        w("")
+
+    # 1. items
     w("-- 1. items -----------------------------------------------------------")
-    w("insert into items (code, stem, author_difficulty, source, status)")
-    w("values")
+    w("insert into items (code, stem, author_difficulty, source, status, figure_id)")
+    w("select v.code, v.stem, v.difficulty, v.source, 'draft', f.id")
+    w("from (values")
     w(",\n".join(
         f"  ({q(it['code'])}, {q(it['stem'])}, {it['difficulty']}, "
-        f"{q(it.get('source'))}, 'draft')" for it in items))
+        f"{q(it.get('source'))}::text, {q(it.get('figure'))}::text)"
+        for it in items))
+    w(") as v(code, stem, difficulty, source, fig_code)")
+    w("left join figures f on f.code = v.fig_code")
     w("on conflict (code) do update")
     w("  set stem = excluded.stem,")
     w("      author_difficulty = excluded.author_difficulty,")
-    w("      source = excluded.source;")
+    w("      source = excluded.source,")
+    w("      figure_id = excluded.figure_id;")
     w("")
 
     # 3. item_options — upsert, no delete
@@ -512,7 +588,7 @@ def emitir(doc: dict, origen: str) -> str:
 
     w("-- 6. Verificación. Si algo no cuadra, revienta y no commitea. -------")
     w("do $verif$")
-    w("declare c integer;")
+    w("declare c integer; t text;")
     w("begin")
     w(f"  select count(*) into c from items where code in ({lista(codes_items)});")
     w(f"  if c <> {n_items} then")
@@ -550,6 +626,50 @@ def emitir(doc: dict, origen: str) -> str:
     w("     and node_id is null;")
     w("  if c <> 0 then")
     w("    raise exception '% errores sin nodo donde se ensenan', c; end if;")
+    w("")
+
+    con_fig = [(it["code"], it["figure"]) for it in items if it.get("figure")]
+    if con_fig:
+        w("  select count(*) into c")
+        w("    from (values")
+        w(",\n".join(f"      ({q(ic)}, {q(fc)})" for ic, fc in con_fig))
+        w("    ) as v(item_code, fig_code)")
+        w("    join items i   on i.code = v.item_code")
+        w("    join figures f on f.id = i.figure_id and f.code = v.fig_code;")
+        w(f"  if c <> {len(con_fig)} then")
+        w(f"    raise exception 'figure_id: {len(con_fig)} ítems con figura, "
+          f"solo % apuntan a la que declara el YAML', c; end if;")
+        w("")
+
+    # Figuras referenciadas en TODA la base, no solo en esta clase.
+    w("  -- Toda figura referenciada en la base (ítems, clases, remediaciones)")
+    w("  -- tiene que existir en figures y seguir en contenido/figuras/.")
+    w("  -- Si alguien borró el .svg, el contenido deja de poder regenerarse.")
+    w("  with refs as (")
+    w("    select f.code::text as code from items i join figures f on f.id = i.figure_id")
+    w("    union")
+    w(f"    select m[1] from lessons l, regexp_matches(l.body, {q(FIG_RE_SQL)}, 'g') m")
+    w("    union")
+    w(f"    select m[1] from remediations r, regexp_matches(r.body, {q(FIG_RE_SQL)}, 'g') m")
+    w("  )")
+    w("  select string_agg(code, ', ' order by code) into t from refs")
+    w("   where code not in (select code from figures)")
+    w(f"      or not (code = any (array[{lista(presentes)}]::text[]));")
+    w("  if t is not null then")
+    w("    raise exception 'figuras referenciadas en la base que ya no están "
+      "en contenido/figuras/ (o no están en figures): %', t; end if;")
+    w("")
+    w("  -- La figura de un ítem no puede aparecer en ninguna clase ni")
+    w("  -- remediación: filtraría la respuesta.")
+    w("  select string_agg(distinct f.code, ', ') into t")
+    w("    from items i join figures f on f.id = i.figure_id")
+    w("   where f.code in (")
+    w(f"     select m[1] from lessons l, regexp_matches(l.body, {q(FIG_RE_SQL)}, 'g') m")
+    w("     union")
+    w(f"     select m[1] from remediations r, regexp_matches(r.body, {q(FIG_RE_SQL)}, 'g') m);")
+    w("  if t is not null then")
+    w("    raise exception 'figuras de ítem que aparecen en una clase o "
+      "remediación: %', t; end if;")
     w("end")
     w("$verif$;")
     w("")
@@ -559,7 +679,8 @@ def emitir(doc: dict, origen: str) -> str:
 
     w(f"-- {n_items} ítems ({len(curados)} curated), {n_opts} alternativas, "
       f"{len(mcs_ref)} misconceptions referenciadas,")
-    w(f"-- {len(rems)} remediaciones, 1 clase sobre {len(les['nodes'])} nodos.")
+    w(f"-- {len(rems)} remediaciones, {len(svgs)} figuras, "
+      f"1 clase sobre {len(les['nodes'])} nodos.")
     w("")
 
     # --- publicación: paso aparte, a propósito -------------------------
@@ -615,7 +736,13 @@ def main() -> int:
         print(e, file=sys.stderr)
         return 1
 
-    fallas = validar(doc, catalogo, rem_unidad, ajenos)
+    raiz = raiz_contenido(ruta)
+    dir_fig = figuras.dir_figuras(raiz)
+    presentes, fallas_nombres = figuras.codigos_presentes(dir_fig)
+    usos_ajenos = figuras.usos_en_contenido(raiz, ruta)
+
+    fallas = validar(doc, catalogo, rem_unidad, ajenos, dir_fig, usos_ajenos)
+    fallas += fallas_nombres
     duros = [f for f in fallas if not f.startswith("AVISO")]
     for a in (f for f in fallas if f.startswith("AVISO")):
         print(a, file=sys.stderr)
@@ -626,7 +753,10 @@ def main() -> int:
             print(f"  - {f}", file=sys.stderr)
         return 1
 
-    print(emitir(doc, ruta.name))
+    de_items, de_cuerpos = figuras.refs_de_doc(doc)
+    svgs = {c: figuras.leer_figura(c, dir_fig)[0]
+            for c in set(de_items) | set(de_cuerpos)}
+    print(emitir(doc, ruta.name, svgs, presentes))
     return 0
 
 

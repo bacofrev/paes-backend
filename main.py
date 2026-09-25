@@ -139,6 +139,10 @@ async def next_item(
         "id": item["id"],
         "code": item["code"],
         "stem": item["stem"],
+        "figure": None if item["figure_code"] is None else {
+            "code": item["figure_code"],
+            "svg": item["figure_svg"],
+        },
         "author_difficulty": item["author_difficulty"],
         "options": item["options"],
         "source": source,
@@ -340,6 +344,7 @@ async def create_response(
             "code": v["remediation_code"],
             "title": v["remediation_title"],
             "body": v["remediation_body"],
+            "figures": v["remediation_figures"],
         },
         "correct_option": {
             "id": v["correct_option_id"],

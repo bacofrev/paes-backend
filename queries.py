@@ -14,6 +14,8 @@ select i.id,
        i.code,
        i.stem,
        i.author_difficulty,
+       f.code as figure_code,
+       f.svg  as figure_svg,
        json_agg(
          json_build_object('id', o.id, 'label', o.label, 'body', o.body)
          order by o.label
@@ -22,6 +24,7 @@ from items i
 join node_items ni on ni.item_id = i.id
 join nodes n       on n.id = ni.node_id
 join item_options o on o.item_id = i.id
+left join figures f on f.id = i.figure_id
 where n.code = %(node_code)s
   and i.status = 'active'
   and not exists (
@@ -29,7 +32,7 @@ where n.code = %(node_code)s
     where r.item_id = i.id
       and r.session_id = %(session_id)s
   )
-group by i.id, i.code, i.stem, i.author_difficulty
+group by i.id, i.code, i.stem, i.author_difficulty, f.code, f.svg
 order by i.author_difficulty, i.code
 limit 1;
 """
@@ -51,6 +54,15 @@ select coalesce(o.is_correct, false) as is_correct,
        r.code  as remediation_code,
        r.title as remediation_title,
        r.body  as remediation_body,
+       -- Only the figures this remediation's body references, as
+       -- ![](fig:CODE). There's deliberately no query that returns
+       -- figures by code on their own: that would expose the item bank.
+       (select coalesce(json_object_agg(f.code, f.svg), '{}'::json)
+          from figures f
+         where f.code in (
+           select m[1]
+             from regexp_matches(r.body, '!\\[\\]\\(fig:([A-Z0-9-]+)\\)', 'g') m
+         )) as remediation_figures,
        co.id    as correct_option_id,
        co.label as correct_option_label
 from item_options o
@@ -131,6 +143,8 @@ select i.id,
        i.author_difficulty,
        n.code as node_code,
        n.name as item_node_name,
+       f.code as figure_code,
+       f.svg  as figure_svg,
        json_agg(
          json_build_object('id', o.id, 'label', o.label, 'body', o.body)
          order by o.label
@@ -143,6 +157,7 @@ join items i               on i.id = ri.item_id
 join node_items ni          on ni.item_id = i.id
 join nodes n                on n.id = ni.node_id
 join item_options o        on o.item_id = i.id
+left join figures f         on f.id = i.figure_id
 where not exists (
   -- already answered in this pass of the lane
   select 1 from responses r
@@ -156,7 +171,8 @@ and not exists (
   where r.item_id = i.id
     and r.session_id = %(session_id)s
 )
-group by i.id, i.code, i.stem, i.author_difficulty, n.code, n.name, ri.position
+group by i.id, i.code, i.stem, i.author_difficulty, n.code, n.name, ri.position,
+         f.code, f.svg
 order by (n.code = %(node_code)s) desc, ri.position asc, i.id asc
 limit 1
 """

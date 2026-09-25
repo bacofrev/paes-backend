@@ -105,6 +105,12 @@ three were merged into one repo for convenience; they still ship independently.
 - `cargar_contenido.py`, `cargar_misconceptions.py`, and `grafo.py` (the Python source of truth
   for the node/edge graph, defined as plain dicts/tuples) never touch the database — they emit
   SQL to stdout for review, which then becomes the next numbered file in `data/migraciones/`.
+- Figures are SVG files in `data/contenido/figuras/FIG-<unit>-<node>-<NN>.svg`, referenced by an
+  item (`figure:` in the lesson YAML → `items.figure_id`) or from a lesson/remediation body
+  (`![](fig:CODE)`), never both — an item's figure shown in a lesson leaks the answer.
+  `data/loaders/figuras.py` holds the SVG/markdown rules (no scripts or external refs, only
+  `currentColor`/`none`); `recta.py` generates number lines. There is deliberately no endpoint
+  that lists figures. See `bitacora-2026-09-25-figuras.md`.
 - Migrations are applied with `psql "$DATABASE_URL" -X -v ON_ERROR_STOP=1 -1 -f <file>`, not
   through the Supabase SQL editor — the editor doesn't respect `begin`/`commit`, so a failure
   partway through leaves a half-applied migration with no transaction to roll back.

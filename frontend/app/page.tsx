@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import MathText from "./MathText";
+import Figure from "./Figure";
 import LoginScreen from "./LoginScreen";
 import { createClient } from "../lib/supabase/client";
 
@@ -35,6 +36,7 @@ type NextItem = {
   id: string;
   code: string;
   stem: string;
+  figure: { code: string; svg: string } | null;
   author_difficulty: number;
   options: Option[];
   source: "pool" | "lane";
@@ -43,7 +45,13 @@ type NextItem = {
 };
 
 type Misconception = { code: string; name: string };
-type Remediation = { code: string; title: string; body: string };
+type Remediation = {
+  code: string;
+  title: string;
+  body: string;
+  // Only the figures its body references as ![](fig:CODE).
+  figures: Record<string, string>;
+};
 type CorrectOption = { id: string; label: string };
 
 type ResponseResult = {
@@ -357,6 +365,7 @@ export default function Home() {
         )}
 
         <MathText text={currentItem.stem} className="stem" />
+        {currentItem.figure && <Figure svg={currentItem.figure.svg} />}
 
         <div className="options">
           {currentItem.options.map((option) => {
@@ -424,6 +433,7 @@ export default function Home() {
                 <MathText
                   text={answer.remediation.body}
                   className="remediation-body"
+                  figures={answer.remediation.figures}
                 />
               </>
             )}
