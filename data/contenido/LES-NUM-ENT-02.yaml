@@ -1,0 +1,781 @@
+# =====================================================================
+# LES-NUM-ENT-02 — Adición y sustracción de enteros
+# Cubre NUM-ENT-ADI
+# =====================================================================
+# Clase sola: es el nodo más pesado de la unidad. Su prerrequisito es
+# NUM-ENT-REC (LES-NUM-ENT-01), así que la recta, el orden y "bajo cero
+# es negativo" se dan por sabidos.
+#
+# Alcance (cerrado 25 sep 2026):
+#   entra   suma de igual y distinto signo, resta como suma del opuesto
+#           (incluye restar un negativo), cadenas de 3 o 4 términos de
+#           izquierda a derecha, paréntesis de un nivel que se calculan
+#           por dentro, sumar en la recta, contexto (temperaturas,
+#           alturas, saldos), variación y diferencia entre dos valores.
+#   fuera   multiplicación y regla de signos (ENT-MUL), mezcla con x y
+#           / (ENT-PRIOR), suprimir paréntesis cambiando signos
+#           (ALG-EXP-ADI), fracciones y decimales negativos (NUM-FRA-SIG,
+#           NUM-DEC-OPER), ecuaciones (ALG-ECU-LIN).
+#   recurso el valor absoluto como "tamaño" (distancia al 0) explica la
+#           suma de signos distintos. Sin notación |x| y sin ítems: es
+#           ENT-ABS (M2), que tendrá su propia clase.
+#
+# Niveles:
+#   1  una operación de dos términos, contexto directo
+#   2  cadenas, paréntesis, variación que cruza el 0, recta con figura
+#   3  contexto de varios pasos, I/II/III, enunciados generales
+# ---------------------------------------------------------------------
+# Las misconceptions viven en contenido/misconceptions/NUM-ENT.yaml.
+# Acá solo se referencian por código.
+#
+# Cómo se derivan los distractores (reglas del catálogo):
+#   REGLAMUL    dos cantidades negativas -> suma los tamaños, resultado +
+#   MAGNOP      "+" suma tamaños, "-" resta tamaños; signo del negativo
+#   INVIERTE    resta mayor menos menor, resultado +
+#   DOBLENEG    a - (-b) se lee a - b
+#   RESTAGRUPA  a - b + c = a - (b + c);  a - b - c = a - (b - c)
+#   VARORDEN    variación = inicial - final
+# ---------------------------------------------------------------------
+
+unit: NUM-ENT
+
+lesson:
+  code: LES-NUM-ENT-02
+  title: Adición y sustracción de enteros
+  position: 2
+  nodes:
+    - node: NUM-ENT-ADI
+      anchor: adicion-y-sustraccion-de-enteros
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== nivel 1 ======================================================
+
+  # A MAGNOP: ve "-", resta tamaños 9-6=3, deja el signo: -3
+  # B REGLAMUL: menos con menos da más: 6+9=15
+  # D INVIERTE: 9-6=3 positivo
+  - code: M1-ENT-025
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de $-6 - 9$?"
+    options:
+      - {label: A, body: "$-3$", misconception: ENT-ADI-MAGNOP}
+      - {label: B, body: "$15$", misconception: ENT-ADI-REGLAMUL}
+      - {label: C, body: "$-15$", correct: true}
+      - {label: D, body: "$3$", misconception: ENT-ADI-INVIERTE}
+
+  # B MAGNOP: ve "+", suma tamaños 8+5, deja el signo: -13
+  # C INVIERTE: 8-5=3 positivo
+  # D CTXSIGNO: "8 bajo cero" = 8; 8+5=13
+  - code: M1-ENT-026
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      A las 7:00 la temperatura en Coyhaique era de 8 °C bajo cero. Hasta
+      el mediodía subió 5 °C. ¿Qué temperatura había al mediodía?
+    options:
+      - {label: A, body: "$-3$ °C", correct: true}
+      - {label: B, body: "$-13$ °C", misconception: ENT-ADI-MAGNOP}
+      - {label: C, body: "$3$ °C", misconception: ENT-ADI-INVIERTE}
+      - {label: D, body: "$13$ °C", misconception: ENT-REC-CTXSIGNO}
+
+  # A INVIERTE: 11-4=7   B REGLAMUL: menos con menos, 5+3=8
+  # C MAGNOP: ve "+", 9+4=13 con el signo del negativo
+  - code: M1-ENT-027
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$4 - 11 = 7$", misconception: ENT-ADI-INVIERTE}
+      - {label: B, body: "$-5 - 3 = 8$", misconception: ENT-ADI-REGLAMUL}
+      - {label: C, body: "$-9 + 4 = -13$", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "$6 - (-2) = 8$", correct: true}
+
+  # A DIRECCION: se mueve a la derecha, 3+7=10
+  # C INVIERTE: 7-3=4 positivo   D MAGNOP: ve "+", 3+7 con signo del -7
+  - code: M1-ENT-028
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Una ficha está en el $3$ de la recta numérica y se mueve 7 unidades
+      hacia la izquierda. ¿Cuál opción representa el movimiento y el
+      lugar donde queda la ficha?
+    options:
+      - {label: A, body: "$3 + 7 = 10$", misconception: ENT-REC-DIRECCION}
+      - {label: B, body: "$3 + (-7) = -4$", correct: true}
+      - {label: C, body: "$3 + (-7) = 4$", misconception: ENT-ADI-INVIERTE}
+      - {label: D, body: "$3 + (-7) = -10$", misconception: ENT-ADI-MAGNOP}
+
+  # B DOBLENEG: -2-7=-9   C MAGNOP: ve "-", 7-2=5, signo del negativo: -5
+  # D REGLAMUL: menos con menos, 2+7=9
+  - code: M1-ENT-029
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de $-2 - (-7)$?"
+    options:
+      - {label: A, body: "$5$", correct: true}
+      - {label: B, body: "$-9$", misconception: ENT-ADI-DOBLENEG}
+      - {label: C, body: "$-5$", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "$9$", misconception: ENT-ADI-REGLAMUL}
+
+  # A REGLAMUL: -3-4, menos con menos: 7
+  # B CTXSIGNO: "tercer subterráneo" = 3; 3-4=-1
+  # C INVIERTE: 4-3=1 positivo
+  - code: M1-ENT-030
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      En un edificio la calle es el piso $0$. Un ascensor está en el
+      tercer subterráneo y baja 4 pisos. ¿En qué piso queda?
+    options:
+      - {label: A, body: "En el piso $7$", misconception: ENT-ADI-REGLAMUL}
+      - {label: B, body: "En el piso $-1$", misconception: ENT-REC-CTXSIGNO}
+      - {label: C, body: "En el piso $1$", misconception: ENT-ADI-INVIERTE}
+      - {label: D, body: "En el piso $-7$", correct: true}
+
+  # variación = -5 - 2 = -7
+  # A VARORDEN: 2-(-5)=7   C MAGNOP: -5-2, resta tamaños 5-2, signo -: -3
+  # D INVIERTE: 5-2=3 positivo
+  - code: M1-ENT-031
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      En Chillán la temperatura pasó de $2$ °C a $-5$ °C durante la
+      noche. ¿Cuál fue la variación de la temperatura?
+    options:
+      - {label: A, body: "$7$ °C", misconception: ENT-ADI-VARORDEN}
+      - {label: B, body: "$-7$ °C", correct: true}
+      - {label: C, body: "$-3$ °C", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "$3$ °C", misconception: ENT-ADI-INVIERTE}
+
+  # valores reales: A -4, B -4, D 14
+  # A INVIERTE: 7-3=4   B REGLAMUL: menos con menos, 1+3=4
+  # D DOBLENEG: 9-5=4
+  - code: M1-ENT-032
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿En cuál de las siguientes operaciones el resultado es $4$?"
+    options:
+      - {label: A, body: "$3 - 7$", misconception: ENT-ADI-INVIERTE}
+      - {label: B, body: "$-1 - 3$", misconception: ENT-ADI-REGLAMUL}
+      - {label: C, body: "$-3 + 7$", correct: true}
+      - {label: D, body: "$9 - (-5)$", misconception: ENT-ADI-DOBLENEG}
+
+  # ===== nivel 2 ======================================================
+
+  # -4-6=-10; -10+9=-1
+  # A RESTAGRUPA: -4-(6+9)=-19   B REGLAMUL: -4-6=10; 10+9=19
+  # C INVIERTE: -10+9, 10-9=1 positivo
+  - code: M1-ENT-033
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de $-4 - 6 + 9$?"
+    options:
+      - {label: A, body: "$-19$", misconception: ENT-ADI-RESTAGRUPA}
+      - {label: B, body: "$19$", misconception: ENT-ADI-REGLAMUL}
+      - {label: C, body: "$1$", misconception: ENT-ADI-INVIERTE}
+      - {label: D, body: "$-1$", correct: true}
+
+  # -6+2=-4; -4+5=1
+  # B DOBLENEG: -6-2+5=-3   C RESTAGRUPA: -6-(-2+5)=-6-3=-9
+  # D REGLAMUL: -6-(-2), menos con menos, 6+2=8; 8+5=13
+  - code: M1-ENT-034
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de $-6 - (-2) + 5$?"
+    options:
+      - {label: A, body: "$1$", correct: true}
+      - {label: B, body: "$-3$", misconception: ENT-ADI-DOBLENEG}
+      - {label: C, body: "$-9$", misconception: ENT-ADI-RESTAGRUPA}
+      - {label: D, body: "$13$", misconception: ENT-ADI-REGLAMUL}
+
+  # subió = 3 - (-5) = 8
+  # A VARORDEN: -5-3=-8   B DOBLENEG: 3-5=-2
+  # D CONTEO: cuenta los números de -5 a 3: 9
+  - code: M1-ENT-035
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      En Puerto Natales la temperatura a las 6:00 era de $-5$ °C y a las
+      14:00 era de $3$ °C. ¿Cuál fue la variación de la temperatura
+      entre esas horas?
+    options:
+      - {label: A, body: "$-8$ °C", misconception: ENT-ADI-VARORDEN}
+      - {label: B, body: "$-2$ °C", misconception: ENT-ADI-DOBLENEG}
+      - {label: C, body: "$8$ °C", correct: true}
+      - {label: D, body: "$9$ °C", misconception: ENT-REC-CONTEO}
+
+  # variación = -6 - (-15) = 9
+  # A VARORDEN: -15-(-6)=-9   C DOBLENEG: -6-15=-21
+  # D CONTEO: cuenta los números de -15 a -6: 10
+  - code: M1-ENT-036
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Considerando el nivel del mar como $0$, una buzo está a $-15$ m y
+      sube hasta $-6$ m. ¿Cuál fue la variación de su posición?
+    options:
+      - {label: A, body: "$-9$ m", misconception: ENT-ADI-VARORDEN}
+      - {label: B, body: "$9$ m", correct: true}
+      - {label: C, body: "$-21$ m", misconception: ENT-ADI-DOBLENEG}
+      - {label: D, body: "$10$ m", misconception: ENT-REC-CONTEO}
+
+  # valores reales: B -6, C 2, D -2
+  # B MAGNOP: ve "-", 5-1=4, signo -: -4   C DOBLENEG: -1-3=-4
+  # D RESTAGRUPA: 2-(5+1)=-4
+  - code: M1-ENT-037
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿En cuál de las siguientes operaciones el resultado es $-4$?"
+    options:
+      - {label: A, body: "$-7 + 5 - 2$", correct: true}
+      - {label: B, body: "$-1 - 5$", misconception: ENT-ADI-MAGNOP}
+      - {label: C, body: "$-1 - (-3)$", misconception: ENT-ADI-DOBLENEG}
+      - {label: D, body: "$2 - 5 + 1$", misconception: ENT-ADI-RESTAGRUPA}
+
+  # P = -6, Q = 4 (la figura rotula solo 0 y 1). Q - P = 10
+  # A VARORDEN: P-Q=-10   B DOBLENEG: 4-6=-2
+  # C CONTEO: cuenta los números de -6 a 4: 11
+  - code: M1-ENT-038
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-ENT-ADI-01
+    stem: >-
+      En la recta numérica de la figura, ¿qué número hay que sumarle a
+      $P$ para obtener $Q$?
+    options:
+      - {label: A, body: "$-10$", misconception: ENT-ADI-VARORDEN}
+      - {label: B, body: "$-2$", misconception: ENT-ADI-DOBLENEG}
+      - {label: C, body: "$11$", misconception: ENT-REC-CONTEO}
+      - {label: D, body: "$10$", correct: true}
+
+  # -3+8=5; 5-10=-5; -5+1=-4
+  # A RESTAGRUPA: 5-(10+1)=-6   B INVIERTE: -5+1, 5-1=4 positivo
+  # D MAGNOP: agrupa 9 y -13, ve "+", 9+13 con signo -: -22
+  - code: M1-ENT-039
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de $-3 + 8 - 10 + 1$?"
+    options:
+      - {label: A, body: "$-6$", misconception: ENT-ADI-RESTAGRUPA}
+      - {label: B, body: "$4$", misconception: ENT-ADI-INVIERTE}
+      - {label: C, body: "$-4$", correct: true}
+      - {label: D, body: "$-22$", misconception: ENT-ADI-MAGNOP}
+
+  # 6-9=-3; -3-4=-7
+  # A RESTAGRUPA: 6-(9-4)=1   C INVIERTE: 6-9=3; 3-4=-1
+  # D REGLAMUL: -3-4, menos con menos: 7
+  - code: M1-ENT-040
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de $6 - 9 - 4$?"
+    options:
+      - {label: A, body: "$1$", misconception: ENT-ADI-RESTAGRUPA}
+      - {label: B, body: "$-7$", correct: true}
+      - {label: C, body: "$-1$", misconception: ENT-ADI-INVIERTE}
+      - {label: D, body: "$7$", misconception: ENT-ADI-REGLAMUL}
+
+  # ===== nivel 3 ======================================================
+
+  # I V (-5), II F (10), III V (-9)
+  # A DOBLENEG: II = 4-6 = -2, la acepta   B REGLAMUL: III = 9, II = 10
+  # C MAGNOP: I = -11, II = -2 (6-4 con signo -), III = -5
+  - code: M1-ENT-041
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Considera las siguientes igualdades:
+
+      I) $-8 + 3 = -5$
+
+      II) $4 - (-6) = -2$
+
+      III) $-2 - 7 = -9$
+
+      ¿Cuál(es) es(son) verdadera(s)?
+    options:
+      - {label: A, body: "I, II y III", misconception: ENT-ADI-DOBLENEG}
+      - {label: B, body: "Solo I", misconception: ENT-ADI-REGLAMUL}
+      - {label: C, body: "Solo II", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "Solo I y III", correct: true}
+
+  # -4-3=-7; -7+9=2
+  # B RESTAGRUPA: -4-(3+9)=-16   C MAGNOP: -4-3, 4-3=1, signo -: -1;
+  #   -1+9, ve "+", 1+9 con signo -: -10
+  # D CTXSIGNO: "bajó 3" como +3: -4+3+9=8
+  - code: M1-ENT-042
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En Putre, a las 5:00 el termómetro marcaba $-4$ °C. Hasta las 7:00
+      la temperatura bajó 3 °C, y desde las 7:00 hasta el mediodía subió
+      9 °C. ¿Qué temperatura marcaba el termómetro al mediodía?
+    options:
+      - {label: A, body: "$2$ °C", correct: true}
+      - {label: B, body: "$-16$ °C", misconception: ENT-ADI-RESTAGRUPA}
+      - {label: C, body: "$-10$ °C", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "$8$ °C", misconception: ENT-REC-CTXSIGNO}
+
+  # Ana: -30-(-12)=-18. Tomás: -9-(-25)=16
+  # A VARORDEN: -12-(-30)=18; -25-(-9)=-16
+  # B DOBLENEG: -30-12=-42; -9-25=-34
+  # D REGLAMUL: menos con menos, 30+12=42; 9+25=34
+  - code: M1-ENT-043
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Considerando el nivel del mar como $0$, Ana bajó desde $-12$ m hasta
+      $-30$ m, y Tomás subió desde $-25$ m hasta $-9$ m. ¿Cuáles fueron
+      las variaciones de posición de Ana y de Tomás, respectivamente?
+    options:
+      - {label: A, body: "$18$ m y $-16$ m", misconception: ENT-ADI-VARORDEN}
+      - {label: B, body: "$-42$ m y $-34$ m", misconception: ENT-ADI-DOBLENEG}
+      - {label: C, body: "$-18$ m y $16$ m", correct: true}
+      - {label: D, body: "$42$ m y $34$ m", misconception: ENT-ADI-REGLAMUL}
+
+  # -3+10=7; 7-4=3; 3-5=-2
+  # A RESTAGRUPA: 7-(4-5)=8   C INVIERTE: 3-5, 5-3=2 positivo
+  # D CTXSIGNO: deuda = +3: 3+10-4-5=4
+  - code: M1-ENT-044
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sofía tiene una deuda de 3 mil pesos con su hermano. Durante la
+      semana recibe 10 mil pesos, gasta 4 mil pesos en transporte y
+      después 5 mil pesos en almuerzos. Si representa su dinero con un
+      entero (en miles de pesos), ¿con qué número termina la semana?
+    options:
+      - {label: A, body: "$8$", misconception: ENT-ADI-RESTAGRUPA}
+      - {label: B, body: "$-2$", correct: true}
+      - {label: C, body: "$2$", misconception: ENT-ADI-INVIERTE}
+      - {label: D, body: "$4$", misconception: ENT-REC-CTXSIGNO}
+
+  # a < 0 < b. a - b = a + (-b): negativo más negativo, siempre negativo.
+  # B MAGNOP: ve "+", suma tamaños y deja el signo de a
+  # C REGLAMUL: a negativo menos b, menos con menos: positivo
+  # D DOBLENEG: b - a lo lee como restarle a b, así que queda menor
+  - code: M1-ENT-045
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sean $a$ un número entero negativo y $b$ un número entero positivo.
+      ¿Cuál de las siguientes afirmaciones es siempre verdadera?
+    options:
+      - {label: A, body: "$a - b$ es negativo", correct: true}
+      - {label: B, body: "$a + b$ es negativo", misconception: ENT-ADI-MAGNOP}
+      - {label: C, body: "$a - b$ es positivo", misconception: ENT-ADI-REGLAMUL}
+      - {label: D, body: "$b - a$ es menor que $b$", misconception: ENT-ADI-DOBLENEG}
+
+  # Visviri: 14-(-9)=23. Punta Arenas: 6-(-3)=9
+  # A DOBLENEG: 14-9=5, 6-3=3 -> Visviri, 5
+  # B VARORDEN: -9-14=-23, -3-6=-9; -9 > -23 -> Punta Arenas, -9
+  # C CONTEO: cuenta los números de -9 a 14: 24
+  - code: M1-ENT-046
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un día de julio, en Visviri la temperatura mínima fue $-9$ °C y la
+      máxima $14$ °C. Ese mismo día, en Punta Arenas la mínima fue $-3$
+      °C y la máxima $6$ °C. ¿En cuál de las dos ciudades fue mayor la
+      diferencia entre la máxima y la mínima, y cuánto fue?
+    options:
+      - {label: A, body: "En Visviri, con $5$ °C", misconception: ENT-ADI-DOBLENEG}
+      - {label: B, body: "En Punta Arenas, con $-9$ °C", misconception: ENT-ADI-VARORDEN}
+      - {label: C, body: "En Visviri, con $24$ °C", misconception: ENT-REC-CONTEO}
+      - {label: D, body: "En Visviri, con $23$ °C", correct: true}
+
+  # I F (-10), II V (9), III V (6)
+  # A DOBLENEG: III = -2-8 = -10, la rechaza
+  # C MAGNOP: I = 5-5 = 0, la acepta; III = 8-2 con signo -: -6, la rechaza
+  # D RESTAGRUPA: II = 10-(4+3) = 3, la rechaza
+  - code: M1-ENT-047
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Considera las siguientes igualdades:
+
+      I) $-5 - 5 = 0$
+
+      II) $10 - 4 + 3 = 9$
+
+      III) $-2 - (-8) = 6$
+
+      ¿Cuál(es) es(son) verdadera(s)?
+    options:
+      - {label: A, body: "Solo II", misconception: ENT-ADI-DOBLENEG}
+      - {label: B, body: "Solo II y III", correct: true}
+      - {label: C, body: "Solo I y II", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "Solo III", misconception: ENT-ADI-RESTAGRUPA}
+
+  # M = -3-9 = -12. N = -15+4 = -11. -12 < -11
+  # A MAGN: valores bien, compara por tamaño: 12 > 11
+  # B REGLAMUL: M = 12 (menos con menos)   D INVIERTE: M = 9-3 = 6, N = 15-4 = 11
+  - code: M1-ENT-048
+    node: NUM-ENT-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sean $M = -3 - 9$ y $N = -15 + 4$. ¿Cuál de las siguientes
+      afirmaciones es verdadera?
+    options:
+      - {label: A, body: "$M = -12$ y $N = -11$, por lo tanto $M > N$", misconception: ENT-REC-MAGN}
+      - {label: B, body: "$M = 12$ y $N = -11$, por lo tanto $M > N$", misconception: ENT-ADI-REGLAMUL}
+      - {label: C, body: "$M = -12$ y $N = -11$, por lo tanto $M < N$", correct: true}
+      - {label: D, body: "$M = 6$ y $N = 11$, por lo tanto $M < N$", misconception: ENT-ADI-INVIERTE}
+
+
+# ---------------------------------------------------------------------
+# REMEDIACIONES
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-ENT-ADI-REGLAMUL
+    misconception: ENT-ADI-REGLAMUL
+    title: '"Menos con menos da más" es solo para multiplicar'
+    body: |
+      Juntaste dos cantidades negativas y te dio un resultado positivo,
+      como si $-20 - 30$ fuera $50$. Usaste la regla de los signos de la
+      multiplicación, pero aquí no hay ninguna multiplicación.
+
+      En una suma o resta, los números se mueven en la recta. Restar $30$
+      es moverse $30$ hacia la izquierda:
+
+      **Si partes en un negativo y te mueves hacia la izquierda, quedas
+      más a la izquierda todavía.**
+
+      Piénsalo con plata: debes 20 mil pesos y gastas 30 mil más. No
+      puedes terminar con plata a favor. Terminas debiendo 50 mil:
+
+      $$-20 - 30 = -50$$
+
+      Lo mismo pasa con $-20 + (-30)$: sumar un negativo también es ir
+      hacia la izquierda, y da $-50$.
+
+      Un control rápido: si todas las cantidades que juntas son
+      negativas, el resultado **tiene que ser negativo**.
+    items: [M1-ENT-025, M1-ENT-030, M1-ENT-033, M1-ENT-040, M1-ENT-041, M1-ENT-048]
+
+  - code: REM-ENT-ADI-MAGNOP
+    misconception: ENT-ADI-MAGNOP
+    title: Los signos de los números deciden si sumas o restas
+    body: |
+      Te guiaste por el símbolo de la operación: como veías un "$+$",
+      sumaste los números sin signo. Así, $-20 + 50$ te habría dado
+      $-70$.
+
+      Pero en $-20 + 50$ importan los signos de los números. Uno te lleva
+      a la izquierda y el otro a la derecha, así que se descuentan:
+
+      **Si los signos son distintos, restas los tamaños y pones el signo
+      del que tiene mayor tamaño.**
+
+      El tamaño es la distancia al $0$, sin mirar el signo:
+
+      - Tamaños: $20$ y $50$. Los restas: $50 - 20 = 30$.
+      - El de mayor tamaño es $50$, que es positivo.
+      - Resultado: $-20 + 50 = 30$.
+
+      Si los dos números tienen el **mismo** signo, ahí sí sumas los
+      tamaños y conservas ese signo.
+
+      Un control rápido: el resultado de una suma con signos distintos
+      queda **entre los dos números**. $30$ está entre $-20$ y $50$;
+      $-70$ no.
+    items: [M1-ENT-026, M1-ENT-029, M1-ENT-037, M1-ENT-039, M1-ENT-042, M1-ENT-045]
+
+  - code: REM-ENT-ADI-INVIERTE
+    misconception: ENT-ADI-INVIERTE
+    title: Si restas más de lo que tienes, pasas bajo el cero
+    body: |
+      Restaste al revés: como "no se puede" quitar un número grande a
+      uno chico, diste vuelta la resta. Así, $20 - 50$ te habría dado
+      $30$.
+
+      Con los naturales eso no se podía hacer. Con los enteros sí se
+      puede, y el resultado es negativo. En la recta, partes en $20$ y te
+      mueves $50$ hacia la izquierda: los primeros $20$ pasos te llevan
+      al $0$ y los otros $30$ te dejan en $-30$.
+
+      **$a - b$ y $b - a$ no son lo mismo: tienen el mismo tamaño y signos
+      contrarios.**
+
+      $$20 - 50 = -30 \qquad 50 - 20 = 30$$
+
+      Con temperaturas se ve solo: si hace $20$ °C y baja $50$ °C, no
+      puede quedar en $30$ °C, más caluroso que al principio.
+
+      Un control rápido: si a un número le restas otro **mayor**, el
+      resultado es **negativo**.
+    items: [M1-ENT-027, M1-ENT-031, M1-ENT-039, M1-ENT-040, M1-ENT-044, M1-ENT-048]
+
+  - code: REM-ENT-ADI-DOBLENEG
+    misconception: ENT-ADI-DOBLENEG
+    title: Restar un negativo es sumar
+    body: |
+      Restaste un número negativo como si fuera positivo: tomaste
+      $20 - (-30)$ como $20 - 30$.
+
+      Restar es sumar el opuesto. Eso vale siempre, también cuando el
+      número que restas es negativo:
+
+      **$a - (-b) = a + b$**
+
+      Piensa en qué es "quitar una deuda". Si alguien te perdona una
+      deuda de 30 mil pesos, no quedas más pobre: quedas 30 mil más
+      rico. Por eso:
+
+      $$20 - (-30) = 20 + 30 = 50$$
+
+      Esto aparece mucho cuando calculas una diferencia que cruza el
+      cero. Entre $-30$ °C y $20$ °C hay $20 - (-30) = 50$ grados, no
+      $-10$.
+
+      Un control rápido: si restas un negativo, el resultado tiene que
+      ser **mayor** que el número con que partiste.
+    items: [M1-ENT-029, M1-ENT-032, M1-ENT-034, M1-ENT-038, M1-ENT-041, M1-ENT-047]
+
+  - code: REM-ENT-ADI-RESTAGRUPA
+    misconception: ENT-ADI-RESTAGRUPA
+    title: Cada signo afecta solo al número que tiene al lado
+    body: |
+      Trataste el primer signo menos como si afectara a todo lo que
+      venía después. Así, $20 - 30 + 50$ te habría dado
+      $20 - (30 + 50) = -60$.
+
+      Pero en una cadena de sumas y restas **cada signo va pegado al
+      número que tiene a su derecha**, y nada más. Se resuelve de
+      izquierda a derecha, de a una operación:
+
+      $$20 - 30 + 50 = -10 + 50 = 40$$
+
+      Otra forma que sirve para cadenas largas: junta por un lado lo que
+      suma y por otro lo que resta.
+
+      - Lo que suma: $20 + 50 = 70$.
+      - Lo que resta: $30$.
+      - Resultado: $70 - 30 = 40$.
+
+      Los dos caminos tienen que dar lo mismo. Si no coinciden, en algún
+      paso le aplicaste un signo a un número que no era el suyo.
+
+      Un control rápido: el $+50$ del final tiene que hacer **subir** el
+      resultado, no bajarlo.
+    items: [M1-ENT-033, M1-ENT-034, M1-ENT-037, M1-ENT-040, M1-ENT-042, M1-ENT-047]
+
+  - code: REM-ENT-ADI-VARORDEN
+    misconception: ENT-ADI-VARORDEN
+    title: Variación es final menos inicial
+    body: |
+      Calculaste la variación al revés, como inicial menos final. El
+      tamaño te dio bien, pero el signo quedó al revés: una subida te
+      apareció como bajada, o al contrario.
+
+      La variación responde "¿cuánto cambió desde el principio hasta el
+      final?". Por eso siempre se calcula igual:
+
+      **variación = valor final − valor inicial**
+
+      Por ejemplo, si un globo meteorológico está a $-20$ °C y después
+      llega a una zona con $-50$ °C:
+
+      $$\text{variación} = -50 - (-20) = -50 + 20 = -30$$
+
+      El signo te dice la dirección: **positivo si subió**, **negativo si
+      bajó**. Aquí la temperatura bajó, y el $-30$ lo muestra.
+
+      Un control rápido: antes de calcular, mira si el valor subió o
+      bajó. El signo de tu resultado tiene que coincidir con eso.
+    items: [M1-ENT-031, M1-ENT-035, M1-ENT-036, M1-ENT-038, M1-ENT-043, M1-ENT-046]
+
+
+# ---------------------------------------------------------------------
+# CUERPO DE LA CLASE
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Ya sabes ubicar los enteros en la recta y compararlos. Ahora vas a
+  operar con ellos: sumar y restar enteros es la base de todo lo que
+  viene después, desde las fracciones con signo hasta las ecuaciones.
+
+  ## Adición y sustracción de enteros
+
+  ### Sumar es moverse en la recta
+
+  Sumar un positivo es moverse hacia la **derecha**. Sumar un negativo
+  es moverse hacia la **izquierda**.
+
+  ![](fig:FIG-ENT-ADI-02)
+
+  $$2 + 5 = 7 \qquad 2 + (-5) = -3$$
+
+  Si partes en $2$ y te mueves $5$ a la izquierda, pasas por el $0$ y
+  llegas a $-3$. Para no dibujar la recta en cada cuenta, hay dos reglas
+  que dependen de los signos.
+
+  ### Números con el mismo signo
+
+  Para hablar de los signos conviene separar el **tamaño** de un número:
+  su distancia al $0$, sin mirar el signo. El tamaño de $-12$ es $12$.
+
+  **Si los dos números tienen el mismo signo, sumas los tamaños y
+  conservas el signo.**
+
+  ![](fig:FIG-ENT-ADI-03)
+
+  $$-12 + (-20) = -32$$
+
+  Partes en $-12$ y te mueves $20$ más hacia la izquierda: quedas
+  todavía más a la izquierda. Juntar dos cantidades negativas siempre
+  da negativo.
+
+  Este es el error más común: "menos con menos da más" es una regla de
+  la **multiplicación**. En una suma no se usa. Si debes 12 mil pesos y
+  te endeudas 20 mil más, no quedas con plata a favor.
+
+  ### Números con distinto signo
+
+  Aquí los movimientos se descuentan: uno te lleva a la derecha y el otro
+  a la izquierda.
+
+  **Si los signos son distintos, restas los tamaños y pones el signo del
+  que tiene mayor tamaño.**
+
+  ![](fig:FIG-ENT-ADI-04)
+
+  $$-18 + 12 = -6$$
+
+  Los tamaños son $18$ y $12$, que restados dan $6$. El de mayor tamaño
+  es $-18$, así que el resultado es negativo. En la recta: desde $-18$
+  avanzas $12$ hacia la derecha, pero no alcanzas a llegar al $0$.
+
+  Ojo con esto: el símbolo "$+$" de la operación no te dice que sumes
+  los tamaños. Lo deciden los signos de los números.
+
+  Un control rápido: con signos distintos, el resultado siempre queda
+  **entre los dos números**. $-6$ está entre $-18$ y $12$.
+
+  ### Restar es sumar el opuesto
+
+  El **opuesto** de un número está a la misma distancia del $0$, pero
+  al otro lado: el opuesto de $5$ es $-5$ y el opuesto de $-5$ es $5$.
+  Toda resta se convierte en una suma:
+
+  **Restar un número es sumar su opuesto.**
+
+  $$11 - 16 = 11 + (-16) = -5$$
+
+  Con los naturales no podías restar un número mayor. Con los enteros
+  sí se puede, y el resultado es negativo. Además, $11 - 16$ y $16 - 11$
+  **no** son lo mismo: dan $-5$ y $5$.
+
+  El caso que más se equivoca es **restar un negativo**. Compara estas
+  dos restas en la recta:
+
+  ![](fig:FIG-ENT-ADI-05)
+
+  $$7 - 5 = 2 \qquad 7 - (-5) = 7 + 5 = 12$$
+
+  Restar $5$ te lleva a la izquierda. Restar $-5$ es lo contrario: te
+  lleva a la derecha. Quitar una deuda te deja más rico. Si restas un
+  negativo, el resultado es mayor que el número con que partiste.
+
+  ### Cadenas de sumas y restas
+
+  Cuando hay varias operaciones seguidas, cada signo va pegado al número
+  que tiene a su derecha. Se resuelve de **izquierda a derecha**, un
+  salto a la vez:
+
+  ![](fig:FIG-ENT-ADI-06)
+
+  $$-10 + 20 - 15 = 10 - 15 = -5$$
+
+  El signo menos del $15$ afecta solo al $15$, no a lo que venga después.
+
+  En cadenas largas sirve juntar lo que suma por un lado y lo que resta
+  por otro, y al final hacer una sola resta. Si aparece un paréntesis,
+  primero calculas lo que está adentro.
+
+  ### Variación y diferencia
+
+  Cuando algo cambia de un valor a otro, la **variación** es:
+
+  **variación = valor final − valor inicial**
+
+  Si es positiva, el valor subió. Si es negativa, bajó. Si la
+  temperatura pasa de $-11$ °C a $-2$ °C:
+
+  $$-2 - (-11) = -2 + 11 = 9$$
+
+  Subió $9$ grados. En la recta es el salto que lleva de un punto al
+  otro: cuánto mide y hacia dónde va.
+
+  ![](fig:FIG-ENT-ADI-07)
+
+  Solo están rotulados el $0$ y el $1$, así que cada salto vale $1$:
+  $A$ está en $-4$ y $B$ en $5$. Para ir desde $A$ hasta $B$ hay que
+  avanzar $9$ hacia la derecha: $B - A = 5 - (-4) = 9$. Cuenta los
+  saltos, no los números.
+
+  ### Sumas y restas en contexto
+
+  Primero traduce cada dato a un entero con su signo. Después opera.
+
+  - Sube, deposita, recibe, avanza: **sumas**.
+  - Baja, gasta, paga, retrocede: **restas**.
+  - Bajo cero, subterráneo, deuda: **número negativo**.
+
+  Un buzo a $11$ m bajo el nivel del mar que baja $7$ m más queda en
+  $-11 - 7 = -18$, es decir, a $18$ m bajo el nivel del mar.

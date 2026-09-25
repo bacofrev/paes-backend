@@ -10,8 +10,8 @@
 #   docente    reportado por alguien que hace clases
 #   hipotesis  plausible, sin evidencia todavía
 #
-# Estado: solo NUM-ENT-REC. ADI, MUL y el resto se agregan al llegar a
-# su clase.
+# Estado: NUM-ENT-REC y NUM-ENT-ADI. MUL y el resto se agregan al
+# llegar a su clase.
 #
 # NUM-ENT-REC es raíz del grafo: no hay nodo debajo al que bajar al
 # estudiante. Las remediaciones de estos errores deben sostenerse solas.
@@ -119,3 +119,88 @@ misconceptions:
       respuesta que SUCESOR; los ítems que buscan distinguirlos usan
       desplazamientos, no sucesores.
     example: "3 unidades a la izquierda de 1 = 4"
+
+  # --- NUM-ENT-ADI ----------------------------------------------------
+  # Aprobadas por Ben en el control 1 de LES-NUM-ENT-02 (25 sep 2026),
+  # todas vistas en aula. Se descartó ENT-ADI-SIGNOPRIM ("pone el signo
+  # del primer término"): sin evidencia de que sea una regla estable y no
+  # un descuido.
+
+  - code: ENT-ADI-REGLAMUL
+    name: Aplica la regla de signos de la multiplicación a la suma
+    nodo: NUM-ENT-ADI
+    area: NUM
+    origin: docente
+    description: >-
+      Lleva "menos con menos da más" a la suma y la resta: dos negativos
+      que se suman o un negativo al que se le resta un positivo le dan
+      resultado positivo. Es el único error del nodo que produce un
+      positivo a partir de dos cantidades negativas, y se vuelve más
+      frecuente después de ver ENT-MUL.
+    example: "-3 - 5 = 8"
+
+  - code: ENT-ADI-MAGNOP
+    name: Decide sumar o restar por el símbolo de la operación
+    nodo: NUM-ENT-ADI
+    area: NUM
+    origin: docente
+    description: >-
+      Mira el símbolo de la operación y no los signos de los números: si
+      ve "+" suma los tamaños, si ve "-" los resta, y deja el signo del
+      negativo que aparece. Se separa de ENT-ADI-INVIERTE con -7 + 3
+      (MAGNOP da -10, INVIERTE da 4) y de ENT-ADI-DOBLENEG con 5 - (-3)
+      (MAGNOP da -2, DOBLENEG da 2). En 3 - 7, sin negativos a la vista,
+      coincide con INVIERTE: ahí se etiqueta INVIERTE. En una cadena
+      a - b + c con a < b coincide con ENT-ADI-RESTAGRUPA: esos ítems no
+      usan las dos.
+    example: "-7 + 3 = -10"
+
+  - code: ENT-ADI-INVIERTE
+    name: Resta el mayor menos el menor y deja el resultado positivo
+    nodo: NUM-ENT-ADI
+    area: NUM
+    origin: docente
+    description: >-
+      Arrastra de los naturales que "no se puede quitar 7 a 3": da vuelta
+      la resta como si fuera conmutativa y el resultado queda positivo.
+      También aparece en sumas con signos distintos, donde resta bien los
+      tamaños pero no pone el signo del que tiene mayor tamaño.
+    example: "3 - 7 = 4"
+
+  - code: ENT-ADI-DOBLENEG
+    name: Ignora que está restando un negativo
+    nodo: NUM-ENT-ADI
+    area: NUM
+    origin: docente
+    description: >-
+      Lee a - (-b) como a - b: el signo del número que se resta desaparece
+      y no se transforma en suma. Un estudiante con solo este error
+      resuelve bien -7 + 3; falla únicamente cuando se resta un negativo,
+      incluidas las diferencias en contexto que cruzan el cero (máxima 4,
+      mínima -6: da 2).
+    example: "5 - (-3) = 2"
+
+  - code: ENT-ADI-RESTAGRUPA
+    name: Aplica el signo menos a todo lo que viene después
+    nodo: NUM-ENT-ADI
+    area: NUM
+    origin: docente
+    description: >-
+      En una cadena de sumas y restas trata el primer "-" como si
+      encerrara el resto entre paréntesis: 10 - 3 + 2 lo calcula como
+      10 - (3 + 2). Solo aparece con tres o más términos. Borde con
+      ENT-PRIOR: se queda en ADI porque la cadena es solo de sumas y
+      restas.
+    example: "10 - 3 + 2 = 5"
+
+  - code: ENT-ADI-VARORDEN
+    name: Calcula la variación como inicial menos final
+    nodo: NUM-ENT-ADI
+    area: NUM
+    origin: docente
+    description: >-
+      Invierte el orden de la resta al calcular una variación o un cambio:
+      hace inicial - final en vez de final - inicial. Acierta el tamaño y
+      falla el signo, así que una subida queda como bajada. Solo aparece
+      en ítems de variación.
+    example: "de -3 °C a 5 °C: variación -8"
