@@ -1,0 +1,1209 @@
+# =====================================================================
+# LES-ALG-EXP-01 — Lenguaje algebraico
+# Cubre ALG-EXP-LENG
+# =====================================================================
+# Primera clase del eje ALG. ALG-EXP-LENG es raíz del grafo: no hay
+# nodo debajo al que bajar al estudiante, así que las remediaciones se
+# sostienen solas y el cuerpo de la clase no asume más que aritmética
+# con naturales.
+#
+# Alcance (cerrado 25 sep 2026):
+#   entra   traducir enunciado -> expresión y expresión -> enunciado;
+#           vocabulario (doble/cuadrado, triple/cubo, cuádruplo/cuarta
+#           potencia, parte, semisuma, exceso, aumentado/disminuido,
+#           opuesto, inverso); alcance de cada operación (paréntesis);
+#           contexto: edades, dinero, comparaciones entre personas,
+#           tasas y períodos; consecutivos, pares e impares; números de
+#           dos cifras (valor posicional); patrones construidos desde el
+#           enunciado (solo nivel 3, decisión de Ben).
+#   fuera   valorizar (ALG-EXP-VAL), reducir términos semejantes y
+#           monomios (ALG-EXP-TERM), suprimir paréntesis (ALG-EXP-ADI),
+#           planteo de ecuaciones (ALG-ECU-PLAN), porcentajes (NUM-POR),
+#           fracciones de una cantidad como 2/5 de x (NUM-FRA), razones
+#           (ALG-PRO-RAZ).
+#   notación  cuadrado/cubo, opuesto (-x) y par/impar entran como
+#           NOTACIÓN aunque NUM-POT-CONC, NUM-ENT-REC y NUM-ENT-DIVIS no
+#           son ancestros (decisión de Ben en el control 1: "mejor que
+#           conozcan más cosas"). Ningún ítem pide calcular una potencia
+#           ni operar con negativos: solo traducir.
+#   respuestas  quedan sin reducir (n + (n + 1) + (n + 2), no 3n + 3):
+#           reducir es ALG-EXP-TERM.
+#
+# Niveles:
+#   1  una traducción directa, vocabulario, contexto de un paso
+#   2  frases compuestas, expresión -> enunciado, contexto de dos pasos
+#   3  contexto de varios pasos, tasas, cifras, patrones, I/II/III
+#
+# Volumen: 45 ítems (15 por nivel) en vez de 24. Con 17 misconceptions
+# hacen falta ~102 distractores para que cada una tenga 6 ítems de
+# práctica; 24 ítems dan 72 (decisión de Ben: los ítems que hagan falta).
+#
+# Material de Ben usado: presentación "MAT 11_PJO_Lenguaje Algebraico" y
+# guía MA 10 (Planteamientos). Ningún ítem copia uno de la guía.
+# ---------------------------------------------------------------------
+# Las misconceptions viven en contenido/misconceptions/ALG-EXP.yaml.
+# Acá solo se referencian por código.
+# ---------------------------------------------------------------------
+
+unit: ALG-EXP
+
+lesson:
+  code: LES-ALG-EXP-01
+  title: Lenguaje algebraico
+  position: 1
+  nodes:
+    - node: ALG-EXP-LENG
+      anchor: lenguaje-algebraico
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== nivel 1 ======================================================
+
+  # B ADITIVO: triple como «3 más»   C POTMUL: triple como cubo   D PARTEMUL: triple como tercera parte
+  - code: M1-EXP-001
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál expresión representa el triple de un número $x$?"
+    options:
+      - {label: A, body: "$3x$", correct: true}
+      - {label: B, body: "$x + 3$", misconception: EXP-LENG-ADITIVO}
+      - {label: C, body: "$x^3$", misconception: EXP-LENG-POTMUL}
+      - {label: D, body: "$\\frac{x}{3}$", misconception: EXP-LENG-PARTEMUL}
+
+  # B POTMUL: cuadrado leído como doble   C JUXTA: 5x leído como 5 + x   D PARTEMUL: cuarta parte leída como cuádruplo
+  - code: M1-EXP-002
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "$x^3$ es $x \\cdot x \\cdot x$", correct: true}
+      - {label: B, body: "$x^2$ es el doble de $x$", misconception: EXP-LENG-POTMUL}
+      - {label: C, body: "$5x$ es $x$ aumentado en $5$", misconception: EXP-LENG-JUXTA}
+      - {label: D, body: "$\\frac{x}{4}$ es el cuádruplo de $x$", misconception: EXP-LENG-PARTEMUL}
+
+  # A LINEAL: la mitad alcanza solo a la b   C PARTEMUL: semi (mitad) como doble   D ADITIVO: mitad como «2 menos»
+  - code: M1-EXP-003
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "La semisuma de $a$ y $b$ se escribe:"
+    options:
+      - {label: A, body: "$a + \\frac{b}{2}$", misconception: EXP-LENG-LINEAL}
+      - {label: B, body: "$\\frac{a + b}{2}$", correct: true}
+      - {label: C, body: "$2(a + b)$", misconception: EXP-LENG-PARTEMUL}
+      - {label: D, body: "$(a + b) - 2$", misconception: EXP-LENG-ADITIVO}
+
+  # A CONSEC: consecutivos como n, 2n, 3n   B NUEVAVAR: una letra por número   D PARCONSEC: paso de 2 en 2, como si fueran pares
+  - code: M1-EXP-004
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "Si $n$ es el menor de tres números naturales consecutivos, ¿cuál expresión representa la suma de los tres?"
+    options:
+      - {label: A, body: "$n + 2n + 3n$", misconception: EXP-LENG-CONSEC}
+      - {label: B, body: "$n + m + p$", misconception: EXP-LENG-NUEVAVAR}
+      - {label: C, body: "$n + (n + 1) + (n + 2)$", correct: true}
+      - {label: D, body: "$n + (n + 2) + (n + 4)$", misconception: EXP-LENG-PARCONSEC}
+
+  # A OPUINV: opuesto confundido con inverso   C ORDENRESTA: resta en el orden de lectura   D EXCESO: exceso leído como suma
+  - code: M1-EXP-005
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "Si $x \\neq 0$, ¿cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "El opuesto de $x$ es $\\frac{1}{x}$", misconception: EXP-LENG-OPUINV}
+      - {label: B, body: "El opuesto de $x$ es $-x$", correct: true}
+      - {label: C, body: "$7$ menos que $x$ es $7 - x$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: D, body: "El exceso de $x$ sobre $3$ es $x + 3$", misconception: EXP-LENG-EXCESO}
+
+  # A SOBREAGRUPA: el doble abarca también a la x   B POTMUL: doble como cuadrado   D ADITIVO: doble como «2 más»
+  - code: M1-EXP-006
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál expresión representa «$x$ aumentado en el doble de $y$»?"
+    options:
+      - {label: A, body: "$2(x + y)$", misconception: EXP-LENG-SOBREAGRUPA}
+      - {label: B, body: "$x + y^2$", misconception: EXP-LENG-POTMUL}
+      - {label: C, body: "$x + 2y$", correct: true}
+      - {label: D, body: "$x + y + 2$", misconception: EXP-LENG-ADITIVO}
+
+  # A JUXTA: 4x leído como 4 + x   B POTMUL: 4x leído como x⁴   D PARTEMUL: 4x leído como x/4
+  - code: M1-EXP-007
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Qué enunciado corresponde a la expresión $4x + 1$?"
+    options:
+      - {label: A, body: "Un número aumentado en 4, y luego aumentado en 1", misconception: EXP-LENG-JUXTA}
+      - {label: B, body: "La cuarta potencia de un número, aumentada en 1", misconception: EXP-LENG-POTMUL}
+      - {label: C, body: "El cuádruplo de un número, aumentado en 1", correct: true}
+      - {label: D, body: "La cuarta parte de un número, aumentada en 1", misconception: EXP-LENG-PARTEMUL}
+
+  # A INVREL: el doble se lo asigna a Luis   B ADITIVO: doble como «2 más»   C POTMUL: doble como cuadrado
+  - code: M1-EXP-008
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "Luis tiene $x$ láminas y Marta tiene el doble de láminas que Luis. ¿Cuántas láminas tiene Marta?"
+    options:
+      - {label: A, body: "$\\frac{x}{2}$", misconception: EXP-LENG-INVREL}
+      - {label: B, body: "$x + 2$", misconception: EXP-LENG-ADITIVO}
+      - {label: C, body: "$x^2$", misconception: EXP-LENG-POTMUL}
+      - {label: D, body: "$2x$", correct: true}
+
+  # A NUEVAVAR: letra nueva para el hermano   C INVREL: el «más» se lo da a Ana   D ADITIVO: «3 más» como «3 veces»
+  - code: M1-EXP-009
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "Ana tiene $a$ años y su hermano tiene 3 años más que ella. ¿Cuál expresión representa la suma de las edades de ambos?"
+    options:
+      - {label: A, body: "$a + b$", misconception: EXP-LENG-NUEVAVAR}
+      - {label: B, body: "$a + (a + 3)$", correct: true}
+      - {label: C, body: "$a + (a - 3)$", misconception: EXP-LENG-INVREL}
+      - {label: D, body: "$a + 3a$", misconception: EXP-LENG-ADITIVO}
+
+  # B PARCONSEC: paso de 1 entre pares   C CONSEC: siguiente de 2n como 3n (n, 2n, 3n)   D NUEVAVAR: letra nueva para el siguiente par
+  - code: M1-EXP-010
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "Si $2n$ es un número par, ¿cuál es el número par que le sigue?"
+    options:
+      - {label: A, body: "$2n + 2$", correct: true}
+      - {label: B, body: "$2n + 1$", misconception: EXP-LENG-PARCONSEC}
+      - {label: C, body: "$3n$", misconception: EXP-LENG-CONSEC}
+      - {label: D, body: "$2m$", misconception: EXP-LENG-NUEVAVAR}
+
+  # A TASA: no multiplica por los kilómetros   C ADITIVO: «t por cada kilómetro» como t + k   D SOBREAGRUPA: los k kilómetros abarcan también la subida
+  - code: M1-EXP-011
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "Un taxi cobra $b$ pesos al subir y $t$ pesos por cada kilómetro recorrido. ¿Cuánto cobra por un viaje de $k$ kilómetros?"
+    options:
+      - {label: A, body: "$b + t$", misconception: EXP-LENG-TASA}
+      - {label: B, body: "$b + tk$", correct: true}
+      - {label: C, body: "$b + t + k$", misconception: EXP-LENG-ADITIVO}
+      - {label: D, body: "$(b + t)k$", misconception: EXP-LENG-SOBREAGRUPA}
+
+  # A LINEAL: el doble alcanza solo a la a   B POTMUL: doble como cuadrado   C PARTEMUL: doble como mitad
+  - code: M1-EXP-012
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "El doble de la suma de $a$ y $b$ se escribe:"
+    options:
+      - {label: A, body: "$2a + b$", misconception: EXP-LENG-LINEAL}
+      - {label: B, body: "$(a + b)^2$", misconception: EXP-LENG-POTMUL}
+      - {label: C, body: "$\\frac{a + b}{2}$", misconception: EXP-LENG-PARTEMUL}
+      - {label: D, body: "$2(a + b)$", correct: true}
+
+  # A SOBREAGRUPA: el cuadrado abarca la suma   B POTMUL: cuadrado como doble   C LINEAL: el cuadrado alcanza solo a la y
+  - code: M1-EXP-013
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "La suma de los cuadrados de $x$ y de $y$ se escribe:"
+    options:
+      - {label: A, body: "$(x + y)^2$", misconception: EXP-LENG-SOBREAGRUPA}
+      - {label: B, body: "$2x + 2y$", misconception: EXP-LENG-POTMUL}
+      - {label: C, body: "$x + y^2$", misconception: EXP-LENG-LINEAL}
+      - {label: D, body: "$x^2 + y^2$", correct: true}
+
+  # A PATRDIF: escribe lo que cambia (15) en vez del valor   B PARTEMUL: «15 cada escalón» como dividir   D TASA: no multiplica por el número de escalones
+  - code: M1-EXP-014
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "Cada escalón de una escalera sube 15 cm. ¿A qué altura, en cm, queda el escalón número $n$, medida desde el suelo?"
+    options:
+      - {label: A, body: "$n + 15$", misconception: EXP-LENG-PATRDIF}
+      - {label: B, body: "$\\frac{n}{15}$", misconception: EXP-LENG-PARTEMUL}
+      - {label: C, body: "$15n$", correct: true}
+      - {label: D, body: "$15$", misconception: EXP-LENG-TASA}
+
+  # A OPUINV: inverso como opuesto   B JUXTA: 7x leído como 7 + x   D TIEMPO: hace como sumar
+  - code: M1-EXP-015
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "Si $x \\neq 0$, ¿cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "El inverso de $x$ es $-x$", misconception: EXP-LENG-OPUINV}
+      - {label: B, body: "$7x$ es la suma de $7$ y $x$", misconception: EXP-LENG-JUXTA}
+      - {label: C, body: "El doble de $x$, aumentado en 1, es $2x + 1$", correct: true}
+      - {label: D, body: "Si hoy tienes $x$ años, hace 2 años tenías $x + 2$", misconception: EXP-LENG-TIEMPO}
+
+  # ===== nivel 2 ======================================================
+
+  # A ORDENRESTA: resta en el orden de lectura   B SOBREAGRUPA: el doble abarca también al 7   C POTMUL: doble como cuadrado
+  - code: M1-EXP-016
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál expresión representa «7 menos que el doble de un número $x$»?"
+    options:
+      - {label: A, body: "$7 - 2x$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: B, body: "$2(x - 7)$", misconception: EXP-LENG-SOBREAGRUPA}
+      - {label: C, body: "$x^2 - 7$", misconception: EXP-LENG-POTMUL}
+      - {label: D, body: "$2x - 7$", correct: true}
+
+  # A EXCESO: exceso como suma   B SOBREAGRUPA: el triple abarca toda la resta   C PARTEMUL: triple como tercera parte
+  - code: M1-EXP-017
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El exceso del triple de $a$ sobre $b$ se escribe:"
+    options:
+      - {label: A, body: "$3a + b$", misconception: EXP-LENG-EXCESO}
+      - {label: B, body: "$3(a - b)$", misconception: EXP-LENG-SOBREAGRUPA}
+      - {label: C, body: "$\\frac{a}{3} - b$", misconception: EXP-LENG-PARTEMUL}
+      - {label: D, body: "$3a - b$", correct: true}
+
+  # A LINEAL: lee 2x² sin el paréntesis   B POTMUL: el cuadrado leído como doble   D JUXTA: 2x leído como 2 + x
+  - code: M1-EXP-018
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Qué enunciado corresponde a la expresión $(2x)^2$?"
+    options:
+      - {label: A, body: "El doble del cuadrado de un número", misconception: EXP-LENG-LINEAL}
+      - {label: B, body: "El doble del doble de un número", misconception: EXP-LENG-POTMUL}
+      - {label: C, body: "El cuadrado del doble de un número", correct: true}
+      - {label: D, body: "El cuadrado de la suma de 2 y un número", misconception: EXP-LENG-JUXTA}
+
+  # A LINEAL: lee 3x − 5 sin el paréntesis   B JUXTA: 3(…) leído como 3 + (…)   D ORDENRESTA: invierte la resta
+  - code: M1-EXP-019
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Qué enunciado corresponde a la expresión $3(x - 5)$?"
+    options:
+      - {label: A, body: "El triple de un número, disminuido en 5", misconception: EXP-LENG-LINEAL}
+      - {label: B, body: "3 más la diferencia entre un número y 5", misconception: EXP-LENG-JUXTA}
+      - {label: C, body: "El triple de la diferencia entre un número y 5", correct: true}
+      - {label: D, body: "El triple de la diferencia entre 5 y un número", misconception: EXP-LENG-ORDENRESTA}
+
+  # B OPUINV: opuesto como inverso   C ADITIVO: triple como «3 más»   D POTMUL: triple como cubo
+  - code: M1-EXP-020
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "El opuesto del triple de un número $x$ es:"
+    options:
+      - {label: A, body: "$-3x$", correct: true}
+      - {label: B, body: "$\\frac{1}{3x}$", misconception: EXP-LENG-OPUINV}
+      - {label: C, body: "$-(x + 3)$", misconception: EXP-LENG-ADITIVO}
+      - {label: D, body: "$-x^3$", misconception: EXP-LENG-POTMUL}
+
+  # B OPUINV: inverso como opuesto   C LINEAL: el inverso alcanza solo a la a   D ADITIVO: doble como «2 más»
+  - code: M1-EXP-021
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $a \\neq 0$, el inverso del doble de $a$ es:"
+    options:
+      - {label: A, body: "$\\frac{1}{2a}$", correct: true}
+      - {label: B, body: "$-2a$", misconception: EXP-LENG-OPUINV}
+      - {label: C, body: "$2 \\cdot \\frac{1}{a}$", misconception: EXP-LENG-LINEAL}
+      - {label: D, body: "$\\frac{1}{a + 2}$", misconception: EXP-LENG-ADITIVO}
+
+  # A INVREL: le da el triple a Juan   B NUEVAVAR: letra nueva para Juan   D ADITIVO: triple como «3 más»
+  - code: M1-EXP-022
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Pedro tiene el triple del dinero que tiene Juan. Si Pedro tiene $p$ pesos, ¿cuánto dinero tienen entre los dos?"
+    options:
+      - {label: A, body: "$p + 3p$", misconception: EXP-LENG-INVREL}
+      - {label: B, body: "$p + q$", misconception: EXP-LENG-NUEVAVAR}
+      - {label: C, body: "$p + \\frac{p}{3}$", correct: true}
+      - {label: D, body: "$p + (p - 3)$", misconception: EXP-LENG-ADITIVO}
+
+  # A TIEMPO: hace como sumar   B LINEAL: el doble alcanza solo a la c   C ORDENRESTA: resta con el 3 primero
+  - code: M1-EXP-023
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Camila tiene $c$ años. ¿Cuál expresión representa el doble de la edad que tenía hace 3 años?"
+    options:
+      - {label: A, body: "$2(c + 3)$", misconception: EXP-LENG-TIEMPO}
+      - {label: B, body: "$2c - 3$", misconception: EXP-LENG-LINEAL}
+      - {label: C, body: "$2(3 - c)$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: D, body: "$2(c - 3)$", correct: true}
+
+  # A PARCONSEC: paso de 1: 2n + 1, 2n + 2, 2n + 3   B CONSEC: consecutivos como múltiplos   D NUEVAVAR: letra nueva para cada impar
+  - code: M1-EXP-024
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $2n + 1$ es el menor de tres números impares consecutivos, ¿cuál es el mayor de ellos?"
+    options:
+      - {label: A, body: "$2n + 3$", misconception: EXP-LENG-PARCONSEC}
+      - {label: B, body: "$3(2n + 1)$", misconception: EXP-LENG-CONSEC}
+      - {label: C, body: "$2n + 5$", correct: true}
+      - {label: D, body: "$2p + 1$", misconception: EXP-LENG-NUEVAVAR}
+
+  # A TASA: no lleva el gasto diario a la semana   B ORDENRESTA: resta al revés   C SOBREAGRUPA: el 7 abarca también lo que gana
+  - code: M1-EXP-025
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Sofía gana $s$ pesos por semana y gasta $g$ pesos cada día, los 7 días de la semana. ¿Cuánto dinero ahorra en una semana?"
+    options:
+      - {label: A, body: "$s - g$", misconception: EXP-LENG-TASA}
+      - {label: B, body: "$7g - s$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: C, body: "$7(s - g)$", misconception: EXP-LENG-SOBREAGRUPA}
+      - {label: D, body: "$s - 7g$", correct: true}
+
+  # A DIGITOS: sin valor posicional   B SOBREAGRUPA: el 10 abarca las dos cifras   C ADITIVO: decenas como «10 más»
+  - code: M1-EXP-026
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Un número de dos cifras tiene $d$ como cifra de las decenas y $u$ como cifra de las unidades. ¿Cuál expresión representa ese número?"
+    options:
+      - {label: A, body: "$d + u$", misconception: EXP-LENG-DIGITOS}
+      - {label: B, body: "$10(d + u)$", misconception: EXP-LENG-SOBREAGRUPA}
+      - {label: C, body: "$d + u + 10$", misconception: EXP-LENG-ADITIVO}
+      - {label: D, body: "$10d + u$", correct: true}
+
+  # A PATRDIF: escribe lo que cambia por día   B ORDENRESTA: resta al revés   D TASA: no multiplica por los días
+  - code: M1-EXP-027
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Un bidón tiene 20 litros de agua y cada día se sacan 3 litros. ¿Cuántos litros quedan después de $d$ días?"
+    options:
+      - {label: A, body: "$d - 3$", misconception: EXP-LENG-PATRDIF}
+      - {label: B, body: "$3d - 20$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: C, body: "$20 - 3d$", correct: true}
+      - {label: D, body: "$20 - 3$", misconception: EXP-LENG-TASA}
+
+  # A OPUINV: opuesto confundido con inverso   C JUXTA: 3x leído como 3 + x   D POTMUL: 3x leído como x³
+  - code: M1-EXP-028
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Qué enunciado corresponde a la expresión $-3x$?"
+    options:
+      - {label: A, body: "El inverso del triple de un número", misconception: EXP-LENG-OPUINV}
+      - {label: B, body: "El opuesto del triple de un número", correct: true}
+      - {label: C, body: "El opuesto de la suma de 3 y un número", misconception: EXP-LENG-JUXTA}
+      - {label: D, body: "El opuesto del cubo de un número", misconception: EXP-LENG-POTMUL}
+
+  # A DIGITOS: sin valor posicional   C CONSEC: el que sigue a x como 2x   D NUEVAVAR: letra nueva para las unidades
+  - code: M1-EXP-029
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "En un número de dos cifras, la cifra de las decenas es $x$ y la de las unidades es el número que sigue a $x$. ¿Cuál expresión representa ese número?"
+    options:
+      - {label: A, body: "$x + (x + 1)$", misconception: EXP-LENG-DIGITOS}
+      - {label: B, body: "$10x + (x + 1)$", correct: true}
+      - {label: C, body: "$10x + 2x$", misconception: EXP-LENG-CONSEC}
+      - {label: D, body: "$10x + y$", misconception: EXP-LENG-NUEVAVAR}
+
+  # B PARCONSEC: paso de 1 entre pares   C CONSEC: consecutivos como múltiplos   D NUEVAVAR: una letra por número
+  - code: M1-EXP-030
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $2n$ es el del medio de tres números pares consecutivos, ¿cuál expresión representa la suma de los tres?"
+    options:
+      - {label: A, body: "$(2n - 2) + 2n + (2n + 2)$", correct: true}
+      - {label: B, body: "$(2n - 1) + 2n + (2n + 1)$", misconception: EXP-LENG-PARCONSEC}
+      - {label: C, body: "$n + 2n + 3n$", misconception: EXP-LENG-CONSEC}
+      - {label: D, body: "$2m + 2n + 2p$", misconception: EXP-LENG-NUEVAVAR}
+
+  # ===== nivel 3 ======================================================
+
+  # A PATRDIF: escribe lo que cambia, no el valor   C LINEAL: el 3 alcanza solo a la n   D ADITIVO: «3 más cada vez» sumado una sola vez
+  - code: M1-EXP-031
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Una secuencia de figuras se arma con palitos. La figura 1 tiene 4 palitos y cada figura tiene 3 palitos más que la anterior. ¿Cuántos palitos tiene la figura $n$?"
+    options:
+      - {label: A, body: "$n + 3$", misconception: EXP-LENG-PATRDIF}
+      - {label: B, body: "$4 + 3(n - 1)$", correct: true}
+      - {label: C, body: "$4 + 3n - 1$", misconception: EXP-LENG-LINEAL}
+      - {label: D, body: "$4 + 3 + (n - 1)$", misconception: EXP-LENG-ADITIVO}
+
+  # B PATRDIF: escribe lo que crece, no la altura   C ADITIVO: «4 cada semana» como 4 + n   D SOBREAGRUPA: el 4 abarca también la altura inicial
+  - code: M1-EXP-032
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Una planta mide 5 cm y crece 4 cm cada semana. ¿Cuánto medirá, en cm, dentro de $n$ semanas?"
+    options:
+      - {label: A, body: "$5 + 4n$", correct: true}
+      - {label: B, body: "$n + 4$", misconception: EXP-LENG-PATRDIF}
+      - {label: C, body: "$5 + 4 + n$", misconception: EXP-LENG-ADITIVO}
+      - {label: D, body: "$4(5 + n)$", misconception: EXP-LENG-SOBREAGRUPA}
+
+  # A PATRDIF: escribe lo que cambia por hora   C LINEAL: la d alcanza solo a la h   D TASA: no multiplica por las horas adicionales
+  - code: M1-EXP-033
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Un estacionamiento cobra $c$ pesos por la primera hora y $d$ pesos por cada hora adicional. ¿Cuánto paga una persona que deja su auto $h$ horas, con $h > 1$?"
+    options:
+      - {label: A, body: "$h + d$", misconception: EXP-LENG-PATRDIF}
+      - {label: B, body: "$c + d(h - 1)$", correct: true}
+      - {label: C, body: "$c + dh - 1$", misconception: EXP-LENG-LINEAL}
+      - {label: D, body: "$c + d$", misconception: EXP-LENG-TASA}
+
+  # A TASA: trata la cuenta bimestral como mensual   B ORDENRESTA: resta al revés   D PARTEMUL: «cada dos meses» como la mitad de b
+  - code: M1-EXP-034
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Una persona gana $a$ pesos al mes y paga una cuenta de $b$ pesos cada dos meses. ¿Cuánto dinero le queda en un año, después de pagar esa cuenta?"
+    options:
+      - {label: A, body: "$12a - 12b$", misconception: EXP-LENG-TASA}
+      - {label: B, body: "$6b - 12a$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: C, body: "$12a - 6b$", correct: true}
+      - {label: D, body: "$12a - \\frac{b}{2}$", misconception: EXP-LENG-PARTEMUL}
+
+  # B LINEAL: el doble alcanza solo a las decenas   C DIGITOS: sin valor posicional   D ADITIVO: doble como «2 más»
+  - code: M1-EXP-035
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Un número de dos cifras tiene $a$ como cifra de las decenas y $b$ como cifra de las unidades. ¿Cuál expresión representa el doble de ese número?"
+    options:
+      - {label: A, body: "$2(10a + b)$", correct: true}
+      - {label: B, body: "$2 \\cdot 10a + b$", misconception: EXP-LENG-LINEAL}
+      - {label: C, body: "$2(a + b)$", misconception: EXP-LENG-DIGITOS}
+      - {label: D, body: "$10a + b + 2$", misconception: EXP-LENG-ADITIVO}
+
+  # B TIEMPO: hace como sumar   C LINEAL: el triple alcanza solo a la h   D INVREL: el triple se lo da a la hija
+  - code: M1-EXP-036
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Hace 4 años, la edad de Martín era el triple de la edad que tenía su hija. Si hoy la hija tiene $h$ años, ¿qué edad tenía Martín hace 4 años?"
+    options:
+      - {label: A, body: "$3(h - 4)$", correct: true}
+      - {label: B, body: "$3(h + 4)$", misconception: EXP-LENG-TIEMPO}
+      - {label: C, body: "$3h - 4$", misconception: EXP-LENG-LINEAL}
+      - {label: D, body: "$\\frac{h - 4}{3}$", misconception: EXP-LENG-INVREL}
+
+  # A TIEMPO: dentro de como restar   B NUEVAVAR: letra nueva para el hermano   C INVREL: el «mayor» se lo da a Rocío
+  - code: M1-EXP-037
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Rocío tiene $r$ años y su hermano es 5 años mayor que ella. ¿Cuál expresión representa la suma de sus edades dentro de 2 años?"
+    options:
+      - {label: A, body: "$(r - 2) + (r + 5 - 2)$", misconception: EXP-LENG-TIEMPO}
+      - {label: B, body: "$(r + 2) + (s + 2)$", misconception: EXP-LENG-NUEVAVAR}
+      - {label: C, body: "$(r + 2) + (r - 5 + 2)$", misconception: EXP-LENG-INVREL}
+      - {label: D, body: "$(r + 2) + (r + 5 + 2)$", correct: true}
+
+  # A EXCESO: exceso como suma   B TIEMPO: invierte dentro de y hace   C ADITIVO: «dentro de 6 años» como 6 veces
+  - code: M1-EXP-038
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Un padre tiene $p$ años y su hijo tiene $h$ años. ¿Cuál expresión representa el exceso de la edad que tendrá el padre dentro de 6 años sobre la edad que tenía el hijo hace 2 años?"
+    options:
+      - {label: A, body: "$(p + 6) + (h - 2)$", misconception: EXP-LENG-EXCESO}
+      - {label: B, body: "$(p - 6) - (h + 2)$", misconception: EXP-LENG-TIEMPO}
+      - {label: C, body: "$6p - 2h$", misconception: EXP-LENG-ADITIVO}
+      - {label: D, body: "$(p + 6) - (h - 2)$", correct: true}
+
+  # B EXCESO: exceso como suma   C OPUINV: inverso como opuesto   D POTMUL: doble como cuadrado
+  - code: M1-EXP-039
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Si $y \\neq 0$, el exceso del doble de $x$ sobre el inverso de $y$ se escribe:"
+    options:
+      - {label: A, body: "$2x - \\frac{1}{y}$", correct: true}
+      - {label: B, body: "$2x + \\frac{1}{y}$", misconception: EXP-LENG-EXCESO}
+      - {label: C, body: "$2x - (-y)$", misconception: EXP-LENG-OPUINV}
+      - {label: D, body: "$x^2 - \\frac{1}{y}$", misconception: EXP-LENG-POTMUL}
+
+  # A EXCESO: rechaza III: exceso como suma   C INVREL: rechaza I: le da el doble a Ignacio   D TIEMPO: acepta II: hace como sumar
+  - code: M1-EXP-040
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Hoy Ignacio tiene $x$ años y su prima Valentina tiene el doble de la edad de Ignacio. ¿Cuál(es) de las siguientes afirmaciones es (son) verdadera(s)?
+
+      I) Valentina tiene $2x$ años.
+
+      II) Hace 3 años, Ignacio tenía $x + 3$ años.
+
+      III) Si Ignacio tiene más de 5 años, el exceso de su edad sobre 5 se escribe $x - 5$.
+    options:
+      - {label: A, body: "Solo I", misconception: EXP-LENG-EXCESO}
+      - {label: B, body: "Solo I y III", correct: true}
+      - {label: C, body: "Solo III", misconception: EXP-LENG-INVREL}
+      - {label: D, body: "I, II y III", misconception: EXP-LENG-TIEMPO}
+
+  # B PARCONSEC: acepta II: paso de 1 entre pares   C DIGITOS: acepta III: sin valor posicional   D CONSEC: rechaza I: consecutivos como múltiplos
+  - code: M1-EXP-041
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Si $n$ es un dígito entre 1 y 9, ¿cuál(es) de las siguientes afirmaciones es (son) verdadera(s)?
+
+      I) $n$, $n + 1$ y $n + 2$ son tres números consecutivos.
+
+      II) $2n$ y $2n + 1$ son dos números pares consecutivos.
+
+      III) El número de dos cifras que tiene $n$ decenas y 5 unidades se escribe $n + 5$.
+    options:
+      - {label: A, body: "Solo I", correct: true}
+      - {label: B, body: "Solo I y II", misconception: EXP-LENG-PARCONSEC}
+      - {label: C, body: "Solo I y III", misconception: EXP-LENG-DIGITOS}
+      - {label: D, body: "Ninguna de ellas", misconception: EXP-LENG-CONSEC}
+
+  # A DIGITOS: sin valor posicional   C LINEAL: el 10 alcanza solo a la a   D SOBREAGRUPA: el 10 abarca también las unidades
+  - code: M1-EXP-042
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Un número de dos cifras tiene $a$ como cifra de las decenas y $b$ como cifra de las unidades, con $a < 9$. Si la cifra de las decenas aumenta en 1, ¿cuál expresión representa el nuevo número?"
+    options:
+      - {label: A, body: "$(a + 1) + b$", misconception: EXP-LENG-DIGITOS}
+      - {label: B, body: "$10(a + 1) + b$", correct: true}
+      - {label: C, body: "$10a + 1 + b$", misconception: EXP-LENG-LINEAL}
+      - {label: D, body: "$10(a + 1 + b)$", misconception: EXP-LENG-SOBREAGRUPA}
+
+  # A TASA: descuenta una sola semana   C TIEMPO: hace como sumar   D ORDENRESTA: resta al revés
+  - code: M1-EXP-043
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Joaquín ahorra $s$ pesos cada semana desde hace 6 semanas y no ha sacado nada. Hoy tiene $A$ pesos en total. ¿Cuánto dinero tenía hace 6 semanas, cuando empezó a ahorrar?"
+    options:
+      - {label: A, body: "$A - s$", misconception: EXP-LENG-TASA}
+      - {label: B, body: "$A - 6s$", correct: true}
+      - {label: C, body: "$A + 6s$", misconception: EXP-LENG-TIEMPO}
+      - {label: D, body: "$6s - A$", misconception: EXP-LENG-ORDENRESTA}
+
+  # A EXCESO: exceso como suma   B PARCONSEC: paso de 1 entre pares   C CONSEC: el par siguiente como 3n
+  - code: M1-EXP-044
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Si $2n$ es un número par, ¿cuál expresión representa el exceso del número par que le sigue sobre $2n$?"
+    options:
+      - {label: A, body: "$(2n + 2) + 2n$", misconception: EXP-LENG-EXCESO}
+      - {label: B, body: "$(2n + 1) - 2n$", misconception: EXP-LENG-PARCONSEC}
+      - {label: C, body: "$3n - 2n$", misconception: EXP-LENG-CONSEC}
+      - {label: D, body: "$(2n + 2) - 2n$", correct: true}
+
+  # B PATRDIF: escribe lo que cambia (10)   C DIGITOS: n decenas y 5 unidades sin valor posicional   D SOBREAGRUPA: el 10 abarca también las unidades
+  - code: M1-EXP-045
+    node: ALG-EXP-LENG
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Se escriben en orden los números de dos cifras que terminan en 5: $15,\\ 25,\\ 35,\\ \\ldots$ ¿Cuál expresión representa el número que ocupa el lugar $n$ de esa lista?"
+    options:
+      - {label: A, body: "$10n + 5$", correct: true}
+      - {label: B, body: "$n + 10$", misconception: EXP-LENG-PATRDIF}
+      - {label: C, body: "$n + 5$", misconception: EXP-LENG-DIGITOS}
+      - {label: D, body: "$10(n + 5)$", misconception: EXP-LENG-SOBREAGRUPA}
+
+# ---------------------------------------------------------------------
+# REMEDIACIONES
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-EXP-LENG-LINEAL
+    misconception: EXP-LENG-LINEAL
+    title: «De la suma de» pide paréntesis
+    body: |
+      Escribiste los símbolos en el orden en que leíste las palabras, y la
+      operación del comienzo tomó solo el término que tenía al lado. Para
+      «el cuádruplo de la suma de $m$ y $9$» escribiste $4m + 9$.
+
+      **Cuando la frase dice «de la suma de…» o «de la diferencia
+      entre…», la operación afecta a ese resultado completo, y eso se
+      escribe con paréntesis.**
+
+      «El cuádruplo de la suma de $m$ y $9$»: primero se forma la suma,
+      $m + 9$. Después se toma su cuádruplo:
+
+      $$4(m + 9)$$
+
+      Compáralo con «la suma del cuádruplo de $m$ y $9$». Ahí primero va
+      el cuádruplo de $m$ y después se suma: $4m + 9$. Las mismas palabras
+      en otro orden dan otra expresión.
+
+      Un control rápido: lee en voz alta lo que escribiste. $4m + 9$ se lee
+      «el cuádruplo de $m$, más $9$». Si la frase original decía «de la
+      suma», falta el paréntesis.
+    items: [M1-EXP-003, M1-EXP-012, M1-EXP-018, M1-EXP-019, M1-EXP-031, M1-EXP-033]
+
+  - code: REM-EXP-LENG-SOBREAGRUPA
+    misconception: EXP-LENG-SOBREAGRUPA
+    title: El paréntesis va solo si la frase agrupa
+    body: |
+      Pusiste un paréntesis que la frase no pedía: la primera operación
+      terminó afectando a todo lo que venía después. Para «el quíntuplo
+      de $w$, aumentado en $8$» escribiste $5(w + 8)$.
+
+      **Una operación abarca una suma o una resta completa solo cuando la
+      frase lo dice: «de la suma de», «de la diferencia entre».**
+
+      «El quíntuplo de $w$, aumentado en $8$»: primero el quíntuplo, $5w$.
+      Después se le agregan $8$:
+
+      $$5w + 8$$
+
+      «El quíntuplo de la suma de $w$ y $8$»: acá sí se suma primero, y
+      queda $5(w + 8)$.
+
+      Con las potencias pasa lo mismo. El cuadrado de la suma de $2$ y $3$
+      es $5^2 = 25$. La suma de los cuadrados de $2$ y $3$ es
+      $4 + 9 = 13$. Son cantidades distintas.
+
+      Un control rápido: antes de poner un paréntesis, busca en la frase
+      la palabra que lo justifica («suma», «diferencia»). Si no está, no
+      hay paréntesis.
+    items: [M1-EXP-006, M1-EXP-011, M1-EXP-016, M1-EXP-017, M1-EXP-032, M1-EXP-042]
+
+  - code: REM-EXP-LENG-ORDENRESTA
+    misconception: EXP-LENG-ORDENRESTA
+    title: En una resta, primero va de donde se quita
+    body: |
+      Escribiste la resta en el orden en que aparecieron los números en
+      la frase. Para «$9$ menos que $k$» escribiste $9 - k$.
+
+      **Antes de escribir una resta, pregúntate de qué cantidad se está
+      quitando. Esa va primero.**
+
+      - «$k$ disminuido en $9$»: a $k$ se le quitan $9$, así que $k - 9$.
+      - «$9$ menos que $k$»: un número que tiene $9$ menos que $k$, así
+        que $k - 9$.
+      - «restar $9$ de $k$»: se quita de $k$, así que $k - 9$.
+
+      Las tres frases nombran los números en distinto orden, y las tres
+      dan $k - 9$.
+
+      En contexto funciona igual. Si tenías $m$ pesos y gastaste $900$, lo
+      que te queda es $m - 900$: se quita de lo que tenías.
+
+      Un control rápido: prueba con un número fácil. «$9$ menos que $30$»
+      es $21$. Si con $k = 30$ tu expresión no da $21$, la resta está al
+      revés.
+    items: [M1-EXP-005, M1-EXP-016, M1-EXP-019, M1-EXP-023, M1-EXP-034, M1-EXP-043]
+
+  - code: REM-EXP-LENG-ADITIVO
+    misconception: EXP-LENG-ADITIVO
+    title: «Veces» multiplica, «más» suma
+    body: |
+      Confundiste cuántas veces se toma una cantidad con cuánto se le
+      agrega. Para «el quíntuplo de $r$» escribiste $r + 5$.
+
+      **Doble, triple, quíntuplo, «$k$ veces» y «$p$ pesos cada uno»
+      multiplican. «Aumentado en», «más que» y «se le agregan» suman.**
+
+      - El quíntuplo de $r$ son cinco copias de $r$:
+        $r + r + r + r + r = 5r$.
+      - $r$ aumentado en $5$ es una sola suma: $r + 5$.
+
+      Con la mitad o la tercera parte pasa lo mismo, pero se divide, no se
+      resta. La tercera parte de $r$ es $\frac{r}{3}$, no $r - 3$.
+
+      En contexto: $8$ cuadernos a $q$ pesos cada uno cuestan $8q$. Sumar
+      $8 + q$ sería juntar cuadernos con pesos.
+
+      Un control rápido: si una cantidad se repite («cada uno», «cada día»,
+      «por kilómetro»), en tu expresión tiene que haber una multiplicación.
+    items: [M1-EXP-001, M1-EXP-003, M1-EXP-020, M1-EXP-021, M1-EXP-031, M1-EXP-032]
+
+  - code: REM-EXP-LENG-PARTEMUL
+    misconception: EXP-LENG-PARTEMUL
+    title: Parte divide, veces multiplica
+    body: |
+      Viste el número dentro de la palabra y multiplicaste cuando había
+      que dividir, o al revés. Para «la quinta parte de $w$» escribiste
+      $5w$.
+
+      **«Parte» y «mitad» reparten: dividen. «Doble», «triple», «cuádruplo»
+      y «veces» juntan copias: multiplican.**
+
+      - La quinta parte de $w$ es $w$ repartido en $5$ partes iguales:
+        $\frac{w}{5}$.
+      - El quíntuplo de $w$ son $5$ copias de $w$: $5w$.
+      - La mitad de $w$ es $\frac{w}{2}$; el doble de $w$ es $2w$.
+
+      Con un número se nota enseguida. La quinta parte de $40$ es $8$. El
+      quíntuplo de $40$ es $200$.
+
+      Un control rápido: una parte de algo es más chica que ese algo; el
+      doble o el triple son más grandes. Si tu expresión para «la quinta
+      parte» agranda el número, está al revés.
+    items: [M1-EXP-001, M1-EXP-002, M1-EXP-003, M1-EXP-007, M1-EXP-017, M1-EXP-034]
+
+  - code: REM-EXP-LENG-POTMUL
+    misconception: EXP-LENG-POTMUL
+    title: El doble suma dos veces, el cuadrado multiplica dos veces
+    body: |
+      Confundiste una multiplicación por $2$ o por $3$ con una potencia.
+      Para «el cuadrado de $w$» escribiste $2w$.
+
+      **El doble es el número sumado dos veces. El cuadrado es el número
+      multiplicado por sí mismo.** Lo mismo con el triple y el cubo:
+
+      - doble de $w$: $w + w = 2w$
+      - cuadrado de $w$: $w \cdot w = w^2$
+      - triple de $w$: $w + w + w = 3w$
+      - cubo de $w$: $w \cdot w \cdot w = w^3$
+
+      Con un número se ve la diferencia. El doble de $9$ es $18$; el
+      cuadrado de $9$ es $81$.
+
+      Un control rápido: el número chico arriba ($w^2$, $w^3$) dice cuántas
+      veces se multiplica la letra por sí misma. El número de adelante
+      ($2w$, $3w$) dice cuántas veces se suma.
+    items: [M1-EXP-001, M1-EXP-002, M1-EXP-006, M1-EXP-016, M1-EXP-018, M1-EXP-039]
+
+  - code: REM-EXP-LENG-EXCESO
+    misconception: EXP-LENG-EXCESO
+    title: El exceso siempre es una resta
+    body: |
+      Leíste «exceso» como una suma, o pusiste la resta al revés. Para «el
+      exceso de $m$ sobre $11$» escribiste $m + 11$.
+
+      **«El exceso de $A$ sobre $B$» es cuánto le sobra a $A$ comparado con
+      $B$: $A - B$. Primero va lo que se nombra justo después de «exceso
+      de».**
+
+      Piénsalo con estaturas. Si Carla mide $172$ cm y Diego $160$ cm, el
+      exceso de la estatura de Carla sobre la de Diego es
+      $172 - 160 = 12$ cm. Es lo que Carla tiene de más.
+
+      - El exceso de $m$ sobre $11$: $m - 11$.
+      - El exceso de $11$ sobre $m$: $11 - m$.
+
+      Un control rápido: «exceso» nunca es una suma. Y lo que se nombra
+      primero es lo que excede, así que va antes del signo menos.
+    items: [M1-EXP-005, M1-EXP-017, M1-EXP-038, M1-EXP-039, M1-EXP-040, M1-EXP-044]
+
+  - code: REM-EXP-LENG-OPUINV
+    misconception: EXP-LENG-OPUINV
+    title: El opuesto suma 0, el inverso multiplica 1
+    body: |
+      Confundiste el opuesto con el inverso. Por ejemplo, dijiste que el
+      opuesto de $m$ es $\frac{1}{m}$.
+
+      **El opuesto de un número es el que sumado con él da $0$. El inverso
+      es el que multiplicado por él da $1$.**
+
+      - Opuesto de $8$: $-8$, porque $8 + (-8) = 0$.
+      - Inverso de $8$: $\frac{1}{8}$, porque $8 \cdot \frac{1}{8} = 1$.
+
+      Con letras, el opuesto de $m$ es $-m$ y el inverso de $m$ (si
+      $m \neq 0$) es $\frac{1}{m}$.
+
+      Si la frase compone, primero se arma lo de adentro. «El opuesto del
+      séxtuplo de $m$»: primero el séxtuplo, $6m$; después su opuesto,
+      $-6m$.
+
+      Un control rápido: el opuesto cambia el signo y nada más. El inverso
+      pone el número abajo de una fracción con $1$ arriba.
+    items: [M1-EXP-005, M1-EXP-015, M1-EXP-020, M1-EXP-021, M1-EXP-028, M1-EXP-039]
+
+  - code: REM-EXP-LENG-JUXTA
+    misconception: EXP-LENG-JUXTA
+    title: Pegados, se multiplican
+    body: |
+      Leíste un número y una letra pegados como una suma: tomaste $6m$ como
+      «$6$ más $m$».
+
+      **Cuando un número va pegado a una letra o a un paréntesis, se
+      multiplican. $6m$ significa $6 \cdot m$: el séxtuplo de $m$.**
+
+      Mira cómo cambia todo con la escritura:
+
+      - $6m$: el séxtuplo de $m$.
+      - $m + 6$: $m$ aumentado en $6$.
+      - $m^6$: la sexta potencia de $m$.
+      - $6(m + 1)$: el séxtuplo de la suma de $m$ y $1$.
+
+      Son cuatro cantidades distintas. Con $m = 10$ valen $60$, $16$, un
+      millón y $66$.
+
+      Un control rápido: si en tu enunciado aparece «aumentado» o «más»,
+      en la expresión tiene que haber un signo $+$ escrito. Si no lo hay,
+      no hay suma.
+    items: [M1-EXP-002, M1-EXP-007, M1-EXP-015, M1-EXP-018, M1-EXP-019, M1-EXP-028]
+
+  - code: REM-EXP-LENG-INVREL
+    misconception: EXP-LENG-INVREL
+    title: Pregúntate quién tiene más
+    body: |
+      Le pusiste la comparación a la persona equivocada. Por ejemplo, si
+      Elena tiene el cuádruplo de libros que Tomás y Elena tiene $e$
+      libros, escribiste que Tomás tiene $4e$.
+
+      **«$A$ tiene el cuádruplo que $B$» significa que $A$ es cuatro veces
+      $B$. El cuádruplo se aplica a $B$, la cantidad con la que se
+      compara.**
+
+      Elena tiene $e$ libros, y eso es el cuádruplo de lo de Tomás. Tomás
+      tiene la cuarta parte: $\frac{e}{4}$.
+
+      Con «más que» funciona igual. Si Elena es $4$ años mayor que Tomás y
+      Tomás tiene $t$ años, Elena tiene $t + 4$, no $t - 4$.
+
+      Un control rápido: antes de escribir, decide quién tiene más. Elena
+      tiene el cuádruplo, así que tiene más. Si tu expresión le da más a
+      Tomás, está al revés.
+    items: [M1-EXP-008, M1-EXP-009, M1-EXP-022, M1-EXP-036, M1-EXP-037, M1-EXP-040]
+
+  - code: REM-EXP-LENG-NUEVAVAR
+    misconception: EXP-LENG-NUEVAVAR
+    title: Una letra, y lo demás en función de ella
+    body: |
+      Usaste una letra nueva para una cantidad que el enunciado ya describe
+      a partir de otra. Si Elisa tiene $e$ láminas y Bruno tiene $6$ más
+      que ella, escribiste lo de ambos como $e + b$.
+
+      **Si una cantidad se describe comparándola con otra, no lleva letra
+      propia: se escribe con la letra de la otra.**
+
+      Bruno tiene $6$ más que Elisa: $e + 6$. Entre los dos tienen
+      $e + (e + 6)$. Una sola letra, porque lo de Bruno depende de lo de
+      Elisa.
+
+      Con números seguidos pasa lo mismo. Si el primero es $k$, los
+      siguientes se escriben a partir de $k$, no con letras nuevas.
+
+      Un control rápido: tu expresión solo puede tener las letras que da
+      el enunciado. Si aparece una letra que nadie nombró, sobra.
+    items: [M1-EXP-004, M1-EXP-009, M1-EXP-010, M1-EXP-022, M1-EXP-024, M1-EXP-037]
+
+  - code: REM-EXP-LENG-TIEMPO
+    misconception: EXP-LENG-TIEMPO
+    title: Hacia atrás se resta, hacia adelante se suma
+    body: |
+      Invertiste el pasado y el futuro. Si Gabriel tiene $g$ años, dijiste
+      que hace $9$ años tenía $g + 9$.
+
+      **Hacia el pasado se resta; hacia el futuro se suma.**
+
+      - Hace $9$ años: $g - 9$.
+      - Dentro de $9$ años: $g + 9$.
+
+      Hace $9$ años Gabriel era más joven, así que su edad tiene que ser
+      menor que $g$. La palabra «hace» no pide sumar: dice que miras hacia
+      atrás.
+
+      Lo mismo con cualquier cantidad que cambia con el tiempo. Lo que
+      había antes de un aumento es lo de ahora menos el aumento.
+
+      Un control rápido: pasado, menos que hoy; futuro, más que hoy. Si tu
+      expresión para el pasado es mayor que la de hoy, está al revés.
+    items: [M1-EXP-015, M1-EXP-023, M1-EXP-036, M1-EXP-037, M1-EXP-038, M1-EXP-040]
+
+  - code: REM-EXP-LENG-TASA
+    misconception: EXP-LENG-TASA
+    title: Cuenta cuántas veces ocurre
+    body: |
+      Usaste la cantidad de un período como si ocurriera una sola vez. Si
+      una tienda vende $v$ pesos cada día y paga $m$ pesos de luz al mes,
+      dijiste que en un mes de $30$ días le queda $v - m$.
+
+      **Antes de sumar o restar, lleva cada cantidad al período que te
+      piden, multiplicándola por las veces que ocurre.**
+
+      En $30$ días la tienda vende $30$ veces $v$: $30v$. La luz se paga una
+      vez en el mes: $m$. Le queda:
+
+      $$30v - m$$
+
+      Lo mismo con los cobros «por cada» unidad: por cada kilo, cada hora
+      o cada kilómetro. El precio se multiplica por las unidades.
+
+      Un control rápido: mira cada cantidad y pregúntate cuántas veces
+      pasa en el período que te piden. Si pasa más de una vez, va
+      multiplicada.
+    items: [M1-EXP-011, M1-EXP-014, M1-EXP-025, M1-EXP-027, M1-EXP-033, M1-EXP-034]
+
+  - code: REM-EXP-LENG-CONSEC
+    misconception: EXP-LENG-CONSEC
+    title: Consecutivo es sumar, no multiplicar
+    body: |
+      Escribiste números consecutivos como si fueran múltiplos: el número,
+      su doble y su triple.
+
+      **Dos números son consecutivos cuando el segundo es el primero más
+      $1$. Se avanza sumando, siempre el mismo paso.**
+
+      Con números se ve claro. $14$, $15$ y $16$ son consecutivos: cada uno
+      es el anterior más $1$. En cambio, $14$, $28$ y $42$ son un número, su
+      doble y su triple: los saltos son de $14$, no de $1$.
+
+      Con letras, si el primero es $k$, el segundo es $k + 1$, no $2k$.
+
+      Un control rápido: entre consecutivos, la distancia de uno al
+      siguiente siempre es la misma ($1$, o $2$ si se cuentan solo pares o
+      solo impares). Entre $k$ y $2k$ la distancia es $k$, que cambia
+      según el número.
+    items: [M1-EXP-004, M1-EXP-010, M1-EXP-024, M1-EXP-029, M1-EXP-041, M1-EXP-044]
+
+  - code: REM-EXP-LENG-PARCONSEC
+    misconception: EXP-LENG-PARCONSEC
+    title: Entre pares o impares, el paso es 2
+    body: |
+      Usaste el paso equivocado: avanzaste de $1$ en $1$ entre pares o
+      impares, o de $2$ en $2$ entre números consecutivos cualesquiera.
+
+      **Entre consecutivos cualesquiera el paso es $1$. Entre pares
+      consecutivos, o entre impares consecutivos, el paso es $2$.**
+
+      Mira una fila de números: $38$, $39$, $40$, $41$, $42$, $43$.
+
+      - Consecutivos: $38$, $39$, $40$.
+      - Pares consecutivos: $38$, $40$, $42$.
+      - Impares consecutivos: $39$, $41$, $43$.
+
+      Entre dos pares siempre queda un impar al medio. Por eso, para pasar
+      de un par al siguiente, hay que sumar $2$.
+
+      Un control rápido: un par más $1$ da un impar, y un impar más $1$ da
+      un par. Si al «par que sigue» le sumaste $1$, te salió un impar.
+    items: [M1-EXP-004, M1-EXP-010, M1-EXP-024, M1-EXP-030, M1-EXP-041, M1-EXP-044]
+
+  - code: REM-EXP-LENG-DIGITOS
+    misconception: EXP-LENG-DIGITOS
+    title: Cada decena vale 10
+    body: |
+      Escribiste un número de dos cifras como la suma de sus cifras, como
+      si cada cifra valiera lo que dice.
+
+      **En un número de dos cifras, la cifra de las decenas vale diez
+      veces lo que dice. El número es $10$ por las decenas, más las
+      unidades.**
+
+      El $73$ tiene $7$ decenas y $3$ unidades:
+
+      $$73 = 10 \cdot 7 + 3$$
+
+      Si sumas las cifras, $7 + 3 = 10$, y eso no es $73$.
+
+      Con letras: si la cifra de las decenas es $p$ y la de las unidades
+      es $q$, el número es $10p + q$.
+
+      Un control rápido: prueba tu expresión con un número que conozcas.
+      Con $7$ decenas y $3$ unidades tiene que dar $73$.
+    items: [M1-EXP-026, M1-EXP-029, M1-EXP-035, M1-EXP-041, M1-EXP-042, M1-EXP-045]
+
+  - code: REM-EXP-LENG-PATRDIF
+    misconception: EXP-LENG-PATRDIF
+    title: No es cuánto cambia, es cuánto hay
+    body: |
+      Escribiste lo que cambia en cada paso, en vez de cuánto hay en el
+      paso $n$. Una alcancía parte con $800$ pesos y cada semana se le
+      agregan $300$, y dijiste que después de $n$ semanas tiene $n + 300$.
+
+      **En el paso $n$ hay lo inicial, más el aumento repetido tantas veces
+      como pasos hubo.**
+
+      Después de $n$ semanas se agregaron $300$ pesos $n$ veces: $300n$.
+      Más lo que había al comienzo:
+
+      $$800 + 300n$$
+
+      Si lo inicial ya cuenta como el paso $1$ (la figura $1$, la primera
+      hora), el aumento se repite una vez menos: $n - 1$ veces.
+
+      Un control rápido: $n + 300$ crece de a $1$ cuando pasa una semana,
+      pero la alcancía crece de a $300$. El número que acompaña a la $n$
+      tiene que ser lo que aumenta en cada paso.
+    items: [M1-EXP-014, M1-EXP-027, M1-EXP-031, M1-EXP-032, M1-EXP-033, M1-EXP-045]
+
+
+# ---------------------------------------------------------------------
+# CUERPO DE LA CLASE
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  El álgebra usa letras para hablar de números que todavía no conoces.
+  Antes de operar con ellas tienes que saber escribir lo que dice una
+  frase. Eso es el lenguaje algebraico, y en la PAES está detrás de casi
+  todos los problemas de planteo.
+
+  ## Lenguaje algebraico
+
+  ### Una letra es un número
+
+  Una letra representa un número cualquiera. Con ella puedes escribir
+  cosas que valen para todos los números a la vez.
+
+  Cuando un número va pegado a una letra, se multiplican: $5m$ significa
+  $5 \cdot m$. No es «$5$ más $m$». Lo mismo con un paréntesis: $5(m + 1)$
+  es $5$ veces la suma.
+
+  **Pegados, se multiplican. Para sumar tiene que aparecer el signo $+$.**
+
+  ### El vocabulario
+
+  Estas palabras aparecen en todos los problemas. Las parejas van juntas
+  porque son las que más se confunden:
+
+  - el doble de $x$: $2x$ · el cuadrado de $x$: $x^2$
+  - el triple de $x$: $3x$ · el cubo de $x$: $x^3$
+  - el cuádruplo de $x$: $4x$ · la cuarta potencia de $x$: $x^4$
+  - la mitad de $x$: $\frac{x}{2}$ · la tercera parte de $x$: $\frac{x}{3}$
+  - $x$ aumentado en $a$: $x + a$ · $x$ disminuido en $a$: $x - a$
+  - el sucesor de $x$: $x + 1$ · el antecesor de $x$: $x - 1$
+  - el opuesto de $x$: $-x$ · el inverso de $x$: $\frac{1}{x}$
+
+  El doble y el cuadrado no son lo mismo. El doble de $7$ es $14$; el
+  cuadrado de $7$ es $49$. El doble suma el número dos veces, el cuadrado
+  lo multiplica por sí mismo.
+
+  «Parte» divide y «veces» multiplica. La tercera parte achica, el triple
+  agranda.
+
+  La **semisuma** de dos números es la mitad de su suma.
+
+  El **opuesto** es el que sumado con el número da $0$. El **inverso** es
+  el que multiplicado por el número da $1$.
+
+  El **exceso de $A$ sobre $B$** es cuánto le sobra a $A$ respecto de $B$:
+  $A - B$. Es una resta, nunca una suma.
+
+  ### Qué abarca cada operación
+
+  Este es el error más común: escribir las palabras en el orden en que se
+  leen, sin fijarse qué abarca cada operación.
+
+  - «el triple de la suma de $k$ y $10$»: $3(k + 10)$
+  - «la suma del triple de $k$ y $10$»: $3k + 10$
+
+  **Cuando la frase dice «de la suma de» o «de la diferencia entre», la
+  operación abarca ese resultado completo, y eso se escribe con
+  paréntesis.** Si la frase no lo dice, no hay paréntesis.
+
+  Con potencias pasa igual: el cuadrado de la suma de $1$ y $4$ es
+  $5^2 = 25$, pero la suma de sus cuadrados es $1 + 16 = 17$.
+
+  En las restas importa el orden. Pregúntate de qué cantidad se quita:
+  esa va primero. «$10$ menos que $k$» es $k - 10$, aunque el $10$ se
+  nombre antes.
+
+  ### De la expresión a la frase
+
+  También hay que leer al revés. Lee primero lo que está más afuera:
+
+  - $5t - 2$: el quíntuplo de un número, disminuido en $2$.
+  - $5(t - 2)$: el quíntuplo de la diferencia entre un número y $2$.
+
+  El paréntesis cambia la frase. Si tu frase no tiene «de la diferencia»,
+  no puede corresponder a una expresión con paréntesis.
+
+  ### Situaciones
+
+  En un problema con varias cantidades, **elige una letra para una sola
+  cantidad y escribe las demás a partir de ella**. Si Beto tiene $b$
+  pesos y Carla tiene $2.000$ más que él, Carla tiene $b + 2.000$. No le
+  pongas otra letra.
+
+  En las comparaciones, decide primero quién tiene más. «Carla tiene el
+  doble que Beto» quiere decir que Carla tiene más: su cantidad es $2b$.
+  Si lo que conoces es lo de Carla, lo de Beto es la mitad.
+
+  En las edades, hacia el pasado se resta y hacia el futuro se suma. Si
+  Beto tiene $b$ años, hace $9$ años tenía $b - 9$ y dentro de $9$ años
+  tendrá $b + 9$.
+
+  Cuando las cantidades vienen por período (por día, por semana, por
+  kilómetro), **llévalas todas al período que te piden antes de sumar o
+  restar**. Un arriendo de $q$ pesos al mes cuesta $12q$ en un año.
+
+  ### Consecutivos, pares, impares y cifras
+
+  Dos números son consecutivos cuando el segundo es el primero más $1$.
+  Si el primero es $k$, los que siguen son $k + 1$ y $k + 2$.
+
+  Un número par se escribe $2k$ y un impar, $2k + 1$. Entre pares
+  consecutivos, o entre impares consecutivos, el paso es $2$: entre dos
+  pares siempre queda un impar al medio.
+
+  En un número de dos cifras, la cifra de las decenas vale diez veces lo
+  que dice: $58 = 10 \cdot 5 + 8$. Por eso un número con $p$ decenas y
+  $q$ unidades es $10p + q$, no $p + q$.
+
+  ### Patrones: cuánto hay en el paso n
+
+  Un patrón describe cómo cambia algo paso a paso. La expresión tiene que
+  decir **cuánto hay** en el paso $n$, no cuánto cambia.
+
+  La primera fila de un teatro tiene $6$ butacas y cada fila tiene $2$
+  más que la anterior. En la fila $n$, el aumento se repitió $n - 1$
+  veces:
+
+  $$6 + 2(n - 1)$$
+
+  Un control: el número que multiplica a la $n$ es lo que aumenta en cada
+  paso. Si escribiste $n + 2$, la cantidad crecería de a $1$, no de a
+  $2$.

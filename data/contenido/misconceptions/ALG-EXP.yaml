@@ -1,0 +1,257 @@
+# =====================================================================
+# Catálogo de misconceptions — unidad ALG-EXP
+# =====================================================================
+# Fuente única de la unidad. Las clases NO declaran misconceptions:
+# solo referencian códigos, y el cargador falla si el código no existe
+# acá.
+#
+# origin — de dónde salió el error:
+#   demre      observado en ítems oficiales o clavijero DEMRE
+#   docente    reportado por alguien que hace clases
+#   hipotesis  plausible, sin evidencia todavía
+#
+# Estado: solo ALG-EXP-LENG. VAL, TERM y el resto se agregan al llegar
+# a su clase.
+#
+# ALG-EXP-LENG es raíz del grafo: no hay nodo debajo al que bajar al
+# estudiante. Las remediaciones de estos errores deben sostenerse solas.
+#
+# Las 17 quedaron como docente por decisión de Ben en el control 1
+# (25 sep 2026). Varias tienen además respaldo en su guía MA 10
+# (Planteamientos): los distractores 3(a − b²), b² − 3a y a³ − b² del
+# ejercicio 1 son SOBREAGRUPA, ORDENRESTA y POTMUL.
+# ---------------------------------------------------------------------
+
+unit: ALG-EXP
+
+misconceptions:
+
+  # --- ALG-EXP-LENG: alcance de cada operación ------------------------
+
+  - code: EXP-LENG-LINEAL
+    name: Traduce palabra por palabra y omite el paréntesis
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Escribe los símbolos en el orden en que lee las palabras y cada
+      operación toma solo el término que tiene al lado. "El doble de la
+      suma de a y b" queda 2a + b: el "doble" alcanzó solo a la a. Es la
+      misconception central del nodo. Se separa de SOBREAGRUPA con "la
+      suma del doble de a y b": LINEAL acierta (2a + b) y SOBREAGRUPA
+      escribe 2(a + b).
+    example: "el doble de la suma de a y b → 2a + b"
+
+  - code: EXP-LENG-SOBREAGRUPA
+    name: Aplica la primera operación a todo lo que sigue
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      El error contrario a LINEAL: la primera operación que nombra la
+      frase abarca todo el resto, aunque la frase no diga "la suma de" ni
+      "la diferencia de". "El triple de x, disminuido en 4" queda
+      3(x − 4). Los ítems marcan el agrupamiento con "la suma de" / "la
+      diferencia entre" para que la frase no sea ambigua.
+    example: "el triple de x, disminuido en 4 → 3(x − 4)"
+
+  - code: EXP-LENG-ORDENRESTA
+    name: Escribe la resta en el orden en que aparecen los términos
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Cree que en una resta va primero lo que se nombra primero. Acierta
+      con "x disminuido en 7", pero con "7 menos que x" o "restar 5 de
+      x" escribe 7 − x y 5 − x. En contexto aparece como una resta al
+      revés (lo gastado menos lo que se tenía). Se separa de TIEMPO con
+      "dentro de 5 años": ORDENRESTA acierta.
+    example: "7 menos que x → 7 − x"
+
+  # --- ALG-EXP-LENG: vocabulario --------------------------------------
+
+  - code: EXP-LENG-ADITIVO
+    name: Confunde "veces" con "más"
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Lee una relación multiplicativa como suma o al revés: "el triple de
+      x" → x + 3, "n cuadernos a p pesos" → n + p, "3 años más" → 3a. No
+      distingue cuántas veces se toma una cantidad de cuánto se le
+      agrega. Se separa de PARTEMUL con "la tercera parte de x":
+      ADITIVO escribe x − 3 y PARTEMUL escribe 3x.
+    example: "el triple de x → x + 3"
+
+  - code: EXP-LENG-PARTEMUL
+    name: Confunde "parte" con "veces"
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Ve el número de la palabra (tercera, mitad, cuádruplo) y no decide
+      si multiplica o divide: "la tercera parte de x" → 3x, "el triple de
+      x" → x/3, "la semisuma" → 2(a + b). Distinto de ADITIVO: acá la
+      operación es multiplicativa pero va en el sentido equivocado.
+    example: "la tercera parte de x → 3x"
+
+  - code: EXP-LENG-POTMUL
+    name: Confunde doble con cuadrado y triple con cubo
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Asocia el número de la palabra con la operación equivocada: "el
+      cuadrado de x" → 2x, "el triple de a" → a³, y leyendo, x² como "el
+      doble de x". La guía MA 10 de Ben empareja a propósito doble y
+      cuadrado, triple y cubo para atacar este error. Se separa de
+      ADITIVO con "el triple de x": POTMUL elige x³ y ADITIVO x + 3.
+    example: "el cuadrado de x → 2x"
+
+  - code: EXP-LENG-EXCESO
+    name: No reconoce "exceso de a sobre b" como a − b
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      No sabe qué operación nombra "exceso": lo lee como "más" y escribe
+      a + b, o invierte la resta y escribe b − a. Es vocabulario formal
+      que la PAES usa y que el estudiante no ocupa en su lenguaje
+      cotidiano. Cuando el ítem es de enunciado, su distractor es la suma
+      o la resta invertida, nunca las dos en el mismo ítem.
+    example: "el exceso de a sobre b → a + b"
+
+  - code: EXP-LENG-OPUINV
+    name: Confunde opuesto con inverso
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Las dos palabras "dan vuelta" el número y no distingue cuál es cuál:
+      "el opuesto de x" → 1/x, "el inverso de a" → −a. No tiene el
+      criterio: el opuesto es el que sumado da 0, el inverso es el que
+      multiplicado da 1. Única misconception de los ítems de opuesto e
+      inverso; el signo menos se usa solo como notación, sin operar con
+      negativos (ENT-REC no es ancestro).
+    example: "el opuesto de x → 1/x"
+
+  # --- ALG-EXP-LENG: símbolo a palabras -------------------------------
+
+  - code: EXP-LENG-JUXTA
+    name: Lee 3x como 3 + x
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Cree que dos símbolos pegados se suman, como en un número mixto o
+      al leer "3x" como "3 y x". Al pasar de expresión a palabras,
+      "5x + 2" le suena a "x aumentado en 5, más 2". Choca con ADITIVO en
+      la dirección palabras → símbolo, así que se usa solo en ítems de
+      expresión → enunciado o de afirmaciones sobre notación.
+    example: "5x = x aumentado en 5"
+
+  # --- ALG-EXP-LENG: relaciones y contexto ----------------------------
+
+  - code: EXP-LENG-INVREL
+    name: Invierte la relación entre dos cantidades
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Pone el multiplicador (o el "más") en la cantidad equivocada: "Pedro
+      tiene el triple que Juan, y Pedro tiene p" → Juan = 3p. Es el error
+      clásico de "hay seis estudiantes por cada profesor" → 6E = P: copia
+      el orden de la frase en vez de preguntarse quién tiene más. Se
+      separa de PARTEMUL porque no aparece la palabra "parte".
+    example: "Pedro (p) tiene el triple que Juan → Juan = 3p"
+
+  - code: EXP-LENG-NUEVAVAR
+    name: Pone una letra nueva a una cantidad que depende de otra
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Le da a cada cantidad su propia incógnita en vez de escribirla en
+      función de la primera: "Ana tiene a años y su hermano 3 más; la
+      suma" → a + b. También en consecutivos (n + m + p). Ninguna otra
+      misconception produce una letra que el enunciado no nombra.
+    example: "Ana tiene a y Luis 4 más; entre los dos → a + b"
+
+  - code: EXP-LENG-TIEMPO
+    name: Invierte "hace" y "dentro de"
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Asocia "hace n años" con sumar (o "dentro de" con restar): la edad
+      hace 5 años queda x + 5. Se separa de ORDENRESTA con "dentro de 5
+      años", donde ORDENRESTA acierta y TIEMPO resta. En ahorro o
+      cantidades que crecen en el tiempo, aparece como sumar lo que ya
+      pasó en vez de descontarlo.
+    example: "edad hace 5 años → x + 5"
+
+  - code: EXP-LENG-TASA
+    name: No ajusta la cantidad al número de períodos
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Opera las cantidades tal como vienen, sin llevarlas a la misma
+      unidad de tiempo ni multiplicarlas por las veces que ocurren: "gana
+      s por semana y gasta g por día" → s − g. También con cobros por
+      unidad ("t pesos por kilómetro" → t). Solo en ítems con tasas o
+      períodos.
+    example: "gana s por semana, gasta g por día → ahorra s − g"
+
+  # --- ALG-EXP-LENG: consecutivos, cifras y patrones ------------------
+
+  - code: EXP-LENG-CONSEC
+    name: Escribe consecutivos como múltiplos
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Lee "primero, segundo, tercero" como factores: tres consecutivos son
+      n, 2n, 3n, y el que sigue a 2n es 3n. No ve que consecutivo es un
+      paso de suma, no de multiplicación. Se separa de PARCONSEC en los
+      pares: CONSEC da 2n, 3n y PARCONSEC 2n, 2n + 1.
+    example: "tres consecutivos → n, 2n, 3n"
+
+  - code: EXP-LENG-PARCONSEC
+    name: Usa el paso equivocado entre pares o impares consecutivos
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Aplica un paso fijo sin mirar qué tipo de número es: avanza de 1 en
+      1 entre pares o impares (2n, 2n + 1) o de 2 en 2 entre consecutivos
+      cualesquiera (n, n + 2, n + 4). El paso depende de si se cuentan
+      todos los naturales o solo los pares o impares, y el estudiante no
+      lo ajusta.
+    example: "dos pares consecutivos → 2n, 2n + 1"
+
+  - code: EXP-LENG-DIGITOS
+    name: Escribe un número de dos cifras como la suma de sus cifras
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      No usa el valor posicional: con d decenas y u unidades escribe
+      d + u, como si cada cifra valiera lo que dice. El 10 que vale cada
+      decena desaparece. Se separa de JUXTA por la dirección: DIGITOS va
+      de palabras a símbolo y JUXTA de símbolo a palabras.
+    example: "d decenas y u unidades → d + u"
+
+  - code: EXP-LENG-PATRDIF
+    name: Escribe el patrón solo con lo que cambia
+    nodo: ALG-EXP-LENG
+    area: ALG
+    origin: docente
+    description: >-
+      Describe cuánto cambia de un paso al siguiente y no cuánto vale en
+      el paso n: "parte con 4 y agrega 3 cada vez" → n + 3. Confunde el
+      aumento con el valor. Solo en ítems de patrón o de cantidades que
+      cambian por paso, y solo en nivel 3 salvo casos directos (decisión
+      del control 1: patrones construidos desde el enunciado, sin
+      comprobar valores, que sería ALG-EXP-VAL).
+    example: "4, 7, 10, … → n + 3"
