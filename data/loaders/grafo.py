@@ -325,6 +325,7 @@ def e(*pares):
 # --- Números: enteros ---
 e(("NUM-ENT-REC","NUM-ENT-ADI"),("NUM-ENT-ADI","NUM-ENT-MUL"),
   ("NUM-ENT-MUL","NUM-ENT-PRIOR"),("NUM-ENT-REC","NUM-ENT-ABS"),
+  ("NUM-ENT-ADI","NUM-ENT-ABS"),
   ("NUM-ENT-DIVIS","NUM-ENT-MCM"),("NUM-ENT-MUL","NUM-ENT-DIVIS"))
 # --- Números: racionales ---
 e(("NUM-ENT-DIVIS","NUM-FRA-CONC"),("NUM-FRA-CONC","NUM-FRA-SIMP"),

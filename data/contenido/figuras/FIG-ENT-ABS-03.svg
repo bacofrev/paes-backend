@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 118" width="220" height="118" role="img" aria-label="Recta numérica de −14 a 14 con marcas cada 7. Desde el 0 salen dos arcos, uno hasta el −14 y otro hasta el 14, los dos rotulados con la distancia 14" fill="currentColor" font-family="Manrope, Verdana, sans-serif" font-size="15" stroke-linecap="round">
+  <g transform="translate(0,42)">
+  <line class="eje" x1="14" y1="36" x2="206" y2="36" stroke="currentColor" stroke-width="1.3" />
+  <polygon points="6,36 16,31 16,41" />
+  <polygon points="214,36 204,31 204,41" />
+  <line class="marca" data-valor="-14" x1="30" y1="29" x2="30" y2="43" stroke="currentColor" stroke-width="1.3" />
+  <line class="marca" data-valor="-7" x1="70" y1="29" x2="70" y2="43" stroke="currentColor" stroke-width="1.3" />
+  <line class="marca" data-valor="0" x1="110" y1="29" x2="110" y2="43" stroke="currentColor" stroke-width="1.3" />
+  <line class="marca" data-valor="7" x1="150" y1="29" x2="150" y2="43" stroke="currentColor" stroke-width="1.3" />
+  <line class="marca" data-valor="14" x1="190" y1="29" x2="190" y2="43" stroke="currentColor" stroke-width="1.3" />
+  <text class="rotulo" data-valor="-14" x="30" y="64" text-anchor="middle">−14</text>
+  <text class="rotulo" data-valor="-7" x="70" y="64" text-anchor="middle">−7</text>
+  <text class="rotulo" data-valor="0" x="110" y="64" text-anchor="middle">0</text>
+  <text class="rotulo" data-valor="7" x="150" y="64" text-anchor="middle">7</text>
+  <text class="rotulo" data-valor="14" x="190" y="64" text-anchor="middle">14</text>
+  <circle class="punto" data-valor="-14" cx="30" cy="36" r="4.5" />
+  <circle class="punto" data-valor="14" cx="190" cy="36" r="4.5" />
+  </g>
+  <path class="salto" data-desde="0" data-hasta="-14" fill="none" stroke="currentColor" stroke-width="1.3" d="M110,68 Q70,8 30,68" />
+  <polygon class="punta" points="30,68 30.68,60.04 37.09,64.31" />
+  <text class="cambio" data-valor="-14" x="70" y="33" text-anchor="middle" font-weight="600">14</text>
+  <path class="salto" data-desde="0" data-hasta="14" fill="none" stroke="currentColor" stroke-width="1.3" d="M110,68 Q150,8 190,68" />
+  <polygon class="punta" points="190,68 182.91,64.31 189.32,60.04" />
+  <text class="cambio" data-valor="14" x="150" y="33" text-anchor="middle" font-weight="600">14</text>
+</svg>

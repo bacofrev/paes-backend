@@ -1,0 +1,1071 @@
+# =====================================================================
+# LES-NUM-ENT-07 — Valor absoluto
+# Cubre NUM-ENT-ABS
+# =====================================================================
+# Clase sola: es el único nodo M2 de la unidad. Sus prerrequisitos son
+# NUM-ENT-REC (LES-NUM-ENT-01) y NUM-ENT-ADI (LES-NUM-ENT-02). La arista
+# ADI -> ABS se agregó el 27 sep 2026: los ítems PAES de valor absoluto
+# operan dentro de las barras (|b - a|, distancia |a - b|). MUL no es
+# prerrequisito: no tiene contenido y bloquearía el nodo; se evalúa al
+# hacer su clase. La posición 7 deja 3 a 6 libres para las clases M1
+# que faltan (MUL, PRIOR, DIVIS, MCM).
+#
+# Alcance (cerrado 26 sep 2026):
+#   entra   |x| como distancia al 0 (incluye |0|), -|x| frente a |-x|,
+#           comparar y ordenar expresiones con valor absoluto, qué
+#           números cumplen |x| = a (dos, uno o ninguno), contar los
+#           enteros con |x| <= a o |x| < a, sumas y restas dentro de las
+#           barras, distancia entre dos enteros como |a - b|, deducir el
+#           signo de lo de adentro (si a > b, |b - a|), contexto.
+#   fuera   multiplicación dentro de las barras (ENT-MUL), fracciones y
+#           decimales (NUM-FRA-SIG, NUM-REA-ORD), irracionales
+#           (NUM-REA-IRR). Sin vocabulario de ecuaciones: se dice "qué
+#           números cumplen".
+#   hueco   inecuaciones |x - a| < b en R y la función f(x) = |x| no
+#           tienen nodo en el grafo.
+#   recurso el opuesto (-a como el simétrico de a) para leer -|x|.
+#
+# Niveles:
+#   1  un valor absoluto, una ecuación o un conteo directo
+#   2  ordenar, pares de ecuaciones, figura, contexto
+#   3  I/II/III, enunciados generales, figura con escala, contexto PAES
+# ---------------------------------------------------------------------
+# Las misconceptions viven en contenido/misconceptions/NUM-ENT.yaml.
+# Acá solo se referencian por código.
+#
+# Cómo se derivan los distractores (reglas del catálogo):
+#   CAMBIA      |a| = -a  (acierta con negativos)
+#   PARENT      |a| = a   (acierta con positivos)
+#   SIGNOFUERA  -|a| = |a|
+#   UNASOL      solo x >= 0: |x| = a -> x = a; |x| <= a -> 0..a
+#   NEGSOL      |x| = -a -> x = a o x = -a
+#   DISTTAM     distancia(a, b) = | |a| - |b| |
+#   SALTOS      cantidad de enteros de m a M = M - m
+#   DISTRIB     |a - b| = |a| - |b|,  |a + b| = |a| + |b|
+#   QUITASIGNO  borra los signos menos de adentro y suma: |a - b| = a + b
+# Una expresión suelta -|a| da lo mismo con SIGNOFUERA que con PARENT
+# (a < 0) o CAMBIA (a > 0). Por eso SIGNOFUERA siempre va en ítems con
+# un -|negativo| y un -|positivo| a la vez.
+# ---------------------------------------------------------------------
+
+unit: NUM-ENT
+
+lesson:
+  code: LES-NUM-ENT-07
+  title: Valor absoluto
+  position: 7
+  nodes:
+    - node: NUM-ENT-ABS
+      anchor: valor-absoluto
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== nivel 1 ======================================================
+
+  # B CAMBIA: |7| = -7, le cambia el signo
+  # C NEGSOL: resuelve |x| = -1 como |x| = 1
+  # D SIGNOFUERA: -|-4| = 4 y -|4| = 4 (con una sola expresión
+  #   coincidiría con PARENT o CAMBIA)
+  - code: M2-ENT-001
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es verdadera?"
+    options:
+      - {label: A, body: "$|-9| = |9|$", correct: true}
+      - {label: B, body: "$|7| = -7$", misconception: ENT-ABS-CAMBIA}
+      - {label: C, body: "$|x| = -1$ se cumple para $x = 1$ y para $x = -1$", misconception: ENT-ABS-NEGSOL}
+      - {label: D, body: "$-|-4| = 4$ y también $-|4| = 4$", misconception: ENT-ABS-SIGNOFUERA}
+
+  # A PARENT: -8 < 5
+  # B CAMBIA: |3| = -3 y |-2| = 2, entonces -3 < 2
+  # D MAGN: 9 > 4 entonces -9 > -4 (lo demás lo tiene bien)
+  - code: M2-ENT-002
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes desigualdades es verdadera?"
+    options:
+      - {label: A, body: "$|-8| < |5|$", misconception: ENT-ABS-PARENT}
+      - {label: B, body: "$|3| < |-2|$", misconception: ENT-ABS-CAMBIA}
+      - {label: C, body: "$|-2| < |-9|$", correct: true}
+      - {label: D, body: "$-9 > -4$ y $|-9| > |-4|$", misconception: ENT-REC-MAGN}
+
+  # A PARENT: |x| = x, entonces x = -6
+  # C NEGSOL: resuelve como |x| = 6
+  # D CAMBIA: |x| = -x = -6, entonces x = 6
+  - code: M2-ENT-003
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Qué valores de $x$ cumplen $|x| = -6$?"
+    options:
+      - {label: A, body: "Solo $x = -6$", misconception: ENT-ABS-PARENT}
+      - {label: B, body: "Ningún valor de $x$", correct: true}
+      - {label: C, body: "$x = 6$ y $x = -6$", misconception: ENT-ABS-NEGSOL}
+      - {label: D, body: "Solo $x = 6$", misconception: ENT-ABS-CAMBIA}
+
+  # A UNASOL: 0, 1, 2, 3
+  # B SALTOS: de -3 a 3 hay 6
+  # C PARENT: |x| = x <= 3, todos los menores o iguales que 3
+  - code: M2-ENT-004
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuántos números enteros $x$ cumplen $|x| \\leq 3$?"
+    options:
+      - {label: A, body: "$4$", misconception: ENT-ABS-UNASOL}
+      - {label: B, body: "$6$", misconception: ENT-ABS-SALTOS}
+      - {label: C, body: "Infinitos: todos los menores o iguales que $3$", misconception: ENT-ABS-PARENT}
+      - {label: D, body: "$7$", correct: true}
+
+  # A UNASOL: solo el lado positivo
+  # C NEGSOL: resuelve |x| = -2 como |x| = 2
+  # D SIGNOFUERA: el menos de afuera también desaparece
+  - code: M2-ENT-005
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es verdadera?"
+    options:
+      - {label: A, body: "Solo un número cumple $|x| = 8$: el $8$.", misconception: ENT-ABS-UNASOL}
+      - {label: B, body: "Dos números cumplen $|x| = 11$: el $11$ y el $-11$.", correct: true}
+      - {label: C, body: "Dos números cumplen $|x| = -2$: el $2$ y el $-2$.", misconception: ENT-ABS-NEGSOL}
+      - {label: D, body: "Las expresiones $-|-5|$ y $-|5|$ son iguales a $5$.", misconception: ENT-ABS-SIGNOFUERA}
+
+  # B DISTTAM: 5 - 3 = 2
+  # C CONTEO: cuenta los números de -5 a 3, que son 9
+  # D SINSIGNO: compara 5 con 3 sin el signo, -5 > 3
+  - code: M2-ENT-006
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      En la recta numérica, el punto $A$ está en $-5$ y el punto $B$ está
+      en $3$. ¿Cuál afirmación es correcta?
+    options:
+      - {label: A, body: "La distancia entre $A$ y $B$ es $8$, y $A$ es menor que $B$.", correct: true}
+      - {label: B, body: "La distancia entre $A$ y $B$ es $2$, y $A$ es menor que $B$.", misconception: ENT-ABS-DISTTAM}
+      - {label: C, body: "La distancia entre $A$ y $B$ es $9$, y $A$ es menor que $B$.", misconception: ENT-REC-CONTEO}
+      - {label: D, body: "La distancia entre $A$ y $B$ es $8$, y $A$ es mayor que $B$.", misconception: ENT-REC-SINSIGNO}
+
+  # A PARENT: |-6| = -6, su opuesto 6; |4| = 4, su opuesto -4
+  # B CAMBIA: |-6| = 6, opuesto -6; |4| = -4, opuesto 4
+  # C SIGNOFUERA: los dos quedan positivos
+  - code: M2-ENT-007
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuáles son los valores de $-|-6|$ y de $-|4|$, en ese orden?"
+    options:
+      - {label: A, body: "$6$ y $-4$", misconception: ENT-ABS-PARENT}
+      - {label: B, body: "$-6$ y $4$", misconception: ENT-ABS-CAMBIA}
+      - {label: C, body: "$6$ y $4$", misconception: ENT-ABS-SIGNOFUERA}
+      - {label: D, body: "$-6$ y $-4$", correct: true}
+
+  # A UNASOL: 0, 1, 2, 3, 4
+  # B SALTOS: de -4 a 4 hay 8
+  # D CAMBIA: |x| = -x < 5, todos los mayores que -5
+  - code: M2-ENT-008
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuántos números enteros $x$ cumplen $|x| < 5$?"
+    options:
+      - {label: A, body: "$5$", misconception: ENT-ABS-UNASOL}
+      - {label: B, body: "$8$", misconception: ENT-ABS-SALTOS}
+      - {label: C, body: "$9$", correct: true}
+      - {label: D, body: "Infinitos: todos los mayores que $-5$", misconception: ENT-ABS-CAMBIA}
+
+  # ===== nivel 2 ======================================================
+
+  # Valores reales: 7, 3, -5, 0
+  # B PARENT: -7, 3, -5, 0
+  # C CAMBIA: 7, -3, 5, 0  (|5| = -5, su opuesto 5)
+  # D SIGNOFUERA: 7, 3, 5, 0
+  - code: M2-ENT-009
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      ¿Cuál de las siguientes opciones ordena de menor a mayor las
+      expresiones $|-7|,\ |3|,\ -|5|,\ |0|$?
+    options:
+      - {label: A, body: "$-|5|,\\ |0|,\\ |3|,\\ |-7|$", correct: true}
+      - {label: B, body: "$|-7|,\\ -|5|,\\ |0|,\\ |3|$", misconception: ENT-ABS-PARENT}
+      - {label: C, body: "$|3|,\\ |0|,\\ -|5|,\\ |-7|$", misconception: ENT-ABS-CAMBIA}
+      - {label: D, body: "$|0|,\\ |3|,\\ -|5|,\\ |-7|$", misconception: ENT-ABS-SIGNOFUERA}
+
+  # A PARENT: |x| = x, x = 9 y x = -3
+  # B CAMBIA: |x| = -x, x = -9 y x = 3
+  # C NEGSOL: resuelve |x| = -3 como |x| = 3
+  - code: M2-ENT-010
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Qué números cumplen $|x| = 9$ y qué números cumplen $|x| = -3$?"
+    options:
+      - {label: A, body: "$|x| = 9$: solo el $9$. $|x| = -3$: solo el $-3$.", misconception: ENT-ABS-PARENT}
+      - {label: B, body: "$|x| = 9$: solo el $-9$. $|x| = -3$: solo el $3$.", misconception: ENT-ABS-CAMBIA}
+      - {label: C, body: "$|x| = 9$: el $9$ y el $-9$. $|x| = -3$: el $3$ y el $-3$.", misconception: ENT-ABS-NEGSOL}
+      - {label: D, body: "$|x| = 9$: el $9$ y el $-9$. $|x| = -3$: ningún número.", correct: true}
+
+  # A DISTTAM: 12 - 7 = 5
+  # C CONTEO: cuenta los números de -12 a 7, que son 20
+  # D CTXSIGNO: "bajo el nivel del mar" queda +12, y de 12 a 7 hay 5
+  - code: M2-ENT-011
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Frente a la costa de Valparaíso, un buzo está a 12 m bajo el nivel
+      del mar. Justo sobre él, una gaviota vuela a 7 m sobre el nivel del
+      mar. Si el nivel del mar es el $0$, ¿cuál opción indica la posición
+      del buzo y la distancia entre el buzo y la gaviota?
+    options:
+      - {label: A, body: "Posición: $-12$ m. Distancia: $5$ m.", misconception: ENT-ABS-DISTTAM}
+      - {label: B, body: "Posición: $-12$ m. Distancia: $19$ m.", correct: true}
+      - {label: C, body: "Posición: $-12$ m. Distancia: $20$ m.", misconception: ENT-REC-CONTEO}
+      - {label: D, body: "Posición: $12$ m. Distancia: $5$ m.", misconception: ENT-REC-CTXSIGNO}
+
+  # Figura: P = -4, Q = -3, R = -1, S = 2, T = 5 (rotulados solo 0 y 1)
+  # A UNASOL: solo los no negativos hasta 3: S
+  # C PARENT: x <= 3: P, Q, R, S
+  # D CAMBIA: -x <= 3, o sea x >= -3: Q, R, S, T
+  - code: M2-ENT-012
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-ENT-ABS-01
+    stem: "¿Cuáles de los puntos marcados en la recta cumplen $|x| \\leq 3$?"
+    options:
+      - {label: A, body: "Solo $S$", misconception: ENT-ABS-UNASOL}
+      - {label: B, body: "$Q$, $R$ y $S$", correct: true}
+      - {label: C, body: "$P$, $Q$, $R$ y $S$", misconception: ENT-ABS-PARENT}
+      - {label: D, body: "$Q$, $R$, $S$ y $T$", misconception: ENT-ABS-CAMBIA}
+
+  # Cada variación entera v con |v| <= 4 da una lectura distinta: se
+  # cuenta v, no hace falta calcular el rango (-22 a -14 sería ENT-ADI).
+  # B UNASOL: solo variaciones 0 a 4 (solo subidas)
+  # C SALTOS: de -4 a 4 hay 8
+  # D PARENT: |v| = v <= 4, cualquier bajada sirve
+  - code: M2-ENT-013
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Una cámara de frío está programada a $-18$ °C. Sea $v$ la variación
+      de la temperatura respecto de ese valor: positiva si sube y negativa
+      si baja. Para que los alimentos se conserven, debe cumplirse
+      $|v| \leq 4$. Si el termómetro solo marca grados enteros, ¿cuántas
+      lecturas distintas están permitidas?
+    options:
+      - {label: A, body: "$9$", correct: true}
+      - {label: B, body: "$5$", misconception: ENT-ABS-UNASOL}
+      - {label: C, body: "$8$", misconception: ENT-ABS-SALTOS}
+      - {label: D, body: "Infinitas, porque la temperatura puede bajar sin límite", misconception: ENT-ABS-PARENT}
+
+  # A UNASOL: solo x >= 0: 1, 1, 0
+  # B NEGSOL: |x| = -5 como |x| = 5: 2, 1, 2
+  # D CAMBIA: x = -a en cada una: 1, 1, 1 (PARENT da lo mismo:
+  #   se etiqueta CAMBIA)
+  - code: M2-ENT-014
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      ¿Cuántos números enteros cumplen $|x| = 5$, cuántos cumplen
+      $|x| = 0$ y cuántos cumplen $|x| = -5$, en ese orden?
+    options:
+      - {label: A, body: "$1$, $1$ y $0$", misconception: ENT-ABS-UNASOL}
+      - {label: B, body: "$2$, $1$ y $2$", misconception: ENT-ABS-NEGSOL}
+      - {label: C, body: "$2$, $1$ y $0$", correct: true}
+      - {label: D, body: "$1$, $1$ y $1$", misconception: ENT-ABS-CAMBIA}
+
+  # A SALTOS: de -5 a -1 hay 4
+  # C UNASOL: solo mira los no negativos, así que no hay negativos
+  # D PARENT: |x| = x < 6 lo cumplen todos los negativos
+  - code: M2-ENT-015
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuántos números enteros **negativos** cumplen $|x| < 6$?"
+    options:
+      - {label: A, body: "$4$", misconception: ENT-ABS-SALTOS}
+      - {label: B, body: "$5$", correct: true}
+      - {label: C, body: "Ninguno", misconception: ENT-ABS-UNASOL}
+      - {label: D, body: "Infinitos", misconception: ENT-ABS-PARENT}
+
+  # A DISTTAM: 9 - 6 = 3
+  # B CONTEO: cuenta los números de -9 a 6, que son 16
+  # C SINSIGNO: compara 9 con 6 sin el signo: -9 > 6
+  - code: M2-ENT-016
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un día de invierno en Ollagüe, a las 5:00 se registraron 9 °C bajo
+      cero y a las 15:00, 6 °C. ¿Cuál afirmación es correcta?
+    options:
+      - {label: A, body: "Las temperaturas se diferencian en 3 °C, y la más fría fue la de las 5:00.", misconception: ENT-ABS-DISTTAM}
+      - {label: B, body: "Las temperaturas se diferencian en 16 °C, y la más fría fue la de las 5:00.", misconception: ENT-REC-CONTEO}
+      - {label: C, body: "Las temperaturas se diferencian en 15 °C, y la más fría fue la de las 15:00.", misconception: ENT-REC-SINSIGNO}
+      - {label: D, body: "Las temperaturas se diferencian en 15 °C, y la más fría fue la de las 5:00.", correct: true}
+
+  # ===== nivel 3 ======================================================
+
+  # Verdades: I V, II F, III F
+  # B NEGSOL: II también le parece verdadera
+  # C SIGNOFUERA: III también le parece verdadera
+  # D UNASOL: I le parece falsa (una sola solución), II y III falsas
+  - code: M2-ENT-017
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Considera las siguientes afirmaciones:
+
+      I. Exactamente dos números cumplen $|x| = 12$.
+
+      II. Exactamente dos números cumplen $|x| = -12$.
+
+      III. Los números $-|-3|$ y $-|8|$ son positivos.
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo I", correct: true}
+      - {label: B, body: "Solo I y II", misconception: ENT-ABS-NEGSOL}
+      - {label: C, body: "Solo I y III", misconception: ENT-ABS-SIGNOFUERA}
+      - {label: D, body: "Ninguna de ellas", misconception: ENT-ABS-UNASOL}
+
+  # Verdades: I V (11 enteros), II V (distancia 8), III V
+  # A UNASOL: I falsa (cuenta 6), III falsa (solo x = 3), II verdadera
+  # B DISTTAM: II falsa (6 - 2 = 4)
+  # C SALTOS: I falsa (de -5 a 5 hay 10)
+  - code: M2-ENT-018
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Considera las siguientes afirmaciones:
+
+      I. Hay $11$ números enteros que cumplen $|x| \leq 5$.
+
+      II. La distancia entre $-6$ y $2$ en la recta numérica es $8$.
+
+      III. Si $|x| = 3$, entonces $x$ puede ser $-3$.
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo II", misconception: ENT-ABS-UNASOL}
+      - {label: B, body: "Solo I y III", misconception: ENT-ABS-DISTTAM}
+      - {label: C, body: "Solo II y III", misconception: ENT-ABS-SALTOS}
+      - {label: D, body: "I, II y III", correct: true}
+
+  # k < 0, -k > 0
+  # A NEGSOL: las dos como si fueran positivas
+  # B UNASOL: |x| = k no tiene solución x >= 0; |x| = -k solo x = -k
+  # D PARENT: |x| = k la cumple x = k; |x| = -k la cumple x = -k
+  #   (CAMBIA da lo mismo: se etiqueta PARENT)
+  - code: M2-ENT-019
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sea $k$ un número entero negativo. ¿Cuántos números cumplen
+      $|x| = k$ y cuántos cumplen $|x| = -k$, respectivamente?
+    options:
+      - {label: A, body: "Dos y dos", misconception: ENT-ABS-NEGSOL}
+      - {label: B, body: "Ninguno y uno", misconception: ENT-ABS-UNASOL}
+      - {label: C, body: "Ninguno y dos", correct: true}
+      - {label: D, body: "Uno y uno", misconception: ENT-ABS-PARENT}
+
+  # A UNASOL: 0 a 50, son 51
+  # B SALTOS: de -50 a 50 hay 100
+  # D CAMBIA: -x <= 50, todos los mayores o iguales que -50
+  - code: M2-ENT-020
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuántos números enteros $x$ cumplen $|x| \\leq 50$?"
+    options:
+      - {label: A, body: "$51$", misconception: ENT-ABS-UNASOL}
+      - {label: B, body: "$100$", misconception: ENT-ABS-SALTOS}
+      - {label: C, body: "$101$", correct: true}
+      - {label: D, body: "Infinitos: todos los mayores o iguales que $-50$", misconception: ENT-ABS-CAMBIA}
+
+  # Figura: marcas de 2 en 2, rotulados solo 0 y 4. M = -6, N = 8.
+  # A DISTTAM: 8 - 6 = 2
+  # C ESCALA: cuenta 3 marcas a la izquierda y 4 a la derecha: 7
+  # D CONTEO: cuenta los números de -6 a 8, que son 15
+  - code: M2-ENT-021
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    figure: FIG-ENT-ABS-02
+    stem: >-
+      En la recta numérica, las marcas están igualmente espaciadas. ¿Cuál
+      es la distancia entre los puntos $M$ y $N$?
+    options:
+      - {label: A, body: "$2$", misconception: ENT-ABS-DISTTAM}
+      - {label: B, body: "$14$", correct: true}
+      - {label: C, body: "$7$", misconception: ENT-REC-ESCALA}
+      - {label: D, body: "$15$", misconception: ENT-REC-CONTEO}
+
+  # Verdades: I V, II V, III V
+  # B PARENT: I (-5 > 2) F, II (5 < -2) F, III (4 > -1) V
+  # C CAMBIA: I (5 > -2) V, II (-5 < 2) V, III (-4 > 1) F
+  # D SIGNOFUERA: I V, II (5 < 2) F, III V
+  - code: M2-ENT-022
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Considera las siguientes desigualdades:
+
+      I. $|-5| > |2|$
+
+      II. $-|-5| < -|2|$
+
+      III. $|4| > |-1|$
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "I, II y III", correct: true}
+      - {label: B, body: "Solo III", misconception: ENT-ABS-PARENT}
+      - {label: C, body: "Solo I y II", misconception: ENT-ABS-CAMBIA}
+      - {label: D, body: "Solo I y III", misconception: ENT-ABS-SIGNOFUERA}
+
+  # Verdades: I V (5), II F (es 11), III V (12 enteros)
+  # A SALTOS: III falsa (de -8 a 3 hay 11): solo I
+  # B CONTEO: I falsa (cuenta 6), III verdadera: solo III
+  # C DISTTAM: II verdadera (8 - 3 = 5): I, II y III
+  - code: M2-ENT-023
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Considera las siguientes afirmaciones:
+
+      I. La distancia entre $-8$ y $-3$ en la recta numérica es $5$.
+
+      II. La distancia entre $-8$ y $3$ en la recta numérica es $5$.
+
+      III. Desde $-8$ hasta $3$, incluyendo ambos, hay $12$ números enteros.
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo I", misconception: ENT-ABS-SALTOS}
+      - {label: B, body: "Solo III", misconception: ENT-REC-CONTEO}
+      - {label: C, body: "I, II y III", misconception: ENT-ABS-DISTTAM}
+      - {label: D, body: "Solo I y III", correct: true}
+
+  # Errores: -4, -2, 0, 1, 3, 5. Se aceptan -2, 0 y 1.
+  # A PARENT: e <= 2: -4, -2, 0, 1
+  # B UNASOL: solo los no negativos: 0, 1
+  # D CAMBIA: -e <= 2, o sea e >= -2: -2, 0, 1, 3, 5
+  - code: M2-ENT-024
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En una fábrica de Rancagua, una pieza se acepta si su error de
+      medida $e$, en milímetros, cumple $|e| \leq 2$. Se midieron seis
+      piezas y sus errores fueron $-4,\ -2,\ 0,\ 1,\ 3$ y $5$. ¿Cuántas
+      piezas se aceptan?
+    options:
+      - {label: A, body: "$4$", misconception: ENT-ABS-PARENT}
+      - {label: B, body: "$2$", misconception: ENT-ABS-UNASOL}
+      - {label: C, body: "$3$", correct: true}
+      - {label: D, body: "$5$", misconception: ENT-ABS-CAMBIA}
+
+  # ===== operar dentro de las barras (agregados el 27 sep) ============
+  # Nivel 1: 025, 026, 031. Nivel 2: 027, 028, 032. Nivel 3: 029, 030,
+  # 033.
+
+  # A PARENT: -2 - 6 = -8 y lo deja así
+  # C DISTRIB: |-2| - |6| = -4
+  # D MAGNOP: ve "-", resta tamaños 6 - 2 = 4 con el signo del negativo:
+  #   -4, y después |-4| = 4
+  - code: M2-ENT-025
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el valor de $|-2 - 6|$?"
+    options:
+      - {label: A, body: "$-8$", misconception: ENT-ABS-PARENT}
+      - {label: B, body: "$8$", correct: true}
+      - {label: C, body: "$-4$", misconception: ENT-ABS-DISTRIB}
+      - {label: D, body: "$4$", misconception: ENT-ADI-MAGNOP}
+
+  # A QUITASIGNO: |-3 + 9| = 3 + 9 = 12 (DISTRIB da lo mismo en una
+  #   suma: acá la etiqueta es QUITASIGNO)
+  # B DISTRIB: |-3| - |5| = -2
+  # C CAMBIA: |6| = -6
+  - code: M2-ENT-026
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$|-3 + 9| = 12$", misconception: ENT-ABS-QUITASIGNO}
+      - {label: B, body: "$|-3 - 5| = -2$", misconception: ENT-ABS-DISTRIB}
+      - {label: C, body: "$|10 - 4| = -6$", misconception: ENT-ABS-CAMBIA}
+      - {label: D, body: "$|4 - 11| = 7$", correct: true}
+
+  # B PARENT: las barras no hacen nada, queda a - b
+  # C DISTTAM: resta las distancias al 0
+  # D QUITASIGNO: borra el menos de a - b
+  - code: M2-ENT-027
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      En la recta numérica, ¿cuál de las siguientes expresiones
+      corresponde siempre a la distancia entre los números enteros $a$ y
+      $b$?
+    options:
+      - {label: A, body: "$|a - b|$", correct: true}
+      - {label: B, body: "$a - b$", misconception: ENT-ABS-PARENT}
+      - {label: C, body: "$|a| - |b|$", misconception: ENT-ABS-DISTTAM}
+      - {label: D, body: "$a + b$", misconception: ENT-ABS-QUITASIGNO}
+
+  # |5 - (-7)| = |12| = 12
+  # A DOBLENEG: 5 - 7 = -2, |-2| = 2 (DISTTAM da lo mismo: se etiqueta
+  #   DOBLENEG porque el enunciado escribe la resta)
+  # B DISTRIB: |5| - |-7| = -2
+  # D CAMBIA: |12| = -12
+  - code: M2-ENT-028
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un día de invierno en Farellones, la temperatura mínima fue de
+      $-7$ °C y la máxima, de $5$ °C. La amplitud térmica se calcula como
+      $|\text{máxima} - \text{mínima}|$. ¿Cuál fue la amplitud térmica ese
+      día?
+    options:
+      - {label: A, body: "$2$ °C", misconception: ENT-ADI-DOBLENEG}
+      - {label: B, body: "$-2$ °C", misconception: ENT-ABS-DISTRIB}
+      - {label: C, body: "$12$ °C", correct: true}
+      - {label: D, body: "$-12$ °C", misconception: ENT-ABS-CAMBIA}
+
+  # Si a > b, b - a es negativo: |b - a| = -(b - a) = a - b
+  # A PARENT: las barras no hacen nada
+  # C QUITASIGNO: borra el menos, b + a
+  # D DISTRIB: |b| - |a|
+  - code: M2-ENT-029
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Si $a$ y $b$ son números enteros tales que $a > b$, ¿a qué expresión es igual $|b - a|$?"
+    options:
+      - {label: A, body: "$b - a$", misconception: ENT-ABS-PARENT}
+      - {label: B, body: "$a - b$", correct: true}
+      - {label: C, body: "$a + b$", misconception: ENT-ABS-QUITASIGNO}
+      - {label: D, body: "$|b| - |a|$", misconception: ENT-ABS-DISTRIB}
+
+  # Verdades: I F (x = 1, y = -3), II V, III V (x está entre -y e y)
+  # B PARENT: lee la hipótesis como x < y: I V, II F, III V
+  # C MAGN: entre negativos cree mayor al más lejano del 0: II F. La I la
+  #   rechaza bien (MAGN solo afecta a los negativos)
+  # D CAMBIA: lee la hipótesis como -x < -y, o sea x > y: I F, II V, III F
+  - code: M2-ENT-030
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Si $x$ e $y$ son números enteros tales que $|x| < |y|$, ¿cuál o
+      cuáles de las siguientes afirmaciones son siempre verdaderas?
+
+      I. $x < y$
+
+      II. Si $x$ e $y$ son negativos, entonces $x > y$.
+
+      III. Si $y$ es positivo, entonces $x < y$.
+    options:
+      - {label: A, body: "Solo II y III", correct: true}
+      - {label: B, body: "Solo I y III", misconception: ENT-ABS-PARENT}
+      - {label: C, body: "Solo III", misconception: ENT-REC-MAGN}
+      - {label: D, body: "Solo II", misconception: ENT-ABS-CAMBIA}
+
+  # A QUITASIGNO: 7 + 15 = 22
+  # B DISTRIB: |7| - |15| = -8 (PARENT da lo mismo: se etiqueta DISTRIB)
+  # D CAMBIA: |8| = -8
+  - code: M2-ENT-031
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$|7 - 15| = 22$", misconception: ENT-ABS-QUITASIGNO}
+      - {label: B, body: "$|7 - 15| = -8$", misconception: ENT-ABS-DISTRIB}
+      - {label: C, body: "$|7 - 15| = 8$", correct: true}
+      - {label: D, body: "$|15 - 7| = -8$", misconception: ENT-ABS-CAMBIA}
+
+  # |14 - 39| = 25
+  # A QUITASIGNO: 14 + 39 = 53
+  # B DISTRIB: |14| - |39| = -25 (PARENT da lo mismo)
+  # C CONTEO: cuenta los kilómetros del 14 al 39, que son 26
+  - code: M2-ENT-032
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      En una carretera, la distancia entre los kilómetros $p$ y $q$ se
+      calcula como $|p - q|$. Un bus está en el kilómetro $14$ y un
+      camión, en el kilómetro $39$. ¿Qué distancia, en kilómetros, los
+      separa?
+    options:
+      - {label: A, body: "$53$", misconception: ENT-ABS-QUITASIGNO}
+      - {label: B, body: "$-25$", misconception: ENT-ABS-DISTRIB}
+      - {label: C, body: "$26$", misconception: ENT-REC-CONTEO}
+      - {label: D, body: "$25$", correct: true}
+
+  # Verdades: I V, II V, III V
+  # B PARENT: I (-7) F, II (-8) F, III (7) V
+  # C QUITASIGNO: I (11) F, II (8) V, III (13) F
+  # D DISTRIB: I (-7) F, II (2) F, III (13) F
+  - code: M2-ENT-033
+    node: NUM-ENT-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |
+      Considera las siguientes igualdades:
+
+      I. $|2 - 9| = 7$
+
+      II. $|-5 - 3| = 8$
+
+      III. $|-3 + 10| = 7$
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "I, II y III", correct: true}
+      - {label: B, body: "Solo III", misconception: ENT-ABS-PARENT}
+      - {label: C, body: "Solo II", misconception: ENT-ABS-QUITASIGNO}
+      - {label: D, body: "Ninguna de ellas", misconception: ENT-ABS-DISTRIB}
+
+
+
+# ---------------------------------------------------------------------
+# REMEDIACIONES
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-ENT-ABS-CAMBIA
+    misconception: ENT-ABS-CAMBIA
+    title: El valor absoluto no cambia el signo, mide una distancia
+    body: |
+      Le cambiaste el signo a un número positivo, como si $|30|$ fuera
+      $-30$. Seguramente viste que $|-30| = 30$ y te quedaste con la idea
+      de que las barras "dan vuelta el signo".
+
+      Pero el valor absoluto no es una regla de signos. Es una distancia:
+
+      **$|a|$ es la distancia entre $a$ y el $0$ en la recta.**
+
+      El $30$ está a $30$ unidades del $0$, así que $|30| = 30$. El $-30$
+      también está a $30$ unidades, así que $|-30| = 30$. Al negativo se
+      le va el signo porque una distancia no tiene dirección, no porque
+      las barras cambien signos. Al positivo no le pasa nada.
+
+      Lo mismo al buscar qué números cumplen $|x| = 30$: sirven el $30$
+      y el $-30$, no solo el $-30$.
+
+      Un control rápido: el resultado de un valor absoluto **nunca es
+      negativo**. Si te dio $-30$, algo se dio vuelta.
+    items: [M2-ENT-001, M2-ENT-007, M2-ENT-008, M2-ENT-014, M2-ENT-022, M2-ENT-024]
+
+  - code: REM-ENT-ABS-PARENT
+    misconception: ENT-ABS-PARENT
+    title: Las barras siempre hacen algo con los negativos
+    body: |
+      Trataste las barras como si fueran un paréntesis y dejaste el número
+      igual: $|-30|$ te quedó $-30$.
+
+      Las barras no son un paréntesis. Preguntan otra cosa:
+
+      **$|a|$ es la distancia entre $a$ y el $0$, y una distancia nunca
+      es negativa.**
+
+      El $-30$ está a $30$ unidades del $0$, así que $|-30| = 30$.
+
+      Esto cambia la forma de comparar. $-30$ es menor que $20$, pero
+      $|-30| = 30$ es mayor que $|20| = 20$: el $-30$ está más lejos del
+      $0$. Al comparar valores absolutos comparas distancias, no los
+      números.
+
+      También cambia los conteos. Los enteros con $|x| \leq 20$ no son
+      "todos los menores que $20$": son los que están a $20$ unidades del
+      $0$ o menos, del $-20$ al $20$. El $-30$ no entra.
+
+      Un control rápido: si dentro de las barras hay un negativo, el
+      resultado **tiene que ser positivo**.
+    items: [M2-ENT-002, M2-ENT-004, M2-ENT-010, M2-ENT-015, M2-ENT-019, M2-ENT-024]
+
+  - code: REM-ENT-ABS-SIGNOFUERA
+    misconception: ENT-ABS-SIGNOFUERA
+    title: Las barras solo tocan lo que está dentro
+    body: |
+      Dejaste positivo algo que tenía un signo menos fuera de las barras,
+      como si $-|-20|$ fuera $20$.
+
+      Las barras actúan solo sobre lo que encierran. El signo de afuera
+      queda esperando y se aplica después:
+
+      **Primero calculas el valor absoluto. Después aplicas el signo que
+      está fuera de las barras.**
+
+      El signo menos delante de un número da su opuesto, el que está al
+      otro lado del $0$ a la misma distancia:
+
+      - $-|-20|$: primero $|-20| = 20$, después el opuesto: $-20$.
+      - $-|20|$: primero $|20| = 20$, después el opuesto: $-20$.
+
+      Por eso $-|a|$ nunca es positivo, venga lo que venga dentro. La
+      idea de que "el valor absoluto siempre es positivo" vale para lo
+      que queda **entre** las barras, no para lo de afuera.
+
+      Un control rápido: tapa las barras con el dedo. Si a la izquierda
+      queda un signo menos, el resultado es negativo (o $0$).
+    items: [M2-ENT-001, M2-ENT-005, M2-ENT-007, M2-ENT-009, M2-ENT-017, M2-ENT-022]
+
+  - code: REM-ENT-ABS-UNASOL
+    misconception: ENT-ABS-UNASOL
+    title: A cada distancia del 0 hay un número por lado
+    body: |
+      Te quedaste solo con los números positivos: para $|x| = 30$
+      respondiste el $30$, y te faltó el otro.
+
+      $|x| = 30$ pregunta qué números están a $30$ unidades del $0$. Mira
+      la recta: hay uno a la derecha y otro a la izquierda.
+
+      **Si $a$ es positivo, dos números cumplen $|x| = a$: el $a$ y el
+      $-a$.**
+
+      Lo mismo al contar. Los enteros con $|x| \leq 20$ no son solo
+      $0, 1, 2, \ldots, 20$. También están $-1, -2, \ldots, -20$. En total:
+
+      $$20 + 20 + 1 = 41$$
+
+      Veinte a cada lado y el $0$ en el medio.
+
+      El único caso con un solo número es $|x| = 0$, porque el $0$ no
+      tiene "otro lado".
+
+      Un control rápido: cuando encuentres un número que cumple, pregúntate
+      si su opuesto también cumple. Casi siempre cumple.
+    items: [M2-ENT-004, M2-ENT-008, M2-ENT-012, M2-ENT-014, M2-ENT-018, M2-ENT-020]
+
+  - code: REM-ENT-ABS-NEGSOL
+    misconception: ENT-ABS-NEGSOL
+    title: Una distancia no puede ser negativa
+    body: |
+      Buscaste los números que cumplen $|x| = -30$ como si fuera
+      $|x| = 30$, y respondiste $30$ y $-30$.
+
+      Compruébalo: $|30| = 30$, no $-30$. Y $|-30| = 30$, tampoco $-30$.
+      Ninguno de los dos sirve.
+
+      El valor absoluto es una distancia al $0$, y una distancia vale $0$
+      o más. Nunca es negativa.
+
+      **Ningún número cumple que su valor absoluto sea igual a un número
+      negativo.**
+
+      Antes de buscar, mira el lado derecho:
+
+      - $|x| = 30$: positivo, lo cumplen dos números.
+      - $|x| = 0$: lo cumple solo el $0$.
+      - $|x| = -30$: negativo, no lo cumple ninguno.
+
+      Un control rápido: reemplaza tu respuesta en la igualdad. Si al
+      lado izquierdo te queda un número positivo y al derecho uno
+      negativo, no puede ser igual.
+    items: [M2-ENT-003, M2-ENT-005, M2-ENT-010, M2-ENT-014, M2-ENT-017, M2-ENT-019]
+
+  - code: REM-ENT-ABS-DISTTAM
+    misconception: ENT-ABS-DISTTAM
+    title: Si el 0 queda al medio, las distancias se suman
+    body: |
+      Para la distancia entre dos puntos restaste sus distancias al $0$.
+      Así, entre $-20$ y $30$ te habría dado $30 - 20 = 10$.
+
+      Eso solo funciona cuando los dos puntos están del mismo lado del
+      $0$. Si el $0$ queda entre ellos, el camino de uno al otro pasa por
+      el $0$:
+
+      - Del $-20$ al $0$ hay $20$ unidades.
+      - Del $0$ al $30$ hay $30$ unidades.
+      - En total: $20 + 30 = 50$.
+
+      **Si un punto es negativo y el otro positivo, la distancia es la
+      suma de sus valores absolutos. Si están al mismo lado, es la
+      resta.**
+
+      Entre $-20$ y $-30$ sí restas: los dos están a la izquierda y los
+      separan $10$ unidades.
+
+      Un control rápido: si el $0$ queda entre los dos puntos, la
+      distancia tiene que ser **mayor** que cada uno de sus valores
+      absolutos.
+    items: [M2-ENT-006, M2-ENT-011, M2-ENT-016, M2-ENT-018, M2-ENT-021, M2-ENT-023]
+
+  - code: REM-ENT-ABS-SALTOS
+    misconception: ENT-ABS-SALTOS
+    title: Contar números no es medir la distancia
+    body: |
+      Para contar los enteros de un tramo mediste su largo, y te faltó
+      uno. Los enteros con $|x| \leq 20$ te habrían dado $40$, porque del
+      $-20$ al $20$ hay $40$ unidades.
+
+      Pero la distancia cuenta **saltos**, y aquí te preguntan por
+      **números**. Mira un caso chico, los enteros del $-2$ al $2$:
+
+      $$-2 \quad -1 \quad 0 \quad 1 \quad 2$$
+
+      Son $5$ números y solo $4$ saltos entre ellos. Siempre hay un
+      número más que saltos, porque se cuentan los dos extremos.
+
+      **Cantidad de enteros de un tramo = largo del tramo + 1.**
+
+      Para $|x| \leq 20$: el largo es $40$, así que son $41$ enteros.
+      Otra forma de verlo: $20$ a cada lado y el $0$.
+
+      Un control rápido: si el tramo es simétrico alrededor del $0$ e
+      incluye el $0$, la cantidad de enteros **es impar**.
+    items: [M2-ENT-004, M2-ENT-013, M2-ENT-015, M2-ENT-018, M2-ENT-020, M2-ENT-023]
+
+  - code: REM-ENT-ABS-DISTRIB
+    misconception: ENT-ABS-DISTRIB
+    title: Primero se calcula lo de adentro, después las barras
+    body: |
+      Le sacaste el valor absoluto a cada número por separado, como si
+      $|20 - 50|$ fuera $|20| - |50| = -30$.
+
+      Las barras no se reparten entre los términos. Encierran **una sola
+      cantidad**: el resultado de la operación de adentro.
+
+      **Primero haces la operación que está dentro de las barras. Después
+      tomas el valor absoluto del resultado.**
+
+      - $|20 - 50| = |-30| = 30$
+      - $|-20 + 50| = |30| = 30$, no $20 + 50 = 70$.
+
+      Separar las barras cambia el resultado cada vez que adentro hay
+      números de distinto signo, o una resta que cruza el $0$.
+
+      Un control rápido: el resultado de un valor absoluto nunca es
+      negativo. Si te dio $-30$, repartiste las barras.
+    items: [M2-ENT-025, M2-ENT-026, M2-ENT-028, M2-ENT-029, M2-ENT-032, M2-ENT-033]
+
+  - code: REM-ENT-ABS-QUITASIGNO
+    misconception: ENT-ABS-QUITASIGNO
+    title: Las barras no borran los signos de adentro
+    body: |
+      Borraste los signos menos que estaban dentro de las barras y
+      sumaste todo, como si $|40 - 70|$ fuera $40 + 70 = 110$.
+
+      El valor absoluto hace positivo **el resultado**, no cada número ni
+      cada operación. El menos de $40 - 70$ es una resta de verdad, y hay
+      que hacerla:
+
+      **Primero calculas lo de adentro, con todos sus signos. Después
+      tomas el valor absoluto.**
+
+      $$|40 - 70| = |-30| = 30$$
+
+      Piénsalo en la recta: $|40 - 70|$ es la distancia entre $40$ y
+      $70$. Están a $30$ unidades, no a $110$.
+
+      Con letras pasa lo mismo: $|b - a|$ nunca es $b + a$. Es $b - a$ o
+      $a - b$, el que no sea negativo.
+
+      Un control rápido: si adentro hay una resta, el resultado tiene que
+      ser **menor** que el mayor de los dos números.
+    items: [M2-ENT-026, M2-ENT-027, M2-ENT-029, M2-ENT-031, M2-ENT-032, M2-ENT-033]
+
+
+# ---------------------------------------------------------------------
+# CUERPO DE LA CLASE
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Ya sabes ubicar los enteros en la recta y compararlos. El valor
+  absoluto le pone nombre a algo que ya usabas: qué tan lejos del $0$
+  está un número. Con él vas a comparar distancias, encontrar los números
+  que están a cierta distancia del $0$ y medir en la recta.
+
+  ## Valor absoluto
+
+  ### El valor absoluto es una distancia
+
+  El **valor absoluto** de un número es su distancia al $0$ en la
+  recta. Se escribe con dos barras: $|a|$.
+
+  ![](fig:FIG-ENT-ABS-03)
+
+  El $-14$ y el $14$ están a $14$ unidades del $0$, uno a cada lado:
+
+  $$|-14| = 14 \qquad |14| = 14 \qquad |0| = 0$$
+
+  **El valor absoluto de un número es su distancia al $0$, y nunca es
+  negativo.**
+
+  Hay dos formas de equivocarse aquí. La primera es pensar que las
+  barras "cambian el signo": al positivo no le pasa nada, $|14|$ sigue
+  siendo $14$. La segunda es leer las barras como un paréntesis y dejar
+  $|-14|$ como $-14$.
+
+  Un control rápido: si el resultado de un valor absoluto te dio
+  negativo, te equivocaste.
+
+  ### El signo de afuera
+
+  Las barras solo actúan sobre lo que está dentro. Un signo menos que
+  está **fuera** de las barras se aplica después, y da el opuesto: el
+  número que está al otro lado del $0$, a la misma distancia.
+
+  **Primero calculas el valor absoluto, después aplicas el signo de
+  afuera.**
+
+  $$-|-20| = -20 \qquad -|20| = -20$$
+
+  Por eso $-|a|$ nunca es positivo. "El valor absoluto siempre es
+  positivo" vale para lo que queda entre las barras, no para lo de
+  afuera.
+
+  ### Comparar valores absolutos
+
+  Comparar $|a|$ con $|b|$ es comparar distancias al $0$, no los números.
+
+  $$-16 < 5 \qquad \text{pero} \qquad |-16| > |5|$$
+
+  El $-16$ es menor, pero está más lejos del $0$. Cuando ordenes
+  expresiones con barras, primero calcula cada una y después ordena los
+  resultados como enteros.
+
+  ### Qué números cumplen $|x| = a$
+
+  $|x| = 15$ pregunta qué números están a $15$ unidades del $0$. Hay uno
+  a cada lado:
+
+  **Si $a$ es positivo, dos números cumplen $|x| = a$: el $a$ y el
+  $-a$.**
+
+  El error más común es quedarse solo con el positivo. Hay dos casos
+  especiales:
+
+  - $|x| = 0$ lo cumple un solo número, el $0$.
+  - $|x| = -15$ no lo cumple ningún número. Ninguno está a una distancia
+    negativa del $0$.
+
+  Un control rápido: mira primero el lado derecho. Positivo, dos
+  números; cero, uno; negativo, ninguno.
+
+  ### Contar los enteros con $|x| \leq a$
+
+  $|x| \leq 7$ describe los enteros que están a $7$ unidades del $0$ o
+  menos. Están a los dos lados, y el $0$ también cuenta:
+
+  ![](fig:FIG-ENT-ABS-04)
+
+  $$-7,\ -6,\ \ldots,\ -1,\ 0,\ 1,\ \ldots,\ 6,\ 7$$
+
+  Son $15$: siete a cada lado y el $0$. Aquí hay dos trampas. Una es
+  contar solo los positivos. La otra es medir la distancia de $-7$ a
+  $7$, que es $14$, en vez de contar los números: siempre hay un número
+  más que saltos.
+
+  **Los enteros con $|x| \leq a$ son $a$ a cada lado más el $0$.**
+
+  Con $<$ el extremo no entra: $|x| < 7$ lo cumplen $13$ enteros, del
+  $-6$ al $6$.
+
+  ### Operar dentro de las barras
+
+  Si dentro de las barras hay una suma o una resta, las barras
+  encierran **el resultado**, no cada número por separado.
+
+  **Primero haces la operación de adentro. Después tomas el valor
+  absoluto.**
+
+  $$|-18 + 4| = |-14| = 14 \qquad |4 - 18| = |-14| = 14$$
+
+  Hay dos atajos que parecen razonables y dan mal. Sacarle el valor
+  absoluto a cada número, $|-18| + |4| = 22$. Y borrar todos los signos
+  de adentro, $4 + 18 = 22$ en vez de $4 - 18$. Las barras no hacen
+  positivo cada número: hacen positivo el resultado.
+
+  ### Distancia entre dos enteros
+
+  Si los dos números están del mismo lado del $0$, la distancia es la
+  resta de sus valores absolutos. Si el $0$ queda entre ellos, el camino
+  pasa por el $0$ y las distancias se **suman**:
+
+  ![](fig:FIG-ENT-ABS-05)
+
+  Del $-7$ al $0$ hay $7$ unidades y del $0$ al $2$ hay $2$. La
+  distancia entre $-7$ y $2$ es $7 + 2 = 9$, no $7 - 2$.
+
+  **Con un número negativo y otro positivo, la distancia es
+  $|a| + |b|$.**
+
+  Las dos situaciones caben en una sola expresión: la distancia entre
+  $a$ y $b$ es $|a - b|$. Entre $-7$ y $2$: $|2 - (-7)| = |2 + 7| = 9$. El
+  orden de la resta no importa, porque $a - b$ y $b - a$ son opuestos y
+  tienen el mismo valor absoluto.
+
+  Un control rápido: si el $0$ queda al medio, la distancia es mayor que
+  cada uno de los dos valores absolutos.
+
+  ### Valor absoluto en contexto
+
+  En un contexto, el valor absoluto responde "qué tan lejos" de la
+  referencia, sin importar hacia qué lado. Primero traduce cada dato a
+  un entero con su signo (bajo el nivel del mar, bajo cero o subterráneo
+  es negativo) y después mide.
+
+  Una mina está a $25$ m bajo la superficie y una antena a $30$ m sobre
+  ella. La antena está más lejos de la superficie, porque
+  $|30| > |-25|$, y las separan $25 + 30 = 55$ m.

@@ -10,8 +10,8 @@
 #   docente    reportado por alguien que hace clases
 #   hipotesis  plausible, sin evidencia todavía
 #
-# Estado: NUM-ENT-REC y NUM-ENT-ADI. MUL y el resto se agregan al
-# llegar a su clase.
+# Estado: NUM-ENT-REC, NUM-ENT-ADI y NUM-ENT-ABS. MUL y el resto se
+# agregan al llegar a su clase.
 #
 # NUM-ENT-REC es raíz del grafo: no hay nodo debajo al que bajar al
 # estudiante. Las remediaciones de estos errores deben sostenerse solas.
@@ -204,3 +204,136 @@ misconceptions:
       falla el signo, así que una subida queda como bajada. Solo aparece
       en ítems de variación.
     example: "de -3 °C a 5 °C: variación -8"
+
+  # --- NUM-ENT-ABS ----------------------------------------------------
+  # Aprobadas por Ben en el control 1 de LES-NUM-ENT-07 (26 sep 2026).
+  # Las siete primeras, vistas en aula. DISTRIB y QUITASIGNO entraron el
+  # 27 sep, al agregar la arista ADI -> ABS: con ella los ítems operan
+  # dentro de las barras.
+  #
+  # Colisiones conocidas:
+  #   PARENT y UNASOL dan lo mismo en |x| = a con a > 0 (x = a): esos
+  #   ítems no usan PARENT.
+  #   SIGNOFUERA coincide con PARENT en -|negativo| y con CAMBIA en
+  #   -|positivo|: SIGNOFUERA va en comparaciones y afirmaciones, no en
+  #   "calcula -|x|".
+  #   DISTRIB coincide con PARENT en |a - b| con 0 < a < b (las dos dan
+  #   a - b), y con QUITASIGNO en |a + b| con signos distintos.
+  #   Con ENT-ADI-MAGNOP coincide en |-a - b| después de tomar el valor
+  #   absoluto: esos ítems ponen como alternativa el valor sin barras.
+
+  - code: ENT-ABS-CAMBIA
+    name: Cree que el valor absoluto cambia el signo
+    nodo: NUM-ENT-ABS
+    area: NUM
+    origin: docente
+    description: >-
+      Generaliza el ejemplo |-3| = 3 como "el valor absoluto le cambia el
+      signo al número" y lo aplica también a los positivos: |5| = -5. Con
+      negativos acierta, así que solo se ve con positivos. En |x| = a se
+      queda con x = -a. Se separa de ENT-ABS-PARENT con |5| (CAMBIA da -5,
+      PARENT da 5).
+    example: "|5| = -5"
+
+  - code: ENT-ABS-PARENT
+    name: Lee las barras como si fueran paréntesis
+    nodo: NUM-ENT-ABS
+    area: NUM
+    origin: docente
+    description: >-
+      Las barras no le hacen nada al número: |-5| = -5. Al comparar
+      valores absolutos compara los números mismos (|-8| < |5| porque
+      -8 < 5), y en |x| <= a acepta todos los enteros menores o iguales
+      que a. Con positivos acierta, así que solo se ve con negativos.
+    example: "|-5| = -5"
+
+  - code: ENT-ABS-SIGNOFUERA
+    name: Cree que las barras también borran el signo de afuera
+    nodo: NUM-ENT-ABS
+    area: NUM
+    origin: docente
+    description: >-
+      Aprende que "el valor absoluto siempre es positivo" y lo extiende al
+      signo menos que está fuera de las barras: -|-6| = 6 y -|4| = 4. Se
+      separa de ENT-ABS-CAMBIA y ENT-ABS-PARENT con -|4|: las dos dan -4 y
+      SIGNOFUERA da 4.
+    example: "-|-6| = 6"
+
+  - code: ENT-ABS-UNASOL
+    name: Considera solo el lado positivo del 0
+    nodo: NUM-ENT-ABS
+    area: NUM
+    origin: docente
+    description: >-
+      Lee |x| como "el número sin signo" y al devolverse se queda solo con
+      los no negativos: |x| = 5 tiene solo la solución 5, y los enteros con
+      |x| <= 3 son 0, 1, 2 y 3. Olvida que a la misma distancia del 0 hay
+      un número a cada lado. Coincide con ENT-ABS-PARENT en |x| = a con
+      a > 0; se separa en |x| <= a (PARENT acepta infinitos).
+    example: "|x| = 5  =>  x = 5"
+
+  - code: ENT-ABS-NEGSOL
+    name: Busca números cuyo valor absoluto sea negativo
+    nodo: NUM-ENT-ABS
+    area: NUM
+    origin: docente
+    description: >-
+      Busca los números que cumplen |x| = -4 igual que si fuera |x| = 4
+      y responde 4 y -4, sin notar que una distancia no puede ser
+      negativa.
+      Solo se ve cuando el valor absoluto se iguala o se compara con un
+      negativo; con a > 0 no falla.
+    example: "|x| = -4  =>  x = 4 o x = -4"
+
+  - code: ENT-ABS-DISTTAM
+    name: Calcula la distancia restando las distancias al 0
+    nodo: NUM-ENT-ABS
+    area: NUM
+    origin: docente
+    description: >-
+      Para la distancia entre dos enteros resta sus valores absolutos,
+      sin mirar si están al mismo lado del 0. Acierta cuando están al
+      mismo lado (-3 y -8: 5) y falla cuando el 0 queda entre ellos
+      (-3 y 5: da 2, son 8). En el cálculo 5 - (-3) coincide con
+      ENT-ADI-DOBLENEG: los ítems de este nodo no escriben esa resta.
+    example: "distancia entre -3 y 5 = 2"
+
+  - code: ENT-ABS-SALTOS
+    name: Cuenta la distancia en vez de los enteros
+    nodo: NUM-ENT-ABS
+    area: NUM
+    origin: docente
+    description: >-
+      Para contar los enteros con |x| <= a mide cuánto hay del menor al
+      mayor (2a) en vez de contar los números (2a + 1): pierde uno, que
+      suele ser el 0. Es el error inverso de ENT-REC-CONTEO, que cuenta
+      números cuando debería contar saltos. Solo aparece en ítems de
+      conteo.
+    example: "enteros con |x| <= 3: cuenta 6 (son 7)"
+
+  - code: ENT-ABS-DISTRIB
+    name: Saca el valor absoluto de cada término por separado
+    nodo: NUM-ENT-ABS
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Trata las barras como un factor que se reparte: |a - b| lo calcula
+      como |a| - |b| y |a + b| como |a| + |b|, conservando la operación de
+      adentro. Puede dar un resultado negativo (|3 - 8| = -5) o uno
+      demasiado grande (|-9 + 2| = 11). Se separa de ENT-ABS-PARENT con
+      |-2 - 6| (DISTRIB da -4, PARENT da -8) y de ENT-ABS-QUITASIGNO con
+      |3 - 8| (DISTRIB da -5, QUITASIGNO da 11).
+    example: "|3 - 8| = |3| - |8| = -5"
+
+  - code: ENT-ABS-QUITASIGNO
+    name: Borra todos los signos de adentro y suma
+    nodo: NUM-ENT-ABS
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Lee "el valor absoluto deja todo positivo" como "borra todos los
+      signos menos que hay adentro", incluido el de la operación: |3 - 8|
+      queda 3 + 8 = 11 y |b - a| queda b + a. Acierta cuando los dos
+      términos ya se alejaban del 0 hacia el mismo lado (|-2 - 6| = 8), así
+      que solo se ve cuando adentro hay una resta que acerca al 0.
+    example: "|3 - 8| = 3 + 8 = 11"
