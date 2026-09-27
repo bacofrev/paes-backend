@@ -88,7 +88,17 @@ three were merged into one repo for convenience; they still ship independently.
    is read server-side (`SESSION_BY_ID`) when scoring a response, never trusted from the
    client, so a student can't open a `mock_exam` and answer as `practice` to dodge deferred
    feedback.
-6. `node_mastery` — one row per (student, node), recomputed by the Postgres function
+6. `plans` / `courses` — what a student *buys* vs. what they *see*. A plan (`CIE-BIO`, "Ciencias
+   mención Biología") grants several courses (`FIS`, `QUI`, `BIO-E`) via `plan_courses`;
+   `student_plans` records the purchase. A course is `(subject, area or null, exam_level)`, and
+   level 2 includes level 1. The student's scope is the union of the courses from their active
+   plans (`v_student_courses`, a view — there is no stored per-student course list). Tiles come
+   from `v_student_visible_courses` (`QUI` is hidden behind `QUI-E`; `M1`/`M2` are never merged).
+   Which lessons a course shows comes from `v_course_lessons`: a lesson enters only if *every*
+   node is in scope, and a trigger (`check_lesson_single_level`) forbids a lesson mixing level-1
+   and level-2 nodes. That's what keeps `M1` from ever listing an `M2` lesson. Migration `052`;
+   test with `data/sim_cursos_alcance.sql`.
+7. `node_mastery` — one row per (student, node), recomputed by the Postgres function
    `recompute_node_mastery` after every response (`queries.RECOMPUTE_FOR_ITEM`). It Beta-smooths
    the proportion correct against `mastery_config` (so 3-for-3 reads as 0.80, not 1.00) and
    requires a minimum count of *hard* items correct, not just volume. This computation lives in
@@ -114,6 +124,9 @@ three were merged into one repo for convenience; they still ship independently.
 - Migrations are applied with `psql "$DATABASE_URL" -X -v ON_ERROR_STOP=1 -1 -f <file>`, not
   through the Supabase SQL editor — the editor doesn't respect `begin`/`commit`, so a failure
   partway through leaves a half-applied migration with no transaction to roll back.
+- `DATABASE_URL` is Supabase's **transaction-mode pooler** (port 6543): a bare session-level
+  `set ...` sticks to the server connection and leaks to the next client, production included.
+  For ad-hoc read-only checks use `begin read only; …; rollback;` or `set local`, never `set`.
 - History starts at `026`; migrations `001`–`025` were never committed, so `esquema_actual.sql`
   is a `pg_dump` reconstruction of current state, not a replayable log. Don't treat it as one.
 - When editing a loader, verify by counting output lines, not exit code — an empty file piped

@@ -305,6 +305,48 @@ NODE_BY_CODE = """
 select code, name from nodes where code = %(node_code)s and status = 'active'
 """
 
+# The tiles of the courses module. Subsumption (QUI hidden behind QUI-E)
+# lives in v_student_visible_courses, migration 052.
+STUDENT_COURSES = """
+select c.code, c.name, s.code as subject_code, a.code as area_code, c.exam_level
+from v_student_visible_courses vc
+join courses c   on c.id = vc.course_id
+join subjects s  on s.id = c.subject_id
+left join areas a on a.id = c.area_id
+where vc.student_id = %(student_id)s::uuid
+order by s.position, c.position
+"""
+
+# v_student_courses, not the visible one: a subsumed course (QUI when
+# the student also has QUI-E) is still theirs, just not a tile.
+COURSE_FOR_STUDENT = """
+select c.id, c.code, c.name, c.exam_level
+from courses c
+join v_student_courses sc on sc.course_id = c.id
+where c.code = %(course_code)s and sc.student_id = %(student_id)s::uuid
+"""
+
+# Which lessons a course shows is decided in v_course_lessons (every
+# node in scope, not just one), so M1 never lists an M2 lesson. Status
+# comes from v_available_nodes, always filtered by student_id.
+COURSE_CONTENT = """
+select u.code as unit_code, u.name as unit_name,
+       l.code as lesson_code, l.title as lesson_title,
+       n.code as node_code, n.name as node_name, n.exam_level, ln.anchor,
+       coalesce(an.status, 'not_started') as status,
+       coalesce(an.pending_prereqs, 0) as pending_prereqs
+from v_course_lessons cl
+join lessons l       on l.id = cl.lesson_id
+join units u         on u.id = l.unit_id
+join areas ua        on ua.id = u.area_id
+join lesson_nodes ln on ln.lesson_id = l.id
+join nodes n         on n.id = ln.node_id
+left join v_available_nodes an
+       on an.student_id = %(student_id)s::uuid and an.node_id = n.id
+where cl.course_id = %(course_id)s
+order by ua.position, u.position, l.position, ln.position
+"""
+
 CREATE_SESSION = """
 insert into sessions (student_id, mode, target_node_id, planned_item_count,
                        active_device_id)

@@ -43,6 +43,61 @@ async def health():
     return {"status": "ok", "db": db_status}
 
 
+@app.get("/courses")
+async def list_courses(student_id: str = Depends(get_current_student)):
+    async with db.pool.connection() as con:
+        cur = await con.execute(queries.STUDENT_COURSES, {"student_id": student_id})
+        rows = await cur.fetchall()
+
+    # Empty is a valid answer: no active plan, nothing bought.
+    return [dict(row) for row in rows]
+
+
+@app.get("/courses/{course_code}")
+async def get_course(course_code: str, student_id: str = Depends(get_current_student)):
+    async with db.pool.connection() as con:
+        cur = await con.execute(
+            queries.COURSE_FOR_STUDENT,
+            {"course_code": course_code, "student_id": student_id},
+        )
+        course = await cur.fetchone()
+
+        # Same 404 whether the course doesn't exist or isn't theirs:
+        # a student shouldn't learn the catalog by probing codes.
+        if course is None:
+            raise HTTPException(status_code=404, detail="course_not_found")
+
+        cur = await con.execute(
+            queries.COURSE_CONTENT,
+            {"course_id": course["id"], "student_id": student_id},
+        )
+        rows = await cur.fetchall()
+
+    # Rows come ordered unit -> lesson -> node; nest them in that order.
+    units = []
+    for row in rows:
+        if not units or units[-1]["code"] != row["unit_code"]:
+            units.append({"code": row["unit_code"], "name": row["unit_name"], "lessons": []})
+        lessons = units[-1]["lessons"]
+        if not lessons or lessons[-1]["code"] != row["lesson_code"]:
+            lessons.append({"code": row["lesson_code"], "title": row["lesson_title"], "nodes": []})
+        lessons[-1]["nodes"].append({
+            "code": row["node_code"],
+            "name": row["node_name"],
+            "exam_level": row["exam_level"],
+            "anchor": row["anchor"],
+            "status": row["status"],
+            "pending_prereqs": row["pending_prereqs"],
+        })
+
+    return {
+        "code": course["code"],
+        "name": course["name"],
+        "exam_level": course["exam_level"],
+        "units": units,
+    }
+
+
 @app.get("/nodes/{node_code}")
 async def get_node(node_code: str, student_id: str = Depends(get_current_student)):
     async with db.pool.connection() as con:
