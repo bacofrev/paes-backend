@@ -207,9 +207,9 @@ misconceptions:
 
   # --- NUM-ENT-ABS ----------------------------------------------------
   # Aprobadas por Ben en el control 1 de LES-NUM-ENT-07 (26 sep 2026).
-  # Las siete primeras, vistas en aula. DISTRIB y QUITASIGNO entraron el
-  # 27 sep, al agregar la arista ADI -> ABS: con ella los ítems operan
-  # dentro de las barras.
+  # Todas vistas en aula. DISTRIB y QUITASIGNO entraron el 27 sep, al
+  # agregar la arista ADI -> ABS: con ella los ítems operan dentro de las
+  # barras.
   #
   # Colisiones conocidas:
   #   PARENT y UNASOL dan lo mismo en |x| = a con a > 0 (x = a): esos
@@ -315,7 +315,7 @@ misconceptions:
     name: Saca el valor absoluto de cada término por separado
     nodo: NUM-ENT-ABS
     area: NUM
-    origin: hipotesis
+    origin: docente
     description: >-
       Trata las barras como un factor que se reparte: |a - b| lo calcula
       como |a| - |b| y |a + b| como |a| + |b|, conservando la operación de
@@ -329,7 +329,7 @@ misconceptions:
     name: Borra todos los signos de adentro y suma
     nodo: NUM-ENT-ABS
     area: NUM
-    origin: hipotesis
+    origin: docente
     description: >-
       Lee "el valor absoluto deja todo positivo" como "borra todos los
       signos menos que hay adentro", incluido el de la operación: |3 - 8|
