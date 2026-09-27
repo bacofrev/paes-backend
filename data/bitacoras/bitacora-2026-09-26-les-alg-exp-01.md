@@ -12,9 +12,11 @@ Primera clase del eje ALG: **ALG-EXP-LENG** (M1), sola, con la skill
 la clase. Sin figuras.
 
 Migraciones 045 (catálogo) y 046 (clase, como `draft`) aplicadas y
-verificadas el 26 de septiembre. **La 047 (publicación) no se aplicó**: el
-modo automático la bloqueó como deploy a producción. Hasta que Ben la corra,
-el estudiante no ve nada de esta clase.
+verificadas el 26 de septiembre. La 047 (publicación) la bloqueó primero el
+modo automático como deploy a producción. Se aplicó el 27 de septiembre,
+cuando Ben lo pidió y después de agregar a `.claude/settings.local.json` un
+permiso acotado a `psql … -f data/migraciones/*`. Quedaron `active` los 45
+ítems, las 17 remediaciones, la clase y el nodo.
 
 Se partió por álgebra porque NUM-ENT tenía otra sesión abierta
 (LES-NUM-ENT-02). LENG es el único nodo de ALG sin prerrequisitos: TERM,
@@ -73,7 +75,6 @@ Decisiones propias:
 
 ## 4. Abierto
 
-- **Aplicar la 047** para publicar la clase.
 - Ítem de patrón con figura de palitos. El 031 lo describe en texto; con
   figura, el alumno tendría que deducir el +3 contando, que es como lo
   pregunta la PAES.
