@@ -4,7 +4,7 @@ Mapa de todas las clases que cubren el grafo (`data/loaders/grafo.py`): qué nod
 orden producirlas y qué falta. Es un plan, no la fuente de verdad: el alcance fino de cada clase se
 cierra en el control 1 de `crear-clase`, y si ahí cambia una agrupación, se actualiza este archivo.
 
-Armado el 27 sep 2026 con el grafo en 244 nodos (11 `pre`, 162 M1, 71 M2).
+Armado el 27 sep 2026 con el grafo en 244 nodos (10 `pre`, 163 M1, 71 M2).
 
 ## Resumen
 
@@ -165,7 +165,7 @@ Todas las clases que ve el curso M1: nodos de nivel 1 y `pre`.
 
 | Clase | Título | Nodos | Estado | Por qué así |
 |---|---|---|---|---|
-| LES-ALG-PRO-01 | Razón, proporción directa y reparto | `ALG-PRO-RAZ` Razón y proporción<br>`ALG-PRO-DIR` Proporción directa<br>`ALG-PRO-REPART` (pre) Reparto proporcional |  | REPART es `pre`, cuelga de DIR. |
+| LES-ALG-PRO-01 | Razón, proporción directa y reparto | `ALG-PRO-RAZ` Razón y proporción<br>`ALG-PRO-DIR` Proporción directa<br>`ALG-PRO-REPART` Reparto proporcional |  | REPART cuelga de DIR. Era `pre`; pasó a M1 el 27 sep 2026 (migración 055). |
 | LES-ALG-PRO-02 | Proporción inversa y cómo distinguirla | `ALG-PRO-INV` Proporción inversa<br>`ALG-PRO-DIST` Distinguir directa de inversa |  |  |
 | LES-ALG-PRO-03 | Representaciones de la proporcionalidad | `ALG-PRO-REP` Representaciones de proporcionalidad |  |  |
 | LES-ALG-PRO-04 | Proporcionalidad compuesta | `ALG-PRO-COMP` Proporcionalidad compuesta |  |  |
@@ -439,8 +439,8 @@ De los 244 nodos, 59 no los pedía ningún otro. Se revisó cada uno: ¿es una m
 | `EST-TAB-ACUM → EST-POS-MEDIANA` | La mediana desde una tabla se ubica con la frecuencia acumulada |
 | `ALG-FAC-ELEC → ALG-FRA-ALG` | Decisión 2 |
 
-**Hojas `pre` que siguen sueltas:** `ALG-NOT-BIN3` (se mantiene, decisión 3) y `ALG-PRO-REPART` (reparto
-proporcional: es contenido M1, candidato a pasar de `pre` a `m1`; pendiente).
+**Hojas `pre`:** `ALG-NOT-BIN3` se mantiene (decisión 3). `ALG-PRO-REPART` (reparto proporcional) era `pre` pero
+es contenido M1 de proporcionalidad: pasó a `m1` como hoja legítima (migración 055).
 
 **El resto (47) son hojas legítimas:** modelación, planteo, aplicaciones, nodos de «distinguir/decidir» y casi todas
 las M2. Son metas del examen, no escalones. `NUM-ENT-ABS` es M2 y ningún nodo M1 puede pedirla.

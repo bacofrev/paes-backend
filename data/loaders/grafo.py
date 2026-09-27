@@ -109,7 +109,7 @@ n("ALG-PRO-INV","Proporción inversa","m1",U)
 n("ALG-PRO-DIST","Distinguir directa de inversa","m1",U)
 n("ALG-PRO-REP","Representaciones de proporcionalidad","m1",U)
 n("ALG-PRO-COMP","Proporcionalidad compuesta","m1",U)
-n("ALG-PRO-REPART","Reparto proporcional","pre",U)
+n("ALG-PRO-REPART","Reparto proporcional","m1",U)
 
 U = "ALG · Ecuaciones e inecuaciones"
 n("ALG-ECU-CONC","Concepto de ecuación y solución","m1",U)
