@@ -47,10 +47,17 @@ def main():
     body = d.get("lesson_body") or ""
     errors, warns = [], []
 
+    # --catalogo puede ser un archivo o el directorio de catálogos: un
+    # distractor puede apuntar a un error de un nodo previo de otra unidad.
     catalog = {}
     if a.catalogo:
-        c = yaml.safe_load(open(a.catalogo, encoding="utf-8"))
-        catalog = {m["code"]: m for m in c.get("misconceptions", [])}
+        from pathlib import Path
+        p = Path(a.catalogo)
+        archivos = sorted(p.glob("*.yaml")) if p.is_dir() else [p]
+        for f in archivos:
+            c = yaml.safe_load(open(f, encoding="utf-8")) or {}
+            for m in c.get("misconceptions", []):
+                catalog.setdefault(m["code"], m)
 
     print(f"# Reporte de autorrevisión — {d.get('lesson', {}).get('code', a.clase)}\n")
 

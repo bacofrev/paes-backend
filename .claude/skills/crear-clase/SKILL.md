@@ -96,8 +96,13 @@ la autorrevisión:
 
 ```
 python3 .claude/skills/crear-clase/scripts/revisar_clase.py \
-    data/contenido/<CLASE>.yaml --catalogo data/contenido/misconceptions/<UNIDAD>.yaml
+    data/contenido/<CLASE>.yaml --catalogo data/contenido/misconceptions
 ```
+
+Un distractor puede apuntar a una misconception de cualquier catálogo si su
+nodo es de la clase o un nodo previo del nodo del ítem en el grafo. El
+cargador lo verifica. No copies un error de otra unidad a este catálogo:
+referéncialo por su código.
 
 Corrige todos los `ERROR`. Cada `AVISO` que quede tiene que ir explicado en el
 reporte del control 2.

@@ -176,6 +176,7 @@ n("ALG-FTR-MOD","Fenómenos periódicos","m2",U)
 U = "GEO · Figuras geométricas"
 n("GEO-FIG-CLAS","Clasificación de figuras","pre",U)
 n("GEO-FIG-ELEM","Altura, base, apotema, diagonal","m1",U)
+n("GEO-FIG-ANG","Suma de ángulos interiores","pre",U)
 n("GEO-PIT-HIP","Pitágoras: hipotenusa","m1",U)
 n("GEO-PIT-CAT","Pitágoras: cateto","m1",U)
 n("GEO-PIT-INV","Recíproco de Pitágoras","m1",U)
@@ -599,3 +600,9 @@ e(("NUM-FRA-SIG","ALG-ECU-FRA"),("NUM-FRA-SIG","ALG-FLI-PEND"),
   ("ALG-PRO-REP","ALG-FLI-CONC"),("NUM-LOG-REL","ALG-FLO-CONC"),
   ("GEO-CUE-UNID","GEO-CUE-VOL-CIL"),("EST-TAB-ACUM","EST-POS-MEDIANA"),
   ("ALG-FAC-ELEC","ALG-FRA-ALG"))
+# --- Revisión de distractores (28 sep 2026): ítems de NUM-POT que ya medían un nodo sin arista ---
+e(("NUM-ENT-PRIOR","NUM-POT-CONC"),("NUM-POT-SIG","NUM-POT-FRA"),
+  ("NUM-POT-POT","NUM-POT-DIST"),("NUM-POT-DIST","NUM-POT-NEG"))
+# --- Ángulos interiores (28 sep 2026): nodo nuevo, faltaba en el grafo ---
+e(("GEO-FIG-CLAS","GEO-FIG-ANG"),("GEO-FIG-ANG","GEO-SEM-CRIT"),
+  ("GEO-FIG-ANG","GEO-CIRC-INS"))

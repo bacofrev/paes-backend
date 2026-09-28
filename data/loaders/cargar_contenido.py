@@ -16,8 +16,16 @@ cargar_misconceptions.py. Este script solo referencia códigos y falla si
 alguno no existe en el catálogo. Antes cada clase declaraba las suyas y
 dos clases podían definir el mismo error distinto: ganaba la última.
 
-La cobertura de remediaciones se evalúa POR UNIDAD, no por archivo: un
-error puede detectarse en la clase 03 y remediarse en la 01.
+Un distractor puede apuntar a una misconception de cualquier catálogo,
+siempre que su nodo sea el nodo del ítem o un nodo previo en el grafo
+(grafo.py). Cada error se define una sola vez, en la unidad donde se
+enseña; un ítem de álgebra que delata ENT-ADI-REGLAMUL usa ese código, no
+una copia. Un error de un nodo que el ítem no tiene debajo falla: el ítem
+estaría midiendo algo que el estudiante todavía no vio.
+
+La cobertura de remediaciones se evalúa sobre TODO el contenido, no por
+archivo: un error puede detectarse en una clase y remediarse en otra, de
+la misma unidad o de otra.
 """
 
 import re
@@ -28,6 +36,7 @@ from pathlib import Path
 import yaml
 
 import figuras
+import grafo
 
 # code_text: ^[A-Z0-9]{2,6}(-[A-Z0-9]+){0,3}$  — máximo 4 segmentos
 CODE_RE = re.compile(r"^[A-Z0-9]{2,6}(-[A-Z0-9]+){0,3}$")
@@ -112,6 +121,33 @@ def cargar_catalogo(unit: str, ruta: Path) -> dict[str, dict]:
         f"{base}/misconceptions/{unit}.yaml")
 
 
+def cargar_todos_los_catalogos(ruta: Path) -> dict[str, dict]:
+    """Las misconceptions de todas las unidades: un distractor puede
+    apuntar a un error de un nodo previo aunque sea de otra unidad."""
+    base = raiz_contenido(ruta)
+    todas: dict[str, dict] = {}
+    for f in sorted((base / "misconceptions").glob("*.yaml")):
+        doc = yaml.safe_load(f.read_text(encoding="utf-8")) or {}
+        for m in doc.get("misconceptions") or []:
+            todas.setdefault(m["code"], m)
+    return todas
+
+
+def ancestros(nodo: str) -> set[str]:
+    """Todos los nodos previos de `nodo` en el grafo (cierre transitivo)."""
+    previos: dict[str, set[str]] = {}
+    for a, b in grafo.E:
+        previos.setdefault(b, set()).add(a)
+    vistos: set[str] = set()
+    pila = list(previos.get(nodo, ()))
+    while pila:
+        n = pila.pop()
+        if n not in vistos:
+            vistos.add(n)
+            pila.extend(previos.get(n, ()))
+    return vistos
+
+
 def codigos_de_la_unidad(unit: str, ruta: Path) -> dict[str, str]:
     """item/remediation code -> archivo que lo define, en el resto de la
     unidad. Los códigos son unique global: dos clases que usan el mismo
@@ -134,20 +170,21 @@ def codigos_de_la_unidad(unit: str, ruta: Path) -> dict[str, str]:
     return ajenos
 
 
-def remediaciones_de_la_unidad(unit: str, ruta: Path) -> dict[str, str]:
-    """misconception -> clase que la remedia, mirando todas las clases
-    de la unidad. Un error puede detectarse en una clase y remediarse en
-    otra: validar por archivo daba falsos negativos."""
+def remediaciones_existentes(ruta: Path) -> dict[str, str]:
+    """misconception -> clase que la remedia, mirando todo el contenido.
+    Un error puede detectarse en una clase y remediarse en otra, incluso
+    de otra unidad: validar por archivo o por unidad daba falsos
+    negativos."""
     base = raiz_contenido(ruta)
     vistas: dict[str, str] = {}
     for f in sorted(base.rglob("*.yaml")):
-        if f.parent.name == "misconceptions":
+        if f.parent.name == "misconceptions" or f.resolve() == ruta.resolve():
             continue
         try:
             d = yaml.safe_load(f.read_text(encoding="utf-8")) or {}
         except Exception:
             continue
-        if d.get("unit") != unit:
+        if not isinstance(d, dict):
             continue
         for rem in d.get("remediations") or []:
             mc = rem.get("misconception")
@@ -302,9 +339,16 @@ def validar(doc: dict, catalogo: dict[str, dict],
                               f"nombrado no aporta señal")
             elif mc not in mcs:
                 fallas.append(f"item {code} alt {etq}: misconception '{mc}' "
-                              f"no está en el catálogo de {doc['unit']}")
+                              f"no está en ningún catálogo")
             else:
                 usadas.add(mc)
+                nodo_mc = mcs[mc].get("nodo")
+                if nodo_mc not in nodos_clase and nodo_mc not in ancestros(nodo):
+                    fallas.append(
+                        f"item {code} alt {etq}: '{mc}' es un error de "
+                        f"{nodo_mc}, que no es de esta clase ni un nodo previo "
+                        f"de {nodo} en el grafo. El ítem mediría algo que el "
+                        f"estudiante todavía no vio")
 
         errores = [o.get("misconception") for o in opts if not o.get("correct")]
         repes = {m for m in errores if errores.count(m) > 1}
@@ -336,7 +380,7 @@ def validar(doc: dict, catalogo: dict[str, dict],
         mc = rem.get("misconception")
         if mc not in mcs:
             fallas.append(f"remediation {code}: misconception '{mc}' "
-                          f"no está en el catálogo de {doc['unit']}")
+                          f"no está en ningún catálogo")
         if mc in vistas:
             fallas.append(f"remediation {code}: '{mc}' ya tiene remediación "
                           f"(la tabla acepta una sola por error)")
@@ -353,7 +397,7 @@ def validar(doc: dict, catalogo: dict[str, dict],
                 fallas.append(f"remediation {code}: ítem '{ref}' no existe "
                               f"en este archivo")
 
-    # --- cobertura de remediación, por unidad ---------------------------
+    # --- cobertura de remediación, en todo el contenido -----------------
     # Falla dura, no aviso: un error detectable sin remediación escrita
     # deja al estudiante viendo el nombre de su error y nada más. Eso es
     # justo lo que el producto promete no hacer.
@@ -361,8 +405,8 @@ def validar(doc: dict, catalogo: dict[str, dict],
     sin_rem = sorted(c for c in usadas if c not in cubiertas)
     if sin_rem:
         fallas.append(
-            f"errores detectables sin remediación en toda la unidad "
-            f"{doc['unit']}: {sin_rem}")
+            f"errores detectables sin remediación en todo el contenido: "
+            f"{sin_rem}")
 
     # --- figuras ----------------------------------------------------------
     de_items, de_cuerpos = figuras.refs_de_doc(doc)
@@ -729,8 +773,9 @@ def main() -> int:
         print("falta la clave raíz 'unit'", file=sys.stderr)
         return 1
     try:
-        catalogo = cargar_catalogo(unit, ruta)
-        rem_unidad = remediaciones_de_la_unidad(unit, ruta)
+        cargar_catalogo(unit, ruta)       # la unidad tiene que tener catálogo
+        catalogo = cargar_todos_los_catalogos(ruta)
+        rem_unidad = remediaciones_existentes(ruta)
         ajenos = codigos_de_la_unidad(unit, ruta)
     except FileNotFoundError as e:
         print(e, file=sys.stderr)

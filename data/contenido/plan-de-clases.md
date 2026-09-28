@@ -66,8 +66,8 @@ M1 primero (lo rinden todos y M2 se construye encima). Dentro de cada ola, el or
 **Ola 1 — tronco de números** (10)  
 EST-DAT-01 (23), GEO-FIG-01 (23), GEO-TRA-01 (22), NUM-ENT-03 (120), GEO-TRA-03 (3), GEO-TRA-02 (3), NUM-ENT-05 (102), NUM-ENT-04 (82), ALG-EXP-03 (49), GEO-TRA-04 (2)
 
-**Ola 2 — fracciones, raíces y álgebra básica** (10)  
-NUM-RAC-01 (100), ALG-ECU-01 (40), NUM-RAI-01 (33), GEO-FIG-03 (9), GEO-TRA-06 (0), GEO-TRA-05 (0), NUM-RAC-02 (82), NUM-RAC-04 (70), ALG-EXP-04 (36), NUM-RAI-02 (16)
+**Ola 2 — fracciones, raíces y álgebra básica** (11)  
+NUM-RAC-01 (100), ALG-ECU-01 (40), NUM-RAI-01 (33), GEO-FIG-08 (11), GEO-FIG-03 (9), GEO-TRA-06 (0), GEO-TRA-05 (0), NUM-RAC-02 (82), NUM-RAC-04 (70), ALG-EXP-04 (36), NUM-RAI-02 (16)
 
 **Ola 3** (13)  
 NUM-RAC-03 (79), ALG-FAC-01 (30), ALG-FAC-02 (30), NUM-RAC-05 (15), EST-DAT-05 (4), NUM-POR-01 (58), ALG-FAC-04 (27), ALG-FAC-03 (27), ALG-FCU-01 (12), ALG-ECU-04 (6), EST-POS-01 (6), ALG-ECU-02 (0), ALG-FAC-06 (0)
@@ -220,6 +220,7 @@ Todas las clases que ve el curso M1: nodos de nivel 1 y `pre`.
 | LES-GEO-FIG-04 | Unidades de superficie y áreas compuestas | `GEO-UNI-SUP` (pre) Unidades de longitud y superficie<br>`GEO-ARE-COMP` Áreas compuestas |  | COMP también pide TRAP (02) y CIR-ARE (03). |
 | LES-GEO-FIG-05 | Pitágoras: hipotenusa y cateto | `GEO-PIT-HIP` Pitágoras: hipotenusa<br>`GEO-PIT-CAT` Pitágoras: cateto |  |  |
 | LES-GEO-FIG-06 | Recíproco de Pitágoras y aplicaciones | `GEO-PIT-INV` Recíproco de Pitágoras<br>`GEO-PIT-APL` Pitágoras en contextos |  |  |
+| LES-GEO-FIG-08 | Ángulos interiores de triángulos y polígonos | `GEO-FIG-ANG` (pre) Suma de ángulos interiores |  | Nodo agregado el 28 sep 2026 (faltaba en el grafo). Solo pide CLAS; lo piden SEM-CRIT (AA) y CIRC-INS. El número 08 es por orden de creación (07 es el sector circular, M2), no de estudio. |
 
 ### GEO-CUE · Cuerpos geométricos
 

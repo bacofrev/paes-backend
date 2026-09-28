@@ -301,6 +301,19 @@ misconceptions:
       Suele aparecer justo después de aprender que a^0 = 1.
     example: "8^1 = 1"
 
+  - code: POT-CERO-INV
+    name: Interpreta el exponente cero como inverso
+    nodo: NUM-POT-CERO
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Responde el recíproco de la base ante un exponente cero,
+      confundiendo la regla con la del exponente negativo. Es un error
+      sobre el exponente cero y aparece en sus ítems: su nodo es
+      NUM-POT-CERO (hasta el 28 sep 2026 estuvo en NUM-POT-NEG, que es
+      posterior, y los ítems de CERO no podían usarlo sin excepción).
+    example: "(2/5)^0 = 5/2"
+
   # --- NUM-POT-DIST ----------------------------------------
 
   - code: POT-DIST-NUM
@@ -373,17 +386,6 @@ misconceptions:
     example: "(2/3)^2 = 9/4"
 
   # --- NUM-POT-NEG -----------------------------------------
-
-  - code: POT-CERO-INV
-    name: Interpreta el exponente cero como inverso
-    nodo: NUM-POT-NEG
-    area: NUM
-    origin: hipotesis
-    description: >-
-      Responde el recíproco de la base ante un exponente cero,
-      confundiendo la regla con la del exponente negativo. Su nodo de
-      origen es NUM-POT-NEG, que el estudiante todavía no vio.
-    example: "(2/5)^0 = 5/2"
 
   - code: POT-NEG-INVMULT
     name: Invierte la base y multiplica por el exponente
