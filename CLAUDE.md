@@ -61,7 +61,14 @@ three were merged into one repo for convenience; they still ship independently.
   states the intent: when item selection moves to IRT, the diff should be contained to this
   file, not scattered across endpoints.
 - `db.py` — a single `psycopg_pool.AsyncConnectionPool`, opened/closed in the FastAPI
-  lifespan. Endpoints borrow a connection via `db.pool.connection()`.
+  lifespan. Endpoints borrow a connection via `db.pool.connection()` (a transaction: use it
+  for anything that writes) or `db.read_connection()` (autocommit, for reads).
+- **Round trips are the cost, not queries.** Supabase is in us-west-1; from Chile each round
+  trip is ~200 ms. A read-only endpoint takes `Depends(read_as_student)` (`auth.py`) and reads
+  only through `reads.fetch(...)`, which sends the soft-delete check and all its queries in one
+  pipeline (one round trip) — so queries that go together must not depend on each other's
+  results (key them by code, decide ownership in Python after). Write endpoints keep
+  `Depends(get_current_student)`.
 
 **Domain model, in the order data moves through it:**
 1. `nodes` — one topic each (e.g. `NUM-POT-SIG`), grouped under `areas` (`NUM`, `ALG`, `GEO`,
@@ -97,13 +104,27 @@ three were merged into one repo for convenience; they still ship independently.
    Which lessons a course shows comes from `v_course_lessons`: a lesson enters only if *every*
    node is in scope, and a trigger (`check_lesson_single_level`) forbids a lesson mixing level-1
    and level-2 nodes. That's what keeps `M1` from ever listing an `M2` lesson. Migration `052`;
-   test with `data/sim_cursos_alcance.sql`.
+   test with `data/sim_cursos_alcance.sql`. How a course *looks* (subtitle, short name, icon key)
+   lives in `courses` too (migration `075`), never mapped by code in the frontend.
+   A lesson's state (`review`/`completed`/`in_progress`/`available`/`locked`) is computed in
+   `main.py` (`lesson_state`). A locked lesson can still be read; only practice is blocked, and
+   the backend enforces it: `POST /sessions` and `GET /nodes/{code}/next` check `NODE_ACCESS`
+   (`v_available_nodes`) → 404 `node_not_found` out of scope, 409 `node_locked` with pending
+   prereqs. See `bitacora-2026-09-28-plataforma-cursos.md`.
 7. `node_mastery` — one row per (student, node), recomputed by the Postgres function
    `recompute_node_mastery` after every response (`queries.RECOMPUTE_FOR_ITEM`). It Beta-smooths
    the proportion correct against `mastery_config` (so 3-for-3 reads as 0.80, not 1.00) and
    requires a minimum count of *hard* items correct, not just volume. This computation lives in
    SQL, not Python — there is currently no application-level mirror of this logic to keep in
    sync if you touch it.
+
+**Frontend routes** (`frontend/app/`): `AuthProvider` (root layout) gates everything behind the
+Supabase login; `(app)/` is the shell (sidebar on web, tab bar on phones) with `/` Inicio,
+`/cursos`, `/cursos/[curso]`, `/cursos/[curso]/clases/[clase]`, `/perfil`; `/practica/[nodo]`
+(`?curso=&clase=`) is the full-screen practice, outside the shell. Nothing content-related is
+hardcoded in the frontend: codes, names, order and icons all come from the API. Lesson bodies
+are split by `## ` in `lib/sections.ts`, whose `slug()` must stay identical to
+`data/loaders/cargar_contenido.py` — the loader validates `lesson_nodes.anchor` against it.
 
 **Content pipeline** (`data/contenido/`, `data/loaders/`, `data/migraciones/`):
 - Lessons are authored as YAML **per class** (`data/contenido/LES-<UNIT>-<NN>.yaml`), not per

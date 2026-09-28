@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Manrope, IBM_Plex_Mono, Fraunces } from "next/font/google";
+// Must be the same KaTeX major/minor that rehype-katex renders with:
+// 0.18 renamed its classes (.sizing -> .katex-sizing), so a newer CSS
+// over 0.16 markup leaves exponents full size. Bump both together.
 import "katex/dist/katex.min.css";
 import "./globals.css";
+import AuthProvider from "./AuthProvider";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -21,8 +25,8 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "PAES — práctica",
-  description: "Práctica de un nodo PAES",
+  title: "rankup",
+  description: "Preparación PAES",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -31,7 +35,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="es"
       className={`${manrope.variable} ${ibmPlexMono.variable} ${fraunces.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

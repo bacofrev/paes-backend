@@ -9,9 +9,9 @@ import Figure from "./Figure";
 // (options, next to the "A. " prefix) or as its own block (stem,
 // remediation paragraphs) without producing invalid nested <p>s.
 //
-// The only image the content may carry is ![](fig:CODE), and only in a
-// remediation body; `figures` (code -> svg) comes with that body from
-// the backend. Any other image — or a fig: with no figures passed —
+// The only image the content may carry is ![](fig:CODE), in a
+// remediation body or a lesson body; `figures` (code -> svg) comes with
+// that body from the backend. Any other image — or a fig: with no figures passed —
 // renders nothing.
 export default function MathText({
   text,

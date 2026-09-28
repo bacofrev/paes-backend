@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 
 import db
 import queries
-from auth import get_current_student
+from auth import StudentReads, get_current_student, read_as_student
 
 logger = logging.getLogger(__name__)
 
@@ -43,58 +43,181 @@ async def health():
     return {"status": "ok", "db": db_status}
 
 
+@app.get("/me")
+async def me(reads: StudentReads = Depends(read_as_student)):
+    [rows] = await reads.fetch(
+        (queries.STUDENT_PROFILE, {"student_id": reads.student_id}),
+    )
+    return {"display_name": rows[0]["display_name"] if rows else None}
+
+
 @app.get("/courses")
-async def list_courses(student_id: str = Depends(get_current_student)):
-    async with db.pool.connection() as con:
-        cur = await con.execute(queries.STUDENT_COURSES, {"student_id": student_id})
-        rows = await cur.fetchall()
+async def list_courses(reads: StudentReads = Depends(read_as_student)):
+    [rows] = await reads.fetch(
+        (queries.STUDENT_COURSES, {"student_id": reads.student_id}),
+    )
 
     # Empty is a valid answer: no active plan, nothing bought.
-    return [dict(row) for row in rows]
+    return [
+        {
+            "code": row["code"],
+            "name": row["name"],
+            "description": row["description"],
+            "short_name": row["short_name"],
+            "icon": row["icon"],
+            "subject_code": row["subject_code"],
+            "area_code": row["area_code"],
+            "exam_level": row["exam_level"],
+            "lesson_count": row["lesson_count"],
+            "total_nodes": row["total_nodes"],
+            "done_nodes": row["done_nodes"],
+            "last_activity_at": row["last_activity_at"],
+            "current_node": None if row["current_node_code"] is None else {
+                "code": row["current_node_code"],
+                "name": row["current_node_name"],
+                "unit_name": row["current_unit_name"],
+            },
+        }
+        for row in rows
+    ]
+
+
+# node_mastery statuses as the course screens read them. lapsed counts as
+# done (it was mastered, the progress isn't lost) but also asks for a
+# review, same as revisit.
+DONE_STATUSES = {"mastered", "lapsed"}
+REVIEW_STATUSES = {"revisit", "lapsed"}
+
+
+def lesson_state(nodes: list[dict]) -> str:
+    """The state a lesson card shows. Order matters: a lesson that needs a
+    review says so even if the rest is done, and 'locked' is only for a
+    lesson where NO section can be practiced yet — it can always be read."""
+    statuses = [n["status"] for n in nodes]
+    if any(s in REVIEW_STATUSES for s in statuses):
+        return "review"
+    if all(s == "mastered" for s in statuses):
+        return "completed"
+    if any(s in ("in_progress", "mastered") for s in statuses):
+        return "in_progress"
+    if any(not n["pending_prereqs"] for n in nodes):
+        return "available"
+    return "locked"
+
+
+def serialize_lesson_node(row) -> dict:
+    return {
+        "code": row["node_code"],
+        "name": row["node_name"],
+        "exam_level": row["exam_level"],
+        "anchor": row["anchor"],
+        "status": row["status"],
+        "pending_prereqs": row["pending_prereqs"],
+    }
+
+
+def lesson_summary(nodes: list[dict]) -> dict:
+    """What a lesson card needs on top of its nodes. blocking_prereqs is
+    what's missing from OUTSIDE the lesson: a prereq taught in the same
+    lesson isn't something to go get elsewhere."""
+    own = {n["code"] for n in nodes}
+    blocking = {}
+    for n in nodes:
+        for p in n["pending_prereqs"]:
+            if p["code"] not in own:
+                blocking.setdefault(p["code"], p)
+    return {
+        "state": lesson_state(nodes),
+        "total_nodes": len(nodes),
+        "done_nodes": sum(n["status"] in DONE_STATUSES for n in nodes),
+        "blocking_prereqs": list(blocking.values()),
+    }
 
 
 @app.get("/courses/{course_code}")
-async def get_course(course_code: str, student_id: str = Depends(get_current_student)):
-    async with db.pool.connection() as con:
-        cur = await con.execute(
-            queries.COURSE_FOR_STUDENT,
-            {"course_code": course_code, "student_id": student_id},
-        )
-        course = await cur.fetchone()
+async def get_course(course_code: str, reads: StudentReads = Depends(read_as_student)):
+    params = {"course_code": course_code, "student_id": reads.student_id}
+    courses, rows = await reads.fetch(
+        (queries.COURSE_FOR_STUDENT, params),
+        (queries.COURSE_CONTENT, params),
+    )
 
-        # Same 404 whether the course doesn't exist or isn't theirs:
-        # a student shouldn't learn the catalog by probing codes.
-        if course is None:
-            raise HTTPException(status_code=404, detail="course_not_found")
+    # Same 404 whether the course doesn't exist or isn't theirs:
+    # a student shouldn't learn the catalog by probing codes. The
+    # content already came back with it (one round trip); it's dropped.
+    if not courses:
+        raise HTTPException(status_code=404, detail="course_not_found")
+    course = courses[0]
 
-        cur = await con.execute(
-            queries.COURSE_CONTENT,
-            {"course_id": course["id"], "student_id": student_id},
-        )
-        rows = await cur.fetchall()
-
-    # Rows come ordered unit -> lesson -> node; nest them in that order.
-    units = []
+    # Rows come ordered area -> unit -> lesson -> node; nest them in that order.
+    areas = []
     for row in rows:
+        if not areas or areas[-1]["code"] != row["area_code"]:
+            areas.append({"code": row["area_code"], "name": row["area_name"], "units": []})
+        units = areas[-1]["units"]
         if not units or units[-1]["code"] != row["unit_code"]:
             units.append({"code": row["unit_code"], "name": row["unit_name"], "lessons": []})
         lessons = units[-1]["lessons"]
         if not lessons or lessons[-1]["code"] != row["lesson_code"]:
-            lessons.append({"code": row["lesson_code"], "title": row["lesson_title"], "nodes": []})
-        lessons[-1]["nodes"].append({
-            "code": row["node_code"],
-            "name": row["node_name"],
-            "exam_level": row["exam_level"],
-            "anchor": row["anchor"],
-            "status": row["status"],
-            "pending_prereqs": row["pending_prereqs"],
-        })
+            lessons.append({
+                "code": row["lesson_code"],
+                "title": row["lesson_title"],
+                "position": row["lesson_position"],
+                "nodes": [],
+            })
+        lessons[-1]["nodes"].append(serialize_lesson_node(row))
+
+    total_nodes = done_nodes = 0
+    for area in areas:
+        for unit in area["units"]:
+            for lesson in unit["lessons"]:
+                lesson.update(lesson_summary(lesson["nodes"]))
+                total_nodes += lesson["total_nodes"]
+                done_nodes += lesson["done_nodes"]
+            unit["total_lessons"] = len(unit["lessons"])
+            unit["done_lessons"] = sum(
+                l["state"] == "completed" for l in unit["lessons"]
+            )
+            unit["has_review"] = any(l["state"] == "review" for l in unit["lessons"])
 
     return {
         "code": course["code"],
         "name": course["name"],
+        "description": course["description"],
+        "short_name": course["short_name"],
+        "icon": course["icon"],
         "exam_level": course["exam_level"],
-        "units": units,
+        "total_nodes": total_nodes,
+        "done_nodes": done_nodes,
+        "areas": areas,
+    }
+
+
+@app.get("/lessons/{lesson_code}")
+async def get_lesson(lesson_code: str, reads: StudentReads = Depends(read_as_student)):
+    params = {"lesson_code": lesson_code, "student_id": reads.student_id}
+    lessons, node_rows = await reads.fetch(
+        (queries.LESSON_FOR_STUDENT, params),
+        (queries.LESSON_NODES, params),
+    )
+
+    # Same rule as course_not_found: not existing and not being in
+    # any of your courses look the same from outside.
+    if not lessons:
+        raise HTTPException(status_code=404, detail="lesson_not_found")
+    lesson = lessons[0]
+    nodes = [serialize_lesson_node(row) for row in node_rows]
+
+    return {
+        "code": lesson["code"],
+        "title": lesson["title"],
+        "position": lesson["position"],
+        "unit": {"code": lesson["unit_code"], "name": lesson["unit_name"]},
+        "area": {"code": lesson["area_code"], "name": lesson["area_name"]},
+        "body": lesson["body"],
+        "figures": lesson["figures"],
+        "nodes": nodes,
+        **lesson_summary(nodes),
     }
 
 
@@ -157,12 +280,20 @@ async def next_item(
         # mode/context are always server-derived), and it can't be
         # folded into NEXT_ITEM/NEXT_LANE_ITEM's WHERE without changing
         # what "no item found" means for every other caller.
+        #
+        # Scope and prereqs first, for the same reason: node_code is a
+        # free parameter here, it doesn't have to be the session's node,
+        # so the check in POST /sessions alone doesn't cover it.
         cur = await con.execute(
-            queries.NODE_MASTERY_STATUS_BY_CODE,
+            queries.NODE_ACCESS,
             {"student_id": student_id, "node_code": node_code},
         )
-        node_mastery = await cur.fetchone()
-        if node_mastery is not None and node_mastery["status"] == "revisit":
+        access = await cur.fetchone()
+        if access is None:
+            raise HTTPException(status_code=404, detail="node_not_found")
+        if access["pending_prereqs"] > 0:
+            raise HTTPException(status_code=409, detail="node_locked")
+        if access["status"] == "revisit":
             raise HTTPException(status_code=409, detail="node_in_revisit")
 
         item = None
@@ -202,13 +333,6 @@ async def next_item(
         "options": item["options"],
         "source": source,
     }
-    # Data only, no prebuilt text: the frontend decides what to say.
-    # Omitted when the lane item turns out to be from the same node —
-    # nothing to explain there.
-    if source == "lane" and item["node_code"] != node_code:
-        result["item_node_code"] = item["node_code"]
-        result["item_node_name"] = item["item_node_name"]
-
     return result
 
 
@@ -222,10 +346,9 @@ class ResponseIn(BaseModel):
 
 async def _active_lane_item(con, student_id, item_id):
     """Does the answered item belong to the remediation of this
-    student's lane in turn (the oldest 'active' one by entered_at)? It
-    no longer has to be one specific remediation_item: any item from
-    that remediation counts, because NEXT_LANE_ITEM can now serve any
-    of them depending on the node. Used both to decide
+    student's lane in turn on the item's node (the oldest 'active' one
+    with something left on that node — same rule NEXT_LANE_ITEM used to
+    serve it)? Any item from that remediation counts. Used both to decide
     responses.context and to advance the lane — a single query, not
     two, so the two reads can never disagree."""
     cur = await con.execute(
@@ -587,6 +710,40 @@ async def create_session(
         )
 
     async with db.pool.connection() as con:
+        # node_code is optional: diagnostic and mock_exam span many nodes.
+        # When present it must resolve, otherwise the caller sent a code
+        # that does not exist and deserves a 404, not a silent null.
+        # Resolved BEFORE the open-session check: a locked node must not
+        # claim (or be answered with) someone's open session.
+        target_node_id = None
+        if payload.node_code is not None:
+            cur = await con.execute(
+                queries.NODE_ID_BY_CODE, {"node_code": payload.node_code}
+            )
+            node = await cur.fetchone()
+            if node is None:
+                raise HTTPException(status_code=404, detail="node_not_found")
+            target_node_id = node["id"]
+
+        # A mode that practices one node only opens on a node the student
+        # has (in scope of a course from an active plan) and can practice
+        # (no pending prereqs). Out of scope is the same 404 as not
+        # existing: the catalog isn't probeable. The UI already greys the
+        # button out; this is the rule, that's just the hint.
+        if payload.mode in NODE_REQUIRED:
+            cur = await con.execute(
+                queries.NODE_ACCESS,
+                {"student_id": student_id, "node_code": payload.node_code},
+            )
+            access = await cur.fetchone()
+            if access is None:
+                raise HTTPException(status_code=404, detail="node_not_found")
+            if access["pending_prereqs"] > 0:
+                raise HTTPException(
+                    status_code=409,
+                    detail={"reason": "node_locked", "node_code": payload.node_code},
+                )
+
         # A student may only have one open session at a time.
         # This pre-check turns the common case into a readable 409 that
         # carries enough data for the frontend to offer "resume or drop".
@@ -618,19 +775,6 @@ async def create_session(
                     "answered": open_session["answered"],
                 },
             )
-
-        # node_code is optional: diagnostic and mock_exam span many nodes.
-        # When present it must resolve, otherwise the caller sent a code
-        # that does not exist and deserves a 404, not a silent null.
-        target_node_id = None
-        if payload.node_code is not None:
-            cur = await con.execute(
-                queries.NODE_ID_BY_CODE, {"node_code": payload.node_code}
-            )
-            node = await cur.fetchone()
-            if node is None:
-                raise HTTPException(status_code=404, detail="node_not_found")
-            target_node_id = node["id"]
 
         # The pre-check above loses to a race between two concurrent
         # requests. The unique index is the real guarantee; catching the

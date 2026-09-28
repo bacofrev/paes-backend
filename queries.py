@@ -83,34 +83,61 @@ where ni.item_id = %(item_id)s::uuid
 # Remediation lane (student_misconceptions)
 # ---------------------------------------------------------------------
 
-# Which lane has the turn: the oldest 'active' one by entered_at
-# (tie-broken by misconception_id, so it's deterministic on a
-# timestamp tie that in practice never happens). A shared fragment,
-# not a standalone query — ACTIVE_LANE_ITEM and NEXT_LANE_ITEM
-# concatenate it so the "whose turn is it" logic isn't duplicated.
-# Returns entered_at, not position: position no longer lives in this
-# table, the next item is derived from responses (see NEXT_LANE_ITEM)
-# and entered_at is the cutoff that separates "this pass" from "a
+# Which lane has the turn ON A GIVEN NODE: the oldest 'active' one by
+# entered_at (tie-broken by misconception_id, deterministic on a
+# timestamp tie) that still has an active remediation_item on that node
+# not answered in this pass (created_at >= entered_at). Practicing a
+# section serves only that section's items, remediation included
+# (bitacora-2026-09-28-plataforma-cursos.md §5): a lane with nothing
+# left on this node waits, still 'active', until the student practices
+# a node where it does. Per node and not global on purpose — with a
+# global "oldest lane" a Potencias lane would hide an Enteros one from
+# an Enteros practice, and /responses would stop recognizing the lane
+# item it just served.
+# Built by a function because the node comes from two places: the URL
+# of GET /next, and the answered item's own node in POST /responses
+# (node_items.item_id is unique, 026). Both run the SAME rule, so the
+# lane /next served from is the one /responses advances. /responses
+# looks it up BEFORE inserting the response, so the item being answered
+# still counts as unanswered and its lane still qualifies.
+# Returns entered_at: the cutoff that separates "this pass" from "a
 # previous pass".
-_CARRIL_EN_TURNO = """
+def _carril_en_turno(node_filter: str) -> str:
+    return f"""
 with carril_en_turno as (
   select sm.misconception_id, sm.entered_at
   from student_misconceptions sm
   where sm.student_id = %(student_id)s::uuid
     and sm.status = 'active'
+    and exists (
+      select 1
+      from remediations rem
+      join remediation_items ri on ri.remediation_id = rem.id
+      join items i              on i.id = ri.item_id
+                               and i.status = 'active'
+      join node_items ni        on ni.item_id = i.id
+      where rem.misconception_id = sm.misconception_id
+        and {node_filter}
+        and not exists (
+          select 1 from responses r
+          where r.item_id = i.id
+            and r.student_id = %(student_id)s::uuid
+            and r.created_at >= sm.entered_at
+        )
+    )
   order by sm.entered_at, sm.misconception_id
   limit 1
 )
 """
 
+
 # Does the item just answered belong to the remediation of the lane in
-# turn? It no longer has to match one specific position — any
-# remediation_item of that remediation counts as a lane response,
-# because any of them can now be served depending on the node. If the
-# one that matches belongs to a newer lane still waiting its turn,
-# this query must return nothing, and it does, because
-# _CARRIL_EN_TURNO never looks at it.
-ACTIVE_LANE_ITEM = _CARRIL_EN_TURNO + """
+# turn on that item's node? Any remediation_item of that remediation
+# counts as a lane response. If it belongs to a newer lane still waiting
+# its turn, this returns nothing, because the fragment never picks it.
+ACTIVE_LANE_ITEM = _carril_en_turno(
+    "ni.node_id = (select node_id from node_items where item_id = %(item_id)s::uuid)"
+) + """
 select ct.misconception_id, ct.entered_at
 from carril_en_turno ct
 join remediations rem     on rem.misconception_id = ct.misconception_id
@@ -118,31 +145,20 @@ join remediation_items ri on ri.remediation_id = rem.id
                           and ri.item_id = %(item_id)s::uuid
 """
 
-# The item to serve from GET /next when there's a lane in turn: the
-# first remediation_item of that remediation the student has NOT
-# answered in this pass (created_at >= entered_at of the lane in
-# turn — a new pass starts with a clean list, failures from a
-# previous pass don't count), preferring the ones that belong to the
-# session's node and tie-breaking by remediation_items.position (the
-# order curated by content, no longer an advance pointer), and finally
-# by item id so the result is deterministic on any remaining tie.
-# Same two rules NEXT_ITEM applies to any item — status = 'active' and
-# not repeated in this session — so if NO remediation_item passes
-# them, this query returns nothing and /next falls back to the node's
-# pool without touching the lane's state: it's retried next time an
-# item is requested.
-# n.code always travels along, even when it matches the session's
-# node: the decision to show it only when it differs belongs to
-# main.py (source + item_node_code in the response), not to this
-# query. node_items.item_id is unique (026, un_nodo_por_item), so the
-# join doesn't duplicate rows.
-NEXT_LANE_ITEM = _CARRIL_EN_TURNO + """
+# The item to serve from GET /next when there's a lane in turn on this
+# node: the first remediation_item of that remediation, ON THIS NODE,
+# the student has NOT answered in this pass (a new pass starts with a
+# clean list, failures from a previous pass don't count), by
+# remediation_items.position (the order curated by content) and item id
+# on a tie. Same two rules NEXT_ITEM applies to any item — status =
+# 'active' and not repeated in this session — so if nothing passes them
+# this returns nothing and /next falls back to the node's pool without
+# touching the lane's state.
+NEXT_LANE_ITEM = _carril_en_turno("ni.node_id = (select id from nodes where code = %(node_code)s)") + """
 select i.id,
        i.code,
        i.stem,
        i.author_difficulty,
-       n.code as node_code,
-       n.name as item_node_name,
        f.code as figure_code,
        f.svg  as figure_svg,
        json_agg(
@@ -156,6 +172,7 @@ join items i               on i.id = ri.item_id
                           and i.status = 'active'
 join node_items ni          on ni.item_id = i.id
 join nodes n                on n.id = ni.node_id
+                          and n.code = %(node_code)s
 join item_options o        on o.item_id = i.id
 left join figures f         on f.id = i.figure_id
 where not exists (
@@ -171,9 +188,8 @@ and not exists (
   where r.item_id = i.id
     and r.session_id = %(session_id)s
 )
-group by i.id, i.code, i.stem, i.author_difficulty, n.code, n.name, ri.position,
-         f.code, f.svg
-order by (n.code = %(node_code)s) desc, ri.position asc, i.id asc
+group by i.id, i.code, i.stem, i.author_difficulty, ri.position, f.code, f.svg
+order by ri.position asc, i.id asc
 limit 1
 """
 
@@ -305,14 +321,96 @@ NODE_BY_CODE = """
 select code, name from nodes where code = %(node_code)s and status = 'active'
 """
 
+# The student's own row, for the sidebar's user card. display_name comes
+# from signup (migration 035's trigger); null is valid, the front falls
+# back to the auth email.
+STUDENT_PROFILE = """
+select display_name from students where id = %(student_id)s::uuid
+"""
+
+# Prereqs of node n that still block it for this student: same rule as
+# v_available_nodes.pending_prereqs (edge not rejected, prereq not
+# effectively mastered — lapsed counts as pending), but as a list, so
+# the screen can say WHAT is missing and where it's taught. lesson_* is
+# null when the prereq has no active lesson yet (it blocks anyway: the
+# graph rule doesn't bend to content gaps). A shared lateral, like
+# _CARRIL_EN_TURNO: concatenated after a FROM that has `n` in scope.
+_PENDING_PREREQS = """
+left join lateral (
+  select coalesce(json_agg(json_build_object(
+           'code', prn.code,
+           'name', prn.name,
+           'unit_name', pu.name,
+           'lesson_code', pl.code,
+           'lesson_title', pl.title,
+           'lesson_position', pl.position
+         ) order by prn.code), '[]'::json) as pending_prereqs
+  from node_edges pre
+  join nodes prn on prn.id = pre.prereq_id
+  join units pu  on pu.id = prn.unit_id
+  left join v_node_mastery pm
+         on pm.student_id = %(student_id)s::uuid and pm.node_code = prn.code
+  left join lateral (
+    select l2.code, l2.title, l2.position
+    from lesson_nodes ln2
+    join lessons l2 on l2.id = ln2.lesson_id and l2.status = 'active'
+    where ln2.node_id = prn.id
+    order by l2.position, l2.code
+    limit 1
+  ) pl on true
+  where pre.target_id = n.id
+    and pre.status <> 'rejected'
+    and coalesce(pm.effective_status, 'not_started') <> 'mastered'
+) pp on true
+"""
+
 # The tiles of the courses module. Subsumption (QUI hidden behind QUI-E)
-# lives in v_student_visible_courses, migration 052.
+# lives in v_student_visible_courses, migration 052. Progress counts the
+# distinct nodes of the course's lessons (v_course_lessons), so it's the
+# same universe GET /courses/{code} shows. lapsed counts as done here: it
+# was mastered, it just needs a review — it's not lost progress.
+# "Where you are" is the node of the student's latest response on any
+# node of the course.
 STUDENT_COURSES = """
-select c.code, c.name, s.code as subject_code, a.code as area_code, c.exam_level
+select c.code, c.name, c.description, c.short_name, c.icon,
+       s.code as subject_code, a.code as area_code, c.exam_level,
+       prog.lesson_count, prog.total_nodes, prog.done_nodes,
+       last.created_at as last_activity_at,
+       last.node_code  as current_node_code,
+       last.node_name  as current_node_name,
+       last.unit_name  as current_unit_name
 from v_student_visible_courses vc
 join courses c   on c.id = vc.course_id
 join subjects s  on s.id = c.subject_id
 left join areas a on a.id = c.area_id
+cross join lateral (
+  select count(distinct cl.lesson_id) as lesson_count,
+         count(distinct ln.node_id)   as total_nodes,
+         count(distinct ln.node_id) filter (
+           where vm.effective_status in ('mastered', 'lapsed')) as done_nodes
+  from v_course_lessons cl
+  join lesson_nodes ln on ln.lesson_id = cl.lesson_id
+  join nodes n         on n.id = ln.node_id
+  left join v_node_mastery vm
+         on vm.student_id = %(student_id)s::uuid and vm.node_code = n.code
+  where cl.course_id = c.id
+) prog
+left join lateral (
+  select r.created_at, n.code as node_code, n.name as node_name,
+         u.name as unit_name
+  from responses r
+  join node_items ni on ni.item_id = r.item_id
+  join nodes n       on n.id = ni.node_id
+  join units u       on u.id = n.unit_id
+  where r.student_id = %(student_id)s::uuid
+    and ni.node_id in (
+      select ln.node_id
+      from v_course_lessons cl
+      join lesson_nodes ln on ln.lesson_id = cl.lesson_id
+      where cl.course_id = c.id)
+  order by r.created_at desc
+  limit 1
+) last on true
 where vc.student_id = %(student_id)s::uuid
 order by s.position, c.position
 """
@@ -320,7 +418,7 @@ order by s.position, c.position
 # v_student_courses, not the visible one: a subsumed course (QUI when
 # the student also has QUI-E) is still theirs, just not a tile.
 COURSE_FOR_STUDENT = """
-select c.id, c.code, c.name, c.exam_level
+select c.id, c.code, c.name, c.description, c.short_name, c.icon, c.exam_level
 from courses c
 join v_student_courses sc on sc.course_id = c.id
 where c.code = %(course_code)s and sc.student_id = %(student_id)s::uuid
@@ -328,23 +426,83 @@ where c.code = %(course_code)s and sc.student_id = %(student_id)s::uuid
 
 # Which lessons a course shows is decided in v_course_lessons (every
 # node in scope, not just one), so M1 never lists an M2 lesson. Status
-# comes from v_available_nodes, always filtered by student_id.
+# is the effective one (lapsed computed on read); the blocking prereqs
+# come from _PENDING_PREREQS. Keyed by course code, not id, so it can
+# travel in the same round trip as COURSE_FOR_STUDENT: ownership is
+# decided there, and these rows are discarded when it says no.
 COURSE_CONTENT = """
-select u.code as unit_code, u.name as unit_name,
-       l.code as lesson_code, l.title as lesson_title,
+select ua.code as area_code, ua.name as area_name,
+       u.code as unit_code, u.name as unit_name,
+       l.code as lesson_code, l.title as lesson_title, l.position as lesson_position,
        n.code as node_code, n.name as node_name, n.exam_level, ln.anchor,
-       coalesce(an.status, 'not_started') as status,
-       coalesce(an.pending_prereqs, 0) as pending_prereqs
+       coalesce(vm.effective_status, 'not_started') as status,
+       pp.pending_prereqs
 from v_course_lessons cl
 join lessons l       on l.id = cl.lesson_id
 join units u         on u.id = l.unit_id
 join areas ua        on ua.id = u.area_id
 join lesson_nodes ln on ln.lesson_id = l.id
 join nodes n         on n.id = ln.node_id
-left join v_available_nodes an
-       on an.student_id = %(student_id)s::uuid and an.node_id = n.id
-where cl.course_id = %(course_id)s
+left join v_node_mastery vm
+       on vm.student_id = %(student_id)s::uuid and vm.node_code = n.code
+""" + _PENDING_PREREQS + """
+where cl.course_id = (select id from courses where code = %(course_code)s)
 order by ua.position, u.position, l.position, ln.position
+"""
+
+# A lesson is the student's if it's in any of their courses — subsumed
+# ones included, same as COURSE_FOR_STUDENT. Figures: only the ones the
+# body references as ![](fig:CODE), same pattern as VERDICT; there's
+# still no query that lists figures on their own.
+LESSON_FOR_STUDENT = """
+select l.id, l.code, l.title, l.body, l.position,
+       u.code as unit_code, u.name as unit_name,
+       a.code as area_code, a.name as area_name,
+       (select coalesce(json_object_agg(f.code, f.svg), '{}'::json)
+          from figures f
+         where f.code in (
+           select m[1]
+             from regexp_matches(l.body, '!\\[\\]\\(fig:([A-Z0-9-]+)\\)', 'g') m
+         )) as figures
+from lessons l
+join units u on u.id = l.unit_id
+join areas a on a.id = u.area_id
+where l.code = %(lesson_code)s
+  and l.status = 'active'
+  and exists (
+    select 1
+    from v_course_lessons cl
+    join v_student_courses sc on sc.course_id = cl.course_id
+    where cl.lesson_id = l.id and sc.student_id = %(student_id)s::uuid)
+"""
+
+# Keyed by lesson code for the same reason as COURSE_CONTENT: it goes out
+# with LESSON_FOR_STUDENT in one round trip, and is discarded when that
+# one finds the lesson isn't the student's.
+LESSON_NODES = """
+select n.code as node_code, n.name as node_name, n.exam_level, ln.anchor,
+       coalesce(vm.effective_status, 'not_started') as status,
+       pp.pending_prereqs
+from lesson_nodes ln
+join nodes n on n.id = ln.node_id
+left join v_node_mastery vm
+       on vm.student_id = %(student_id)s::uuid and vm.node_code = n.code
+""" + _PENDING_PREREQS + """
+where ln.lesson_id = (select id from lessons
+                     where code = %(lesson_code)s and status = 'active')
+order by ln.position
+"""
+
+# Can this student practice this node? No row: the node doesn't exist,
+# is retired, or is outside every course they have — all the same 404.
+# pending_prereqs > 0: locked. status is the effective one, so 'revisit'
+# reads the same as node_mastery.status (revisit is stored, never
+# derived). Used by POST /sessions and GET /next: the UI greys the
+# button out, but the backend never trusts the client to self-gate.
+NODE_ACCESS = """
+select status, pending_prereqs
+from v_available_nodes
+where student_id = %(student_id)s::uuid and code = %(node_code)s
 """
 
 CREATE_SESSION = """
@@ -399,22 +557,8 @@ left join mastery_config mc
 # revisit: node_mastery.status lookups and streak-window events
 # ---------------------------------------------------------------------
 
-# GET /next needs this before it queries NEXT_LANE_ITEM or NEXT_ITEM — a
-# single joined query keyed by node_code, since that's all /next has in
-# scope. LEFT JOIN on purpose: a node with no node_mastery row yet
-# (not_started) must not look like it's in revisit. Zero rows for an
-# unknown/retired node_code, same as NEXT_ITEM/NEXT_LANE_ITEM today —
-# that falls through to the existing sin_items 404 unchanged.
-NODE_MASTERY_STATUS_BY_CODE = """
-select nm.status
-from nodes n
-left join node_mastery nm
-    on nm.student_id = %(student_id)s::uuid and nm.node_id = n.id
-where n.code = %(node_code)s and n.status = 'active'
-"""
-
-# Same lookup keyed by node_id, for the events endpoint: it already has
-# node_id (resolved via NODE_ID_BY_CODE), and needs this twice — once to
+# node_mastery.status keyed by node_id, for the events endpoint: it already
+# has node_id (resolved via NODE_ID_BY_CODE), and needs this twice — once to
 # guard streak_reset, once to report the post-recompute status back.
 NODE_MASTERY_STATUS_BY_ID = """
 select status from node_mastery

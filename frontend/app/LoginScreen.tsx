@@ -20,7 +20,7 @@ export default function LoginScreen({ supabase }: { supabase: SupabaseClient }) 
     try {
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) setError("Mail o contraseña incorrectos.");
+        if (error) setError("Correo o contraseña incorrectos.");
       } else {
         // options.data.display_name termina en auth.users.raw_user_meta_data,
         // que es lo que lee el trigger de alta (migración 035) para poblar
@@ -43,9 +43,13 @@ export default function LoginScreen({ supabase }: { supabase: SupabaseClient }) 
   }
 
   return (
-    <main className="screen">
+    <main className="screen screen-center">
+      <div className="logo logo-login">
+        <span>rank</span>
+        <span className="logo-accent">up</span>
+      </div>
       <div className="card">
-        <h1 className="node-name">{mode === "login" ? "Ingresar" : "Crear cuenta"}</h1>
+        <h1 className="card-title">{mode === "login" ? "Ingresar" : "Crear cuenta"}</h1>
         <form className="button-stack" onSubmit={handleSubmit}>
           {mode === "signup" && (
             <input
@@ -61,7 +65,7 @@ export default function LoginScreen({ supabase }: { supabase: SupabaseClient }) 
           <input
             className="field"
             type="email"
-            placeholder="Mail"
+            placeholder="Correo"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             autoComplete="email"
@@ -77,11 +81,11 @@ export default function LoginScreen({ supabase }: { supabase: SupabaseClient }) 
             required
           />
           {error && <p className="field-error">{error}</p>}
-          <button className="primary" type="submit" disabled={isSubmitting}>
+          <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
             {mode === "login" ? "Ingresar" : "Crear cuenta"}
           </button>
           <button className="link-button" type="button" onClick={toggleMode}>
-            {mode === "login" ? "¿No tenés cuenta? Creá una" : "¿Ya tenés cuenta? Ingresá"}
+            {mode === "login" ? "¿No tienes cuenta? Crea una" : "¿Ya tienes cuenta? Ingresa"}
           </button>
         </form>
       </div>
