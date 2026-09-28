@@ -10,8 +10,8 @@
 #   docente    reportado por alguien que hace clases
 #   hipotesis  plausible, sin evidencia todavía
 #
-# Estado: solo ALG-EXP-LENG. VAL, TERM y el resto se agregan al llegar
-# a su clase.
+# Estado: ALG-EXP-LENG, ALG-EXP-TERM y ALG-EXP-ADI. VAL y el resto se
+# agregan al llegar a su clase.
 #
 # ALG-EXP-LENG es raíz del grafo: no hay nodo debajo al que bajar al
 # estudiante. Las remediaciones de estos errores deben sostenerse solas.
@@ -255,3 +255,141 @@ misconceptions:
       del control 1: patrones construidos desde el enunciado, sin
       comprobar valores, que sería ALG-EXP-VAL).
     example: "4, 7, 10, … → n + 3"
+
+  # --- ALG-EXP-TERM ---------------------------------------------------
+  # Propuestas para LES-ALG-EXP-03 (27 sep 2026), sin control 1: todas
+  # hipotesis. Se descartó ORDENLETRAS ("xy y yx no son semejantes"):
+  # no daba 4 ítems sin forzar; la clase lo enseña igual.
+  #
+  # Colisiones conocidas:
+  #   EXPSUMA y MULTIPLICA suben el exponente; se separan por el
+  #   coeficiente (5x + 3x: EXPSUMA 8x², MULTIPLICA 15x²).
+  #   GRADO y JUNTA juntan lo que no es semejante; GRADO solo con la misma
+  #   letra y distinto exponente, y deja el exponente mayor (5x² + 3x =
+  #   8x²). JUNTA suma todo y pega las letras (3x + 2y = 5xy).
+  #   COEFUNO y CANCELA fallan en el mismo ítem (9m − m): COEFUNO da 9m,
+  #   CANCELA da 9.
+
+  - code: EXP-TERM-JUNTA
+    name: Suma términos que no son semejantes
+    nodo: ALG-EXP-TERM
+    area: ALG
+    origin: hipotesis
+    description: >-
+      Suma los coeficientes de términos con distinta parte literal y pega
+      las letras: 3x + 2y = 5xy, 5k + 1 = 6k. También reconoce como
+      semejantes dos términos con el mismo coeficiente (5a y 5b). Es la
+      misconception central del nodo.
+    example: "3x + 2y = 5xy"
+
+  - code: EXP-TERM-EXPSUMA
+    name: Suma los exponentes al sumar términos semejantes
+    nodo: ALG-EXP-TERM
+    area: ALG
+    origin: hipotesis
+    description: >-
+      Trae la regla del producto de potencias a la suma: 4k² + 3k² = 7k⁴,
+      k + k = k². Opera bien los coeficientes; lo que cambia es la parte
+      literal. Se separa de MULTIPLICA por el coeficiente.
+    example: "4k² + 3k² = 7k⁴"
+
+  - code: EXP-TERM-GRADO
+    name: Junta términos con la misma letra y distinto exponente
+    nodo: ALG-EXP-TERM
+    area: ALG
+    origin: hipotesis
+    description: >-
+      Cree que basta la misma letra para ser semejantes: 5k² + 3k = 8k².
+      Se queda con el exponente mayor. Se separa de JUNTA porque solo
+      junta términos de la misma letra.
+    example: "5k² + 3k = 8k²"
+
+  - code: EXP-TERM-COEFUNO
+    name: Trata una letra sin número como si valiera cero
+    nodo: ALG-EXP-TERM
+    area: ALG
+    origin: hipotesis
+    description: >-
+      No ve el coeficiente 1 (o −1) que no se escribe: 10z − z = 10z,
+      6v + v = 6v. El término sin número "no suma nada". Se separa de
+      CANCELA con 9m − m: COEFUNO da 9m, CANCELA da 9.
+    example: "10z − z = 10z"
+
+  - code: EXP-TERM-CANCELA
+    name: Al restar semejantes, hace desaparecer la letra
+    nodo: ALG-EXP-TERM
+    area: ALG
+    origin: hipotesis
+    description: >-
+      Resta bien los coeficientes y borra la parte literal, como si "x − x"
+      se anulara aunque los coeficientes no: 6w − 5w = 1, 7x − x = 7. Solo
+      aparece en restas.
+    example: "6w − 5w = 1"
+
+  - code: EXP-TERM-SIGNOSUELTO
+    name: Al agrupar, el término pierde su signo
+    nodo: ALG-EXP-TERM
+    area: ALG
+    origin: hipotesis
+    description: >-
+      Reordena los términos para juntar los semejantes y deja atrás el
+      signo que tenía uno de ellos: en 6t − 2u − 4t junta 6t + 4t = 10t.
+      Solo aparece con cuatro o más términos o con un término negativo que
+      no está al lado de su semejante.
+    example: "6t − 2u − 4t → 10t − 2u"
+
+  - code: EXP-TERM-MULTIPLICA
+    name: Multiplica los términos cuando hay que sumarlos
+    nodo: ALG-EXP-TERM
+    area: ALG
+    origin: hipotesis
+    description: >-
+      Confunde reducir con multiplicar: 9k + 4k = 36k², 5x + 3x = 15x². Se
+      separa de EXPSUMA porque también multiplica los coeficientes.
+    example: "9k + 4k = 36k²"
+
+  # --- ALG-EXP-ADI ----------------------------------------------------
+  # Propuestas para LES-ALG-EXP-03 (27 sep 2026), sin control 1.
+  # SIGNOPAR es la versión algebraica de ENT-PRIOR-SIGNOPAR: PRIOR no es
+  # ancestro de ADI, por eso son dos entradas. El error de restar al revés
+  # (Q − P por P − Q) ya existe: es EXP-LENG-ORDENRESTA.
+  #
+  # Colisiones conocidas:
+  #   SIGNOPAR e IGNORA coinciden en a − (b − c) cuando el primer término
+  #   de adentro es positivo: SIGNOPAR da a − b − c e IGNORA a + b − c.
+  #   Coinciden solo si el paréntesis parte con un negativo; esos ítems
+  #   usan una de las dos.
+
+  - code: EXP-ADI-SIGNOPAR
+    name: El menos delante del paréntesis cambia solo el primer término
+    nodo: ALG-EXP-ADI
+    area: ALG
+    origin: hipotesis
+    description: >-
+      Saca el paréntesis y el menos queda solo con el primer término:
+      x − (2x − 3) = x − 2x − 3, −(4c − 9) = −4c − 9. Es la misconception
+      central del nodo.
+    example: "−(4c − 9) = −4c − 9"
+
+  - code: EXP-ADI-MASCAMBIA
+    name: Cambia los signos también con un más delante del paréntesis
+    nodo: ALG-EXP-ADI
+    area: ALG
+    origin: hipotesis
+    description: >-
+      Sobreaplica la regla del menos: sacar cualquier paréntesis "cambia
+      los signos". (5c + 1) + (3c − 8) = 5c + 1 + 3c + 8. Aparece sobre
+      todo en sumas de polinomios dados como P + Q.
+    example: "+(3c − 8) = 3c + 8"
+
+  - code: EXP-ADI-IGNORA
+    name: Borra el menos junto con el paréntesis
+    nodo: ALG-EXP-ADI
+    area: ALG
+    origin: hipotesis
+    description: >-
+      Elimina el paréntesis y el signo menos de adelante como si fueran una
+      sola marca: 10 − (c + 2) = 10 + c + 2, −(−2m + 6) = −2m + 6. Se
+      separa de SIGNOPAR porque no cambia ningún signo de adentro, ni
+      siquiera el primero.
+    example: "10 − (c + 2) = 10 + c + 2"

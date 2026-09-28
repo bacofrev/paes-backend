@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 432 282" width="432" height="282" role="img" aria-label="Figura en L de 8 cm de ancho y 6 cm de alto, con una muesca. Los dos lados sin medida se deducen: el tramo horizontal de arriba a la derecha mide 8 − 5 = 3 cm y el vertical, 6 − 3 = 3 cm. Perímetro: 28 cm." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="63,228 303,228 303,138 213,138 213,48 63,48" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <text x="183" y="243" font-size="13" text-anchor="middle" dominant-baseline="central">8 cm</text>
+  <text x="40.5" y="138" font-size="13" text-anchor="middle" dominant-baseline="central">6 cm</text>
+  <text x="138" y="33" font-size="13" text-anchor="middle" dominant-baseline="central">5 cm</text>
+  <text x="325.5" y="183" font-size="13" text-anchor="middle" dominant-baseline="central">3 cm</text>
+  <text x="276" y="121.5" font-size="12" text-anchor="middle" dominant-baseline="central" font-style="italic">8 − 5 = 3</text>
+  <text x="276" y="90" font-size="12" text-anchor="middle" dominant-baseline="central" font-style="italic">6 − 3 = 3</text>
+</svg>

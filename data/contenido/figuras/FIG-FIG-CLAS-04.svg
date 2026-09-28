@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 571.6 177.2" width="571.6" height="177.2" role="img" aria-label="Cuatro cuadriláteros rotulados A, B, C y D." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="37.6,122.6 126,122.6 153.2,68.2 64.8,68.2" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="187.2,122.6 275.6,122.6 262,58 200.8,81.8" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="340.2,132.8 418.18,78.2 371.39,52.86 332.39,80.16" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon points="452.4,115.8 534,126 520.4,58 472.8,78.4" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <text x="95.4" y="144.7" font-size="14" text-anchor="middle" dominant-baseline="central">A</text>
+  <text x="231.4" y="144.7" font-size="14" text-anchor="middle" dominant-baseline="central">B</text>
+  <text x="365.54" y="144.7" font-size="14" text-anchor="middle" dominant-baseline="central">C</text>
+  <text x="494.9" y="144.7" font-size="14" text-anchor="middle" dominant-baseline="central">D</text>
+</svg>

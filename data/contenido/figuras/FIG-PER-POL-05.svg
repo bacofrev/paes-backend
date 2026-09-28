@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 306 353.56" width="306" height="353.56" role="img" aria-label="Triángulo con base de 6 cm y dos lados marcados como iguales; uno de ellos mide 9 cm." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="63,299.56 243,299.56 153,45" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="103.47" y1="170.68" x2="112.53" y2="173.88" stroke-width="1.2"/>
+  <line x1="193.47" y1="173.88" x2="202.53" y2="170.68" stroke-width="1.2"/>
+  <text x="153" y="316.06" font-size="13" text-anchor="middle" dominant-baseline="central">6 cm</text>
+  <text x="129.21" y="179.78" font-size="13" text-anchor="middle" dominant-baseline="central">9 cm</text>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 184" width="256" height="184" role="img" aria-label="Un triángulo con un ángulo recto marcado en su vértice superior y los dos lados que forman ese ángulo marcados como iguales." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="107.29,58.73 50.73,156.71 205.27,115.29" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polyline points="101.69,68.43 111.39,74.03 116.99,64.33" fill="none" stroke-width="1.1"/>
+  <line x1="84.55" y1="110.92" x2="73.47" y2="104.52" stroke-width="1.2"/>
+  <line x1="159.48" y1="81.47" x2="153.08" y2="92.55" stroke-width="1.2"/>
+</svg>

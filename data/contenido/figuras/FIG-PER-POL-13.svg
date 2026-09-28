@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 271.6 354.8" width="271.6" height="354.8" role="img" aria-label="Figura con forma de casa: un cuadrado de lado 6 cm con un techo triangular encima, de lados iguales de 5 cm. El borde entre el cuadrado y el techo está dibujado, y la altura del techo, punteada, mide 4 cm." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="60.4,302.2 216.4,302.2 216.4,146.2 138.4,42.2 60.4,146.2" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="60.4" y1="146.2" x2="216.4" y2="146.2" stroke-width="1.5"/>
+  <line x1="138.4" y1="42.2" x2="138.4" y2="146.2" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <line x1="138.4" y1="298.04" x2="138.4" y2="306.36" stroke-width="1.2"/>
+  <line x1="212.24" y1="224.2" x2="220.56" y2="224.2" stroke-width="1.2"/>
+  <line x1="64.56" y1="224.2" x2="56.24" y2="224.2" stroke-width="1.2"/>
+  <line x1="174.77" y1="97.63" x2="181.43" y2="92.64" stroke-width="1.2"/>
+  <line x1="173.37" y1="95.76" x2="180.03" y2="90.77" stroke-width="1.2"/>
+  <line x1="103.43" y1="95.76" x2="96.77" y2="90.77" stroke-width="1.2"/>
+  <line x1="102.03" y1="97.63" x2="95.37" y2="92.64" stroke-width="1.2"/>
+  <text x="138.4" y="317.8" font-size="13" text-anchor="middle" dominant-baseline="central">6 cm</text>
+  <text x="84.84" y="83.28" font-size="13" text-anchor="middle" dominant-baseline="central">5 cm</text>
+  <text x="161.8" y="99.4" font-size="13" text-anchor="middle" dominant-baseline="central">4 cm</text>
+</svg>

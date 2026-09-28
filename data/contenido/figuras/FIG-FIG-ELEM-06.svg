@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 264 296" width="264" height="296" role="img" aria-label="Triángulo ABC con el lado BC vertical. Desde A salen el segmento AH, horizontal, con un ángulo recto marcado en H, y el segmento AM." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="48,168 208,248 208,48" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="48" y1="168" x2="208" y2="168" stroke-width="1.2"/>
+  <line x1="48" y1="168" x2="208" y2="148" stroke-width="1.2"/>
+  <polyline points="199.2,168 199.2,159.2 208,159.2" fill="none" stroke-width="1.1"/>
+  <text x="34.51" y="169.69" font-size="14" text-anchor="middle" dominant-baseline="central">A</text>
+  <text x="214.75" y="259.81" font-size="14" text-anchor="middle" dominant-baseline="central">B</text>
+  <text x="214.08" y="35.84" font-size="14" text-anchor="middle" dominant-baseline="central">C</text>
+  <text x="222" y="168" font-size="13" text-anchor="middle" dominant-baseline="central">H</text>
+  <text x="222" y="146" font-size="13" text-anchor="middle" dominant-baseline="central">M</text>
+</svg>

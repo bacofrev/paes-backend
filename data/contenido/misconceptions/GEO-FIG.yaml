@@ -1,0 +1,270 @@
+# =====================================================================
+# Catálogo de misconceptions — unidad GEO-FIG
+# =====================================================================
+# Fuente única de la unidad. Las clases NO declaran misconceptions:
+# solo referencian códigos, y el cargador falla si el código no existe
+# acá.
+#
+# origin — de dónde salió el error:
+#   demre      observado en ítems oficiales o clavijero DEMRE
+#   docente    reportado por alguien que hace clases
+#   hipotesis  plausible, sin evidencia todavía
+#
+# Estado: GEO-FIG-CLAS, GEO-FIG-ELEM y GEO-PER-POL (LES-GEO-FIG-01,
+# propuestas el 27 sep 2026, sin control 1: todas hipotesis). El resto
+# se agrega al llegar a su clase.
+#
+# GEO-FIG-CLAS es raíz del grafo: no hay nodo debajo al que bajar al
+# estudiante. Las remediaciones de estos errores deben sostenerse solas.
+#
+# Los ítems de clasificación por ángulos dan los ángulos o los marcan,
+# nunca piden calcularlos: la suma de ángulos interiores es GEO-FIG-ANG
+# (nodo creado el 28 sep 2026, migración 074, clase LES-GEO-FIG-08).
+# ---------------------------------------------------------------------
+
+unit: GEO-FIG
+
+misconceptions:
+
+  # --- GEO-FIG-CLAS ---------------------------------------------------
+
+  - code: FIG-CLAS-EXCLUYE
+    name: Cree que las clases de figuras no se incluyen unas en otras
+    nodo: GEO-FIG-CLAS
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Clasifica como si cada figura tuviera un solo nombre: un cuadrado
+      "no es" rectángulo ni rombo, un equilátero "no es" isósceles, un
+      rectángulo "no es" paralelogramo. Es la misconception central del
+      nodo. Se separa de CRITERIOS porque ocurre dentro de un mismo
+      criterio (lados con lados).
+    example: "un cuadrado no es un rectángulo"
+
+  - code: FIG-CLAS-ORIENTA
+    name: Clasifica según cómo está dibujada la figura
+    nodo: GEO-FIG-CLAS
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Cree que la posición cambia la figura: un cuadrado apoyado en un
+      vértice "es un rombo", un triángulo es rectángulo solo si el ángulo
+      recto está abajo, un trapecio necesita sus bases horizontales. Solo
+      aparece con figuras o descripciones de la posición.
+    example: "un cuadrado girado 45° es un rombo, no un cuadrado"
+
+  - code: FIG-CLAS-REGULAR
+    name: Cree que basta una condición para que un polígono sea regular
+    nodo: GEO-FIG-CLAS
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Considera regular un polígono con todos sus lados iguales (el rombo)
+      o con todos sus ángulos iguales (el rectángulo). Regular exige las
+      dos cosas a la vez.
+    example: "el rombo es un polígono regular"
+
+  - code: FIG-CLAS-CRITERIOS
+    name: Cree que la clasificación por lados y por ángulos se excluyen
+    nodo: GEO-FIG-CLAS
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Piensa que un triángulo que ya tiene nombre por sus ángulos no puede
+      tenerlo por sus lados: "si es rectángulo, no puede ser isósceles".
+      Mezcla dos criterios independientes. Se separa de EXCLUYE con el
+      triángulo rectángulo isósceles.
+    example: "un triángulo rectángulo no puede ser isósceles"
+
+  - code: FIG-CLAS-PARALELOS
+    name: Confunde cuántos pares de lados paralelos tiene cada cuadrilátero
+    nodo: GEO-FIG-CLAS
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Mezcla trapecio (un par de lados paralelos), paralelogramo (dos
+      pares) y trapezoide (ninguno): llama trapecio a un paralelogramo, o
+      cree que el rombo tiene un solo par.
+    example: "un trapecio tiene dos pares de lados paralelos"
+
+  - code: FIG-CLAS-NOMBRE
+    name: Confunde los nombres de la clasificación
+    nodo: GEO-FIG-CLAS
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Conoce las categorías pero cambia los nombres: escaleno por
+      isósceles, isósceles por equilátero, trapecio por trapezoide o
+      romboide, hexágono por pentágono u octágono. Error de vocabulario,
+      no de concepto; se mantiene porque la PAES nombra las figuras sin
+      dibujarlas.
+    example: "un triángulo isósceles tiene sus tres lados iguales"
+
+  # --- GEO-FIG-ELEM ---------------------------------------------------
+  # Colisiones conocidas:
+  #   ALTVERTICAL y la respuesta correcta coinciden cuando el lado es
+  #   horizontal: los ítems que la usan tienen el lado inclinado.
+  #   ALTMEDIANA acierta en el isósceles sobre la base: no se usa ahí.
+
+  - code: FIG-ELEM-ALTLADO
+    name: Confunde la altura con un lado
+    nodo: GEO-FIG-ELEM
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Toma como altura un lado del triángulo (el que "sube"), o al revés,
+      no reconoce que en un triángulo rectángulo un cateto es la altura
+      sobre el otro cateto.
+    example: "la altura desde C es el lado CB"
+
+  - code: FIG-ELEM-ALTVERTICAL
+    name: Cree que la altura siempre es vertical
+    nodo: GEO-FIG-ELEM
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Traza la altura "hacia abajo", en vertical respecto de la hoja, sin
+      mirar el lado: si el lado está inclinado, elige el segmento vertical
+      y no el perpendicular; si el lado es vertical, cree que no hay altura.
+      Es la misconception central del nodo.
+    example: "la altura desde C es el segmento vertical CV"
+
+  - code: FIG-ELEM-ALTDENTRO
+    name: Cree que la altura siempre queda dentro del triángulo
+    nodo: GEO-FIG-ELEM
+    area: GEO
+    origin: hipotesis
+    description: >-
+      En un triángulo obtusángulo busca la altura adentro y elige un
+      segmento interior; no acepta que el pie caiga en la prolongación del
+      lado.
+    example: "en un obtusángulo, las tres alturas están adentro"
+
+  - code: FIG-ELEM-ALTMEDIANA
+    name: Confunde la altura con la mediana
+    nodo: GEO-FIG-ELEM
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Cree que la altura llega al punto medio del lado opuesto. Solo es
+      cierto sobre la base de un isósceles, y por eso se refuerza.
+    example: "la altura desde C llega al punto medio de AB"
+
+  - code: FIG-ELEM-APORADIO
+    name: Confunde la apotema con el radio
+    nodo: GEO-FIG-ELEM
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Llama apotema al segmento del centro a un vértice (el radio), en vez
+      del segmento del centro al punto medio de un lado.
+    example: "la apotema del hexágono va del centro a un vértice"
+
+  - code: FIG-ELEM-DIAGLADOS
+    name: Cuenta los lados como diagonales
+    nodo: GEO-FIG-ELEM
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Cree que una diagonal une dos vértices cualesquiera, también los
+      consecutivos: un pentágono tendría 10 diagonales y un triángulo 3.
+      Cuenta n(n − 1)/2.
+    example: "el hexágono tiene 15 diagonales"
+
+  - code: FIG-ELEM-DIAGDOBLE
+    name: Cuenta cada diagonal dos veces
+    nodo: GEO-FIG-ELEM
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Multiplica las diagonales que salen de cada vértice por el número de
+      vértices, n(n − 3), sin notar que cada diagonal se contó desde sus dos
+      extremos.
+    example: "el hexágono tiene 18 diagonales"
+
+  - code: FIG-ELEM-DIAGUNO
+    name: Confunde las diagonales de un vértice con el total
+    nodo: GEO-FIG-ELEM
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Da como total las diagonales que salen de un solo vértice (n − 3), o
+      al revés, da el total cuando se preguntan las de un vértice.
+    example: "el hexágono tiene 3 diagonales"
+
+  # --- GEO-PER-POL ----------------------------------------------------
+
+  - code: PER-POL-AREA
+    name: Confunde perímetro con área
+    nodo: GEO-PER-POL
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Multiplica medidas cuando se pide el perímetro (largo por ancho, lado
+      por lado, base por altura). Es la misconception central del nodo.
+    example: "perímetro de un rectángulo de 8 por 5: 40"
+
+  - code: PER-POL-SOLODATOS
+    name: Suma solo las medidas que están escritas
+    nodo: GEO-PER-POL
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Suma los números de la figura y no los lados: si un hexágono regular
+      tiene un lado rotulado, su perímetro "es 7"; si faltan medidas en una
+      figura en L, las omite.
+    example: "hexágono regular con un lado de 7 cm: perímetro 7 cm"
+
+  - code: PER-POL-INTERIOR
+    name: Suma segmentos interiores al unir figuras
+    nodo: GEO-PER-POL
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Al unir dos figuras suma sus perímetros completos, incluido el lado
+      que quedó adentro; o al cortar una figura, reparte el perímetro sin
+      agregar el nuevo borde.
+    example: "dos rectángulos unidos: perímetro = suma de los dos perímetros"
+
+  - code: PER-POL-DOSLADOS
+    name: Calcula el perímetro del rectángulo como largo más ancho
+    nodo: GEO-PER-POL
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Suma cada medida distinta una sola vez: el perímetro de un rectángulo
+      de 8 por 5 le da 13, la mitad del real. En despejes, divide o resta
+      como si el perímetro fueran dos lados.
+    example: "rectángulo de 8 por 5: perímetro 13"
+
+  - code: PER-POL-ALTURA
+    name: Suma al perímetro segmentos que no son lados
+    nodo: GEO-PER-POL
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Incluye la altura, una diagonal o un segmento interior dibujado en la
+      figura como si fuera parte del borde.
+    example: "triángulo 13, 14, 15 con altura 12: perímetro 54"
+
+  - code: PER-POL-RESTA
+    name: Calcula mal un lado que no está rotulado
+    nodo: GEO-PER-POL
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Para encontrar un lado desconocido opera mal: suma dos medidas donde
+      hay que restarlas (en una figura en L o en U), o resta el lado conocido
+      del perímetro sin repartir el resto entre los lados que faltan.
+    example: "perímetro 30, un lado de 12 y dos iguales: cada uno 18"
+
+  - code: PER-POL-FALTAN
+    name: Cree que no se puede calcular si falta alguna medida escrita
+    nodo: GEO-PER-POL
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Si no están rotulados todos los lados, concluye que el perímetro no se
+      puede calcular, aunque los que faltan se deduzcan (lados iguales
+      marcados, escaleras, figuras en L).
+    example: "figura en escalera sin medidas en los escalones: no se puede"

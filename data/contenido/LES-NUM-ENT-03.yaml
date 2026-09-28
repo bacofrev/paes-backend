@@ -1,0 +1,725 @@
+# =====================================================================
+# LES-NUM-ENT-03 — Multiplicación y división de enteros
+# Cubre NUM-ENT-MUL
+# =====================================================================
+# Clase sola: incluye la división y concentra las reglas de signos.
+# Prerrequisito: NUM-ENT-ADI (LES-NUM-ENT-02). Desbloquea potencias
+# (NUM-POT-CONC, NUM-POT-SIG), PRIOR, DIVIS y ALG-EXP-TERM.
+#
+# Alcance (propuesto, sin control 1):
+#   entra   producto y cociente de dos enteros; regla de signos; producto
+#           de tres o más factores (se cuentan los negativos); el cero
+#           como factor, como dividendo y como divisor; factor o divisor
+#           desconocido (? · (−5) = −35); contexto: bajadas constantes,
+#           deudas repartidas, variación por hora.
+#   fuera   potencias, aunque sean productos repetidos (NUM-POT-CONC);
+#           mezcla de operaciones y cadenas de divisiones de izquierda a
+#           derecha (NUM-ENT-PRIOR); divisibilidad (NUM-ENT-DIVIS);
+#           divisiones no exactas (NUM-FRA); valor absoluto |a · b|
+#           (NUM-ENT-ABS, M2).
+#   recurso el "tamaño" de un número (distancia al 0) para decir que el
+#           tamaño del producto es el producto de los tamaños. Sin
+#           notación |x|.
+#   dos pasos  los ítems de nivel 2-3 pueden calcular una variación con
+#           ADI antes de dividir: ADI es prerrequisito.
+#
+# Niveles:
+#   1  una operación, igualdad verdadera, contexto directo
+#   2  tres o más factores, factor desconocido, contexto de dos pasos
+#   3  I/II/III, enunciados generales con letras, casos límite con cero
+# ---------------------------------------------------------------------
+
+unit: NUM-ENT
+
+lesson:
+  code: LES-NUM-ENT-03
+  title: Multiplicación y división de enteros
+  position: 3
+  nodes:
+    - node: NUM-ENT-MUL
+      anchor: multiplicacion-y-division-de-enteros
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== NUM-ENT-MUL · nivel 1 =================================
+
+  # A DIVCERO: dividir por cero da cero
+  # C SUMA: lee (−6)(2) como −6 + 2
+  # D REGLASUMA: dos negativos dan negativo, como en la suma
+  - code: M1-ENT-049
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$(-8) \\div 0 = 0$", misconception: ENT-MUL-DIVCERO}
+      - {label: B, body: "$(-7)\\cdot(-3) = 21$", correct: true}
+      - {label: C, body: "$(-6)(2) = -4$", misconception: ENT-MUL-SUMA}
+      - {label: D, body: "$(-4)\\cdot(-5) = -20$", misconception: ENT-MUL-REGLASUMA}
+
+  # A SUMA: lee (−2)(5) como −2 + 5
+  # B REGLASUMA: signo del de mayor tamaño: el 10, positivo
+  # D CERONEUTRO: el 0 no cambia el número
+  - code: M1-ENT-050
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$(-2)(5) = 3$", misconception: ENT-MUL-SUMA}
+      - {label: B, body: "$(-3)\\cdot 10 = 30$", misconception: ENT-MUL-REGLASUMA}
+      - {label: C, body: "$(-56) \\div 8 = -7$", correct: true}
+      - {label: D, body: "$9 \\cdot 0 = 9$", misconception: ENT-MUL-CERONEUTRO}
+
+  # A REGLASUMA: cree que (−7)(−5) = −35
+  # B INVERSA: multiplica (−35)(−5) en vez de dividir
+  # C SUMA: busca qué número sumado a −5 da −35
+  - code: M1-ENT-051
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Qué número multiplicado por $-5$ da $-35$?"
+    options:
+      - {label: A, body: "$-7$", misconception: ENT-MUL-REGLASUMA}
+      - {label: B, body: "$175$", misconception: ENT-MUL-INVERSA}
+      - {label: C, body: "$-30$", misconception: ENT-MUL-SUMA}
+      - {label: D, body: "$7$", correct: true}
+
+  # B CERONEUTRO: se salta el 0: (−6)(−1) = 6
+  # C REGLASUMA: signo del de mayor tamaño: el 42, positivo
+  # D MAYORIA: hay más factores positivos: positivo
+  - code: M1-ENT-052
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál de las siguientes operaciones tiene resultado positivo?
+    options:
+      - {label: A, body: "$(-42) \\div (-7)$", correct: true}
+      - {label: B, body: "$(-6)\\cdot 0 \\cdot (-1)$", misconception: ENT-MUL-CERONEUTRO}
+      - {label: C, body: "$42 \\div (-7)$", misconception: ENT-MUL-REGLASUMA}
+      - {label: D, body: "$(-5)\\cdot 2 \\cdot 3$", misconception: ENT-MUL-MAYORIA}
+
+  # A CTXSIGNO: «bajó» se anota positivo
+  # B SUMA: junta los dos datos sumando
+  # C INVERSA: multiplica cuando la situación reparte
+  - code: M1-ENT-053
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      En $4$ días, el saldo de una cuenta bajó
+      $\$12.000$ en total, la misma cantidad cada día. ¿Qué operación permite calcular el cambio diario del saldo?
+    options:
+      - {label: A, body: "$12.000 \\div 4$", misconception: ENT-REC-CTXSIGNO}
+      - {label: B, body: "$(-12.000) + 4$", misconception: ENT-MUL-SUMA}
+      - {label: C, body: "$(-12.000) \\cdot 4$", misconception: ENT-MUL-INVERSA}
+      - {label: D, body: "$(-12.000) \\div 4$", correct: true}
+
+  # A INVERSA: reparte en vez de repetir
+  # C CTXSIGNO: «baja» se anota positivo
+  # D SUMA: junta la bajada y los minutos sumando
+  - code: M1-ENT-054
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Un ascensor baja $3$ pisos por minuto durante $4$ minutos. ¿Qué
+      expresión representa el cambio de piso del ascensor?
+    options:
+      - {label: A, body: "$(-3) \\div 4$", misconception: ENT-MUL-INVERSA}
+      - {label: B, body: "$(-3) \\cdot 4$", correct: true}
+      - {label: C, body: "$3 \\cdot 4$", misconception: ENT-REC-CTXSIGNO}
+      - {label: D, body: "$(-3) + 4$", misconception: ENT-MUL-SUMA}
+
+  # A CERONEUTRO: el 0 no cambia el número
+  # B REGLASUMA: dos negativos dan negativo
+  # D DIVCERO: dividir por cero da cero
+  - code: M1-ENT-055
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$(-4) \\cdot 0 = -4$", misconception: ENT-MUL-CERONEUTRO}
+      - {label: B, body: "$(-4) \\cdot (-1) = -4$", misconception: ENT-MUL-REGLASUMA}
+      - {label: C, body: "$0 \\div (-4) = 0$", correct: true}
+      - {label: D, body: "$(-4) \\div 0 = 0$", misconception: ENT-MUL-DIVCERO}
+
+  # B REGLASUMA: dos negativos dan negativo: −24
+  # C SUMA: lee −30 + 6 = −24
+  # D MAYORIA: más negativos que positivos: −24
+  - code: M1-ENT-056
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál de las siguientes multiplicaciones tiene resultado $-24$?
+    options:
+      - {label: A, body: "$(-3)\\cdot 8$", correct: true}
+      - {label: B, body: "$(-4)\\cdot(-6)$", misconception: ENT-MUL-REGLASUMA}
+      - {label: C, body: "$(-30)(6)$", misconception: ENT-MUL-SUMA}
+      - {label: D, body: "$(-1)\\cdot(-2)\\cdot 12$", misconception: ENT-MUL-MAYORIA}
+
+  # ===== NUM-ENT-MUL · nivel 2 =================================
+
+  # A REGLASUMA: trae la regla de la suma: gana el de mayor tamaño
+  # B SUMA: −1 + 2 + 5 + 6
+  # D MAYORIA: decide el signo por mayoría
+  - code: M1-ENT-057
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el valor de $(-1)(2)(5)(6)$ y por qué?"
+    options:
+      - {label: A, body: "$60$, porque el factor de mayor tamaño es positivo.", misconception: ENT-MUL-REGLASUMA}
+      - {label: B, body: "$12$, porque los paréntesis seguidos se suman.", misconception: ENT-MUL-SUMA}
+      - {label: C, body: "$-60$, porque hay una cantidad impar de factores negativos.", correct: true}
+      - {label: D, body: "$60$, porque hay más factores positivos que negativos.", misconception: ENT-MUL-MAYORIA}
+
+  # A MAYORIA: dos negativos contra un positivo: negativo (vale 60)
+  # C REGLASUMA: (−9)(−1) = −9 y después gana el signo del mayor: −108 (vale 108)
+  # D CERONEUTRO: se salta el 0: (−7)(2) = −14 (vale 0)
+  - code: M1-ENT-058
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál de los siguientes productos es negativo?"
+    options:
+      - {label: A, body: "$(-2)\\cdot(-3)\\cdot 10$", misconception: ENT-MUL-MAYORIA}
+      - {label: B, body: "$(-1)\\cdot 3 \\cdot 4 \\cdot 2$", correct: true}
+      - {label: C, body: "$(-9)\\cdot(-1)\\cdot 2 \\cdot 3 \\cdot 2$", misconception: ENT-MUL-REGLASUMA}
+      - {label: D, body: "$(-7)\\cdot 0 \\cdot 2$", misconception: ENT-MUL-CERONEUTRO}
+
+  # variación = −10 − 2 = −12; por hora −12 ÷ 4 = −3
+  # B CTXSIGNO: «10 bajo cero» = 10: 10 − 2 = 8; 8 ÷ 4
+  # C VARORDEN: variación = inicial − final = 2 − (−10) = 12; 12 ÷ 4
+  # D INVERSA: multiplica la variación por las horas: −12 · 4
+  - code: M1-ENT-059
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      A las 22:00 un termómetro marcaba $2$ °C y a las 02:00 marcaba $10$ °C
+      bajo cero. Si la temperatura bajó lo mismo cada hora, ¿cuál fue la
+      variación por hora?
+    options:
+      - {label: A, body: "$-3$ °C", correct: true}
+      - {label: B, body: "$2$ °C", misconception: ENT-REC-CTXSIGNO}
+      - {label: C, body: "$3$ °C", misconception: ENT-ADI-VARORDEN}
+      - {label: D, body: "$-48$ °C", misconception: ENT-MUL-INVERSA}
+
+  # a = 48 ÷ (−4) = −12; a ÷ 2 = −6
+  # A REGLASUMA: a = 12: cree que 12 · (−4) da positivo por el signo del mayor
+  # B INVERSA: a = 48 · (−4) = −192; −192 ÷ 2
+  # C SUMA: lee a + (−4) = 48: a = 52; 52 ÷ 2
+  - code: M1-ENT-060
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Se sabe que $a(-4) = 48$. ¿Cuál es el valor de $a \\div 2$?"
+    options:
+      - {label: A, body: "$6$", misconception: ENT-MUL-REGLASUMA}
+      - {label: B, body: "$-96$", misconception: ENT-MUL-INVERSA}
+      - {label: C, body: "$26$", misconception: ENT-MUL-SUMA}
+      - {label: D, body: "$-6$", correct: true}
+
+  # A REGLASUMA: signo del de mayor tamaño: el 11
+  # C DIVCERO: dividir por cero da cero
+  # D MAYORIA: tres positivos contra un negativo
+  - code: M1-ENT-061
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$(-6)\\cdot 11 = 66$", misconception: ENT-MUL-REGLASUMA}
+      - {label: B, body: "$(-72) \\div (-8) = 9$", correct: true}
+      - {label: C, body: "$15 \\div 0 = 0$", misconception: ENT-MUL-DIVCERO}
+      - {label: D, body: "$(-1)\\cdot 2 \\cdot 3 \\cdot 4 = 24$", misconception: ENT-MUL-MAYORIA}
+
+  # B MAYORIA: dos positivos contra un negativo: cree que da 24
+  # C REGLASUMA: cree que las dos dan −24
+  # D CERONEUTRO: el 0 no cambia el 24
+  - code: M1-ENT-062
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      ¿Cuál de las siguientes operaciones da el mismo resultado que
+      $(-6)\cdot(-4)$?
+    options:
+      - {label: A, body: "$(-48) \\div (-2)$", correct: true}
+      - {label: B, body: "$(-1)\\cdot 3 \\cdot 8$", misconception: ENT-MUL-MAYORIA}
+      - {label: C, body: "$(-12)\\cdot 2$", misconception: ENT-MUL-REGLASUMA}
+      - {label: D, body: "$24 \\cdot 0$", misconception: ENT-MUL-CERONEUTRO}
+
+  # A REGLASUMA: cree que (−9)(−6) = −54
+  # B INVERSA: multiplica (−54)(−9)
+  # D SUMA: busca qué sumado a −9 da −54
+  - code: M1-ENT-063
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El producto de dos números enteros es $-54$. Si uno de ellos es $-9$,
+      ¿cuál es el otro?
+    options:
+      - {label: A, body: "$-6$", misconception: ENT-MUL-REGLASUMA}
+      - {label: B, body: "$486$", misconception: ENT-MUL-INVERSA}
+      - {label: C, body: "$6$", correct: true}
+      - {label: D, body: "$-45$", misconception: ENT-MUL-SUMA}
+
+  # variación = −100 − (−40) = −60; por minuto −60 ÷ 5 = −12
+  # A INVERSA: multiplica la variación por los minutos
+  # B DOBLENEG: −100 − (−40) leído como −100 − 40 = −140; −140 ÷ 5
+  # C VARORDEN: variación = −40 − (−100) = 60; 60 ÷ 5
+  - code: M1-ENT-064
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un submarino pasó de estar a $-40$ m a estar a $-100$ m en $5$
+      minutos, bajando lo mismo cada minuto. ¿Cuál fue su variación de
+      posición por minuto?
+    options:
+      - {label: A, body: "$-300$ m", misconception: ENT-MUL-INVERSA}
+      - {label: B, body: "$-28$ m", misconception: ENT-ADI-DOBLENEG}
+      - {label: C, body: "$12$ m", misconception: ENT-ADI-VARORDEN}
+      - {label: D, body: "$-12$ m", correct: true}
+
+  # ===== NUM-ENT-MUL · nivel 3 =================================
+
+  # A REGLASUMA: rechaza I: dos negativos dan negativo
+  # C DIVCERO: rechaza III: cree que dividir el cero no se puede
+  # D MAYORIA: acepta II: dos positivos contra un negativo
+  - code: M1-ENT-065
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. $(-6)\cdot(-7) = 42$
+
+      II. $(-2)\cdot 3 \cdot 4 = 24$
+
+      III. $0 \div (-5) = 0$
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo III", misconception: ENT-MUL-REGLASUMA}
+      - {label: B, body: "Solo I y III", correct: true}
+      - {label: C, body: "Solo I", misconception: ENT-MUL-DIVCERO}
+      - {label: D, body: "I, II y III", misconception: ENT-MUL-MAYORIA}
+
+  # B DIVCERO: acepta III: dividir por cero da cero
+  # C MAYORIA: acepta I: tres positivos contra uno
+  # D CERONEUTRO: rechaza II: el 0 no cambia el producto
+  - code: M1-ENT-066
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones sobre números enteros:
+
+      I. Si un producto tiene cuatro factores y tres de ellos son positivos, el producto es positivo.
+
+      II. Si uno de los factores de un producto es $0$, el producto es $0$.
+
+      III. $(-12) \div 0 = 0$
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo II", correct: true}
+      - {label: B, body: "Solo II y III", misconception: ENT-MUL-DIVCERO}
+      - {label: C, body: "Solo I y II", misconception: ENT-MUL-MAYORIA}
+      - {label: D, body: "Ninguna de ellas", misconception: ENT-MUL-CERONEUTRO}
+
+  # p·q < 0 y por q > 0 sigue negativo
+  # A MAYORIA: dos factores negativos contra uno positivo
+  # B CERONEUTRO: se salta el 0: queda p · q, negativo
+  # C REGLASUMA: dos negativos dan negativo
+  - code: M1-ENT-067
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sean $p$ y $q$ números enteros tales que $p < 0$ y $q > 0$. ¿Cuál de
+      las siguientes expresiones es **siempre** negativa?
+    options:
+      - {label: A, body: "$p \\cdot p \\cdot q$", misconception: ENT-MUL-MAYORIA}
+      - {label: B, body: "$p \\cdot 0 \\cdot q$", misconception: ENT-MUL-CERONEUTRO}
+      - {label: C, body: "$p \\cdot p$", misconception: ENT-MUL-REGLASUMA}
+      - {label: D, body: "$p \\cdot q \\cdot q$", correct: true}
+
+  # A SUMA: rechaza I (−3 − 4 − 5 = −12) y III (−5 + 0 − 2 = −7)
+  # B REGLASUMA: acepta II: dos negativos dan negativo
+  # D CERONEUTRO: acepta III: se salta el 0
+  - code: M1-ENT-068
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. $(-3)(-4)(-5) = -60$
+
+      II. $(-8) \div (-2) = -4$
+
+      III. $(-5)(0)(-2) = 10$
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Ninguna de ellas", misconception: ENT-MUL-SUMA}
+      - {label: B, body: "Solo I y II", misconception: ENT-MUL-REGLASUMA}
+      - {label: C, body: "Solo I", correct: true}
+      - {label: D, body: "Solo I y III", misconception: ENT-MUL-CERONEUTRO}
+
+  # A REGLASUMA: rechaza I: cree que (−7)(−6) = −42
+  # B SUMA: acepta III: lee (−10)(−3) como −10 − 3
+  # C INVERSA: acepta II: divide 5 ÷ (−2) en vez de multiplicar
+  - code: M1-ENT-069
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. Si un número multiplicado por $-6$ da $42$, ese número es $-7$.
+
+      II. Si $x \div (-2) = 5$, entonces $x = -\frac{5}{2}$.
+
+      III. $(-10)(-3) = -13$
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Ninguna de ellas", misconception: ENT-MUL-REGLASUMA}
+      - {label: B, body: "Solo I y III", misconception: ENT-MUL-SUMA}
+      - {label: C, body: "Solo I y II", misconception: ENT-MUL-INVERSA}
+      - {label: D, body: "Solo I", correct: true}
+
+  # A SUMA: busca qué sumado a −12 da 0
+  # C CERONEUTRO: trata al 0 como neutro
+  # D DIVCERO: cree que dividir el cero no se puede
+  - code: M1-ENT-070
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Qué número multiplicado por $-12$ da $0$?"
+    options:
+      - {label: A, body: "$12$, porque $-12 + 12 = 0$.", misconception: ENT-MUL-SUMA}
+      - {label: B, body: "$0$, porque cualquier número multiplicado por $0$ da $0$.", correct: true}
+      - {label: C, body: "Ninguno, porque multiplicar por $0$ deja el número igual.", misconception: ENT-MUL-CERONEUTRO}
+      - {label: D, body: "Ninguno, porque $0 \\div (-12)$ no está definido.", misconception: ENT-MUL-DIVCERO}
+
+  # A MAYORIA: dos factores negativos contra uno positivo
+  # B REGLASUMA: dos negativos dan negativo
+  # D CERONEUTRO: el 0 no cambia a
+  - code: M1-ENT-071
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sea $a$ un número entero negativo. ¿Cuál de las siguientes expresiones
+      tiene **siempre** el mismo signo que $a$?
+    options:
+      - {label: A, body: "$a \\cdot a \\cdot 5$", misconception: ENT-MUL-MAYORIA}
+      - {label: B, body: "$a \\cdot a$", misconception: ENT-MUL-REGLASUMA}
+      - {label: C, body: "$2 \\cdot 5 \\cdot a$", correct: true}
+      - {label: D, body: "$a \\cdot 0$", misconception: ENT-MUL-CERONEUTRO}
+
+  # −45.000 ÷ 3 = −15.000 por socio; −15.000 ÷ 5 = −3.000 por mes
+  # B INVERSA: reparte entre los socios y después multiplica por las cuotas
+  # C SUMA: junta socios y cuotas sumando: −45.000 ÷ (3 + 5)
+  # D CTXSIGNO: la deuda se anota positiva
+  - code: M1-ENT-072
+    node: NUM-ENT-MUL
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Tres socios tienen una deuda común de
+      $\$45.000$. Acuerdan pagarla en partes iguales entre los tres y cada uno en $5$ cuotas mensuales iguales. Si la deuda se anota con signo negativo, ¿qué número representa la parte de la deuda que corresponde a cada cuota de un socio?
+    options:
+      - {label: A, body: "$-3.000$", correct: true}
+      - {label: B, body: "$-75.000$", misconception: ENT-MUL-INVERSA}
+      - {label: C, body: "$-5.625$", misconception: ENT-MUL-SUMA}
+      - {label: D, body: "$3.000$", misconception: ENT-REC-CTXSIGNO}
+
+
+# ---------------------------------------------------------------------
+# REMEDIACIONES
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-ENT-MUL-REGLASUMA
+    misconception: ENT-MUL-REGLASUMA
+    title: Signos iguales, positivo; signos distintos, negativo
+    body: |
+      Usaste la regla de la suma para multiplicar. Por ejemplo, dijiste que
+      $(-6)\cdot(-2)$ es $-12$, como cuando sumas dos deudas, o le pusiste
+      al producto el signo del número más grande.
+
+      **En la multiplicación y la división, signos iguales dan positivo y
+      signos distintos dan negativo. El tamaño de los números no decide el
+      signo.**
+
+      $(-6)\cdot 2$ es sumar dos veces $-6$: $-12$. Multiplicar por $-2$ en
+      vez de $2$ da el resultado al otro lado del $0$:
+
+      $$(-6)\cdot(-2) = 12$$
+
+      Y en $(-2) \cdot 6$ los signos son distintos, así que el resultado es
+      $-12$, aunque el $6$ sea más grande y positivo.
+
+      Un control rápido: separa la cuenta en dos preguntas. El tamaño sale
+      de multiplicar $6 \cdot 2 = 12$. El signo sale solo de comparar los
+      signos: ¿iguales o distintos?
+    items: [M1-ENT-051, M1-ENT-052, M1-ENT-060, M1-ENT-061, M1-ENT-068, M1-ENT-069]
+
+  - code: REM-ENT-MUL-MAYORIA
+    misconception: ENT-MUL-MAYORIA
+    title: El signo lo decide cuántos negativos hay
+    body: |
+      Con varios factores, le pusiste al resultado el signo que más se
+      repetía. Por ejemplo, en $(-3)\cdot 2 \cdot 5$ viste más positivos y
+      dijiste $30$.
+
+      **Con varios factores, cuenta solo los negativos: si son una
+      cantidad par, el producto es positivo; si son impar, negativo.**
+
+      Multiplica de a dos y mira qué pasa con el signo:
+
+      $$(-3)\cdot 2 = -6 \qquad (-6)\cdot 5 = -30$$
+
+      Los factores positivos no cambian el signo: multiplicar por $2$ o por
+      $5$ deja el signo como estaba. Cada negativo, en cambio, lo da vuelta.
+      Por eso importa cuántas vueltas hay, no cuántos positivos.
+
+      Un control rápido: tacha los factores positivos y cuenta lo que queda.
+      Un negativo: resultado negativo. Dos: positivo. Tres: negativo.
+    items: [M1-ENT-052, M1-ENT-056, M1-ENT-058, M1-ENT-061, M1-ENT-066, M1-ENT-067]
+
+  - code: REM-ENT-MUL-SUMA
+    misconception: ENT-MUL-SUMA
+    title: Dos paréntesis seguidos se multiplican
+    body: |
+      Sumaste números que se estaban multiplicando. Por ejemplo, leíste
+      $(-8)(3)$ como $-8 + 3$ y respondiste $-5$.
+
+      **Cuando dos paréntesis van pegados, o un número va pegado a un
+      paréntesis, hay una multiplicación aunque no se vea el punto.**
+
+      $$(-8)(3) = (-8)\cdot 3 = -24$$
+
+      $$2(-8) = 2 \cdot (-8) = -16$$
+
+      Para sumar tiene que aparecer el signo $+$ entre los números:
+      $(-8) + 3 = -5$.
+
+      En un problema pasa lo mismo: si algo se repite (baja $8$ metros,
+      $3$ veces), es una multiplicación, no una suma de los dos datos.
+
+      Un control rápido: si entre dos números no hay ningún signo de
+      operación, pon un punto de multiplicación antes de calcular.
+    items: [M1-ENT-051, M1-ENT-053, M1-ENT-060, M1-ENT-063, M1-ENT-069, M1-ENT-070]
+
+  - code: REM-ENT-MUL-DIVCERO
+    misconception: ENT-MUL-DIVCERO
+    title: Se puede dividir el cero, no dividir por cero
+    body: |
+      Confundiste el cero que se divide con el cero que divide. Por
+      ejemplo, dijiste que $(-6) \div 0$ es $0$, o que $0 \div (-6)$ no se
+      puede calcular.
+
+      **$0 \div a = 0$ para cualquier $a$ distinto de cero. En cambio,
+      $a \div 0$ no está definido.**
+
+      Toda división se comprueba con una multiplicación:
+
+      - $0 \div (-6)$ pregunta qué número por $-6$ da $0$. Respuesta: $0$.
+      - $(-6) \div 0$ pregunta qué número por $0$ da $-6$. Cualquier
+        número por $0$ da $0$, nunca $-6$. No hay respuesta.
+
+      Un control rápido: mira dónde está el cero. Arriba (el que se divide),
+      el resultado es $0$. Abajo (el divisor), la división no existe.
+    items: [M1-ENT-049, M1-ENT-055, M1-ENT-061, M1-ENT-065, M1-ENT-066, M1-ENT-070]
+
+  - code: REM-ENT-MUL-CERONEUTRO
+    misconception: ENT-MUL-CERONEUTRO
+    title: Un factor cero hace cero todo el producto
+    body: |
+      Te saltaste el cero en una multiplicación, como si no cambiara nada.
+      Por ejemplo, en $(-5)\cdot 0 \cdot (-2)$ multiplicaste solo
+      $(-5)\cdot(-2)$ y respondiste $10$.
+
+      **Si uno de los factores es $0$, el producto completo es $0$.**
+
+      El número que no cambia nada al multiplicar es el $1$, no el $0$:
+      $(-5)\cdot 1 = -5$. Multiplicar por $0$ es tomar el número cero
+      veces:
+
+      $$(-5)\cdot 0 = 0 \qquad 0 \cdot (-2) = 0$$
+
+      Da lo mismo cuántos factores haya o qué signos tengan: basta un cero
+      para que todo sea $0$.
+
+      Un control rápido: antes de contar negativos o multiplicar tamaños,
+      busca si hay un $0$ entre los factores.
+    items: [M1-ENT-052, M1-ENT-055, M1-ENT-058, M1-ENT-062, M1-ENT-068, M1-ENT-070]
+
+  - code: REM-ENT-MUL-INVERSA
+    misconception: ENT-MUL-INVERSA
+    title: Para encontrar el factor que falta, se divide
+    body: |
+      Multiplicaste cuando había que dividir. Por ejemplo, para saber qué
+      número multiplicado por $-3$ da $24$, hiciste $24 \cdot (-3) = -72$.
+
+      **Si conoces el producto y uno de los factores, el otro factor se
+      obtiene dividiendo el producto por el factor conocido.**
+
+      $$? \cdot (-3) = 24 \quad\Rightarrow\quad ? = 24 \div (-3) = -8$$
+
+      Lo mismo al repartir: si algo cambió $-24$ en total en $3$ partes
+      iguales, cada parte es $(-24) \div 3 = -8$. Repartir es dividir.
+
+      Un control rápido: reemplaza tu respuesta en la multiplicación. Con
+      $-72$ quedaría $(-72)\cdot(-3) = 216$, que no es $24$. Con $-8$:
+      $(-8)\cdot(-3) = 24$.
+    items: [M1-ENT-053, M1-ENT-054, M1-ENT-060, M1-ENT-063, M1-ENT-069, M1-ENT-072]
+
+
+# ---------------------------------------------------------------------
+# CUERPO DE LA CLASE
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Multiplicar y dividir enteros es lo mismo que con naturales, más una
+  pregunta: ¿qué signo tiene el resultado? Esa regla la vas a usar en
+  potencias, en álgebra y en cada ecuación que resuelvas.
+
+  ## Multiplicación y división de enteros
+
+  ### Primero el tamaño, después el signo
+
+  El **tamaño** de un número es su distancia al $0$: el tamaño de $-8$ es
+  $8$. Para multiplicar o dividir dos enteros, separa las dos preguntas:
+
+  1. El tamaño del resultado: multiplicas o divides los tamaños, como con
+     naturales.
+  2. El signo del resultado: lo decide la regla de signos.
+
+  Por ejemplo, en $(-5) \cdot 9$ el tamaño es $5 \cdot 9 = 45$. Falta el
+  signo.
+
+  ### La regla de signos
+
+  **Signos iguales dan positivo. Signos distintos dan negativo.**
+
+  $$(+)\cdot(+) = + \qquad (-)\cdot(-) = + \qquad (+)\cdot(-) = - \qquad (-)\cdot(+) = -$$
+
+  La división sigue exactamente la misma regla: $(-45) \div (-9) = 5$ y
+  $45 \div (-9) = -5$.
+
+  Por qué menos por menos da más: $(-5) \cdot 9$ es sumar nueve veces
+  $-5$, y da $-45$. Multiplicar por $-9$ es lo contrario de multiplicar
+  por $9$: el resultado cambia de lado. Por eso $(-5)\cdot(-9) = 45$.
+
+  ### El error que más se comete
+
+  La regla de la multiplicación **no es la de la suma**. En la suma, dos
+  negativos juntan una deuda más grande: $-5 + (-9) = -14$. En la
+  multiplicación, dos negativos dan positivo: $(-5)\cdot(-9) = 45$.
+
+  Y en la multiplicación no importa cuál número es más grande. En la suma
+  $-3 + 11$ gana el signo del $11$. En $(-3) \cdot 11$ no gana nadie: los
+  signos son distintos, así que el resultado es $-33$.
+
+  Un control rápido: **si en tu cuenta hay una multiplicación o una
+  división, olvídate de «cuál es más grande» para el signo.** Solo mira si
+  los signos son iguales o distintos.
+
+  Cuidado también con la escritura. $(-7)(4)$, sin nada entre los
+  paréntesis, es una multiplicación: $(-7)(4) = -28$. No es $-7 + 4$.
+
+  ### Muchos factores: cuenta los negativos
+
+  Con tres o más factores, multiplica los tamaños y después **cuenta
+  cuántos factores son negativos**:
+
+  - una cantidad par de negativos: el resultado es positivo;
+  - una cantidad impar de negativos: el resultado es negativo.
+
+  $$(-2)\cdot 3 \cdot (-1) \cdot 7 = 42 \quad \text{(dos negativos)}$$
+
+  No importa si hay más positivos que negativos. En
+  $(-1)\cdot 2 \cdot 3 \cdot 5$ hay tres positivos y un solo negativo, y el
+  resultado es $-30$: un negativo es cantidad impar.
+
+  ### El cero
+
+  - Si un factor es $0$, el producto es $0$: $(-13) \cdot 0 \cdot 4 = 0$. El
+    cero no se salta.
+  - El cero dividido por cualquier número distinto de cero es $0$:
+    $0 \div (-9) = 0$.
+  - **Dividir por cero no está definido.** $(-9) \div 0$ no tiene
+    resultado: ningún número multiplicado por $0$ da $-9$.
+
+  Para no confundir los dos últimos, vuelve a la multiplicación. $0 \div
+  (-9)$ pregunta qué número por $-9$ da $0$: el $0$. $(-9) \div 0$
+  pregunta qué número por $0$ da $-9$: ninguno.
+
+  ### El número que falta
+
+  Multiplicar y dividir son operaciones inversas. Si te preguntan qué
+  número multiplicado por $-4$ da $52$, **divide**: $52 \div (-4) = -13$.
+  Comprueba multiplicando: $(-13)\cdot(-4) = 52$.
+
+  La comprobación sirve siempre: una división está bien si al multiplicar
+  el resultado por el divisor vuelves al dividendo.
+
+  ### Situaciones
+
+  Primero traduce, después opera. Lo que baja, se pierde o se debe es
+  negativo.
+
+  Si un buzo desciende $4$ metros por minuto durante $9$ minutos, su
+  cambio de posición es $(-4) \cdot 9 = -36$ metros.
+
+  Si una deuda de $\$30.000$ se reparte en partes iguales entre $5$
+  personas, cada una debe $(-30.000) \div 5 = -6.000$ pesos. Repartir es
+  dividir; el signo dice que sigue siendo deuda.
+
+  Cuando te dan el valor inicial y el final, calcula primero la variación
+  (final menos inicial) y después divide por el número de horas, días o
+  pasos.

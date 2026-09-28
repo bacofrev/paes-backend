@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 328 288" width="328" height="288" role="img" aria-label="Hexágono regular. El radio va del centro a un vértice. La apotema va del centro al punto medio de un lado y es perpendicular a él; es más corta que el radio." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="274,144 219,48.74 109,48.74 54,144 109,239.26 219,239.26" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="164" y1="144" x2="274" y2="144" stroke-width="1.3"/>
+  <line x1="164" y1="144" x2="246.5" y2="96.37" stroke-width="1.3"/>
+  <polyline points="238.71,100.87 234.21,93.07 242,88.57" fill="none" stroke-width="1.1"/>
+  <circle cx="164" cy="144" r="2.8" fill="currentColor" stroke="none"/>
+  <text x="219" y="158" font-size="12" text-anchor="middle" dominant-baseline="central" font-style="italic">radio</text>
+  <text x="174.25" y="114.18" font-size="12" text-anchor="middle" dominant-baseline="central" font-style="italic">apotema</text>
+</svg>

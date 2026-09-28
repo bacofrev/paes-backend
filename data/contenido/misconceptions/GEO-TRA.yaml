@@ -1,0 +1,490 @@
+# =====================================================================
+# Catálogo de misconceptions — unidad GEO-TRA
+# =====================================================================
+# Fuente única de la unidad. Las clases NO declaran misconceptions:
+# solo referencian códigos, y el cargador falla si el código no existe
+# acá.
+#
+# origin — de dónde salió el error:
+#   demre      observado en ítems oficiales o clavijero DEMRE
+#   docente    reportado por alguien que hace clases
+#   hipotesis  plausible, sin evidencia todavía
+#
+# Estado: COORD (LES-GEO-TRA-01), VEC, VEC-OP y TRAS (LES-GEO-TRA-02),
+# REF-EJE y REF-REC (LES-GEO-TRA-03), ROT-90, ROT-CEN y SIM-CEN
+# (LES-GEO-TRA-04). Propuestas el 27 sep 2026, sin control 1: todas
+# hipotesis. REG, PROP, COMP e INV se agregan al llegar a su clase.
+#
+# PLA-COORD-ESCALA y PLA-COORD-CONTEO son la versión en el plano de
+# ENT-REC-ESCALA y ENT-REC-CONTEO. Se mantienen propias porque su
+# remediación habla de la cuadrícula, no de la recta (pregunta abierta
+# para Ben: ¿usar las de ENT-REC?).
+# ---------------------------------------------------------------------
+
+unit: GEO-TRA
+
+misconceptions:
+
+  # --- GEO-PLA-COORD --------------------------------------------------
+  # Colisiones conocidas:
+  #   ORDEN y CUADNUM coinciden en puntos del segundo y cuarto cuadrante
+  #   cuando la pregunta es solo el cuadrante: (−3, 5) leído al revés
+  #   queda en el cuarto, y el cuarto es "el segundo" para quien numera
+  #   en sentido horario. Esos ítems piden coordenadas y cuadrante juntos.
+  #   EJECERO y ORDEN coinciden en "¿sobre qué eje está (0, a)?": los
+  #   ítems de ejes usan afirmaciones.
+
+  - code: PLA-COORD-ORDEN
+    name: Invierte el orden de las coordenadas
+    nodo: GEO-PLA-COORD
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Escribe o lee (y, x) en vez de (x, y): el punto 4 a la derecha y 3
+      abajo lo anota (−3, 4), y ubica (2, 7) a 7 unidades del eje y. Es la
+      misconception central del nodo. Confunde también abscisa con
+      ordenada.
+    example: "4 a la derecha y 3 abajo → (−3, 4)"
+
+  - code: PLA-COORD-SINSIGNO
+    name: Lee las coordenadas como distancias, sin signo
+    nodo: GEO-PLA-COORD
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Cuenta cuánto se aleja el punto de cada eje y no mira hacia dónde:
+      todo punto le queda con coordenadas positivas. Entre dos puntos
+      alineados resta los tamaños (de −3 a 4 hay 1).
+    example: "punto 4 a la izquierda y 3 arriba → (4, 3)"
+
+  - code: PLA-COORD-CUADNUM
+    name: Numera los cuadrantes en el sentido equivocado
+    nodo: GEO-PLA-COORD
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Numera los cuadrantes en sentido horario (como un reloj) a partir
+      del primero: el de abajo a la derecha queda como "segundo" y el de
+      arriba a la izquierda como "cuarto". Acierta en el primero y el
+      tercero; falla solo en el segundo y el cuarto.
+    example: "(5, −1) está en el segundo cuadrante"
+
+  - code: PLA-COORD-EJECERO
+    name: Cree que (0, a) está sobre el eje x
+    nodo: GEO-PLA-COORD
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Asocia el 0 de la primera coordenada con el eje x ("la x es 0, está
+      en el eje x"), y al revés: (a, 0) le parece sobre el eje y. Todo
+      punto con x = 0 está sobre el eje y.
+    example: "(0, −4) está sobre el eje x"
+
+  - code: PLA-COORD-EJECUAD
+    name: Ubica en un cuadrante un punto que está sobre un eje
+    nodo: GEO-PLA-COORD
+    area: GEO
+    origin: hipotesis
+    description: >-
+      No sabe que los puntos de los ejes no pertenecen a ningún
+      cuadrante: (0, 2) le parece del primero y (−6, 0) del tercero, por
+      el signo de la coordenada que no es cero.
+    example: "(0, 2) está en el primer cuadrante"
+
+  - code: PLA-COORD-ESCALA
+    name: Cuenta cuadrados como si cada uno valiera 1
+    nodo: GEO-PLA-COORD
+    area: GEO
+    origin: hipotesis
+    description: >-
+      En una cuadrícula cuyos ejes van de 2 en 2 (o de 5 en 5), lee las
+      coordenadas contando cuadrados: un punto en (−6, 4) le queda en
+      (−3, 2). Es la versión en el plano de ENT-REC-ESCALA. Solo aparece
+      con figura.
+    example: "escala 2: (−6, 4) leído como (−3, 2)"
+
+  - code: PLA-COORD-CONTEO
+    name: Cuenta líneas de la cuadrícula en vez de espacios
+    nodo: GEO-PLA-COORD
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Cuenta las líneas (o los puntos de la cuadrícula) incluyendo la de
+      partida: entre x = −3 y x = 4 cuenta 8, y al leer un punto cuenta el
+      eje como la primera línea (un punto en (4, −3) le queda en (5, −4)).
+      Es la versión en el plano de ENT-REC-CONTEO.
+    example: "de (−3, 2) a (4, 2) hay 8 unidades"
+
+  # --- GEO-PLA-VEC ----------------------------------------------------
+  # Colisiones conocidas:
+  #   ORIGEN (A − B) y SINSIGNO (componentes sin signo) coinciden cuando
+  #   las dos componentes de B − A son negativas: los ítems usan vectores
+  #   con componentes de distinto signo.
+  #   ORIGEN aplicado dos veces (al calcular y al usar) acierta: en los
+  #   ítems de dos pasos no se usa.
+
+  - code: PLA-VEC-ORIGEN
+    name: Calcula el vector como inicio menos final
+    nodo: GEO-PLA-VEC
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Resta al revés: el vector de A a B lo calcula como A − B, y le queda
+      el opuesto. Con una figura, cuenta desde la punta hacia la cola. Es
+      la misconception central del nodo.
+    example: "A(2, −1), B(5, 3): AB = (−3, −4)"
+
+  - code: PLA-VEC-PUNTO
+    name: Toma las coordenadas del extremo como componentes
+    nodo: GEO-PLA-VEC
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Cree que las componentes de un vector son las coordenadas del punto
+      donde termina, sin restar el origen. Acierta solo cuando el vector
+      parte del (0, 0), y por eso se sostiene.
+    example: "de (2, −1) a (5, 3): componentes (5, 3)"
+
+  - code: PLA-VEC-SUMA
+    name: Suma las coordenadas de los dos puntos
+    nodo: GEO-PLA-VEC
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Calcula el vector de A a B como A + B. Sabe que hay que operar las
+      coordenadas de los dos puntos, pero no cuál operación.
+    example: "A(2, −1), B(5, 3): AB = (7, 2)"
+
+  - code: PLA-VEC-POSICION
+    name: Cree que un vector depende de dónde parte
+    nodo: GEO-PLA-VEC
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Piensa que dos flechas con la misma dirección, sentido y largo son
+      vectores distintos si parten de puntos distintos. El vector es el
+      desplazamiento, no la flecha dibujada en un lugar.
+    example: "de (0, 0) a (2, 1) y de (3, 3) a (5, 4) son vectores distintos"
+
+  - code: PLA-VEC-SINSIGNO
+    name: Cuenta las componentes sin mirar el sentido
+    nodo: GEO-PLA-VEC
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Cuenta cuántos cuadrados avanza la flecha en cada dirección, pero no
+      hacia dónde: todas las componentes le quedan positivas, y un vector
+      y su opuesto le parecen iguales.
+    example: "flecha 5 a la derecha y 2 abajo: (5, 2)"
+
+  # --- GEO-PLA-VEC-OP -------------------------------------------------
+  # Los errores de signo al operar componentes son de NUM-ENT-ADI (nodo
+  # previo): los ítems usan ENT-ADI-MAGNOP, ENT-ADI-REGLAMUL y
+  # ENT-ADI-DOBLENEG directamente.
+
+  - code: PLA-VECOP-RESTAORDEN
+    name: Resta los vectores al revés
+    nodo: GEO-PLA-VEC-OP
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Calcula u − v como v − u, o al despejar un vector que falta resta en
+      el orden equivocado. El resultado es el opuesto del correcto.
+    example: "(5, 1) − (2, 3) = (−3, 2)"
+
+  - code: PLA-VECOP-SINSENTIDO
+    name: Suma los desplazamientos sin mirar su sentido
+    nodo: GEO-PLA-VEC-OP
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Junta dos movimientos sumando lo que mide cada uno, aunque vayan en
+      sentidos contrarios: 5 al este y 8 al oeste le dan 13. Es la
+      misconception central del nodo en contexto.
+    example: "5 al este y 8 al oeste: (13, 0)"
+
+  - code: PLA-VECOP-PUNTAS
+    name: Toma la otra diagonal como vector suma
+    nodo: GEO-PLA-VEC-OP
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Con dos vectores dibujados desde un mismo punto, da como suma el
+      segmento que une sus puntas (que es la diferencia) en vez de la
+      diagonal que parte del origen común. Al revés, cuando piden la
+      diferencia da la suma.
+    example: "u = (3, −1), v = (−1, 3): u + v = (−4, 4)"
+
+  # --- GEO-TRA-TRAS ---------------------------------------------------
+
+  - code: TRA-TRAS-SENTIDO
+    name: Aplica el vector de traslación en sentido contrario
+    nodo: GEO-TRA-TRAS
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Al trasladar resta el vector (P − v), y al buscar el punto de origen
+      a partir de la imagen vuelve a sumarlo. Confunde "trasladar según v"
+      con "deshacer v". Es la misconception central del nodo.
+    example: "P(2, −3) según (−4, 5) → (6, −8)"
+
+  - code: TRA-TRAS-FORMA
+    name: Cree que una traslación puede girar o deformar la figura
+    nodo: GEO-TRA-TRAS
+    area: GEO
+    origin: hipotesis
+    description: >-
+      No sabe que la traslación solo desplaza: acepta como traslación una
+      imagen girada o reflejada, o cree que los lados pueden cambiar de
+      largo o de dirección. Solo aparece en ítems de figura o de
+      propiedades.
+    example: "la imagen trasladada de un triángulo puede quedar girada"
+
+  # --- GEO-TRA-REF-EJE ------------------------------------------------
+  # Códigos de 3 segmentos (TRA-REFEJE-*): el nodo tiene 4 segmentos y
+  # REM-<código> no puede pasar de 4.
+  #
+  # Colisiones conocidas:
+  #   CAMBIAEJE y AMBOS coinciden en puntos con una coordenada 0.
+  #   CAMBIAEJE aplicado a dos reflexiones seguidas (eje x y después eje y)
+  #   acierta: esos ítems no la usan.
+
+  - code: TRA-REFEJE-CAMBIAEJE
+    name: Cambia la coordenada equivocada al reflejar en un eje
+    nodo: GEO-TRA-REF-EJE
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Al reflejar respecto del eje x cambia el signo de la x (y respecto
+      del eje y, el de la y). Asocia "eje x" con "la x cambia", cuando el
+      eje x es justamente la coordenada que se conserva. Es la
+      misconception central del nodo.
+    example: "(3, −5) respecto del eje x → (−3, −5)"
+
+  - code: TRA-REFEJE-AMBOS
+    name: Cambia el signo de las dos coordenadas
+    nodo: GEO-TRA-REF-EJE
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Cree que reflejar es "cambiar los signos" y cambia los dos: hace una
+      simetría respecto del origen en vez de una reflexión en un eje.
+    example: "(3, −5) respecto del eje x → (−3, 5)"
+
+  - code: TRA-REFEJE-INTERCAMBIA
+    name: Intercambia las coordenadas al reflejar
+    nodo: GEO-TRA-REF-EJE
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Refleja cambiando el orden de las coordenadas, (x, y) → (y, x), a
+      veces con un signo. Es la regla de la recta y = x aplicada a los ejes.
+    example: "(3, −5) respecto del eje x → (−5, 3)"
+
+  - code: TRA-REFEJE-TRASLADA
+    name: Pasa la figura al otro lado sin darla vuelta
+    nodo: GEO-TRA-REF-EJE
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Lleva la figura al otro lado del eje conservando su orientación, como
+      si fuera una traslación. No ve que la reflexión invierte la figura:
+      lo que estaba cerca del eje sigue cerca del eje. Solo aparece con
+      figuras.
+    example: "triángulo reflejado en el eje y que conserva hacia dónde apunta"
+
+  - code: TRA-REFEJE-PROYECTA
+    name: Deja el punto sobre el eje
+    nodo: GEO-TRA-REF-EJE
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Mueve el punto hasta el eje y se detiene: (5, −3) reflejado en el eje
+      x queda en (5, 0). Recorre la mitad del camino. Hipótesis débil, se
+      mantiene para ver si aparece.
+    example: "(5, −3) respecto del eje x → (5, 0)"
+
+  # --- GEO-TRA-REF-REC ------------------------------------------------
+  # Colisiones conocidas:
+  #   EJE y RESTA coinciden cuando la recta pasa por el origen (a = 0):
+  #   los ítems usan rectas x = a o y = b con a, b distintos de 0.
+
+  - code: TRA-REFREC-EJE
+    name: Refleja respecto del eje en vez de la recta dada
+    nodo: GEO-TRA-REF-REC
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Ignora dónde está la recta y aplica la regla del eje paralelo: (5, 2)
+      respecto de x = 1 le queda (−5, 2). Con y = x o y = −x refleja en el
+      eje más cercano. Es la misconception central del nodo.
+    example: "(5, 2) respecto de x = 1 → (−5, 2)"
+
+  - code: TRA-REFREC-RECTAX
+    name: Lee la recta x = a como horizontal
+    nodo: GEO-TRA-REF-REC
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Cree que x = a es una recta horizontal (o y = b una vertical), y cambia
+      la coordenada equivocada: respecto de x = 1 refleja la y.
+    example: "(5, 2) respecto de x = 1 → (5, 0)"
+
+  - code: TRA-REFREC-RESTA
+    name: Calcula la imagen como a − x
+    nodo: GEO-TRA-REF-REC
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Resta la coordenada al valor de la recta, x' = a − x, en vez de
+      x' = 2a − x. Acierta solo con a = 0. Hipótesis: sin evidencia, se
+      mantiene para ver si aparece.
+    example: "(5, 2) respecto de x = 1 → (−4, 2)"
+
+  - code: TRA-REFREC-DIAG
+    name: Confunde la recta y = x con y = −x
+    nodo: GEO-TRA-REF-REC
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Al reflejar respecto de y = x cambia los signos además de
+      intercambiar, (x, y) → (−y, −x), que es la regla de y = −x; y al
+      revés con y = −x.
+    example: "(4, −2) respecto de y = x → (2, −4)"
+
+  # --- GEO-TRA-ROT-90 -------------------------------------------------
+  # Convención de los ítems: el sentido se dice siempre (antihorario u
+  # horario); no se usa "ángulo positivo".
+  #
+  # Colisiones conocidas:
+  #   SENTIDO y SOLOCAMBIA coinciden en puntos sobre un eje ((0, a)):
+  #   esos ítems usan puntos fuera de los ejes o valor + afirmación.
+  #   SOLOSIGNO y ANGULO coinciden con la reflexión en un eje cuando el
+  #   punto está sobre el otro eje.
+
+  - code: TRA-ROT90-SENTIDO
+    name: Gira en el sentido contrario
+    nodo: GEO-TRA-ROT-90
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Aplica la regla del giro horario cuando se pide antihorario, o al
+      revés: (3, 1) girado 90° antihorario le queda (1, −3). Es la
+      misconception central del nodo.
+    example: "(3, 1), 90° antihorario → (1, −3)"
+
+  - code: TRA-ROT90-SOLOCAMBIA
+    name: Intercambia las coordenadas sin cambiar signos
+    nodo: GEO-TRA-ROT-90
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Recuerda que girar 90° "intercambia" las coordenadas, pero no el
+      cambio de signo: (3, 1) → (1, 3). Eso es reflejar en la recta y = x.
+    example: "(3, 1), 90° antihorario → (1, 3)"
+
+  - code: TRA-ROT90-SOLOSIGNO
+    name: Cambia un signo sin intercambiar
+    nodo: GEO-TRA-ROT-90
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Gira cambiando el signo de una coordenada y dejándolas en su lugar:
+      (3, 1) → (−3, 1). Eso es reflejar en un eje. En 180° cambia un solo
+      signo en vez de los dos.
+    example: "(3, 1), 90° antihorario → (−3, 1)"
+
+  - code: TRA-ROT90-ANGULO
+    name: Confunde el giro de 90° con el de 180°
+    nodo: GEO-TRA-ROT-90
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Aplica la regla de 180° (cambiar los dos signos) a un giro de 90°, o
+      la de 90° a uno de 180°. En 270° usa la regla de 180° o la de 90°.
+    example: "(3, 1), 90° antihorario → (−3, −1)"
+
+  # --- GEO-TRA-ROT-CEN ------------------------------------------------
+  # Colisiones conocidas:
+  #   VUELVEMAL coincide con ORIGEN en giros de 180° (en los dos queda
+  #   (−x, −y) desplazado de la misma forma): esos ítems usan ANGULO en
+  #   su lugar.
+
+  - code: TRA-ROTCEN-ORIGEN
+    name: Gira respecto del origen en vez del centro dado
+    nodo: GEO-TRA-ROT-CEN
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Ignora el centro de rotación y aplica la regla del origen: (4, 1)
+      girado 90° antihorario respecto de (1, 1) le queda (−1, 4). Es la
+      misconception central del nodo.
+    example: "(4, 1), 90° antihorario respecto de (1, 1) → (−1, 4)"
+
+  - code: TRA-ROTCEN-NOVUELVE
+    name: Gira el vector desde el centro y no vuelve a sumar el centro
+    nodo: GEO-TRA-ROT-CEN
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Hace bien el primer paso (restar el centro) y el giro, pero entrega
+      el vector girado como si fuera el punto: (4, 1) respecto de (1, 1)
+      le queda (0, 3).
+    example: "(4, 1), 90° antihorario respecto de (1, 1) → (0, 3)"
+
+  - code: TRA-ROTCEN-VUELVEMAL
+    name: Al volver, resta el centro otra vez
+    nodo: GEO-TRA-ROT-CEN
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Resta el centro, gira y vuelve a restar el centro en vez de sumarlo:
+      (4, 1) respecto de (1, 1) → (0, 3) − (1, 1) = (−1, 2).
+    example: "(4, 1), 90° antihorario respecto de (1, 1) → (−1, 2)"
+
+  # --- GEO-TRA-SIM-CEN ------------------------------------------------
+
+  - code: TRA-SIMCEN-EJE
+    name: Hace una reflexión en un eje en vez de la simetría central
+    nodo: GEO-TRA-SIM-CEN
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Cambia el signo de una sola coordenada (o, con centro C, refleja solo
+      una coordenada respecto de C): (4, −3) respecto del origen → (4, 3).
+      Confunde simetría central con simetría axial. Es la misconception
+      central del nodo.
+    example: "(4, −3) respecto del origen → (4, 3)"
+
+  - code: TRA-SIMCEN-ORIGEN
+    name: Usa el origen como centro aunque el centro sea otro
+    nodo: GEO-TRA-SIM-CEN
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Con un centro C distinto del origen, cambia los dos signos igual:
+      (5, 1) respecto de (2, 3) → (−5, −1).
+    example: "(5, 1) respecto de (2, 3) → (−5, −1)"
+
+  - code: TRA-SIMCEN-RESTA
+    name: Calcula el simétrico como C − P
+    nodo: GEO-TRA-SIM-CEN
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Resta el punto al centro (o el centro al punto) y entrega ese vector
+      como el simétrico: (5, 1) respecto de (2, 3) → (−3, 2). Acierta con
+      el origen como centro, y por eso se sostiene. Al buscar el centro,
+      da la diferencia entre P y P' en vez del punto medio.
+    example: "(5, 1) respecto de (2, 3) → (−3, 2)"
+
+  - code: TRA-SIMCEN-SINGIRAR
+    name: Lleva la figura al lado opuesto sin girarla
+    nodo: GEO-TRA-SIM-CEN
+    area: GEO
+    origin: hipotesis
+    description: >-
+      Pone la figura en el cuadrante opuesto conservando hacia dónde
+      apunta, como una traslación. La simetría central la gira en 180°:
+      queda "de cabeza". Solo aparece con figuras o en afirmaciones.
+    example: "triángulo con la punta arriba → imagen con la punta arriba"

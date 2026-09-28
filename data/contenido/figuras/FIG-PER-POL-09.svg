@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 388 275.8" width="388" height="275.8" role="img" aria-label="Dos cuadrados unidos por un lado: uno de lado 5 cm y otro de lado 3 cm, apoyados en la misma línea." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="64.8,217.8 336.8,217.8 336.8,115.8 234.8,115.8 234.8,47.8 64.8,47.8" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="234.8" y1="217.8" x2="234.8" y2="115.8" stroke-width="1.5"/>
+  <line x1="149.8" y1="212.36" x2="149.8" y2="223.24" stroke-width="1.2"/>
+  <line x1="149.8" y1="42.36" x2="149.8" y2="53.24" stroke-width="1.2"/>
+  <line x1="59.36" y1="132.8" x2="70.24" y2="132.8" stroke-width="1.2"/>
+  <line x1="284.27" y1="212.36" x2="284.27" y2="223.24" stroke-width="1.2"/>
+  <line x1="287.33" y1="212.36" x2="287.33" y2="223.24" stroke-width="1.2"/>
+  <line x1="331.36" y1="168.33" x2="342.24" y2="168.33" stroke-width="1.2"/>
+  <line x1="331.36" y1="165.27" x2="342.24" y2="165.27" stroke-width="1.2"/>
+  <line x1="284.27" y1="110.36" x2="284.27" y2="121.24" stroke-width="1.2"/>
+  <line x1="287.33" y1="110.36" x2="287.33" y2="121.24" stroke-width="1.2"/>
+  <text x="39.3" y="132.8" font-size="13" text-anchor="middle" dominant-baseline="central">5 cm</text>
+  <text x="362.3" y="166.8" font-size="13" text-anchor="middle" dominant-baseline="central">3 cm</text>
+</svg>

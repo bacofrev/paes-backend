@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 477 240" width="477" height="240" role="img" aria-label="Trapecio con bases de 12 cm y 6 cm y sus dos lados no paralelos marcados como iguales; uno mide 5 cm. Su altura, punteada, mide 4 cm." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="63,180 423,180 333,60 153,60" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="153" y1="60" x2="153" y2="180" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <polyline points="153,168 165,168 165,180" fill="none" stroke-width="1.1"/>
+  <line x1="374.16" y1="122.88" x2="381.84" y2="117.12" stroke-width="1.2"/>
+  <line x1="111.84" y1="122.88" x2="104.16" y2="117.12" stroke-width="1.2"/>
+  <text x="243" y="198" font-size="13" text-anchor="middle" dominant-baseline="central">12 cm</text>
+  <text x="243" y="43.5" font-size="13" text-anchor="middle" dominant-baseline="central">6 cm</text>
+  <text x="91.2" y="107.4" font-size="13" text-anchor="middle" dominant-baseline="central">5 cm</text>
+  <text x="177" y="123" font-size="13" text-anchor="middle" dominant-baseline="central">4 cm</text>
+</svg>

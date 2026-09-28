@@ -1,0 +1,1362 @@
+# =====================================================================
+# LES-NUM-ENT-05 — Divisibilidad, mcm y MCD
+# Cubre NUM-ENT-DIVIS, NUM-ENT-MCM
+# =====================================================================
+# Dos nodos `pre` con arista directa DIVIS -> MCM (decisión 1 del plan,
+# cerrada). DIVIS pide NUM-ENT-MUL (LES-NUM-ENT-03). La clase 06 queda
+# sin usar.
+#
+# Alcance (propuesto, sin control 1):
+#   DIVIS entra  múltiplos y divisores de un natural (listar, contar,
+#                reconocer); "a es divisor de b" <-> "b es múltiplo de
+#                a"; criterios de divisibilidad por 2, 3, 4, 5, 6, 9 y
+#                10; primos y compuestos (el 1 no es ninguno, el 2 es el
+#                único primo par); descomposición en factores primos
+#                escrita como producto (2 · 2 · 3 · 5); contexto de
+#                repartos y grupos iguales.
+#         fuera  potencias en la descomposición (2² · 3): NUM-POT-CONC no
+#                es ancestro, se escribe el producto repetido; mcm y MCD
+#                (MCM); simplificar fracciones (NUM-FRA-SIMP); raíces
+#                (NUM-RAI-DESC); divisores negativos.
+#   MCM   entra  mcm y MCD de dos o tres números, por listado y por
+#                descomposición; problemas de "cuándo coinciden" (mcm) y
+#                de "el grupo más grande posible" (MCD); números primos
+#                entre sí; mcm · MCD = a · b como afirmación.
+#         fuera  suma de fracciones con mcm (NUM-FRA-ADI).
+#
+# Niveles:
+#   1  una idea: reconocer, listar, un criterio, un cálculo directo
+#   2  descomposición, contar divisores, contexto de un paso, I/II/III
+#   3  contexto que exige decidir mcm o MCD, tres números, afirmaciones
+#      generales
+# ---------------------------------------------------------------------
+
+unit: NUM-ENT
+
+lesson:
+  code: LES-NUM-ENT-05
+  title: Divisibilidad, mcm y MCD
+  position: 5
+  nodes:
+    - node: NUM-ENT-DIVIS
+      anchor: multiplos-divisores-y-numeros-primos
+    - node: NUM-ENT-MCM
+      anchor: minimo-comun-multiplo-y-maximo-comun-divisor
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== NUM-ENT-DIVIS · nivel 1 ===============================
+
+  # B EXTREMOS: omite el 1 y el 18
+  # C INVIERTE: lista múltiplos
+  # D SOLOPRIMOS: se queda con los primos
+  - code: M1-ENT-097
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuáles son todos los divisores de $18$?"
+    options:
+      - {label: A, body: "$1, 2, 3, 6, 9, 18$", correct: true}
+      - {label: B, body: "$2, 3, 6, 9$", misconception: ENT-DIVIS-EXTREMOS}
+      - {label: C, body: "$18, 36, 54, 72$", misconception: ENT-DIVIS-INVIERTE}
+      - {label: D, body: "$2, 3$", misconception: ENT-DIVIS-SOLOPRIMOS}
+
+  # A INVIERTE: invierte la relación
+  # B IMPARPRIMO: impar = primo
+  # D UNO: el 1 es primo
+  - code: M1-ENT-098
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es verdadera?"
+    options:
+      - {label: A, body: "$56$ es divisor de $8$.", misconception: ENT-DIVIS-INVIERTE}
+      - {label: B, body: "$21$ es un número primo.", misconception: ENT-DIVIS-IMPARPRIMO}
+      - {label: C, body: "$8$ es divisor de $56$.", correct: true}
+      - {label: D, body: "$1$ es un número primo.", misconception: ENT-DIVIS-UNO}
+
+  # 4 + 7 + 7 = 18
+  # A INVIERTE: confunde "divisible por 9" con "divisor de 9"
+  # B ULTCIFRA: termina en 9
+  # C CRITERIO: 5 + 7 = 12, múltiplo de 3: cree que basta
+  - code: M1-ENT-099
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de los siguientes números es divisible por $9$?"
+    options:
+      - {label: A, body: "$3$", misconception: ENT-DIVIS-INVIERTE}
+      - {label: B, body: "$139$", misconception: ENT-DIVIS-ULTCIFRA}
+      - {label: C, body: "$57$", misconception: ENT-DIVIS-CRITERIO}
+      - {label: D, body: "$477$", correct: true}
+
+  # A UNO: incluye el 1 como factor primo
+  # C SOLOPRIMOS: escribe cada primo que divide una sola vez
+  # D COMPUESTO: se queda en factores compuestos
+  - code: M1-ENT-100
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es la descomposición en factores primos de $60$?"
+    options:
+      - {label: A, body: "$1 \\cdot 2 \\cdot 2 \\cdot 3 \\cdot 5$", misconception: ENT-DIVIS-UNO}
+      - {label: B, body: "$2 \\cdot 2 \\cdot 3 \\cdot 5$", correct: true}
+      - {label: C, body: "$2 \\cdot 3 \\cdot 5$", misconception: ENT-DIVIS-SOLOPRIMOS}
+      - {label: D, body: "$4 \\cdot 15$", misconception: ENT-DIVIS-COMPUESTO}
+
+  # 1, 2, 4, 5, 10, 20
+  # B EXTREMOS: omite el 1 y el 20
+  # C SOLOPRIMOS: cuenta solo el 2 y el 5
+  # D INVIERTE: confunde divisores con múltiplos
+  - code: M1-ENT-101
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuántos divisores tiene el número $20$?"
+    options:
+      - {label: A, body: "$6$", correct: true}
+      - {label: B, body: "$4$", misconception: ENT-DIVIS-EXTREMOS}
+      - {label: C, body: "$2$", misconception: ENT-DIVIS-SOLOPRIMOS}
+      - {label: D, body: "Infinitos", misconception: ENT-DIVIS-INVIERTE}
+
+  # 1 + 3 + 5 = 9
+  # A INVIERTE: invierte quién divide a quién
+  # B ULTCIFRA: termina en 3
+  # C CRITERIO: 4 + 2 = 6, múltiplo de 3: cree que basta
+  - code: M1-ENT-102
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es verdadera?"
+    options:
+      - {label: A, body: "$9$ es divisible por $135$.", misconception: ENT-DIVIS-INVIERTE}
+      - {label: B, body: "$53$ es divisible por $3$.", misconception: ENT-DIVIS-ULTCIFRA}
+      - {label: C, body: "$42$ es divisible por $9$.", misconception: ENT-DIVIS-CRITERIO}
+      - {label: D, body: "$135$ es divisible por $9$.", correct: true}
+
+  # 51 = 3 · 17
+  # A IMPARPRIMO: par = compuesto; y 51, impar, lo cree primo
+  # C ULTCIFRA: termina en 3: lo cree divisible por 3; a 51 lo cree primo
+  # D UNO: ubica el 1 entre primos o compuestos
+  - code: M1-ENT-103
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de los siguientes números es compuesto?"
+    options:
+      - {label: A, body: "$2$", misconception: ENT-DIVIS-IMPARPRIMO}
+      - {label: B, body: "$51$", correct: true}
+      - {label: C, body: "$53$", misconception: ENT-DIVIS-ULTCIFRA}
+      - {label: D, body: "$1$", misconception: ENT-DIVIS-UNO}
+
+  # A INVIERTE: lista divisores
+  # B ULTCIFRA: los que terminan en 8
+  # D EXTREMOS: cree que 8 no es múltiplo de sí mismo
+  - code: M1-ENT-104
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuáles son los múltiplos de $8$ menores que $40$?"
+    options:
+      - {label: A, body: "$1, 2, 4, 8$", misconception: ENT-DIVIS-INVIERTE}
+      - {label: B, body: "$8, 18, 28, 38$", misconception: ENT-DIVIS-ULTCIFRA}
+      - {label: C, body: "$8, 16, 24, 32$", correct: true}
+      - {label: D, body: "$16, 24, 32$", misconception: ENT-DIVIS-EXTREMOS}
+
+  # ===== NUM-ENT-DIVIS · nivel 2 ===============================
+
+  # divisores de 24: 1, 2, 3, 4, 6, 8, 12, 24
+  # B SOLOPRIMOS: solo grupos de 2 o de 3
+  # C EXTREMOS: descarta grupos de 1 y un solo grupo de 24
+  # D INVIERTE: piensa en múltiplos de 24
+  - code: M1-ENT-105
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Una profesora quiere repartir a sus $24$ estudiantes en grupos que
+      tengan todos la misma cantidad de integrantes, sin que sobre nadie.
+      ¿Cuántas cantidades distintas de integrantes por grupo puede elegir?
+    options:
+      - {label: A, body: "$8$", correct: true}
+      - {label: B, body: "$2$", misconception: ENT-DIVIS-SOLOPRIMOS}
+      - {label: C, body: "$6$", misconception: ENT-DIVIS-EXTREMOS}
+      - {label: D, body: "Infinitas", misconception: ENT-DIVIS-INVIERTE}
+
+  # A IMPARPRIMO: rechaza I (el 2 es par) y acepta II (el 1 es impar)
+  # C CRITERIO: acepta III
+  # D UNO: acepta II
+  - code: M1-ENT-106
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. El $2$ es el único número primo par.
+
+      II. El $1$ es un número primo.
+
+      III. Todo número divisible por $3$ es divisible por $9$.
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo II", misconception: ENT-DIVIS-IMPARPRIMO}
+      - {label: B, body: "Solo I", correct: true}
+      - {label: C, body: "Solo I y III", misconception: ENT-DIVIS-CRITERIO}
+      - {label: D, body: "Solo I y II", misconception: ENT-DIVIS-UNO}
+
+  # A EXTREMOS: cree que un número no es divisor de sí mismo
+  # B INVIERTE: invierte la relación
+  # C SOLOPRIMOS: cree que los divisores son primos
+  - code: M1-ENT-107
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Sean $a$ y $b$ números naturales tales que $a$ es divisor de $b$.
+      ¿Cuál de las siguientes afirmaciones es **siempre** verdadera?
+    options:
+      - {label: A, body: "$a$ es distinto de $b$.", misconception: ENT-DIVIS-EXTREMOS}
+      - {label: B, body: "$a$ es múltiplo de $b$.", misconception: ENT-DIVIS-INVIERTE}
+      - {label: C, body: "$a$ es un número primo.", misconception: ENT-DIVIS-SOLOPRIMOS}
+      - {label: D, body: "$b$ es múltiplo de $a$.", correct: true}
+
+  # n = 90; divisores: 1, 2, 3, 5, 6, 9, 10, 15, 18, 30, 45, 90. El 4 no.
+  # A SOLOPRIMOS: 6 no es primo: cree que no divide
+  # B EXTREMOS: el número no es divisor de sí mismo
+  # D ULTCIFRA: 90 no termina en 9
+  - code: M1-ENT-108
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      La descomposición en factores primos de un número es
+      $2 \cdot 3 \cdot 3 \cdot 5$. ¿Cuál de los siguientes números **no** es
+      divisor de ese número?
+    options:
+      - {label: A, body: "$6$", misconception: ENT-DIVIS-SOLOPRIMOS}
+      - {label: B, body: "$90$", misconception: ENT-DIVIS-EXTREMOS}
+      - {label: C, body: "$4$", correct: true}
+      - {label: D, body: "$9$", misconception: ENT-DIVIS-ULTCIFRA}
+
+  # A CRITERIO: par basta para 4
+  # B UNO: el 1 es primo
+  # C IMPARPRIMO: impar = primo
+  - code: M1-ENT-109
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es verdadera?"
+    options:
+      - {label: A, body: "Todo número par es divisible por $4$.", misconception: ENT-DIVIS-CRITERIO}
+      - {label: B, body: "El $1$ es el menor número primo.", misconception: ENT-DIVIS-UNO}
+      - {label: C, body: "Todo número impar es primo.", misconception: ENT-DIVIS-IMPARPRIMO}
+      - {label: D, body: "Todo número par mayor que $2$ es compuesto.", correct: true}
+
+  # 126 = 2 · 3 · 3 · 7
+  # A COMPUESTO: copia los divisores de Javiera, con el 9
+  # B UNO: agrega el 1 del final como factor
+  # D SOLOPRIMOS: escribe cada primo una sola vez
+  - code: M1-ENT-110
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Javiera dividió $126$ así: $126 \div 2 = 63$, $63 \div 9 = 7$ y
+      $7 \div 7 = 1$. ¿Cuál es la descomposición de $126$ en factores
+      primos?
+    options:
+      - {label: A, body: "$2 \\cdot 9 \\cdot 7$", misconception: ENT-DIVIS-COMPUESTO}
+      - {label: B, body: "$1 \\cdot 2 \\cdot 3 \\cdot 3 \\cdot 7$", misconception: ENT-DIVIS-UNO}
+      - {label: C, body: "$2 \\cdot 3 \\cdot 3 \\cdot 7$", correct: true}
+      - {label: D, body: "$2 \\cdot 3 \\cdot 7$", misconception: ENT-DIVIS-SOLOPRIMOS}
+
+  # 114: par y 1 + 1 + 4 = 6
+  # A INVIERTE: un divisor de 6
+  # C CRITERIO: 8 + 1 = 9, divisible por 3: cree que basta (no mira que sea par)
+  # D ULTCIFRA: par y termina en 6: lo cree divisible por 3 (7 + 6 = 13)
+  - code: M1-ENT-111
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál de los siguientes números es divisible por $6$?"
+    options:
+      - {label: A, body: "$3$", misconception: ENT-DIVIS-INVIERTE}
+      - {label: B, body: "$114$", correct: true}
+      - {label: C, body: "$81$", misconception: ENT-DIVIS-CRITERIO}
+      - {label: D, body: "$76$", misconception: ENT-DIVIS-ULTCIFRA}
+
+  # 7, 14, 21, 28, 35, 42, 49
+  # B EXTREMOS: no cuenta el 7 como múltiplo de sí mismo
+  # C INVIERTE: cuenta los divisores de 7
+  # D ULTCIFRA: cuenta los que terminan en 7: 7, 17, 27, 37, 47
+  - code: M1-ENT-112
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuántos múltiplos de $7$ hay entre $1$ y $50$?"
+    options:
+      - {label: A, body: "$7$", correct: true}
+      - {label: B, body: "$6$", misconception: ENT-DIVIS-EXTREMOS}
+      - {label: C, body: "$2$", misconception: ENT-DIVIS-INVIERTE}
+      - {label: D, body: "$5$", misconception: ENT-DIVIS-ULTCIFRA}
+
+  # ===== NUM-ENT-DIVIS · nivel 3 ===============================
+
+  # 84: 1, 2, 3, 4, 6, 7, 12, 14, 21, 28, 42, 84
+  # A SOLOPRIMOS: cuenta los primos distintos: 2, 3 y 7
+  # B EXTREMOS: omite el 1 y el 84
+  # C INVIERTE: confunde divisores con múltiplos
+  - code: M1-ENT-113
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      La descomposición en factores primos de un número $n$ es
+      $2 \cdot 2 \cdot 3 \cdot 7$. ¿Cuántos divisores tiene $n$?
+    options:
+      - {label: A, body: "$3$", misconception: ENT-DIVIS-SOLOPRIMOS}
+      - {label: B, body: "$10$", misconception: ENT-DIVIS-EXTREMOS}
+      - {label: C, body: "Infinitos", misconception: ENT-DIVIS-INVIERTE}
+      - {label: D, body: "$12$", correct: true}
+
+  # 87 = 3 · 29; 83 primo; 1 no es primo
+  # A ULTCIFRA: 83 termina en 3: lo cree divisible por 3; a 87 no lo divide por 3 porque termina en 7
+  # C IMPARPRIMO: son impares
+  # D UNO: el 1 es primo
+  - code: M1-ENT-114
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Considera los números $1$, $83$ y $87$. ¿Cuál de las siguientes
+      afirmaciones es verdadera?
+    options:
+      - {label: A, body: "Solo $87$ es primo.", misconception: ENT-DIVIS-ULTCIFRA}
+      - {label: B, body: "Solo $83$ es primo.", correct: true}
+      - {label: C, body: "Los tres son primos.", misconception: ENT-DIVIS-IMPARPRIMO}
+      - {label: D, body: "Solo $1$ y $83$ son primos.", misconception: ENT-DIVIS-UNO}
+
+  # A IMPARPRIMO: primo = impar (olvida el 2)
+  # B SOLOPRIMOS: cree que los divisores son primos (el 1 no lo es)
+  # D UNO: el 1 es primo, "tiene dos divisores"
+  - code: M1-ENT-115
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sea $n$ un número natural que tiene exactamente dos divisores. ¿Cuál
+      de las siguientes afirmaciones es verdadera?
+    options:
+      - {label: A, body: "$n$ es un número impar.", misconception: ENT-DIVIS-IMPARPRIMO}
+      - {label: B, body: "Los dos divisores de $n$ son números primos.", misconception: ENT-DIVIS-SOLOPRIMOS}
+      - {label: C, body: "$n$ es un número primo.", correct: true}
+      - {label: D, body: "$n$ puede ser $1$.", misconception: ENT-DIVIS-UNO}
+
+  # B IMPARPRIMO: todo impar es primo
+  # C SOLOPRIMOS: cree que los divisores son primos (con p = 3, el 4 divide a 4)
+  # D EXTREMOS: descarta el 1 y el propio p
+  - code: M1-ENT-116
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sea $p$ un número primo mayor que $2$. ¿Cuál de las siguientes
+      afirmaciones es **siempre** verdadera?
+    options:
+      - {label: A, body: "$p + 1$ es par.", correct: true}
+      - {label: B, body: "$p + 2$ es primo.", misconception: ENT-DIVIS-IMPARPRIMO}
+      - {label: C, body: "Todos los divisores de $p + 1$ son primos.", misconception: ENT-DIVIS-SOLOPRIMOS}
+      - {label: D, body: "$p$ no tiene divisores.", misconception: ENT-DIVIS-EXTREMOS}
+
+  # 2+0+2+5 = 9; 2+0+1+3 = 6; 2.025 = 3·3·3·3·5·5
+  # A COMPUESTO: acepta III
+  # C ULTCIFRA: rechaza I: 2.025 no termina en 9
+  # D CRITERIO: acepta II: la suma 6 es múltiplo de 3
+  - code: M1-ENT-117
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. $2.025$ es divisible por $9$.
+
+      II. $2.013$ es divisible por $9$.
+
+      III. La descomposición en factores primos de $2.025$ es $81 \cdot 25$.
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo I y III", misconception: ENT-DIVIS-COMPUESTO}
+      - {label: B, body: "Solo I", correct: true}
+      - {label: C, body: "Ninguna de ellas", misconception: ENT-DIVIS-ULTCIFRA}
+      - {label: D, body: "Solo I y II", misconception: ENT-DIVIS-CRITERIO}
+
+  # 210 = 2 · 3 · 5 · 7; 210 ÷ 35 = 6
+  # A SOLOPRIMOS: los divisores son los primos
+  # B COMPUESTO: acepta factores compuestos
+  # D CRITERIO: tiene un 3: cree que basta para 9
+  - code: M1-ENT-118
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      La descomposición en factores primos de un número es
+      $2 \cdot 3 \cdot 5 \cdot 7$. ¿Cuál de las siguientes afirmaciones es
+      verdadera?
+    options:
+      - {label: A, body: "Sus únicos divisores son $2$, $3$, $5$ y $7$.", misconception: ENT-DIVIS-SOLOPRIMOS}
+      - {label: B, body: "Su descomposición en factores primos también puede escribirse como $6 \\cdot 35$.", misconception: ENT-DIVIS-COMPUESTO}
+      - {label: C, body: "El número es divisible por $35$.", correct: true}
+      - {label: D, body: "El número es divisible por $9$.", misconception: ENT-DIVIS-CRITERIO}
+
+  # 72: par y 7 + 2 = 9
+  # B INVIERTE: un divisor de 18
+  # C ULTCIFRA: termina en 8, como el 18
+  # D CRITERIO: par y divisible por 3: cree que basta para 18
+  - code: M1-ENT-119
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál de los siguientes números es divisible por $18$?"
+    options:
+      - {label: A, body: "$72$", correct: true}
+      - {label: B, body: "$9$", misconception: ENT-DIVIS-INVIERTE}
+      - {label: C, body: "$98$", misconception: ENT-DIVIS-ULTCIFRA}
+      - {label: D, body: "$78$", misconception: ENT-DIVIS-CRITERIO}
+
+  # A ULTCIFRA: 15 termina en 5: lo relaciona con 25 (distractor débil)
+  # B CRITERIO: 15 es divisible por 3: cree que también por 9
+  # C INVIERTE: un múltiplo de 15
+  - code: M1-ENT-120
+    node: NUM-ENT-DIVIS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Se sabe que $15$ es divisor de un número natural $n$. ¿Cuál de los
+      siguientes números es **con seguridad** divisor de $n$?
+    options:
+      - {label: A, body: "$25$", misconception: ENT-DIVIS-ULTCIFRA}
+      - {label: B, body: "$9$", misconception: ENT-DIVIS-CRITERIO}
+      - {label: C, body: "$30$", misconception: ENT-DIVIS-INVIERTE}
+      - {label: D, body: "$5$", correct: true}
+
+  # ===== NUM-ENT-MCM · nivel 1 =================================
+
+  # A SOLOCOMUN: solo el factor común 2, con su mayor repetición (tres veces)
+  # B PRODUCTO: multiplica 8 · 12
+  # C CAMBIA: da el MCD
+  - code: M1-ENT-121
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el mínimo común múltiplo de $8$ y $12$?"
+    options:
+      - {label: A, body: "$8$", misconception: ENT-MCM-SOLOCOMUN}
+      - {label: B, body: "$96$", misconception: ENT-MCM-PRODUCTO}
+      - {label: C, body: "$4$", misconception: ENT-MCM-CAMBIA}
+      - {label: D, body: "$24$", correct: true}
+
+  # A MAYOR: toma el menor de los dos
+  # B CAMBIA: da el mcm
+  # D PRIMERCOMUN: el primer divisor común mayor que 1
+  - code: M1-ENT-122
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el máximo común divisor de $12$ y $18$?"
+    options:
+      - {label: A, body: "$12$", misconception: ENT-MCM-MAYOR}
+      - {label: B, body: "$36$", misconception: ENT-MCM-CAMBIA}
+      - {label: C, body: "$6$", correct: true}
+      - {label: D, body: "$2$", misconception: ENT-MCM-PRIMERCOMUN}
+
+  # A CAMBIA: usa el MCD
+  # C PRODUCTO: multiplica los períodos
+  # D SUMA: suma los períodos
+  - code: M1-ENT-123
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Un bus pasa por un paradero cada $6$ minutos y otro cada $10$ minutos.
+      Si acaban de pasar juntos, ¿en cuántos minutos volverán a pasar juntos
+      por primera vez?
+    options:
+      - {label: A, body: "$2$", misconception: ENT-MCM-CAMBIA}
+      - {label: B, body: "$30$", correct: true}
+      - {label: C, body: "$60$", misconception: ENT-MCM-PRODUCTO}
+      - {label: D, body: "$16$", misconception: ENT-MCM-SUMA}
+
+  # B CAMBIA: da el MCD
+  # C PRODUCTO: multiplica 9 · 15
+  # D MAYOR: toma el mayor de los dos
+  - code: M1-ENT-124
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el mínimo común múltiplo de $9$ y $15$?"
+    options:
+      - {label: A, body: "$45$", correct: true}
+      - {label: B, body: "$3$", misconception: ENT-MCM-CAMBIA}
+      - {label: C, body: "$135$", misconception: ENT-MCM-PRODUCTO}
+      - {label: D, body: "$15$", misconception: ENT-MCM-MAYOR}
+
+  # A MAYOR: el mayor de los dos
+  # B INVIERTE: un divisor común
+  # C SUMA: suma los números
+  - code: M1-ENT-125
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál de los siguientes números es múltiplo común de $4$ y $6$?
+    options:
+      - {label: A, body: "$6$", misconception: ENT-MCM-MAYOR}
+      - {label: B, body: "$2$", misconception: ENT-DIVIS-INVIERTE}
+      - {label: C, body: "$10$", misconception: ENT-MCM-SUMA}
+      - {label: D, body: "$36$", correct: true}
+
+  # A PRODUCTO: multiplica 14 · 35
+  # B MAYOR: toma el menor de los dos
+  # D CAMBIA: da el mcm
+  - code: M1-ENT-126
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el máximo común divisor de $14$ y $35$?"
+    options:
+      - {label: A, body: "$490$", misconception: ENT-MCM-PRODUCTO}
+      - {label: B, body: "$14$", misconception: ENT-MCM-MAYOR}
+      - {label: C, body: "$7$", correct: true}
+      - {label: D, body: "$70$", misconception: ENT-MCM-CAMBIA}
+
+  # B SUMA: suma los lápices
+  # C CAMBIA: usa el mcm
+  # D PRIMERCOMUN: el primer divisor común
+  - code: M1-ENT-127
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Se tienen $12$ lápices rojos y $20$ azules. Se quiere armar la mayor
+      cantidad posible de estuches iguales, con la misma cantidad de lápices
+      rojos y la misma de azules en cada uno, sin que sobre ninguno.
+      ¿Cuántos estuches se arman?
+    options:
+      - {label: A, body: "$4$", correct: true}
+      - {label: B, body: "$32$", misconception: ENT-MCM-SUMA}
+      - {label: C, body: "$60$", misconception: ENT-MCM-CAMBIA}
+      - {label: D, body: "$2$", misconception: ENT-MCM-PRIMERCOMUN}
+
+  # A MAYOR: toma el mayor de los dos
+  # C CAMBIA: da el MCD
+  # D SUMA: suma los números
+  - code: M1-ENT-128
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el mínimo común múltiplo de $5$ y $7$?"
+    options:
+      - {label: A, body: "$7$", misconception: ENT-MCM-MAYOR}
+      - {label: B, body: "$35$", correct: true}
+      - {label: C, body: "$1$", misconception: ENT-MCM-CAMBIA}
+      - {label: D, body: "$12$", misconception: ENT-MCM-SUMA}
+
+  # ===== NUM-ENT-MCM · nivel 2 =================================
+
+  # mcm = 2 · 2 · 3 · 5 = 60
+  # B PRODUCTO: multiplica 20 · 30
+  # C CAMBIA: da el MCD: 2 · 5
+  # D SOLOCOMUN: solo los comunes (2 y 5), con su mayor repetición: 2 · 2 · 5
+  - code: M1-ENT-129
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Si $20 = 2 \cdot 2 \cdot 5$ y $30 = 2 \cdot 3 \cdot 5$, ¿cuál es el
+      mínimo común múltiplo de $20$ y $30$?
+    options:
+      - {label: A, body: "$60$", correct: true}
+      - {label: B, body: "$600$", misconception: ENT-MCM-PRODUCTO}
+      - {label: C, body: "$10$", misconception: ENT-MCM-CAMBIA}
+      - {label: D, body: "$20$", misconception: ENT-MCM-SOLOCOMUN}
+
+  # MCD = 2 · 2 · 3 = 12
+  # A SOLOPRIMOS: cada primo común una sola vez: 2 · 3
+  # C CAMBIA: da el mcm
+  # D PRIMERCOMUN: un solo factor común
+  - code: M1-ENT-130
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Si $24 = 2 \cdot 2 \cdot 2 \cdot 3$ y
+      $36 = 2 \cdot 2 \cdot 3 \cdot 3$, ¿cuál es el máximo común divisor de
+      $24$ y $36$?
+    options:
+      - {label: A, body: "$6$", misconception: ENT-DIVIS-SOLOPRIMOS}
+      - {label: B, body: "$12$", correct: true}
+      - {label: C, body: "$72$", misconception: ENT-MCM-CAMBIA}
+      - {label: D, body: "$2$", misconception: ENT-MCM-PRIMERCOMUN}
+
+  # A PRODUCTO: multiplica 4 · 6 · 9
+  # B SUMA: suma los períodos
+  # D MAYOR: toma el mayor período
+  - code: M1-ENT-131
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Tres alarmas suenan cada $4$, $6$ y $9$ minutos. Si acaban de sonar
+      juntas, ¿en cuántos minutos volverán a sonar juntas por primera vez?
+    options:
+      - {label: A, body: "$216$", misconception: ENT-MCM-PRODUCTO}
+      - {label: B, body: "$19$", misconception: ENT-MCM-SUMA}
+      - {label: C, body: "$36$", correct: true}
+      - {label: D, body: "$9$", misconception: ENT-MCM-MAYOR}
+
+  # A CAMBIA: usa el mcm
+  # B PRIMERCOMUN: el primer divisor común
+  # C SUMA: suma las flores
+  - code: M1-ENT-132
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Una florista tiene $36$ rosas y $48$ claveles. Quiere armar la mayor
+      cantidad posible de ramos iguales, con la misma cantidad de rosas y la
+      misma de claveles en cada ramo, usando todas las flores. ¿Cuántos
+      ramos arma?
+    options:
+      - {label: A, body: "$144$", misconception: ENT-MCM-CAMBIA}
+      - {label: B, body: "$2$", misconception: ENT-MCM-PRIMERCOMUN}
+      - {label: C, body: "$84$", misconception: ENT-MCM-SUMA}
+      - {label: D, body: "$12$", correct: true}
+
+  # A MAYOR: el mayor de los dos
+  # B SOLOCOMUN: 9 = 3 · 3 y 12 = 2 · 2 · 3: solo el común 3, con su mayor repetición
+  # C PRODUCTO: multiplica 9 · 12
+  - code: M1-ENT-133
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el mínimo común múltiplo de $9$ y $12$?"
+    options:
+      - {label: A, body: "$12$", misconception: ENT-MCM-MAYOR}
+      - {label: B, body: "$9$", misconception: ENT-MCM-SOLOCOMUN}
+      - {label: C, body: "$108$", misconception: ENT-MCM-PRODUCTO}
+      - {label: D, body: "$36$", correct: true}
+
+  # A PRIMERCOMUN: rechaza II: el MCD sería 2
+  # B CAMBIA: calcula el MCD cuando piden mcm y al revés: rechaza las tres
+  # D PRODUCTO: acepta I: el producto es el mcm
+  - code: M1-ENT-134
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. $\text{mcm}(4, 10) = 40$
+
+      II. $\text{MCD}(8, 20) = 4$
+
+      III. $\text{mcm}(3, 5) = 15$
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo III", misconception: ENT-MCM-PRIMERCOMUN}
+      - {label: B, body: "Ninguna de ellas", misconception: ENT-MCM-CAMBIA}
+      - {label: C, body: "Solo II y III", correct: true}
+      - {label: D, body: "I, II y III", misconception: ENT-MCM-PRODUCTO}
+
+  # A CAMBIA: usa el MCD
+  # C SUMA: suma los períodos
+  # D PRODUCTO: multiplica 8 · 12 = 96 segundos
+  - code: M1-ENT-135
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Dos luces parpadean: una cada $8$ segundos y otra cada $12$ segundos.
+      Si parpadean juntas a las 20:00:00, ¿a qué hora vuelven a parpadear
+      juntas por primera vez?
+    options:
+      - {label: A, body: "20:00:04", misconception: ENT-MCM-CAMBIA}
+      - {label: B, body: "20:00:24", correct: true}
+      - {label: C, body: "20:00:20", misconception: ENT-MCM-SUMA}
+      - {label: D, body: "20:01:36", misconception: ENT-MCM-PRODUCTO}
+
+  # B CAMBIA: da el MCD
+  # C SUMA: suma los tres
+  # D PRODUCTO: multiplica los tres
+  - code: M1-ENT-136
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el mínimo común múltiplo de $4$, $6$ y $10$?"
+    options:
+      - {label: A, body: "$60$", correct: true}
+      - {label: B, body: "$2$", misconception: ENT-MCM-CAMBIA}
+      - {label: C, body: "$20$", misconception: ENT-MCM-SUMA}
+      - {label: D, body: "$240$", misconception: ENT-MCM-PRODUCTO}
+
+  # ===== NUM-ENT-MCM · nivel 3 =================================
+
+  # a · b = 6 · 72 = 432; b = 24. MCD(18, 24) = 6 y mcm = 72
+  # A PRODUCTO: cree que el mcm es el producto: 18 · b = 72
+  # B MAYOR: el mcm es el mayor de los dos números
+  # C SUMA: 18 + b = 72 (distractor débil)
+  - code: M1-ENT-137
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Dos números naturales $a$ y $b$ cumplen $\text{MCD}(a, b) = 6$ y
+      $\text{mcm}(a, b) = 72$. Si $a = 18$, ¿cuál es el valor de $b$?
+    options:
+      - {label: A, body: "$4$", misconception: ENT-MCM-PRODUCTO}
+      - {label: B, body: "$72$", misconception: ENT-MCM-MAYOR}
+      - {label: C, body: "$54$", misconception: ENT-MCM-SUMA}
+      - {label: D, body: "$24$", correct: true}
+
+  # mcm = 20 días; lunes + 20 = domingo
+  # B PRODUCTO: 4 · 10 = 40 días: lunes + 40
+  # C CAMBIA: MCD = 2 días: lunes + 2
+  # D SUMA: 4 + 10 = 14 días: lunes + 14
+  - code: M1-ENT-138
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Camila va a la piscina cada $4$ días y Diego cada $10$ días. Se
+      encontraron en la piscina un lunes. ¿Qué día de la semana volverán a
+      encontrarse por primera vez?
+    options:
+      - {label: A, body: "Domingo", correct: true}
+      - {label: B, body: "Sábado", misconception: ENT-MCM-PRODUCTO}
+      - {label: C, body: "Miércoles", misconception: ENT-MCM-CAMBIA}
+      - {label: D, body: "Lunes", misconception: ENT-MCM-SUMA}
+
+  # A PRIMERCOMUN: el primer divisor común
+  # C CAMBIA: usa el mcm
+  # D MAYOR: toma el lado menor
+  - code: M1-ENT-139
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Se quiere embaldosar un patio rectangular de $120$ cm por $180$ cm con
+      baldosas cuadradas iguales, lo más grandes posible, sin cortar
+      ninguna. ¿Cuánto mide el lado de cada baldosa?
+    options:
+      - {label: A, body: "$2$ cm", misconception: ENT-MCM-PRIMERCOMUN}
+      - {label: B, body: "$60$ cm", correct: true}
+      - {label: C, body: "$360$ cm", misconception: ENT-MCM-CAMBIA}
+      - {label: D, body: "$120$ cm", misconception: ENT-MCM-MAYOR}
+
+  # A MAYOR: rechaza III: el menor "nunca" es el MCD
+  # B CAMBIA: rechaza I: cree que el mcm es "el chico"
+  # D PRODUCTO: acepta II
+  - code: M1-ENT-140
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones, para números naturales $a$ y
+      $b$:
+
+      I. $\text{mcm}(a, b)$ siempre es mayor o igual que $a$ y que $b$.
+
+      II. $\text{mcm}(a, b)$ siempre es igual a $a \cdot b$.
+
+      III. Si $a$ es divisor de $b$, entonces $\text{MCD}(a, b) = a$.
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo I", misconception: ENT-MCM-MAYOR}
+      - {label: B, body: "Solo III", misconception: ENT-MCM-CAMBIA}
+      - {label: C, body: "Solo I y III", correct: true}
+      - {label: D, body: "I, II y III", misconception: ENT-MCM-PRODUCTO}
+
+  # A MAYOR: toma el menor de los tres
+  # C PRIMERCOMUN: el primer divisor común mayor que 1
+  # D CAMBIA: da el mcm
+  - code: M1-ENT-141
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál es el máximo común divisor de $30$, $45$ y $75$?"
+    options:
+      - {label: A, body: "$30$", misconception: ENT-MCM-MAYOR}
+      - {label: B, body: "$15$", correct: true}
+      - {label: C, body: "$3$", misconception: ENT-MCM-PRIMERCOMUN}
+      - {label: D, body: "$450$", misconception: ENT-MCM-CAMBIA}
+
+  # A CAMBIA: lo trata como MCD: 5 divide a 10 y a 30
+  # B INVIERTE: busca un múltiplo de 30 en vez de un divisor
+  # C SUMA: n + 10 = 30
+  - code: M1-ENT-142
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Se sabe que $\text{mcm}(n, 10) = 30$. ¿Cuál de los siguientes números
+      puede ser $n$?
+    options:
+      - {label: A, body: "$5$", misconception: ENT-MCM-CAMBIA}
+      - {label: B, body: "$60$", misconception: ENT-DIVIS-INVIERTE}
+      - {label: C, body: "$20$", misconception: ENT-MCM-SUMA}
+      - {label: D, body: "$15$", correct: true}
+
+  # mcm(45, 60) = 180 s = 3 min; a los 3, 6, …, 30 min: 10 veces
+  # B CAMBIA: MCD = 15 s; 1.800 ÷ 15
+  # C PRODUCTO: 45 · 60 = 2.700 s = 45 min: ninguna antes de las 8:30
+  # D SUMA: 45 + 60 = 105 s; 1.800 ÷ 105 ≈ 17
+  - code: M1-ENT-143
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un semáforo cambia de color cada $45$ segundos y otro cada $60$
+      segundos. Cambian juntos a las 8:00. ¿Cuántas veces vuelven a cambiar
+      juntos después de las 8:00 y hasta las 8:30, incluida esa hora?
+    options:
+      - {label: A, body: "$10$", correct: true}
+      - {label: B, body: "$120$", misconception: ENT-MCM-CAMBIA}
+      - {label: C, body: "$0$", misconception: ENT-MCM-PRODUCTO}
+      - {label: D, body: "$17$", misconception: ENT-MCM-SUMA}
+
+  # A PRODUCTO: junta todos los factores de los dos: a · b
+  # B CAMBIA: da el MCD
+  # D SOLOCOMUN: solo los comunes (2 y 3) con su mayor repetición
+  - code: M1-ENT-144
+    node: NUM-ENT-MCM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Si $a = 2 \cdot 2 \cdot 3 \cdot 5$ y $b = 2 \cdot 3 \cdot 3 \cdot 7$,
+      ¿cuál es el mínimo común múltiplo de $a$ y $b$?
+    options:
+      - {label: A, body: "$2 \\cdot 2 \\cdot 2 \\cdot 3 \\cdot 3 \\cdot 3 \\cdot 5 \\cdot 7$", misconception: ENT-MCM-PRODUCTO}
+      - {label: B, body: "$2 \\cdot 3$", misconception: ENT-MCM-CAMBIA}
+      - {label: C, body: "$2 \\cdot 2 \\cdot 3 \\cdot 3 \\cdot 5 \\cdot 7$", correct: true}
+      - {label: D, body: "$2 \\cdot 2 \\cdot 3 \\cdot 3$", misconception: ENT-MCM-SOLOCOMUN}
+
+
+# ---------------------------------------------------------------------
+# REMEDIACIONES
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-ENT-DIVIS-INVIERTE
+    misconception: ENT-DIVIS-INVIERTE
+    title: El divisor es el chico, el múltiplo es el grande
+    body: |
+      Cambiaste múltiplo por divisor. Por ejemplo, cuando te pidieron
+      divisores de $14$ diste $28$, o dijiste que $42$ es divisor de $6$.
+
+      **Si $a \cdot k = b$ con números naturales, entonces $a$ es divisor
+      de $b$ y $b$ es múltiplo de $a$.**
+
+      $14 = 2 \cdot 7$. Por eso $2$ y $7$ son divisores de $14$, y $14$ es
+      múltiplo de $2$ y de $7$. El $28$ es múltiplo de $14$, no divisor:
+      $14 \div 28$ no da exacto.
+
+      Los divisores de un número son, a lo más, el número mismo: nunca
+      son más grandes. Los múltiplos son, como mínimo, el número mismo, y
+      siguen para siempre.
+
+      Un control rápido: si te piden divisores y tu respuesta es mayor que
+      el número, estás dando múltiplos.
+    items: [M1-ENT-101, M1-ENT-102, M1-ENT-107, M1-ENT-111, M1-ENT-119, M1-ENT-120]
+
+  - code: REM-ENT-DIVIS-UNO
+    misconception: ENT-DIVIS-UNO
+    title: El 1 no es primo ni compuesto
+    body: |
+      Pusiste el $1$ entre los primos, o entre los compuestos. Por ejemplo,
+      escribiste $1 \cdot 2 \cdot 7$ como descomposición de $14$.
+
+      **Un primo tiene exactamente dos divisores distintos: el $1$ y él
+      mismo. Un compuesto tiene más de dos. El $1$ tiene uno solo.**
+
+      - $7$: divisores $1$ y $7$. Dos: primo.
+      - $21$: divisores $1, 3, 7, 21$. Más de dos: compuesto.
+      - $1$: divisor $1$. Uno solo: no es ninguna de las dos cosas.
+
+      Por eso el $1$ nunca aparece en una descomposición en primos:
+      $14 = 2 \cdot 7$. Agregar un $1$ no cambia el producto, pero el $1$
+      no es un factor primo.
+
+      Un control rápido: el menor primo es el $2$.
+    items: [M1-ENT-100, M1-ENT-103, M1-ENT-109, M1-ENT-110, M1-ENT-114, M1-ENT-115]
+
+  - code: REM-ENT-DIVIS-IMPARPRIMO
+    misconception: ENT-DIVIS-IMPARPRIMO
+    title: Primo no es lo mismo que impar
+    body: |
+      Trataste "primo" como sinónimo de "impar". Por ejemplo, dijiste que
+      $33$ es primo porque es impar, o que el $2$ no es primo porque es
+      par.
+
+      **Un número es primo si sus únicos divisores son el $1$ y él mismo.
+      Que sea par o impar no alcanza para decidirlo.**
+
+      - $33 = 3 \cdot 11$: impar y compuesto.
+      - $2$: sus divisores son $1$ y $2$. Es primo, y es el único primo
+        par (todos los demás pares son divisibles por $2$).
+
+      Para saber si un impar es primo hay que buscar divisores: prueba con
+      $3$, $5$, $7$, $11$... Si ninguno lo divide antes de llegar a un
+      primo cuyo cuadrado se pase del número, es primo.
+
+      Un control rápido: si un número termina en $5$ y es mayor que $5$,
+      es compuesto aunque sea impar.
+    items: [M1-ENT-098, M1-ENT-103, M1-ENT-106, M1-ENT-109, M1-ENT-115, M1-ENT-116]
+
+  - code: REM-ENT-DIVIS-ULTCIFRA
+    misconception: ENT-DIVIS-ULTCIFRA
+    title: Para el 3 y el 9 se suman las cifras
+    body: |
+      Decidiste si un número es divisible por $3$ o por $9$ mirando su
+      última cifra. Por ejemplo, dijiste que $43$ es divisible por $3$
+      porque termina en $3$.
+
+      **Un número es divisible por $3$ si la suma de sus cifras es
+      múltiplo de $3$, y por $9$ si esa suma es múltiplo de $9$.**
+
+      - $43$: $4 + 3 = 7$, no es múltiplo de $3$. $43$ no es divisible por
+        $3$.
+      - $87$: $8 + 7 = 15$, múltiplo de $3$. $87 = 3 \cdot 29$, aunque
+        termine en $7$.
+
+      Mirar la última cifra sirve para el $2$, el $5$ y el $10$, porque
+      esos dividen a $10$. El $3$ y el $9$ no, y por eso su criterio es
+      distinto.
+
+      Un control rápido: si el criterio de tu respuesta fue "termina en",
+      y el divisor es $3$ o $9$, suma las cifras.
+    items: [M1-ENT-102, M1-ENT-103, M1-ENT-111, M1-ENT-112, M1-ENT-117, M1-ENT-119]
+
+  - code: REM-ENT-DIVIS-CRITERIO
+    misconception: ENT-DIVIS-CRITERIO
+    title: Divisible por 3 no es divisible por 9
+    body: |
+      Usaste el criterio de un número para decidir sobre otro. Por
+      ejemplo, dijiste que $48$ es divisible por $9$ porque sus cifras
+      suman $12$, que es múltiplo de $3$.
+
+      **Cada divisor tiene su criterio. Para el $9$ la suma de cifras tiene
+      que ser múltiplo de $9$; para el $6$, el número tiene que ser par
+      y además divisible por $3$; para el $4$, sus dos últimas cifras
+      tienen que formar un múltiplo de $4$.**
+
+      - $48$: $4 + 8 = 12$. Divisible por $3$, no por $9$.
+      - $38$: es par, pero $3 + 8 = 11$. No es divisible por $6$.
+      - $38$: termina en $38$, que no es múltiplo de $4$. No es divisible
+        por $4$, aunque sea par.
+
+      Un control rápido: $9$ es más exigente que $3$; $6$ y $4$ son más
+      exigentes que $2$. Si solo comprobaste el criterio del más fácil, te
+      falta un paso.
+    items: [M1-ENT-099, M1-ENT-102, M1-ENT-109, M1-ENT-111, M1-ENT-118, M1-ENT-119]
+
+  - code: REM-ENT-DIVIS-EXTREMOS
+    misconception: ENT-DIVIS-EXTREMOS
+    title: El 1 y el propio número también son divisores
+    body: |
+      Al listar los divisores dejaste fuera el $1$ y el número mismo. Por
+      ejemplo, para $10$ escribiste solo $2$ y $5$.
+
+      **Todo número es divisible por $1$ y por sí mismo. Esos dos siempre
+      están en la lista.**
+
+      Busca los divisores por parejas que multiplicadas den el número. Para
+      $28$:
+
+      $$1 \cdot 28 \qquad 2 \cdot 14 \qquad 4 \cdot 7$$
+
+      Los divisores son $1, 2, 4, 7, 14$ y $28$: seis. La primera pareja
+      siempre es $1$ por el número, así que partir por ahí evita
+      olvidarlos.
+
+      Lo mismo con los múltiplos: el primer múltiplo de $28$ es el propio
+      $28$.
+
+      Un control rápido: cuenta tus parejas. Cada pareja aporta dos
+      divisores, y la primera es siempre el $1$ con el número.
+    items: [M1-ENT-101, M1-ENT-104, M1-ENT-107, M1-ENT-108, M1-ENT-113, M1-ENT-116]
+
+  - code: REM-ENT-DIVIS-SOLOPRIMOS
+    misconception: ENT-DIVIS-SOLOPRIMOS
+    title: Un divisor no tiene que ser primo
+    body: |
+      Te quedaste solo con los divisores primos. Por ejemplo, para $28$
+      dijiste que sus divisores son $2$ y $7$.
+
+      **Un divisor es cualquier número que divide exacto, sea primo o no.**
+
+      $28 \div 4 = 7$ y $28 \div 14 = 2$: el $4$ y el $14$ también son
+      divisores de $28$, aunque no sean primos. La lista completa es
+      $1, 2, 4, 7, 14, 28$.
+
+      Los primos $2$ y $7$ son los **factores primos** de $28$: los que
+      aparecen en su descomposición $2 \cdot 2 \cdot 7$. Todos los demás
+      divisores salen de multiplicar algunos de esos factores: $2 \cdot 2
+      = 4$, $2 \cdot 7 = 14$.
+
+      Un control rápido: si tu lista de divisores no incluye al propio
+      número, está incompleta.
+    items: [M1-ENT-100, M1-ENT-101, M1-ENT-108, M1-ENT-110, M1-ENT-115, M1-ENT-116]
+
+  - code: REM-ENT-DIVIS-COMPUESTO
+    misconception: ENT-DIVIS-COMPUESTO
+    title: En la descomposición, todos los factores son primos
+    body: |
+      Escribiste el número como un producto, pero algún factor no era
+      primo. Por ejemplo, para $90$ escribiste $9 \cdot 10$.
+
+      **La descomposición en factores primos termina recién cuando todos
+      los factores son primos.**
+
+      $9 \cdot 10$ es correcto como producto, pero $9 = 3 \cdot 3$ y
+      $10 = 2 \cdot 5$ se pueden seguir descomponiendo:
+
+      $$90 = 2 \cdot 3 \cdot 3 \cdot 5$$
+
+      Divide siempre por el menor primo posible hasta llegar a $1$:
+      $90 \div 2 = 45$, $45 \div 3 = 15$, $15 \div 3 = 5$, $5 \div 5 = 1$.
+      Los divisores que usaste son los factores.
+
+      Un control rápido: revisa cada factor de tu respuesta. Si alguno es
+      $4$, $6$, $8$, $9$, $10$... todavía no terminaste.
+    items: [M1-ENT-100, M1-ENT-110, M1-ENT-117, M1-ENT-118]
+
+  - code: REM-ENT-MCM-CAMBIA
+    misconception: ENT-MCM-CAMBIA
+    title: El mcm es grande, el MCD es chico
+    body: |
+      Cambiaste el mcm por el MCD. Por ejemplo, para $8$ y $12$ diste
+      $4$ como mcm, o en un problema de coincidencias usaste el MCD.
+
+      **El mcm es múltiplo de los dos números, así que es mayor o igual
+      que ambos. El MCD divide a los dos, así que es menor o igual que
+      ambos.**
+
+      Para $8$ y $12$:
+
+      - múltiplos comunes: $24, 48, \dots$ El menor es $24$: mcm.
+      - divisores comunes: $1, 2, 4$. El mayor es $4$: MCD.
+
+      En los problemas: si algo se repite y preguntan cuándo vuelve a
+      coincidir, es mcm. Si hay que repartir en grupos iguales lo más
+      grandes posible, es MCD.
+
+      Un control rápido: compara tu respuesta con los datos. Un mcm menor
+      que uno de los números, o un MCD mayor, está cambiado.
+    items: [M1-ENT-124, M1-ENT-126, M1-ENT-132, M1-ENT-134, M1-ENT-141, M1-ENT-142]
+
+  - code: REM-ENT-MCM-PRODUCTO
+    misconception: ENT-MCM-PRODUCTO
+    title: El producto es un múltiplo común, pero no siempre el menor
+    body: |
+      Multiplicaste los dos números para obtener el mcm. Por ejemplo, para
+      $6$ y $14$ diste $84$.
+
+      **El producto $a \cdot b$ siempre es múltiplo común, pero el mcm es
+      el menor, y muchas veces hay uno más chico.**
+
+      Múltiplos de $14$: $14, 28, 42, \dots$ El $42$ ya es múltiplo de $6$.
+      Entonces $\text{mcm}(6, 14) = 42$, no $84$.
+
+      Por descomposición: $6 = 2 \cdot 3$ y $14 = 2 \cdot 7$. El $2$ que
+      comparten se cuenta una sola vez: $2 \cdot 3 \cdot 7 = 42$. Al
+      multiplicar $6 \cdot 14$ se cuenta un $2$ de más.
+
+      El producto es el mcm solo cuando los números no tienen factores en
+      común, como $4$ y $9$.
+
+      Un control rápido: divide tu mcm por $2$, $3$ o $5$. Si el resultado
+      sigue siendo múltiplo de los dos números, no era el menor.
+    items: [M1-ENT-123, M1-ENT-124, M1-ENT-133, M1-ENT-134, M1-ENT-140, M1-ENT-143]
+
+  - code: REM-ENT-MCM-SUMA
+    misconception: ENT-MCM-SUMA
+    title: Para saber cuándo coinciden, se busca un múltiplo común
+    body: |
+      Sumaste los períodos. Por ejemplo, si una alarma suena cada $6$
+      minutos y otra cada $9$, dijiste que vuelven a sonar juntas a los
+      $15$ minutos.
+
+      **Dos cosas que se repiten coinciden en un momento que es múltiplo
+      de los dos períodos. La primera vez es el mcm.**
+
+      La primera alarma suena a los $6, 12, 18, \dots$ minutos. La segunda,
+      a los $9, 18, \dots$ Coinciden a los $18$ minutos:
+      $\text{mcm}(6, 9) = 18$.
+
+      A los $15$ minutos no suena ninguna de las dos: $15$ no es múltiplo
+      de $6$ ni de $9$.
+
+      Un control rápido: tu respuesta tiene que estar en la lista de las
+      dos cosas. Divide por cada período y comprueba que da exacto.
+    items: [M1-ENT-125, M1-ENT-127, M1-ENT-132, M1-ENT-135, M1-ENT-138, M1-ENT-142]
+
+  - code: REM-ENT-MCM-MAYOR
+    misconception: ENT-MCM-MAYOR
+    title: El mayor sirve solo si es múltiplo del otro
+    body: |
+      Tomaste el mayor de los números como mcm (o el menor como MCD) sin
+      comprobarlo. Por ejemplo, para $4$ y $14$ diste $14$ como mcm.
+
+      **El mcm tiene que ser múltiplo de los dos números.**
+
+      $14$ es múltiplo de $14$, pero no de $4$: $14 \div 4$ no da exacto.
+      Sigue con los múltiplos de $14$: $28$ sí es múltiplo de $4$.
+      $\text{mcm}(4, 14) = 28$.
+
+      Con el MCD pasa lo mismo al revés: el menor de los números es el MCD
+      solo si divide al otro. $\text{MCD}(4, 14)$ no es $4$, porque $4$ no
+      divide a $14$; es $2$.
+
+      Un control rápido: divide tu mcm por cada número. Si alguna división
+      no da exacta, no es múltiplo común.
+    items: [M1-ENT-125, M1-ENT-126, M1-ENT-131, M1-ENT-133, M1-ENT-139, M1-ENT-140]
+
+  - code: REM-ENT-MCM-SOLOCOMUN
+    misconception: ENT-MCM-SOLOCOMUN
+    title: El mcm lleva todos los factores
+    body: |
+      Para el mcm usaste solo los factores que los números tienen en
+      común. Por ejemplo, con $8 = 2 \cdot 2 \cdot 2$ y
+      $20 = 2 \cdot 2 \cdot 5$ te quedaste con $2 \cdot 2 \cdot 2 = 8$.
+
+      **El mcm lleva todos los factores primos de los dos números, cada
+      uno las veces que más se repite. Solo los comunes es la regla del
+      MCD.**
+
+      Para $8$ y $20$: el $2$ aparece tres veces en $8$ y dos en $20$, así
+      que van tres. El $5$ aparece en $20$, así que también va:
+
+      $$\text{mcm}(8, 20) = 2 \cdot 2 \cdot 2 \cdot 5 = 40$$
+
+      Si dejas fuera el $5$, tu resultado no es múltiplo de $20$.
+
+      Un control rápido: el mcm tiene que ser divisible por los dos
+      números. Compruébalo antes de responder.
+    items: [M1-ENT-121, M1-ENT-129, M1-ENT-133, M1-ENT-144]
+
+  - code: REM-ENT-MCM-PRIMERCOMUN
+    misconception: ENT-MCM-PRIMERCOMUN
+    title: El MCD es el mayor divisor común, no el primero
+    body: |
+      Diste como MCD el primer divisor común que encontraste. Por ejemplo,
+      para $18$ y $30$ respondiste $2$.
+
+      **El MCD es el mayor de los divisores comunes.**
+
+      Divisores comunes de $18$ y $30$: $1, 2, 3, 6$. El $2$ divide a los
+      dos, pero hay divisores comunes más grandes. El mayor es $6$.
+
+      Por descomposición: $18 = 2 \cdot 3 \cdot 3$ y
+      $30 = 2 \cdot 3 \cdot 5$. En común tienen un $2$ y un $3$:
+      $2 \cdot 3 = 6$. Todos los factores comunes se multiplican, no se
+      elige uno.
+
+      Un control rápido: divide los dos números por tu MCD. Si los dos
+      cocientes todavía tienen un divisor común mayor que $1$, tu MCD se
+      quedó corto.
+    items: [M1-ENT-122, M1-ENT-127, M1-ENT-132, M1-ENT-134, M1-ENT-139, M1-ENT-141]
+
+
+# ---------------------------------------------------------------------
+# CUERPO DE LA CLASE
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Todo lo de esta clase sale de una sola pregunta: ¿una división da
+  exacta? Con eso vas a simplificar fracciones, sumarlas y resolver
+  problemas de repartos y de cosas que se repiten.
+
+  ## Múltiplos, divisores y números primos
+
+  ### Múltiplo y divisor son la misma relación
+
+  $42 = 6 \cdot 7$. Eso se puede decir de dos maneras:
+
+  - $42$ es **múltiplo** de $6$ (está en la tabla del $6$);
+  - $6$ es **divisor** de $42$ ($42 \div 6$ da exacto).
+
+  **El múltiplo es el grande; el divisor es el chico.** Si confundes cuál
+  es cuál, pregúntate quién divide a quién. $6$ divide a $42$; $42$ no
+  divide a $6$.
+
+  Todo número es múltiplo y divisor de sí mismo, y el $1$ es divisor de
+  todos. Un número tiene una cantidad limitada de divisores, pero
+  infinitos múltiplos.
+
+  ### Listar divisores
+
+  Para listar los divisores de $30$, busca las parejas que multiplicadas
+  dan $30$:
+
+  $$1 \cdot 30 \qquad 2 \cdot 15 \qquad 3 \cdot 10 \qquad 5 \cdot 6$$
+
+  Los divisores de $30$ son $1, 2, 3, 5, 6, 10, 15$ y $30$: ocho en
+  total. No olvides los extremos ($1$ y $30$), y no te quedes solo con los
+  primos: $6$, $10$ y $15$ también dividen a $30$.
+
+  ### Criterios de divisibilidad
+
+  - Por $2$: termina en cifra par.
+  - Por $5$: termina en $0$ o en $5$.
+  - Por $10$: termina en $0$.
+  - Por $4$: sus dos últimas cifras forman un múltiplo de $4$.
+  - Por $3$: **la suma de sus cifras** es múltiplo de $3$.
+  - Por $9$: **la suma de sus cifras** es múltiplo de $9$.
+  - Por $6$: es divisible por $2$ **y** por $3$.
+
+  El error típico es mirar la última cifra para el $3$ y el $9$. $73$
+  termina en $3$ y no es divisible por $3$ ($7 + 3 = 10$). En cambio $78$
+  sí lo es ($7 + 8 = 15$).
+
+  Otro: divisible por $3$ no significa divisible por $9$. La suma de
+  cifras de $78$ es $15$: múltiplo de $3$, pero no de $9$.
+
+  ### Primos y compuestos
+
+  Un número **primo** tiene exactamente dos divisores: el $1$ y él mismo.
+  Un **compuesto** tiene más de dos.
+
+  - El $1$ tiene un solo divisor: **no es primo ni compuesto**.
+  - El $2$ es primo, y es el único primo par.
+  - Impar no es lo mismo que primo: $39 = 3 \cdot 13$ es impar y
+    compuesto.
+
+  Los primos menores que $30$ son $2, 3, 5, 7, 11, 13, 17, 19, 23$ y
+  $29$.
+
+  ### Descomposición en factores primos
+
+  Todo compuesto se escribe como producto de primos. Se divide
+  repetidamente por el menor primo que se pueda:
+
+  $$150 = 2 \cdot 75 = 2 \cdot 3 \cdot 25 = 2 \cdot 3 \cdot 5 \cdot 5$$
+
+  **Todos los factores tienen que ser primos**, y un primo que se repite
+  se escribe las veces que aparece. $150 = 6 \cdot 25$ es un producto
+  correcto, pero no es la descomposición en primos.
+
+  ## Mínimo común múltiplo y máximo común divisor
+
+  ### Qué es cada uno
+
+  - El **mcm** de dos números es el menor número que es múltiplo de los
+    dos.
+  - El **MCD** es el mayor número que divide a los dos.
+
+  El mcm es mayor o igual que los dos números. El MCD es menor o igual
+  que los dos. Si tu mcm es más chico que alguno de los números, o tu MCD
+  más grande, cambiaste uno por el otro.
+
+  ### Por listado
+
+  Para $10$ y $25$:
+
+  - múltiplos de $10$: $10, 20, 30, 40, 50, \dots$ y de $25$: $25, 50,
+    \dots$ El primero común es $50$: $\text{mcm}(10, 25) = 50$.
+  - divisores de $10$: $1, 2, 5, 10$ y de $25$: $1, 5, 25$. El mayor
+    común es $5$: $\text{MCD}(10, 25) = 5$.
+
+  Ojo con el MCD: no es el primer divisor común que encuentras (sería el
+  $1$, o el menor mayor que $1$), sino **el mayor**.
+
+  ### Por descomposición
+
+  $28 = 2 \cdot 2 \cdot 7$ y $42 = 2 \cdot 3 \cdot 7$.
+
+  - **MCD: solo los factores comunes, las veces que se repiten en ambos.**
+    En común tienen un $2$ y un $7$: $\text{MCD} = 14$.
+  - **mcm: todos los factores, las veces que más se repiten.** Dos $2$, un
+    $3$ y un $7$: $\text{mcm} = 2 \cdot 2 \cdot 3 \cdot 7 = 84$.
+
+  El mcm no es, en general, el producto de los números: $28 \cdot 42 =
+  1.176$ es múltiplo común, pero no el menor. El producto coincide con el
+  mcm solo cuando los números no comparten factores (se llaman **primos
+  entre sí**, y su MCD es $1$).
+
+  Además, siempre se cumple
+  $\text{mcm}(a, b) \cdot \text{MCD}(a, b) = a \cdot b$. En el ejemplo:
+  $84 \cdot 14 = 1.176$.
+
+  ### ¿mcm o MCD? Lee qué pide el problema
+
+  - **Cosas que se repiten y hay que saber cuándo vuelven a coincidir**:
+    mcm. Dos buses que pasan cada $10$ y cada $25$ minutos coinciden cada
+    $50$ minutos. No se suman los tiempos: sumarlos no da un momento en
+    que los dos pasen.
+  - **Repartir en la mayor cantidad de grupos iguales, o en grupos lo más
+    grandes posible, sin que sobre**: MCD. Con $10$ manzanas y $25$
+    naranjas se arman como máximo $\text{MCD}(10, 25) = 5$ bolsas iguales,
+    cada una con $2$ manzanas y $5$ naranjas.
+
+  Un control rápido: en los problemas de coincidir, la respuesta es
+  **mayor** que los datos; en los de repartir, es **menor**.

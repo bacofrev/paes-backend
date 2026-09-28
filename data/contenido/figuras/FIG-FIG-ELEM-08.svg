@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 288" width="288" height="288" role="img" aria-label="Cuadrado dibujado inclinado, de centro O. Están dibujados OA, hasta el vértice A, y OM, hasta el punto M del lado AB, con un ángulo recto en M." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="116.55,246.45 246.45,171.45 171.45,41.55 41.55,116.55" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="144" y1="144" x2="181.5" y2="208.95" stroke-width="1.2"/>
+  <line x1="144" y1="144" x2="116.55" y2="246.45" stroke-width="1.2"/>
+  <polyline points="177,201.16 184.79,196.66 189.29,204.45" fill="none" stroke-width="1.1"/>
+  <circle cx="144" cy="144" r="2.8" fill="currentColor" stroke="none"/>
+  <text x="112.15" y="262.87" font-size="14" text-anchor="middle" dominant-baseline="central">A</text>
+  <text x="262.87" y="175.85" font-size="14" text-anchor="middle" dominant-baseline="central">B</text>
+  <text x="189" y="221.94" font-size="13" text-anchor="middle" dominant-baseline="central">M</text>
+  <text x="149" y="128" font-size="13" text-anchor="middle" dominant-baseline="central">O</text>
+</svg>

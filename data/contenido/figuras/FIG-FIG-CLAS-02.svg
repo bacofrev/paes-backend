@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 296 216" width="296" height="216" role="img" aria-label="Un cuadrilátero con sus cuatro ángulos rectos marcados; sus lados opuestos están marcados como iguales." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="48,168 248,168 248,48 48,48" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polyline points="59.2,168 59.2,156.8 48,156.8" fill="none" stroke-width="1.1"/>
+  <polyline points="248,156.8 236.8,156.8 236.8,168" fill="none" stroke-width="1.1"/>
+  <polyline points="236.8,48 236.8,59.2 248,59.2" fill="none" stroke-width="1.1"/>
+  <polyline points="48,59.2 59.2,59.2 59.2,48" fill="none" stroke-width="1.1"/>
+  <line x1="148" y1="161.6" x2="148" y2="174.4" stroke-width="1.2"/>
+  <line x1="148" y1="41.6" x2="148" y2="54.4" stroke-width="1.2"/>
+  <line x1="241.6" y1="109.8" x2="254.4" y2="109.8" stroke-width="1.2"/>
+  <line x1="241.6" y1="106.2" x2="254.4" y2="106.2" stroke-width="1.2"/>
+  <line x1="41.6" y1="109.8" x2="54.4" y2="109.8" stroke-width="1.2"/>
+  <line x1="41.6" y1="106.2" x2="54.4" y2="106.2" stroke-width="1.2"/>
+</svg>

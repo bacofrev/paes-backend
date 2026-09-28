@@ -205,6 +205,367 @@ misconceptions:
       en ítems de variación.
     example: "de -3 °C a 5 °C: variación -8"
 
+  # --- NUM-ENT-MUL ----------------------------------------------------
+  # Propuestas para LES-NUM-ENT-03 (27 sep 2026), sin control 1: todas
+  # hipotesis hasta que Ben las revise.
+  #
+  # Colisiones conocidas:
+  #   REGLASUMA y MAYORIA dan el mismo valor (el opuesto del correcto)
+  #   en un producto de números sueltos siempre que las dos se
+  #   equivoquen. Por eso los ítems de varios factores usan valor +
+  #   afirmación, o preguntan "¿cuál es negativo?" con productos donde
+  #   una de las dos acierta.
+  #   REGLASUMA acierta cuando el factor de mayor tamaño es el negativo
+  #   ((−8) · 3): esos ítems la dejan fuera.
+
+  - code: ENT-MUL-REGLASUMA
+    name: Aplica la regla de signos de la suma a la multiplicación
+    nodo: NUM-ENT-MUL
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Espejo de ENT-ADI-REGLAMUL: trae a la multiplicación y la división
+      lo que sabe de la suma. Dos negativos "juntan" un negativo más
+      grande ((−4)(−5) = −20), y con signos distintos pone el signo del
+      factor de mayor tamaño ((−2) · 6 = 12). Es la misconception central
+      del nodo. Se separa de MAYORIA en un producto de varios factores
+      donde el de mayor tamaño y la mayoría tienen signos distintos, o con
+      valor + afirmación.
+    example: "(−4)(−5) = −20;  (−2) · 6 = 12"
+
+  - code: ENT-MUL-MAYORIA
+    name: Decide el signo de un producto por mayoría
+    nodo: NUM-ENT-MUL
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Con tres o más factores, le pone al resultado el signo que más se
+      repite en vez de contar si los negativos son una cantidad par o
+      impar: (−1) · 2 · 3 = 6 porque "hay más positivos". Solo aparece con
+      tres o más factores. Acierta siempre que la mayoría coincide con la
+      paridad (tres negativos solos, por ejemplo).
+    example: "(−1) · 2 · 3 = 6"
+
+  - code: ENT-MUL-SUMA
+    name: Suma los números que se multiplican
+    nodo: NUM-ENT-MUL
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Lee dos paréntesis seguidos, o un número pegado a un paréntesis,
+      como suma: (−4)(3) = −1. En situaciones que se repiten (baja 3 pisos
+      por minuto durante 4 minutos) junta los datos sumando en vez de
+      multiplicar. Solo se usa en ítems escritos sin punto de
+      multiplicación o en contexto: con "·" a la vista la regla no se
+      activa.
+    example: "(−4)(3) = −1"
+
+  - code: ENT-MUL-DIVCERO
+    name: Confunde dividir el cero con dividir por cero
+    nodo: NUM-ENT-MUL
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Cree que a ÷ 0 = 0, o al revés, que 0 ÷ a no está definido. Es una
+      sola regla mal ubicada: sabe que "con el cero hay un problema" pero
+      no dónde. Se separa de CERONEUTRO porque solo aparece en divisiones.
+      Se mantiene como una sola misconception porque ningún ítem de
+      opción múltiple separa las dos direcciones sin que una de ellas
+      coincida con la correcta.
+    example: "(−8) ÷ 0 = 0"
+
+  - code: ENT-MUL-CERONEUTRO
+    name: Trata el cero como si no cambiara el producto
+    nodo: NUM-ENT-MUL
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Se salta el factor 0, como si fuera el 1: (−5) · 0 · (−2) = 10 y
+      9 · 0 = 9. Confunde el neutro de la multiplicación (1) con el de la
+      suma (0). Solo aparece en productos: en divisiones con cero se
+      etiqueta DIVCERO.
+    example: "(−5) · 0 · (−2) = 10"
+
+  - code: ENT-MUL-INVERSA
+    name: Multiplica cuando corresponde dividir
+    nodo: NUM-ENT-MUL
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Usa la operación directa donde hace falta la inversa: para hallar el
+      factor que falta (? · (−5) = −35) multiplica −35 · (−5), y al
+      repartir una cantidad en partes iguales la multiplica por el número
+      de partes. También al revés: reparte cuando la situación repite.
+      Acierta el signo o no, según los números; lo que la delata es el
+      tamaño del resultado.
+    example: "? · (−5) = −35  →  175"
+
+  # --- NUM-ENT-PRIOR --------------------------------------------------
+  # Propuestas para LES-NUM-ENT-04 (27 sep 2026), sin control 1.
+  # "Sumas antes que restas" ya existe: es ENT-ADI-RESTAGRUPA, y los
+  # ítems de PRIOR la usan como distractor cruzado.
+  #
+  # Colisiones conocidas:
+  #   SIGNOPAR y IZQDER dan lo mismo en a − (b − c) cuando IZQDER ignora
+  #   el paréntesis: esos ítems se etiquetan SIGNOPAR.
+  #   IZQDER acierta en cadenas donde la izquierda ya es la prioridad
+  #   (a · b + c, a ÷ b · c): ahí solo cabe MULTDIV.
+
+  - code: ENT-PRIOR-IZQDER
+    name: Calcula de izquierda a derecha sin mirar la prioridad
+    nodo: NUM-ENT-PRIOR
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Opera en el orden en que lee: en 5 + 3 · (−2) suma primero y obtiene
+      8 · (−2) = −16. Trata la expresión como si cada operación encerrara
+      entre paréntesis todo lo anterior. Es la misconception central del
+      nodo. Solo se ve cuando una suma o resta aparece antes que una
+      multiplicación o división.
+    example: "5 + 3 · (−2) = −16"
+
+  - code: ENT-PRIOR-MULTDIV
+    name: Multiplica antes de dividir
+    nodo: NUM-ENT-PRIOR
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Lee la regla como una lista ordenada (primero multiplicar, después
+      dividir) en vez de "multiplicación y división al mismo nivel, de
+      izquierda a derecha": 24 ÷ 4 · 2 = 24 ÷ 8 = 3. Se separa de IZQDER
+      porque en una cadena de solo · y ÷ IZQDER acierta. El análogo con
+      sumas y restas es ENT-ADI-RESTAGRUPA.
+    example: "24 ÷ 4 · 2 = 3"
+
+  - code: ENT-PRIOR-SIGNOPAR
+    name: El menos delante del paréntesis afecta solo al primer término
+    nodo: NUM-ENT-PRIOR
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Saca el paréntesis sin calcular adentro y el signo menos queda solo
+      con el primer número: 10 − (4 − 9) = 10 − 4 − 9 = −3. Es la versión
+      numérica de EXP-ADI-SIGNOPAR (álgebra); PRIOR no es ancestro de
+      ALG-EXP-ADI, por eso son dos entradas.
+    example: "10 − (4 − 9) = −3"
+
+  - code: ENT-PRIOR-PARCIAL
+    name: El número de afuera multiplica solo al primer término
+    nodo: NUM-ENT-PRIOR
+    area: NUM
+    origin: hipotesis
+    description: >-
+      En a(b − c) multiplica a solo por b: 3(4 − 6) = 12 − 6 = 6. Deja el
+      resto del paréntesis sin multiplicar. Se separa de ENT-MUL-SUMA
+      (que lee a(b − c) como a + (b − c)) porque PARCIAL sí multiplica.
+    example: "3(4 − 6) = 6"
+
+  - code: ENT-PRIOR-RAYA
+    name: La raya de fracción divide solo el término más cercano
+    nodo: NUM-ENT-PRIOR
+    area: NUM
+    origin: hipotesis
+    description: >-
+      No ve la raya de fracción como agrupación: en (−12 + 4)/(−2) divide
+      solo el 4 y obtiene −12 − 2 = −14. Aplica la prioridad de la
+      división como si la expresión estuviera escrita en una línea sin
+      paréntesis.
+    example: "(−12 + 4)/(−2) = −14"
+
+  # --- NUM-ENT-DIVIS --------------------------------------------------
+  # Propuestas para LES-NUM-ENT-05 (27 sep 2026), sin control 1.
+  # DIVIS es `pre` y su único ancestro con contenido es MUL: casi no hay
+  # errores de otros nodos que sirvan de distractor, así que los ítems
+  # usan mucho el formato de afirmación.
+  #
+  # Colisiones conocidas:
+  #   IMPARPRIMO y ULTCIFRA coinciden en impares compuestos que no
+  #   terminan en 3, 6 o 9 (51, 57, 87): los dos los creen primos. Los
+  #   ítems que las usan juntas ponen a ULTCIFRA sobre un primo que
+  #   termina en 3 (53, 83), que IMPARPRIMO acierta.
+  #   CRITERIO y ULTCIFRA coinciden en pares que terminan en 6 cuando se
+  #   pregunta por el 6 (46, 76): se etiqueta ULTCIFRA y el distractor de
+  #   CRITERIO se busca impar y divisible por 3.
+
+  - code: ENT-DIVIS-INVIERTE
+    name: Confunde múltiplo con divisor
+    nodo: NUM-ENT-DIVIS
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Invierte la relación: lista múltiplos cuando le piden divisores (o
+      al revés), dice que 24 es divisor de 6, o lee "divisible por 9" como
+      "divisor de 9". Es la misconception central del nodo. Una señal: un
+      "divisor" mayor que el número.
+    example: "divisores de 6: 6, 12, 18, 24"
+
+  - code: ENT-DIVIS-UNO
+    name: Clasifica el 1 como primo o como compuesto
+    nodo: NUM-ENT-DIVIS
+    area: NUM
+    origin: hipotesis
+    description: >-
+      No sabe que el 1 no es primo ni compuesto. Casi siempre lo pone entre
+      los primos ("tiene como divisores al 1 y a sí mismo") y lo incluye en
+      descomposiciones (1 · 2 · 3 · 5).
+    example: "1 es primo"
+
+  - code: ENT-DIVIS-IMPARPRIMO
+    name: Confunde primo con impar
+    nodo: NUM-ENT-DIVIS
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Usa "impar" como si fuera "primo": 21, 27 o 35 le parecen primos, y
+      el 2 no, porque es par. Se separa de ULTCIFRA con un primo que
+      termina en 3 (IMPARPRIMO acierta) y con el 2.
+    example: "21 es primo; 2 no es primo"
+
+  - code: ENT-DIVIS-ULTCIFRA
+    name: Aplica al 3 y al 9 un criterio de última cifra
+    nodo: NUM-ENT-DIVIS
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Generaliza el criterio del 2, del 5 y del 10 (mirar la última cifra)
+      a divisores que no lo tienen: 43 es divisible por 3 porque termina en
+      3; 139 por 9 porque termina en 9; 87 no es divisible por 3 porque
+      termina en 7. También cuenta "los múltiplos de 7" como los que
+      terminan en 7.
+    example: "43 es divisible por 3"
+
+  - code: ENT-DIVIS-CRITERIO
+    name: Usa el criterio de un divisor más chico como suficiente
+    nodo: NUM-ENT-DIVIS
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Comprueba solo una parte: divisible por 3 le basta para el 9, ser par
+      le basta para el 4 o para el 6, y "par y divisible por 3" le basta
+      para el 18. Conoce los criterios; lo que falla es qué divisor
+      certifica cada uno.
+    example: "57 es divisible por 9 (5 + 7 = 12)"
+
+  - code: ENT-DIVIS-EXTREMOS
+    name: Deja fuera el 1 y el propio número
+    nodo: NUM-ENT-DIVIS
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Al listar o contar divisores omite el 1 y el número mismo ("esos no
+      cuentan"), y a veces cree que un número no es múltiplo de sí mismo.
+      Divisores de 20: 2, 4, 5, 10. Se separa de SOLOPRIMOS porque sí
+      incluye los divisores compuestos.
+    example: "divisores de 20: 2, 4, 5, 10"
+
+  - code: ENT-DIVIS-SOLOPRIMOS
+    name: Cree que los divisores de un número son sus factores primos
+    nodo: NUM-ENT-DIVIS
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Confunde "divisores" con "factores primos": los divisores de 20 son
+      2 y 5; 6 no divide a 90 porque no es primo. Al descomponer escribe
+      cada primo una sola vez (60 = 2 · 3 · 5).
+    example: "divisores de 20: 2 y 5"
+
+  - code: ENT-DIVIS-COMPUESTO
+    name: Deja factores compuestos en la descomposición
+    nodo: NUM-ENT-DIVIS
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Se detiene en un producto correcto pero con factores que no son
+      primos: 60 = 4 · 15, 126 = 2 · 9 · 7. Sabe que hay que "partir" el
+      número, no que la descomposición termina cuando todos los factores
+      son primos.
+    example: "60 = 4 · 15"
+
+  # --- NUM-ENT-MCM ----------------------------------------------------
+  # Propuestas para LES-NUM-ENT-05 (27 sep 2026), sin control 1.
+  #
+  # Colisiones conocidas:
+  #   CAMBIA en un cálculo (da el MCD cuando piden mcm) y CAMBIA en un
+  #   problema (usa el MCD donde corresponde el mcm) dan el mismo número:
+  #   por eso son una sola misconception.
+  #   SOLOCOMUN coincide con el mcm cuando todos los primos son comunes
+  #   (12 y 18), y con el MCD cuando los comunes aparecen con la misma
+  #   repetición (6 y 10): se usa con pares como 8 y 12, 9 y 12, 20 y 30.
+  #   MAYOR acierta cuando un número divide al otro: esos ítems no la usan.
+
+  - code: ENT-MCM-CAMBIA
+    name: Intercambia mcm y MCD
+    nodo: NUM-ENT-MCM
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Da el MCD cuando le piden el mcm (o al revés), o en un problema usa
+      el que no corresponde: para saber cuándo coinciden dos buses usa el
+      MCD. Es la misconception central del nodo. La delata el tamaño: un
+      mcm menor que los números o un MCD mayor.
+    example: "mcm(8, 12) = 4"
+
+  - code: ENT-MCM-PRODUCTO
+    name: Cree que el mcm es el producto de los números
+    nodo: NUM-ENT-MCM
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Multiplica los números: mcm(8, 12) = 96. El producto siempre es
+      múltiplo común, por eso la regla "funciona" con primos entre sí y
+      se refuerza. Por descomposición aparece como juntar todos los
+      factores de los dos sin quitar los repetidos.
+    example: "mcm(8, 12) = 96"
+
+  - code: ENT-MCM-SUMA
+    name: Suma los períodos para saber cuándo coinciden
+    nodo: NUM-ENT-MCM
+    area: NUM
+    origin: hipotesis
+    description: >-
+      En problemas de cosas que se repiten, suma los períodos: buses cada 6
+      y cada 10 minutos coinciden a los 16. Trata "juntar dos ciclos" como
+      juntar dos cantidades. Solo aparece en contexto o con números
+      pequeños.
+    example: "cada 6 y cada 10 minutos: coinciden a los 16"
+
+  - code: ENT-MCM-MAYOR
+    name: Toma el mayor como mcm o el menor como MCD
+    nodo: NUM-ENT-MCM
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Da como mcm el mayor de los números y como MCD el menor, sin
+      comprobar que uno sea múltiplo o divisor del otro. Acierta cuando uno
+      divide al otro (mcm(4, 12) = 12), y por eso se sostiene.
+    example: "mcm(6, 10) = 10"
+
+  - code: ENT-MCM-SOLOCOMUN
+    name: Para el mcm usa solo los factores comunes
+    nodo: NUM-ENT-MCM
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Mezcla las dos reglas de la descomposición: para el mcm toma los
+      factores comunes (con su mayor repetición) y deja fuera los que no
+      comparten. 8 = 2 · 2 · 2 y 12 = 2 · 2 · 3 dan 8. Solo se ve por
+      descomposición o con números que la vuelven distinta del mcm y del
+      MCD.
+    example: "mcm(8, 12) = 8"
+
+  - code: ENT-MCM-PRIMERCOMUN
+    name: Da como MCD el primer divisor común que encuentra
+    nodo: NUM-ENT-MCM
+    area: NUM
+    origin: hipotesis
+    description: >-
+      Lee "común divisor" y se detiene en el primero mayor que 1 (casi
+      siempre 2 o 3), sin buscar el mayor: MCD(12, 18) = 2. Por
+      descomposición aparece como elegir un solo factor común en vez de
+      multiplicarlos todos. Es el espejo de lo que en el mcm sí funciona
+      (el primer múltiplo común es el mínimo).
+    example: "MCD(12, 18) = 2"
+
   # --- NUM-ENT-ABS ----------------------------------------------------
   # Aprobadas por Ben en el control 1 de LES-NUM-ENT-07 (26 sep 2026).
   # Todas vistas en aula. DISTRIB y QUITASIGNO entraron el 27 sep, al

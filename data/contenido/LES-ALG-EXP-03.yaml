@@ -1,0 +1,1231 @@
+# =====================================================================
+# LES-ALG-EXP-03 — Términos semejantes y suma de polinomios
+# Cubre ALG-EXP-TERM, ALG-EXP-ADI
+# =====================================================================
+# Arista directa TERM -> ADI. TERM pide ALG-EXP-LENG (LES-ALG-EXP-01) y
+# NUM-ENT-MUL (LES-NUM-ENT-03). LES-ALG-EXP-02 (VAL) va por otra rama:
+# esta clase no valoriza.
+#
+# Alcance (propuesto, sin control 1):
+#   TERM entra   término, coeficiente y parte literal; reconocer términos
+#                semejantes (misma parte literal, mismos exponentes; ab y
+#                ba son semejantes); reducir expresiones con coeficientes
+#                enteros; coeficiente 1 y −1 implícitos; contexto que se
+#                traduce (LENG) y después se reduce.
+#        fuera   multiplicar monomios (ALG-EXP-MUL, ALG-EXP-POT);
+#                valorizar (ALG-EXP-VAL); coeficientes fraccionarios
+#                (NUM-FRA); grado de un polinomio como concepto.
+#   ADI  entra   sumar y restar polinomios; suprimir paréntesis con + y
+#                con − adelante; opuesto de un polinomio; P − Q con P y Q
+#                dados; corchetes de dos niveles; contexto de dinero,
+#                personas y edades.
+#        fuera   un número distinto de ±1 delante del paréntesis,
+#                3(x + 2) (ALG-EXP-MUL); perímetros con expresiones
+#                (GEO-PER-POL no es ancestro).
+#   notación  x² y x³ aparecen como notación, igual que en LES-ALG-EXP-01
+#        (decisión de Ben entonces): ningún ítem calcula una potencia.
+#
+# Niveles:
+#   1  una reducción directa, reconocer semejantes, un paréntesis
+#   2  cuatro o más términos, varias letras, P ± Q, contexto de un paso
+#   3  I/II/III, desarrollos para elegir, afirmaciones generales,
+#      contexto de varios pasos
+# ---------------------------------------------------------------------
+
+unit: ALG-EXP
+
+lesson:
+  code: LES-ALG-EXP-03
+  title: Términos semejantes y suma de polinomios
+  position: 3
+  nodes:
+    - node: ALG-EXP-TERM
+      anchor: terminos-semejantes
+    - node: ALG-EXP-ADI
+      anchor: adicion-y-sustraccion-de-polinomios
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== ALG-EXP-TERM · nivel 1 ================================
+
+  # A JUXTA: lee 5x como 5 + x y 3x como 3 + x
+  # B EXPSUMA: suma los exponentes: x¹ + x¹ = x²
+  # D MULTIPLICA: multiplica 5x · 3x
+  - code: M1-EXP-046
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $5x + 3x$?"
+    options:
+      - {label: A, body: "$8 + 2x$", misconception: EXP-LENG-JUXTA}
+      - {label: B, body: "$8x^2$", misconception: EXP-TERM-EXPSUMA}
+      - {label: C, body: "$8x$", correct: true}
+      - {label: D, body: "$15x^2$", misconception: EXP-TERM-MULTIPLICA}
+
+  # B COEFUNO: la a sola vale 0
+  # C JUNTA: suma todos los coeficientes y junta las letras
+  # D EXPSUMA: 7a + a = 8a²
+  - code: M1-EXP-047
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $7a + 2b + a$?"
+    options:
+      - {label: A, body: "$8a + 2b$", correct: true}
+      - {label: B, body: "$7a + 2b$", misconception: EXP-TERM-COEFUNO}
+      - {label: C, body: "$10ab$", misconception: EXP-TERM-JUNTA}
+      - {label: D, body: "$8a^2 + 2b$", misconception: EXP-TERM-EXPSUMA}
+
+  # A JUNTA: mismo coeficiente: le parecen semejantes
+  # B POTMUL: confunde el cuadrado con el doble
+  # C GRADO: misma letra: le parecen semejantes
+  - code: M1-EXP-048
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de los siguientes pares de términos son semejantes?"
+    options:
+      - {label: A, body: "$5a$ y $5b$", misconception: EXP-TERM-JUNTA}
+      - {label: B, body: "$x^2$ y $2x$", misconception: EXP-LENG-POTMUL}
+      - {label: C, body: "$3x^2$ y $3x$", misconception: EXP-TERM-GRADO}
+      - {label: D, body: "$4x^2y$ y $-7x^2y$", correct: true}
+
+  # 9m − m = 8m; queda 8m + 2m²
+  # A COEFUNO: la m sola vale 0
+  # C CANCELA: al restar, la m se va: 9m − m = 9
+  # D GRADO: junta m con m²: 9 − 1 + 2 = 10
+  - code: M1-EXP-049
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $9m - m + 2m^2$?"
+    options:
+      - {label: A, body: "$9m + 2m^2$", misconception: EXP-TERM-COEFUNO}
+      - {label: B, body: "$8m + 2m^2$", correct: true}
+      - {label: C, body: "$9 + 2m^2$", misconception: EXP-TERM-CANCELA}
+      - {label: D, body: "$10m^2$", misconception: EXP-TERM-GRADO}
+
+  # −6y + 2y = −4y
+  # A MAGNOP: ve «+», suma tamaños 6 + 2 con el signo del negativo
+  # B GRADO: junta y con y²: −6 + 2 + 1
+  # C COEFUNO: el y² sin número vale 0
+  - code: M1-EXP-050
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $-6y + 2y + y^2$?"
+    options:
+      - {label: A, body: "$-8y + y^2$", misconception: ENT-ADI-MAGNOP}
+      - {label: B, body: "$-3y^2$", misconception: EXP-TERM-GRADO}
+      - {label: C, body: "$-4y$", misconception: EXP-TERM-COEFUNO}
+      - {label: D, body: "$-4y + y^2$", correct: true}
+
+  # A REGLAMUL: menos con menos da más
+  # C MULTIPLICA: multiplica (−3p)(−5p)
+  # D MAGNOP: ve «−», resta tamaños 5 − 3 con el signo del negativo
+  - code: M1-EXP-051
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $-3p - 5p$?"
+    options:
+      - {label: A, body: "$8p$", misconception: ENT-ADI-REGLAMUL}
+      - {label: B, body: "$-8p$", correct: true}
+      - {label: C, body: "$15p^2$", misconception: EXP-TERM-MULTIPLICA}
+      - {label: D, body: "$-2p$", misconception: ENT-ADI-MAGNOP}
+
+  # 4x + 2x = 6x; 3 − 1 = 2
+  # A JUNTA: 4 + 3 + 2 − 1 = 8, todo con x
+  # B EXPSUMA: 4x + 2x = 6x²
+  # D SIGNOSUELTO: junta 3 y 1 sin el menos del 1
+  - code: M1-EXP-052
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $4x + 3 + 2x - 1$?"
+    options:
+      - {label: A, body: "$8x$", misconception: EXP-TERM-JUNTA}
+      - {label: B, body: "$6x^2 + 2$", misconception: EXP-TERM-EXPSUMA}
+      - {label: C, body: "$6x + 2$", correct: true}
+      - {label: D, body: "$6x + 4$", misconception: EXP-TERM-SIGNOSUELTO}
+
+  # B MULTIPLICA: multiplica 2ab · 3ba
+  # C EXPSUMA: suma los exponentes de cada letra
+  # D JUXTA: lee 2ab como 2 + a + b
+  - code: M1-EXP-053
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $2ab + 3ba$?"
+    options:
+      - {label: A, body: "$5ab$", correct: true}
+      - {label: B, body: "$6a^2b^2$", misconception: EXP-TERM-MULTIPLICA}
+      - {label: C, body: "$5a^2b^2$", misconception: EXP-TERM-EXPSUMA}
+      - {label: D, body: "$5 + 2a + 2b$", misconception: EXP-LENG-JUXTA}
+
+  # ===== ALG-EXP-TERM · nivel 2 ================================
+
+  # x + 3x + (3x − 5) = 7x − 5
+  # B JUNTA: 7x − 5 = 2x
+  # C COEFUNO: la x de Sofía vale 0: 3x + 3x − 5
+  # D ADITIVO: triple = x + 3: x + (x + 3) + (x + 3 − 5)
+  - code: M1-EXP-054
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Sofía tiene $x$ láminas, Tomás tiene el triple que Sofía y Luis tiene
+      $5$ menos que Tomás. ¿Qué expresión representa la cantidad de láminas
+      que tienen entre los tres?
+    options:
+      - {label: A, body: "$7x - 5$", correct: true}
+      - {label: B, body: "$2x$", misconception: EXP-TERM-JUNTA}
+      - {label: C, body: "$6x - 5$", misconception: EXP-TERM-COEFUNO}
+      - {label: D, body: "$3x + 1$", misconception: EXP-LENG-ADITIVO}
+
+  # 4x − 3x = x; −2y + 5y = 3y
+  # A SIGNOSUELTO: junta 4x con 3x sin su menos
+  # B JUNTA: 4 − 2 − 3 + 5 = 4 y junta las letras
+  # C CANCELA: 4x − 3x = 1: la x se va
+  - code: M1-EXP-055
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $4x - 2y - 3x + 5y$?"
+    options:
+      - {label: A, body: "$7x + 3y$", misconception: EXP-TERM-SIGNOSUELTO}
+      - {label: B, body: "$4xy$", misconception: EXP-TERM-JUNTA}
+      - {label: C, body: "$1 + 3y$", misconception: EXP-TERM-CANCELA}
+      - {label: D, body: "$x + 3y$", correct: true}
+
+  # 3x² − x² = 2x²; 5x + 2x = 7x
+  # A EXPSUMA: suma exponentes: 3x² − x² = 2x⁴, 5x + 2x = 7x²
+  # C GRADO: junta x² con x: 3 + 5 − 1 + 2
+  # D COEFUNO: el −x² vale 0
+  - code: M1-EXP-056
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $3x^2 + 5x - x^2 + 2x$?"
+    options:
+      - {label: A, body: "$2x^4 + 7x^2$", misconception: EXP-TERM-EXPSUMA}
+      - {label: B, body: "$2x^2 + 7x$", correct: true}
+      - {label: C, body: "$9x^2$", misconception: EXP-TERM-GRADO}
+      - {label: D, body: "$3x^2 + 7x$", misconception: EXP-TERM-COEFUNO}
+
+  # 5ab + 3ab = 8ab; −2a − 7a = −9a
+  # A REGLAMUL: −2a − 7a: menos con menos da más
+  # B EXPSUMA: suma los exponentes al juntar
+  # D JUNTA: 8ab − 9a: 8 − 9 = −1 con ab
+  - code: M1-EXP-057
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $5ab - 2a + 3ab - 7a$?"
+    options:
+      - {label: A, body: "$8ab + 9a$", misconception: ENT-ADI-REGLAMUL}
+      - {label: B, body: "$8a^2b^2 - 9a^2$", misconception: EXP-TERM-EXPSUMA}
+      - {label: C, body: "$8ab - 9a$", correct: true}
+      - {label: D, body: "$-ab$", misconception: EXP-TERM-JUNTA}
+
+  # Ana 3p + 2q; Beto 2p + 5q; total 5p + 7q
+  # A EXPSUMA: 3p + 2p = 5p²
+  # B JUNTA: 3 + 2 + 2 + 5 = 12 y junta las letras
+  # C ADITIVO: 3 cuadernos a p pesos = 3 + p
+  - code: M1-EXP-058
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      En una librería cada cuaderno cuesta $p$ pesos y cada lápiz $q$ pesos.
+      Ana compra $3$ cuadernos y $2$ lápices, y Beto compra $2$ cuadernos y
+      $5$ lápices. ¿Qué expresión representa lo que gastan entre los dos?
+    options:
+      - {label: A, body: "$5p^2 + 7q^2$", misconception: EXP-TERM-EXPSUMA}
+      - {label: B, body: "$12pq$", misconception: EXP-TERM-JUNTA}
+      - {label: C, body: "$12 + 2p + 2q$", misconception: EXP-LENG-ADITIVO}
+      - {label: D, body: "$5p + 7q$", correct: true}
+
+  # 6xy − 2yx = 4xy; queda 4xy + x
+  # A JUNTA: 6 − 2 + 1 = 5 y junta todo en xy
+  # B COEFUNO: la x sola vale 0
+  # D EXPSUMA: suma los exponentes al restar semejantes
+  - code: M1-EXP-059
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $6xy - 2yx + x$?"
+    options:
+      - {label: A, body: "$5xy$", misconception: EXP-TERM-JUNTA}
+      - {label: B, body: "$4xy$", misconception: EXP-TERM-COEFUNO}
+      - {label: C, body: "$4xy + x$", correct: true}
+      - {label: D, body: "$4x^2y^2 + x$", misconception: EXP-TERM-EXPSUMA}
+
+  # A COEFUNO: la w sola vale 0
+  # C EXPSUMA: suma los exponentes
+  # D CANCELA: la letra se va al restar
+  - code: M1-EXP-060
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es verdadera?"
+    options:
+      - {label: A, body: "$4w + w = 4w$", misconception: EXP-TERM-COEFUNO}
+      - {label: B, body: "$8n - 7n = n$", correct: true}
+      - {label: C, body: "$2z + 2z = 4z^2$", misconception: EXP-TERM-EXPSUMA}
+      - {label: D, body: "$6k - 5k = 1$", misconception: EXP-TERM-CANCELA}
+
+  # B POTMUL: confunde sumar tres veces con elevar al cubo
+  # C JUNTA: junta todo en un solo término
+  # D MULTIPLICA: 3a · 2b
+  - code: M1-EXP-061
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál expresión es equivalente a $a + a + a + b + b$?"
+    options:
+      - {label: A, body: "$3a + 2b$", correct: true}
+      - {label: B, body: "$a^3 + b^2$", misconception: EXP-LENG-POTMUL}
+      - {label: C, body: "$5ab$", misconception: EXP-TERM-JUNTA}
+      - {label: D, body: "$6ab$", misconception: EXP-TERM-MULTIPLICA}
+
+  # ===== ALG-EXP-TERM · nivel 3 ================================
+
+  # A EXPSUMA: rechaza I: cree que da 5x²; y rechaza II y III
+  # B CANCELA: acepta III: la b se va al restar
+  # C GRADO: acepta II: misma letra
+  - code: M1-EXP-062
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes igualdades:
+
+      I. $3x + 2x = 5x$
+
+      II. $4a^2 + 3a = 7a^2$
+
+      III. $6b - b = 6$
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Ninguna de ellas", misconception: EXP-TERM-EXPSUMA}
+      - {label: B, body: "Solo I y III", misconception: EXP-TERM-CANCELA}
+      - {label: C, body: "Solo I y II", misconception: EXP-TERM-GRADO}
+      - {label: D, body: "Solo I", correct: true}
+
+  # v + 2v + (2v − 30) = 5v − 30
+  # B JUNTA: 5v − 30: 5 − 30 = −25 con v
+  # C ORDENRESTA: «30 menos que el martes» = 30 − 2v: v + 2v + 30 − 2v
+  # D COEFUNO: la v del lunes vale 0
+  - code: M1-EXP-063
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un sitio web tuvo $v$ visitas el lunes. El martes tuvo el doble de
+      visitas que el lunes, y el miércoles tuvo $30$ visitas menos que el
+      martes. ¿Qué expresión representa el total de visitas de los tres
+      días?
+    options:
+      - {label: A, body: "$5v - 30$", correct: true}
+      - {label: B, body: "$-25v$", misconception: EXP-TERM-JUNTA}
+      - {label: C, body: "$v + 30$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: D, body: "$4v - 30$", misconception: EXP-TERM-COEFUNO}
+
+  # semejantes ⇒ n = 2; 3x²y − 2x²y = x²y
+  # A SIGNOSUELTO: suma 3 y 2 sin el menos
+  # B MULTIPLICA: multiplica los términos
+  # D EXPSUMA: suma los exponentes
+  - code: M1-EXP-064
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Los términos $3x^ny$ y $-2x^2y$ son semejantes. ¿Cuál es el resultado
+      de sumarlos?
+    options:
+      - {label: A, body: "$5x^2y$", misconception: EXP-TERM-SIGNOSUELTO}
+      - {label: B, body: "$-6x^4y^2$", misconception: EXP-TERM-MULTIPLICA}
+      - {label: C, body: "$x^2y$", correct: true}
+      - {label: D, body: "$x^4y^2$", misconception: EXP-TERM-EXPSUMA}
+
+  # A EXPSUMA: rechaza I: cree que da x⁴
+  # C GRADO: acepta II
+  # D COEFUNO: rechaza III: la a sola vale 0, queda −3a
+  - code: M1-EXP-065
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. $x^2 + x^2 = 2x^2$
+
+      II. $x^2$ y $x$ son semejantes, porque tienen la misma letra.
+
+      III. $-3a - a = -4a$
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo III", misconception: EXP-TERM-EXPSUMA}
+      - {label: B, body: "Solo I y III", correct: true}
+      - {label: C, body: "I, II y III", misconception: EXP-TERM-GRADO}
+      - {label: D, body: "Solo I", misconception: EXP-TERM-COEFUNO}
+
+  # 12p + (12 − 8)p − 3p = 13p
+  # A JUNTA: junta las cantidades por un lado y el precio por otro
+  # B ORDENRESTA: «8 menos que el lunes» = 8 − 12 = −4: 12p − 4p − 3p
+  # D SIGNOSUELTO: suma la devolución: 12p + 4p + 3p
+  - code: M1-EXP-066
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Una tienda vende poleras a $p$ pesos cada una. El lunes vendió $12$
+      poleras, el martes $8$ menos que el lunes, y el miércoles le
+      devolvieron $3$ poleras y devolvió el dinero. ¿Qué expresión
+      representa el dinero que ganó la tienda en los tres días?
+    options:
+      - {label: A, body: "$13 + p$", misconception: EXP-TERM-JUNTA}
+      - {label: B, body: "$5p$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: C, body: "$13p$", correct: true}
+      - {label: D, body: "$19p$", misconception: EXP-TERM-SIGNOSUELTO}
+
+  # −4ab + 7ab − 3ab = 0
+  # A MAGNOP: −4ab + 7ab: ve «+», suma tamaños 11 con el signo del negativo; −11ab − 3ab
+  # B REGLAMUL: −4ab − 3ab: menos con menos da más, 7ab + 7ab
+  # C EXPSUMA: −4ab + 7ab = 3a²b²
+  - code: M1-EXP-067
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál es el resultado de reducir $-4ab + 7ab - 3ab$?"
+    options:
+      - {label: A, body: "$-14ab$", misconception: ENT-ADI-MAGNOP}
+      - {label: B, body: "$14ab$", misconception: ENT-ADI-REGLAMUL}
+      - {label: C, body: "$3a^2b^2 - 3ab$", misconception: EXP-TERM-EXPSUMA}
+      - {label: D, body: "$0$", correct: true}
+
+  # 3x + 2x − x = 4x
+  # A COEFUNO: la x sola vale 0: 5x − 0
+  # C CANCELA: 5x − x = 5: la x se va al restar
+  # D POTMUL: triple = cubo, doble = cuadrado
+  - code: M1-EXP-068
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      ¿Qué expresión representa «el triple de un número, más el doble del
+      mismo número, menos el número»?
+    options:
+      - {label: A, body: "$5x$", misconception: EXP-TERM-COEFUNO}
+      - {label: B, body: "$4x$", correct: true}
+      - {label: C, body: "$5$", misconception: EXP-TERM-CANCELA}
+      - {label: D, body: "$x^3 + x^2 - x$", misconception: EXP-LENG-POTMUL}
+
+  # 5a + 2a = 7a; −3b − b = −4b
+  # B SIGNOSUELTO: el −b pierde su signo al agruparlo
+  # C REGLAMUL: menos con menos da más
+  # D COEFUNO: la b sola vale 0
+  - code: M1-EXP-069
+    node: ALG-EXP-TERM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      ¿Cuál de los siguientes desarrollos para reducir $5a - 3b + 2a - b$ es
+      correcto?
+    options:
+      - {label: A, body: "$(5a + 2a) + (-3b - b) = 7a - 4b$", correct: true}
+      - {label: B, body: "$(5a + 2a) + (-3b + b) = 7a - 2b$", misconception: EXP-TERM-SIGNOSUELTO}
+      - {label: C, body: "$(5a + 2a) + (-3b - b) = 7a + 4b$", misconception: ENT-ADI-REGLAMUL}
+      - {label: D, body: "$(5a + 2a) + (-3b - b) = 7a - 3b$", misconception: EXP-TERM-COEFUNO}
+
+  # ===== ALG-EXP-ADI · nivel 1 =================================
+
+  # 2a − 5a + 4 = −3a + 4
+  # A SIGNOPAR: cambia solo el signo del 5a
+  # C IGNORA: 2a + 5a − 4: el menos desaparece
+  # D JUNTA: −3a + 4: −3 + 4 = 1 con a
+  - code: M1-EXP-070
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de $2a - (5a - 4)$?"
+    options:
+      - {label: A, body: "$-3a - 4$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: B, body: "$-3a + 4$", correct: true}
+      - {label: C, body: "$7a - 4$", misconception: EXP-ADI-IGNORA}
+      - {label: D, body: "$a$", misconception: EXP-TERM-JUNTA}
+
+  # 6x − 4
+  # A MASCAMBIA: cambia los signos del segundo paréntesis aunque tiene un +
+  # B EXPSUMA: 4x + 2x = 6x²
+  # D JUNTA: 6x − 4: 6 − 4 = 2 con x
+  - code: M1-EXP-071
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de $(4x + 3) + (2x - 7)$?"
+    options:
+      - {label: A, body: "$6x + 10$", misconception: EXP-ADI-MASCAMBIA}
+      - {label: B, body: "$6x^2 - 4$", misconception: EXP-TERM-EXPSUMA}
+      - {label: C, body: "$6x - 4$", correct: true}
+      - {label: D, body: "$2x$", misconception: EXP-TERM-JUNTA}
+
+  # 5y − 2 − 3y − 1 = 2y − 3
+  # B JUNTA: 2y − 3: 2 − 3 = −1 con y
+  # C SIGNOPAR: cambia solo el signo del 3y: 5y − 2 − 3y + 1
+  # D REGLAMUL: −2 − 1: menos con menos da más
+  - code: M1-EXP-072
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de $(5y - 2) - (3y + 1)$?"
+    options:
+      - {label: A, body: "$2y - 3$", correct: true}
+      - {label: B, body: "$-y$", misconception: EXP-TERM-JUNTA}
+      - {label: C, body: "$2y - 1$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: D, body: "$2y + 3$", misconception: ENT-ADI-REGLAMUL}
+
+  # A SIGNOPAR: cambia solo el signo del primero
+  # B JUNTA: 2m − 6: 2 − 6 = −4 con m
+  # C IGNORA: borra el menos junto con el paréntesis
+  - code: M1-EXP-073
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál expresión es igual a $-(-2m + 6)$?"
+    options:
+      - {label: A, body: "$2m + 6$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: B, body: "$-4m$", misconception: EXP-TERM-JUNTA}
+      - {label: C, body: "$-2m + 6$", misconception: EXP-ADI-IGNORA}
+      - {label: D, body: "$2m - 6$", correct: true}
+
+  # (3x + 2) − (x − 4) = 2x + 6
+  # A ORDENRESTA: resta al revés: (x − 4) − (3x + 2)
+  # B IGNORA: 3x + 2 + x − 4: el menos desaparece
+  # C SIGNOPAR: 3x + 2 − x − 4: no cambia el −4
+  - code: M1-EXP-074
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Ana tenía $3x + 2$ dulces y regaló $x - 4$ de ellos. ¿Qué expresión
+      representa la cantidad de dulces que le quedan?
+    options:
+      - {label: A, body: "$-2x - 6$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: B, body: "$4x - 2$", misconception: EXP-ADI-IGNORA}
+      - {label: C, body: "$2x - 2$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: D, body: "$2x + 6$", correct: true}
+
+  # 3x² + 2x
+  # B GRADO: junta x² con x: 1 + 3 + 2 − 1
+  # C COEFUNO: el x² y el −x sin número valen 0
+  # D EXPSUMA: suma los exponentes al juntar
+  - code: M1-EXP-075
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de $(x^2 + 3x) + (2x^2 - x)$?"
+    options:
+      - {label: A, body: "$3x^2 + 2x$", correct: true}
+      - {label: B, body: "$5x^2$", misconception: EXP-TERM-GRADO}
+      - {label: C, body: "$2x^2 + 3x$", misconception: EXP-TERM-COEFUNO}
+      - {label: D, body: "$3x^4 + 2x^2$", misconception: EXP-TERM-EXPSUMA}
+
+  # 7 − 2x + 3 = 10 − 2x
+  # A JUNTA: 10 − 2x: 10 − 2 = 8 con x
+  # C SIGNOPAR: 7 − 2x − 3
+  # D IGNORA: 7 + 2x − 3
+  - code: M1-EXP-076
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál expresión es equivalente a $7 - (2x - 3)$?"
+    options:
+      - {label: A, body: "$8x$", misconception: EXP-TERM-JUNTA}
+      - {label: B, body: "$10 - 2x$", correct: true}
+      - {label: C, body: "$4 - 2x$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: D, body: "$4 + 2x$", misconception: EXP-ADI-IGNORA}
+
+  # 6a − 1 − 2a + 5 = 4a + 4
+  # A JUNTA: 4a + 4: 4 + 4 = 8 con a
+  # B MAGNOP: 6a + (−2a): ve «+», suma tamaños con el signo del negativo
+  # D MASCAMBIA: cambia los signos del segundo paréntesis: 6a − 1 + 2a − 5
+  - code: M1-EXP-077
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de $(6a - 1) + (-2a + 5)$?"
+    options:
+      - {label: A, body: "$8a$", misconception: EXP-TERM-JUNTA}
+      - {label: B, body: "$-8a + 4$", misconception: ENT-ADI-MAGNOP}
+      - {label: C, body: "$4a + 4$", correct: true}
+      - {label: D, body: "$8a - 6$", misconception: EXP-ADI-MASCAMBIA}
+
+  # ===== ALG-EXP-ADI · nivel 2 =================================
+
+  # −a − b + a − b = −2b
+  # A SIGNOPAR: −a + b + a − b
+  # C IGNORA: a + b + a − b
+  # D REGLAMUL: −b − b: menos con menos da más
+  - code: M1-EXP-078
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de $-(a + b) + (a - b)$?"
+    options:
+      - {label: A, body: "$0$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: B, body: "$-2b$", correct: true}
+      - {label: C, body: "$2a$", misconception: EXP-ADI-IGNORA}
+      - {label: D, body: "$2b$", misconception: ENT-ADI-REGLAMUL}
+
+  # 3m − m − 2 + 4 − m = m + 2
+  # A COEFUNO: las m solas valen 0
+  # B MASCAMBIA: cambia también el segundo: 3m − m − 2 − 4 + m
+  # D SIGNOPAR: 3m − m + 2 + 4 − m
+  - code: M1-EXP-079
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de $3m - (m + 2) + (4 - m)$?"
+    options:
+      - {label: A, body: "$3m + 2$", misconception: EXP-TERM-COEFUNO}
+      - {label: B, body: "$3m - 6$", misconception: EXP-ADI-MASCAMBIA}
+      - {label: C, body: "$m + 2$", correct: true}
+      - {label: D, body: "$m + 6$", misconception: EXP-ADI-SIGNOPAR}
+
+  # 3x² − 2x + 1 − x² − 4x + 3 = 2x² − 6x + 4
+  # B REGLAMUL: −2x − 4x: menos con menos da más
+  # C ORDENRESTA: calcula Q − P
+  # D SIGNOPAR: cambia solo el signo del x²
+  - code: M1-EXP-080
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Si $P = 3x^2 - 2x + 1$ y $Q = x^2 + 4x - 3$, ¿cuál es el resultado de
+      $P - Q$?
+    options:
+      - {label: A, body: "$2x^2 - 6x + 4$", correct: true}
+      - {label: B, body: "$2x^2 + 6x + 4$", misconception: ENT-ADI-REGLAMUL}
+      - {label: C, body: "$-2x^2 + 6x - 4$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: D, body: "$2x^2 + 2x - 2$", misconception: EXP-ADI-SIGNOPAR}
+
+  # 5a − 2b − a + 3b = 4a + b
+  # A JUNTA: 4a + b: 4 + 1 = 5 y junta las letras
+  # B MAGNOP: 5a + (−a): ve «+», suma tamaños con el signo del negativo
+  # C MASCAMBIA: cambia los signos de B al sumarlo
+  - code: M1-EXP-081
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Si $A = 5a - 2b$ y $B = -a + 3b$, ¿cuál es el resultado de $A + B$?
+    options:
+      - {label: A, body: "$5ab$", misconception: EXP-TERM-JUNTA}
+      - {label: B, body: "$-6a + b$", misconception: ENT-ADI-MAGNOP}
+      - {label: C, body: "$6a - 5b$", misconception: EXP-ADI-MASCAMBIA}
+      - {label: D, body: "$4a + b$", correct: true}
+
+  # 2n + 5 − (n − 3) + (n + 1) = 2n + 9
+  # A SIGNOPAR: 2n + 5 − n − 3 + n + 1
+  # B IGNORA: 2n + 5 + n − 3 + n + 1
+  # C JUNTA: 2n + 9: 2 + 9 = 11 con n
+  - code: M1-EXP-082
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un taller tenía $2n + 5$ inscritos. Se retiraron $n - 3$ y después se
+      inscribieron $n + 1$ más. ¿Qué expresión representa la cantidad de
+      inscritos al final?
+    options:
+      - {label: A, body: "$2n + 3$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: B, body: "$4n + 3$", misconception: EXP-ADI-IGNORA}
+      - {label: C, body: "$11n$", misconception: EXP-TERM-JUNTA}
+      - {label: D, body: "$2n + 9$", correct: true}
+
+  # 2x² − 3x − x² + 3x = x²
+  # A SIGNOPAR: 2x² − 3x − x² − 3x
+  # B COEFUNO: el x² sin número vale 0
+  # D CANCELA: 2x² − x² = 1: la letra se va
+  - code: M1-EXP-083
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de $(2x^2 - 3x) - (x^2 - 3x)$?"
+    options:
+      - {label: A, body: "$x^2 - 6x$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: B, body: "$2x^2$", misconception: EXP-TERM-COEFUNO}
+      - {label: C, body: "$x^2$", correct: true}
+      - {label: D, body: "$1$", misconception: EXP-TERM-CANCELA}
+
+  # 3x − (x − 2) = 2x + 2
+  # B IGNORA: 3x + x − 2
+  # C SIGNOPAR: 3x − x − 2: no pone paréntesis a M
+  # D JUNTA: 2x + 2: 2 + 2 = 4 con x
+  - code: M1-EXP-084
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $M = x - 2$, ¿cuál es el resultado de $3x - M$?"
+    options:
+      - {label: A, body: "$2x + 2$", correct: true}
+      - {label: B, body: "$4x - 2$", misconception: EXP-ADI-IGNORA}
+      - {label: C, body: "$2x - 2$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: D, body: "$4x$", misconception: EXP-TERM-JUNTA}
+
+  # 3a + 2b − a + 4b − 2a + b = 7b
+  # A SIGNOPAR: 3a + 2b − a − 4b − 2a + b
+  # C MASCAMBIA: cambia también el tercero: + 2a − b
+  # D COEFUNO: la a restada y la b sumada sin número valen 0
+  - code: M1-EXP-085
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el resultado de $(3a + 2b) - (a - 4b) + (-2a + b)$?"
+    options:
+      - {label: A, body: "$-b$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: B, body: "$7b$", correct: true}
+      - {label: C, body: "$4a + 5b$", misconception: EXP-ADI-MASCAMBIA}
+      - {label: D, body: "$a + 6b$", misconception: EXP-TERM-COEFUNO}
+
+  # ===== ALG-EXP-ADI · nivel 3 =================================
+
+  # (5x + 2) − Q = 3x − 4 ⇒ Q = 2x + 6
+  # A SIGNOPAR: 5x + 2 − 3x − 4
+  # C ORDENRESTA: calcula (3x − 4) − (5x + 2)
+  # D JUNTA: 2x + 6: 2 + 6 = 8 con x
+  - code: M1-EXP-086
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      ¿Qué expresión hay que restarle a $5x + 2$ para obtener $3x - 4$?
+    options:
+      - {label: A, body: "$2x - 2$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: B, body: "$2x + 6$", correct: true}
+      - {label: C, body: "$-2x - 6$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: D, body: "$8x$", misconception: EXP-TERM-JUNTA}
+
+  # −[x − 2 + x] = −[2x − 2] = −2x + 2
+  # A IGNORA: adentro borra el menos: x + 2 − x = 2; −[2]
+  # B SIGNOPAR: adentro bien; afuera cambia solo el primero
+  # C COEFUNO: las x solas valen 0: −[0 − (2 − 0)]
+  - code: M1-EXP-087
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál es el resultado de $-[\\,x - (2 - x)\\,]$?"
+    options:
+      - {label: A, body: "$-2$", misconception: EXP-ADI-IGNORA}
+      - {label: B, body: "$-2x - 2$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: C, body: "$2$", misconception: EXP-TERM-COEFUNO}
+      - {label: D, body: "$-2x + 2$", correct: true}
+
+  # B MASCAMBIA: acepta II
+  # C SIGNOPAR: rechaza I y acepta III: cambia solo el primero
+  # D IGNORA: para él −(a − b) = a − b y a − (b + c) = a + b + c
+  - code: M1-EXP-088
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes igualdades:
+
+      I. $-(a - b) = -a + b$
+
+      II. $+(x - 3) = x + 3$
+
+      III. $a - (b + c) = a - b + c$
+
+      ¿Cuál o cuáles son verdaderas?
+    options:
+      - {label: A, body: "Solo I", correct: true}
+      - {label: B, body: "Solo I y II", misconception: EXP-ADI-MASCAMBIA}
+      - {label: C, body: "Solo III", misconception: EXP-ADI-SIGNOPAR}
+      - {label: D, body: "Ninguna de ellas", misconception: EXP-ADI-IGNORA}
+
+  # 4k − 1 − (2k − 5) + (k − 2) = 3k + 2
+  # A SIGNOPAR: 4k − 1 − 2k − 5 + k − 2
+  # B ORDENRESTA: resta al revés: (2k − 5) − (4k − 1) + (k − 2)
+  # D MASCAMBIA: cambia también el signo de lo devuelto: + k + 2
+  - code: M1-EXP-089
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Pedro tenía $4k - 1$ figuritas. Le regaló $2k - 5$ a su hermana y
+      después ella le devolvió $k - 2$. ¿Qué expresión representa las
+      figuritas que tiene Pedro ahora?
+    options:
+      - {label: A, body: "$3k - 8$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: B, body: "$-k - 6$", misconception: EXP-LENG-ORDENRESTA}
+      - {label: C, body: "$3k + 2$", correct: true}
+      - {label: D, body: "$3k + 6$", misconception: EXP-ADI-MASCAMBIA}
+
+  # B MASCAMBIA: el más también cambia signos
+  # C SIGNOPAR: el menos cambia solo al primero
+  # D ORDENRESTA: la resta no depende del orden
+  - code: M1-EXP-090
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sean $P$ y $Q$ dos polinomios. ¿Cuál de las siguientes afirmaciones es
+      **siempre** verdadera?
+    options:
+      - {label: A, body: "$P - Q$ es el opuesto de $Q - P$.", correct: true}
+      - {label: B, body: "$+(P - Q) = P + Q$", misconception: EXP-ADI-MASCAMBIA}
+      - {label: C, body: "$-(P + Q) = -P + Q$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: D, body: "$P - Q = Q - P$", misconception: EXP-LENG-ORDENRESTA}
+
+  # 5x − 2x + 3 − x − 4 = 2x − 1
+  # A IGNORA: borra los menos con los paréntesis
+  # B SIGNOPAR: cambia solo el primero de cada paréntesis
+  # D COEFUNO: la x sola vale 0
+  - code: M1-EXP-091
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      ¿Cuál de los siguientes desarrollos de $5x - (2x - 3) - (x + 4)$ es
+      correcto?
+    options:
+      - {label: A, body: "$5x + 2x - 3 + x + 4 = 8x + 1$", misconception: EXP-ADI-IGNORA}
+      - {label: B, body: "$5x - 2x - 3 - x + 4 = 2x + 1$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: C, body: "$5x - 2x + 3 - x - 4 = 2x - 1$", correct: true}
+      - {label: D, body: "$5x - 2x + 3 - x - 4 = 3x - 1$", misconception: EXP-TERM-COEFUNO}
+
+  # (4s + 50) − (s − 30) = 3s + 80
+  # A SIGNOPAR: 4s + 50 − s − 30
+  # C EXCESO: «exceso» como suma
+  # D ORDENRESTA: resta al revés: Beto menos Ana
+  - code: M1-EXP-092
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      El sueldo de Ana es $4s + 50$ y el de Beto es $s - 30$, en miles de
+      pesos. ¿Cuál es el exceso del sueldo de Ana sobre el de Beto?
+    options:
+      - {label: A, body: "$3s + 20$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: B, body: "$3s + 80$", correct: true}
+      - {label: C, body: "$5s + 20$", misconception: EXP-LENG-EXCESO}
+      - {label: D, body: "$-3s - 80$", misconception: EXP-LENG-ORDENRESTA}
+
+  # 2x − 1 − x − 3 − 4 + x = 2x − 8
+  # A SIGNOPAR: 2x − 1 − x + 3 − 4 − x: cambia solo el primero de B y de C
+  # B IGNORA: 2x − 1 + x + 3 + 4 − x
+  # C JUNTA: 2x − 8: 2 − 8 = −6 con x
+  - code: M1-EXP-093
+    node: ALG-EXP-ADI
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Si $A = 2x - 1$, $B = x + 3$ y $C = 4 - x$, ¿cuál es el resultado de
+      $A - B - C$?
+    options:
+      - {label: A, body: "$-2$", misconception: EXP-ADI-SIGNOPAR}
+      - {label: B, body: "$2x + 6$", misconception: EXP-ADI-IGNORA}
+      - {label: C, body: "$-6x$", misconception: EXP-TERM-JUNTA}
+      - {label: D, body: "$2x - 8$", correct: true}
+
+
+# ---------------------------------------------------------------------
+# REMEDIACIONES
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-EXP-TERM-JUNTA
+    misconception: EXP-TERM-JUNTA
+    title: Solo se juntan los términos con la misma parte literal
+    body: |
+      Juntaste términos que no son semejantes. Por ejemplo, escribiste
+      $6r + 2s = 8rs$, o $5k + 1 = 6k$.
+
+      **Dos términos se pueden sumar solo si tienen exactamente las mismas
+      letras con los mismos exponentes.**
+
+      Piénsalo con objetos: $6r$ son seis cosas de un tipo y $2s$ son dos
+      de otro. Juntos no forman ocho cosas del tipo «$rs$»; siguen siendo
+      seis y dos. Por eso $6r + 2s$ ya está reducido.
+
+      Lo mismo con un número solo: en $5k + 1$, el $1$ no es un $k$. Queda
+      $5k + 1$.
+
+      Un control rápido: antes de sumar dos coeficientes, tapa los números
+      y compara lo que queda. Si las partes literales no son idénticas, no
+      los sumes.
+    items: [M1-EXP-059, M1-EXP-061, M1-EXP-066, M1-EXP-071, M1-EXP-072, M1-EXP-086]
+
+  - code: REM-EXP-TERM-EXPSUMA
+    misconception: EXP-TERM-EXPSUMA
+    title: Al sumar semejantes, el exponente no cambia
+    body: |
+      Sumaste los exponentes al sumar términos semejantes. Por ejemplo,
+      escribiste $4k^2 + 3k^2 = 7k^4$, o $k + k = k^2$.
+
+      **Al sumar o restar términos semejantes, operas los coeficientes y la
+      parte literal queda igual.**
+
+      $4k^2 + 3k^2$ son cuatro «$k^2$» más tres «$k^2$»: siete «$k^2$».
+
+      $$4k^2 + 3k^2 = 7k^2$$
+
+      Los exponentes se suman cuando se **multiplican** potencias de igual
+      base, no cuando se suman términos. $k + k$ es el doble de $k$,
+      $2k$; $k^2$ es $k$ por $k$.
+
+      Un control rápido: la parte literal de tu resultado tiene que ser la
+      misma de los términos que juntaste.
+    items: [M1-EXP-052, M1-EXP-053, M1-EXP-058, M1-EXP-059, M1-EXP-064, M1-EXP-065]
+
+  - code: REM-EXP-TERM-GRADO
+    misconception: EXP-TERM-GRADO
+    title: Misma letra con distinto exponente no es semejante
+    body: |
+      Juntaste términos con la misma letra pero distinto exponente. Por
+      ejemplo, escribiste $5k^2 + 3k = 8k^2$.
+
+      **Para ser semejantes, las letras tienen que coincidir y también sus
+      exponentes.**
+
+      $k^2$ y $k$ son cantidades distintas: si $k = 10$, $k^2 = 100$ y
+      $k = 10$. Cinco de los primeros y tres de los segundos no son ocho de
+      ninguno.
+
+      $$5k^2 + 3k \quad \text{ya está reducido.}$$
+
+      En una expresión larga, separa por familias: los $k^2$ con los $k^2$,
+      los $k$ con los $k$, los números con los números.
+
+      Un control rápido: si dos términos tienen la misma letra, mira
+      también el exponente antes de juntarlos.
+    items: [M1-EXP-049, M1-EXP-050, M1-EXP-056, M1-EXP-062, M1-EXP-065, M1-EXP-075]
+
+  - code: REM-EXP-TERM-COEFUNO
+    misconception: EXP-TERM-COEFUNO
+    title: Una letra sola vale uno de ella, no cero
+    body: |
+      Trataste una letra sin número adelante como si no contara. Por
+      ejemplo, escribiste $10z - z = 10z$, o $6v + v = 6v$.
+
+      **Cuando un término no muestra coeficiente, su coeficiente es $1$. Y
+      si solo tiene un menos, es $-1$.**
+
+      $z$ es «un $z$». Entonces:
+
+      $$10z - z = 10z - 1z = 9z \qquad 6v + v = 6v + 1v = 7v$$
+
+      Con un solo $z$ restado, tienes uno menos. No puede quedar igual.
+
+      Un control rápido: escribe el $1$ que no se ve antes de operar:
+      $-z$ es $-1z$.
+    items: [M1-EXP-049, M1-EXP-050, M1-EXP-060, M1-EXP-068, M1-EXP-069, M1-EXP-079]
+
+  - code: REM-EXP-TERM-CANCELA
+    misconception: EXP-TERM-CANCELA
+    title: Al restar semejantes, la letra se queda
+    body: |
+      Al restar dos términos semejantes, la letra desapareció. Por ejemplo,
+      escribiste $6w - 5w = 1$.
+
+      **Al restar términos semejantes, restas los coeficientes y la parte
+      literal se copia igual.**
+
+      $$6w - 5w = 1w = w$$
+
+      Seis $w$ menos cinco $w$ es un $w$, no el número $1$. La letra solo
+      desaparece cuando el coeficiente queda en $0$: $6w - 6w = 0$.
+
+      Un control rápido: si tu resultado es un número suelto, comprueba que
+      los coeficientes se hayan anulado del todo. Si no dio $0$, la letra
+      tiene que seguir ahí.
+    items: [M1-EXP-049, M1-EXP-055, M1-EXP-060, M1-EXP-062, M1-EXP-068, M1-EXP-083]
+
+  - code: REM-EXP-TERM-SIGNOSUELTO
+    misconception: EXP-TERM-SIGNOSUELTO
+    title: Cada término se mueve con su signo
+    body: |
+      Al ordenar los términos, uno perdió el signo que tenía adelante. Por
+      ejemplo, en $6t - 2u - 4t$ juntaste $6t + 4t = 10t$.
+
+      **El signo que está delante de un término es parte de ese término.
+      Donde lo lleves, se va con él.**
+
+      En $6t - 2u - 4t$ los términos son $6t$, $-2u$ y $-4t$. Los $t$ son
+      $6t$ y $-4t$:
+
+      $$6t - 4t = 2t \qquad \text{y queda} \quad 2t - 2u$$
+
+      Una forma segura es subrayar cada término junto con el signo que
+      tiene a su izquierda antes de agruparlos.
+
+      Un control rápido: cuenta los signos menos antes y después de
+      ordenar. Tienen que ser los mismos, en los mismos términos.
+    items: [M1-EXP-052, M1-EXP-055, M1-EXP-064, M1-EXP-066, M1-EXP-069]
+
+  - code: REM-EXP-TERM-MULTIPLICA
+    misconception: EXP-TERM-MULTIPLICA
+    title: Sumar semejantes no es multiplicarlos
+    body: |
+      Multiplicaste cuando había que sumar. Por ejemplo, escribiste
+      $9k + 4k = 36k^2$.
+
+      **Para sumar términos semejantes se suman los coeficientes; la parte
+      literal no cambia.**
+
+      $9k + 4k$ es nueve $k$ más cuatro $k$: trece $k$.
+
+      $$9k + 4k = 13k$$
+
+      $36k^2$ es el resultado de $9k \cdot 4k$, que es otra operación. El
+      signo que aparece entre los términos decide qué haces: $+$ es sumar.
+
+      Un control rápido: si el problema es una suma de semejantes, tu
+      resultado tiene la misma parte literal que los términos. Si te
+      apareció un exponente nuevo, multiplicaste.
+    items: [M1-EXP-046, M1-EXP-051, M1-EXP-053, M1-EXP-061, M1-EXP-064]
+
+  - code: REM-EXP-ADI-SIGNOPAR
+    misconception: EXP-ADI-SIGNOPAR
+    title: El menos cambia el signo de todo el paréntesis
+    body: |
+      Al sacar un paréntesis con un menos adelante, cambiaste solo el signo
+      del primer término. Por ejemplo, escribiste
+      $-(4c - 9) = -4c - 9$.
+
+      **Un menos delante de un paréntesis cambia el signo de cada término
+      que está adentro.**
+
+      $$-(4c - 9) = -4c + 9$$
+
+      El paréntesis significa «resta todo esto». Restar $4c - 9$ es quitar
+      el $4c$ y también quitar el $-9$, y quitar $-9$ es sumar $9$.
+
+      Lo mismo con una resta de polinomios:
+
+      $$10c - (3c - 2) = 10c - 3c + 2 = 7c + 2$$
+
+      Un control rápido: después de sacar el paréntesis, revisa que **todos**
+      los términos que estaban adentro hayan cambiado de signo, no solo el
+      primero.
+    items: [M1-EXP-073, M1-EXP-074, M1-EXP-082, M1-EXP-083, M1-EXP-089, M1-EXP-090]
+
+  - code: REM-EXP-ADI-MASCAMBIA
+    misconception: EXP-ADI-MASCAMBIA
+    title: Un más delante del paréntesis no cambia nada
+    body: |
+      Cambiaste los signos de un paréntesis que tenía un más adelante. Por
+      ejemplo, escribiste $+(3c - 8) = 3c + 8$.
+
+      **Si delante del paréntesis hay un $+$ (o no hay nada), se saca el
+      paréntesis y todos los signos quedan igual.**
+
+      $$(5c + 1) + (3c - 8) = 5c + 1 + 3c - 8 = 8c - 7$$
+
+      Sumar un polinomio es sumar cada uno de sus términos tal como están.
+      Solo el menos delante del paréntesis da vuelta los signos.
+
+      Un control rápido: antes de sacar un paréntesis, mira qué signo tiene
+      justo adelante. Si es $+$, copia; si es $-$, cambia todo.
+    items: [M1-EXP-071, M1-EXP-077, M1-EXP-081, M1-EXP-085, M1-EXP-089, M1-EXP-090]
+
+  - code: REM-EXP-ADI-IGNORA
+    misconception: EXP-ADI-IGNORA
+    title: El menos no desaparece con el paréntesis
+    body: |
+      Borraste el paréntesis junto con el signo menos que tenía adelante,
+      como si no estuviera. Por ejemplo, escribiste
+      $10 - (c + 2) = 10 + c + 2$.
+
+      **El menos que está delante de un paréntesis no se borra: se aplica a
+      cada término de adentro.**
+
+      $$10 - (c + 2) = 10 - c - 2 = 8 - c$$
+
+      Si los $c + 2$ se van, se restan los dos: el $c$ y el $2$.
+
+      Un control rápido: cuenta los signos menos. Si antes de sacar el
+      paréntesis había uno delante y después ninguno de los términos de
+      adentro cambió, perdiste ese menos.
+    items: [M1-EXP-073, M1-EXP-074, M1-EXP-082, M1-EXP-084, M1-EXP-088, M1-EXP-091]
+
+
+# ---------------------------------------------------------------------
+# CUERPO DE LA CLASE
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Ya sabes escribir en lenguaje algebraico. Ahora toca ordenar lo que
+  escribes: juntar lo que se puede juntar y sacar paréntesis sin perder
+  signos. Casi todo el álgebra de la PAES pasa por estos dos pasos.
+
+  ## Términos semejantes
+
+  ### Las partes de un término
+
+  En el término $-7a^2b$:
+
+  - el **coeficiente** es $-7$ (el número, con su signo);
+  - la **parte literal** es $a^2b$ (las letras con sus exponentes).
+
+  Cuando no se ve un número, el coeficiente es $1$: en $m$ hay un $m$, no
+  cero. Y en $-m$ el coeficiente es $-1$.
+
+  ### Qué términos son semejantes
+
+  **Dos términos son semejantes si tienen exactamente la misma parte
+  literal: las mismas letras, cada una con el mismo exponente.**
+
+  - $4pq$ y $-9pq$ son semejantes.
+  - $5k^2$ y $5k$ **no** lo son: tienen la misma letra, pero distinto
+    exponente.
+  - $3mn$ y $2nm$ sí lo son: el orden de las letras no importa, porque
+    $mn = nm$.
+  - $6r$ y $6s$ no lo son, aunque tengan el mismo coeficiente.
+
+  ### Reducir: se suman los coeficientes, la parte literal no cambia
+
+  **Para sumar o restar términos semejantes, operas los coeficientes y
+  copias la parte literal tal cual.**
+
+  $$9k + 4k = 13k \qquad 2w^2 - 6w^2 = -4w^2$$
+
+  El exponente **no** se suma. $4k^2 + 3k^2$ son $7$ veces $k^2$: $7k^2$.
+  Si escribes $7k^4$, cambiaste lo que estás contando.
+
+  Tampoco se multiplica: $9k + 4k$ no es $36k^2$. Sumar $k$ nueve veces y
+  cuatro veces más da $13$ veces $k$.
+
+  ### Lo que no se puede juntar se queda separado
+
+  $6r + 2s$ ya está reducido. No es $8rs$: son dos cantidades distintas,
+  como $6$ lápices y $2$ gomas. Lo mismo con un número suelto: $5k + 1$ no
+  es $6k$.
+
+  En una expresión larga, junta cada familia por separado. **Cada término
+  se lleva su signo**:
+
+  $$6t - 2u - 4t + 7u = (6t - 4t) + (-2u + 7u) = 2t + 5u$$
+
+  El error típico es mover $-4t$ al lado de $6t$ y olvidar su menos.
+
+  ### Coeficiente 1 y resultados sin número
+
+  $10z - z = 9z$: al $10z$ le quitas un $z$. No es $10z$ (como si $z$
+  valiera cero) ni $10$ (la letra no desaparece).
+
+  Si al reducir queda coeficiente $1$, se escribe solo la letra:
+  $4v - 3v = v$. Si queda $0$, el término desaparece:
+  $5v - 5v = 0$.
+
+  ## Adición y sustracción de polinomios
+
+  ### Sumar polinomios
+
+  Para sumar, se sacan los paréntesis **sin cambiar ningún signo** y se
+  reducen los semejantes:
+
+  $$(2c^2 - 5c) + (c^2 + 8c) = 2c^2 - 5c + c^2 + 8c = 3c^2 + 3c$$
+
+  Un $+$ delante del paréntesis no cambia nada. El error es cambiar
+  signos igual que con el menos.
+
+  ### El menos delante del paréntesis cambia todos los signos
+
+  **Un signo menos delante de un paréntesis cambia el signo de cada uno de
+  los términos de adentro, no solo el del primero.**
+
+  $$-(4c - 9) = -4c + 9$$
+
+  Es restar el polinomio completo. Si solo cambias el primero, quedaría
+  $-4c - 9$: le restaste el $4c$ pero le sumaste el $9$... que no era lo
+  que había que hacer.
+
+  Tampoco se puede borrar el menos junto con el paréntesis: $10 - (c + 2)$
+  es $8 - c$, no $12 + c$.
+
+  ### Restar polinomios
+
+  Para calcular $P - Q$, escribe $P$ tal cual, cambia todos los signos de
+  $Q$ y reduce:
+
+  $$(5d - 1) - (2d - 6) = 5d - 1 - 2d + 6 = 3d + 5$$
+
+  El orden importa. «Restar $Q$ de $P$» es $P - Q$: se le quita a $P$. Y
+  $Q - P$ da el opuesto: $-3d - 5$.
+
+  El **opuesto** de un polinomio es el que se obtiene cambiando todos sus
+  signos: el opuesto de $d^2 - 2d + 3$ es $-d^2 + 2d - 3$.
+
+  ### Corchetes
+
+  Con paréntesis dentro de corchetes, trabaja de adentro hacia afuera, y
+  aplica el signo de cada nivel a todo lo que encierra:
+
+  $$-[\,2e - (e - 5)\,] = -[\,2e - e + 5\,] = -[\,e + 5\,] = -e - 5$$
+
+  ### Situaciones
+
+  Si una cantidad se quita, va entre paréntesis con un menos adelante. Si
+  un curso tenía $4r + 6$ estudiantes y se van $r + 2$, quedan
+  $4r + 6 - (r + 2) = 3r + 4$. El paréntesis te recuerda que se van los
+  $r$ **y** los $2$.

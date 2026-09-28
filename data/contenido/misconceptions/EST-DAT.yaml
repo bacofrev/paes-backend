@@ -1,0 +1,251 @@
+# =====================================================================
+# Catálogo de misconceptions — unidad EST-DAT
+# =====================================================================
+# Fuente única de la unidad. Las clases NO declaran misconceptions:
+# solo referencian códigos, y el cargador falla si el código no existe
+# acá.
+#
+# origin — de dónde salió el error:
+#   demre      observado en ítems oficiales o clavijero DEMRE
+#   docente    reportado por alguien que hace clases
+#   hipotesis  plausible, sin evidencia todavía
+#
+# Estado: EST-DAT-VAR, EST-TAB-ABS y EST-TAB-ACUM (LES-EST-DAT-01,
+# propuestas el 27 sep 2026, sin control 1: todas hipotesis). El resto
+# se agrega al llegar a su clase.
+#
+# EST-DAT-VAR es raíz del grafo: no hay nodo debajo al que bajar al
+# estudiante. Las remediaciones de estos errores deben sostenerse solas.
+# ---------------------------------------------------------------------
+
+unit: EST-DAT
+
+misconceptions:
+
+  # --- EST-DAT-VAR ----------------------------------------------------
+  # Colisiones conocidas:
+  #   ENTERO y CANTIDAD dan "discreta" para una medición continua. Se
+  #   separan con valor + afirmación (la razón es distinta) o con una
+  #   cantidad continua anotada con decimales (ENTERO acierta, CANTIDAD
+  #   no).
+  #   NUMERO y ORDINAL coinciden en categorías codificadas con números
+  #   (estrellas de un hotel): esos ítems no se usan.
+
+  - code: DAT-VAR-NUMERO
+    name: Cree que toda variable con valores numéricos es cuantitativa
+    nodo: EST-DAT-VAR
+    area: EST
+    origin: hipotesis
+    description: >-
+      Clasifica por la forma de la respuesta y no por lo que mide: el
+      número de camiseta, el RUT, el código postal o una categoría
+      codificada con 1, 2, 3 le parecen cuantitativos porque "son
+      números". Es la misconception central del nodo. La prueba es si
+      tiene sentido sumarlos o promediarlos.
+    example: "número de camiseta: cuantitativa"
+
+  - code: DAT-VAR-ORDINAL
+    name: Cree que una variable con categorías ordenadas es cuantitativa
+    nodo: EST-DAT-VAR
+    area: EST
+    origin: hipotesis
+    description: >-
+      Confunde "se puede ordenar" con "es una cantidad": la talla (S, M,
+      L), el nivel de inglés o el nivel de satisfacción le parecen
+      cuantitativos. Se separa de NUMERO con categorías ordenadas escritas
+      con palabras.
+    example: "nivel de inglés (básico, intermedio, avanzado): cuantitativa"
+
+  - code: DAT-VAR-ENTERO
+    name: Decide discreta o continua según si se anotó con decimales
+    nodo: EST-DAT-VAR
+    area: EST
+    origin: hipotesis
+    description: >-
+      Mira cómo se registró el dato y no qué se mide: la estatura anotada
+      en centímetros enteros le parece discreta, porque "no tiene
+      decimales". Continua quiere decir que la magnitud puede tomar
+      cualquier valor de un intervalo, aunque se redondee al anotarla.
+    example: "estatura en cm enteros: discreta"
+
+  - code: DAT-VAR-CANTIDAD
+    name: Cree que toda "cantidad de" es discreta
+    nodo: EST-DAT-VAR
+    area: EST
+    origin: hipotesis
+    description: >-
+      Se guía por la palabra: "cantidad de lluvia", "cantidad de agua" o
+      "cantidad de harina" le parecen discretas porque "se cuentan".
+      Confunde cantidad (medir) con cantidad de objetos (contar). Se separa
+      de ENTERO con una medición anotada con decimales.
+    example: "cantidad de lluvia caída (mm): discreta"
+
+  - code: DAT-VAR-DISCATEG
+    name: Aplica discreta o continua a variables cualitativas
+    nodo: EST-DAT-VAR
+    area: EST
+    origin: hipotesis
+    description: >-
+      Cree que discreta significa "con categorías separadas" y la usa para
+      variables cualitativas: el color de ojos o la comuna son
+      "discretas". Discreta y continua son tipos de variable cuantitativa.
+    example: "color de ojos: variable discreta"
+
+  - code: DAT-VAR-POBLACION
+    name: Confunde la variable con los individuos que se estudian
+    nodo: EST-DAT-VAR
+    area: EST
+    origin: hipotesis
+    description: >-
+      Responde "los 30 estudiantes" o "los 50 árboles" cuando se pregunta
+      cuál es la variable. La variable es la característica que se registra
+      de cada individuo, no los individuos ni cuántos son.
+    example: "encuesta a 30 estudiantes: la variable son los 30 estudiantes"
+
+  - code: DAT-VAR-VALOR
+    name: Confunde la variable con uno de sus valores
+    nodo: EST-DAT-VAR
+    area: EST
+    origin: hipotesis
+    description: >-
+      Nombra como variable una respuesta concreta ("el fútbol", "2 autos",
+      "165 cm"), casi siempre la más repetida. Se separa de POBLACION
+      porque sí mira la característica, pero se queda en un valor.
+    example: "la variable es «fútbol»"
+
+  - code: DAT-VAR-FRECUENCIA
+    name: Confunde la variable con cuántos individuos tienen cada valor
+    nodo: EST-DAT-VAR
+    area: EST
+    origin: hipotesis
+    description: >-
+      Cree que lo que se estudia es el conteo: "la variable es cuántos
+      estudiantes prefieren cada deporte". Mezcla la variable con su
+      frecuencia. Es el paso previo a TAB-ABS-COLUMNA.
+    example: "la variable es cuántos estudiantes eligen cada deporte"
+
+  # --- EST-TAB-ABS ----------------------------------------------------
+  # Colisiones conocidas:
+  #   SUMAX y FILAS dan valores distintos solo si los valores de la
+  #   variable no son 1, 2, 3, …, n: las tablas parten en 0.
+  #   SUMAF funciona en las dos direcciones (da Σx·f cuando piden n, y Σf
+  #   cuando piden el total de la variable): una sola regla, confundir
+  #   "cuántos datos" con "cuánto suman".
+
+  - code: TAB-ABS-COLUMNA
+    name: Lee el valor de la variable como si fuera la frecuencia
+    nodo: EST-TAB-ABS
+    area: EST
+    origin: hipotesis
+    description: >-
+      Confunde las dos columnas: a "¿cuántos estudiantes tienen 2
+      hermanos?" responde 2, y a "¿cuál es el valor más frecuente?"
+      responde la mayor frecuencia. Es la misconception central del nodo.
+    example: "¿cuántos tienen 2 hermanos? → 2"
+
+  - code: TAB-ABS-FILAS
+    name: Cuenta las filas para saber cuántos datos hay
+    nodo: EST-TAB-ABS
+    area: EST
+    origin: hipotesis
+    description: >-
+      Da como total de datos el número de valores distintos (filas de la
+      tabla) en vez de sumar las frecuencias: una tabla de 5 filas "tiene
+      5 datos".
+    example: "tabla con valores 0 a 4: n = 5"
+
+  - code: TAB-ABS-SUMAX
+    name: Suma los valores de la variable sin sus frecuencias
+    nodo: EST-TAB-ABS
+    area: EST
+    origin: hipotesis
+    description: >-
+      Suma la columna de la variable (0 + 1 + 2 + 3 + 4) para obtener el
+      total de datos o el total de la variable, sin mirar cuántas veces se
+      repite cada valor.
+    example: "hermanos 0, 1, 2, 3, 4: total 10"
+
+  - code: TAB-ABS-SUMAF
+    name: Confunde cuántos datos hay con cuánto suman
+    nodo: EST-TAB-ABS
+    area: EST
+    origin: hipotesis
+    description: >-
+      Cuando piden el total de la variable (total de goles) da la cantidad
+      de datos (partidos), y al revés: cuando piden cuántos datos hay,
+      calcula la suma de valor por frecuencia. También lee "frecuencia 6 del
+      valor 2" como "12 en total".
+    example: "¿cuántos goles en total? → cantidad de partidos"
+
+  - code: TAB-ABS-LIMITE
+    name: Ubica un dato en el borde de un intervalo en el intervalo equivocado
+    nodo: EST-TAB-ABS
+    area: EST
+    origin: hipotesis
+    description: >-
+      Con datos agrupados en intervalos [a, b), pone un dato igual a b
+      dentro de [a, b) o deja fuera un dato igual a a. No lee si el
+      extremo es cerrado o abierto.
+    example: "20 minutos en [10, 20)"
+
+  # --- EST-TAB-ACUM ---------------------------------------------------
+  # Colisiones conocidas:
+  #   SOLOF y FCOMOF son la misma confusión en direcciones opuestas: SOLOF
+  #   usa f donde va F, FCOMOF usa F donde va f. Un ítem pregunta en una
+  #   sola dirección, así que nunca coinciden.
+  #   BORDE y COMPLEMENTO coinciden en "al menos k" (BORDE excluye k,
+  #   COMPLEMENTO no resta): dan números distintos salvo que f(k) = 0.
+
+  - code: TAB-ACUM-BORDE
+    name: Confunde "menos de" con "a lo sumo" y "más de" con "al menos"
+    nodo: EST-TAB-ACUM
+    area: EST
+    origin: hipotesis
+    description: >-
+      No distingue si el valor del borde entra: "menos de 3" lo cuenta con
+      el 3, "al menos 2" lo deja fuera. Es la misconception central del
+      nodo.
+    example: "menos de 3 libros → F(3)"
+
+  - code: TAB-ACUM-SOLOF
+    name: Responde con la frecuencia absoluta cuando se pide la acumulada
+    nodo: EST-TAB-ACUM
+    area: EST
+    origin: hipotesis
+    description: >-
+      A "¿cuántos leyeron a lo sumo 2 libros?" responde f(2), solo los que
+      leyeron exactamente 2. No acumula.
+    example: "a lo sumo 2 → f(2)"
+
+  - code: TAB-ACUM-COMPLEMENTO
+    name: Usa la acumulada directamente para "más de" o "al menos"
+    nodo: EST-TAB-ACUM
+    area: EST
+    origin: hipotesis
+    description: >-
+      Para "más de k" responde F(k), que cuenta los de abajo, en vez de
+      n − F(k). Sabe leer la acumulada pero no que acumula hacia abajo.
+    example: "más de 2 libros → F(2)"
+
+  - code: TAB-ACUM-FCOMOF
+    name: Lee la frecuencia acumulada como si fuera la absoluta
+    nodo: EST-TAB-ACUM
+    area: EST
+    origin: hipotesis
+    description: >-
+      Con una tabla de F, a "¿cuántos tienen exactamente 17 años?" responde
+      F(17) en vez de F(17) − F(16). También suma la columna F para obtener
+      el total.
+    example: "exactamente 17 años → F(17)"
+
+  - code: TAB-ACUM-PAR
+    name: Acumula solo la fila anterior
+    nodo: EST-TAB-ACUM
+    area: EST
+    origin: hipotesis
+    description: >-
+      Construye F sumando la frecuencia de la fila con la de la fila
+      anterior (f_i + f_{i−1}) en vez de sumar todas las anteriores.
+      Acierta en las dos primeras filas, por eso los ítems preguntan de la
+      tercera en adelante.
+    example: "F(3) = f(3) + f(2)"

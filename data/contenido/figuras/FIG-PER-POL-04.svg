@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 415.2 245.2" width="415.2" height="245.2" role="img" aria-label="Dos rectángulos unidos por un lado, formando un rectángulo más grande. El de la izquierda mide 6 cm de ancho y el de la derecha 3 cm; los dos miden 4 cm de alto." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="64.8,183.8 370.8,183.8 370.8,47.8 64.8,47.8" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="268.8" y1="183.8" x2="268.8" y2="47.8" stroke-width="1.5"/>
+  <text x="166.8" y="200.8" font-size="13" text-anchor="middle" dominant-baseline="central">6 cm</text>
+  <text x="319.8" y="200.8" font-size="13" text-anchor="middle" dominant-baseline="central">3 cm</text>
+  <text x="39.3" y="115.8" font-size="13" text-anchor="middle" dominant-baseline="central">4 cm</text>
+</svg>

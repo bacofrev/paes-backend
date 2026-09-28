@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380.8 294.4" width="380.8" height="294.4" role="img" aria-label="Rectángulo de lados 8 cm y 6 cm, con una diagonal de 10 cm dibujada." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="56,238.4 312,238.4 312,46.4 56,46.4" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="56" y1="238.4" x2="312" y2="46.4" stroke-width="1.2"/>
+  <polyline points="67.2,238.4 67.2,227.2 56,227.2" fill="none" stroke-width="1.1"/>
+  <polyline points="312,227.2 300.8,227.2 300.8,238.4" fill="none" stroke-width="1.1"/>
+  <polyline points="300.8,46.4 300.8,57.6 312,57.6" fill="none" stroke-width="1.1"/>
+  <polyline points="56,57.6 67.2,57.6 67.2,46.4" fill="none" stroke-width="1.1"/>
+  <text x="184" y="254.4" font-size="13" text-anchor="middle" dominant-baseline="central">8 cm</text>
+  <text x="336" y="142.4" font-size="13" text-anchor="middle" dominant-baseline="central">6 cm</text>
+  <text x="175.36" y="130.88" font-size="13" text-anchor="middle" dominant-baseline="central">10 cm</text>
+</svg>

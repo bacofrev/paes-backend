@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 326" width="330" height="326" role="img" aria-label="Plano con cuadrícula, el triángulo F y cuatro triángulos numerados del 1 al 4." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <line x1="26" y1="26" x2="26" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="48" y1="26" x2="48" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="70" y1="26" x2="70" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="92" y1="26" x2="92" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="114" y1="26" x2="114" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="136" y1="26" x2="136" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="158" y1="26" x2="158" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="180" y1="26" x2="180" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="202" y1="26" x2="202" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="224" y1="26" x2="224" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="246" y1="26" x2="246" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="268" y1="26" x2="268" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="290" y1="26" x2="290" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="290" x2="290" y2="290" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="268" x2="290" y2="268" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="246" x2="290" y2="246" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="224" x2="290" y2="224" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="202" x2="290" y2="202" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="180" x2="290" y2="180" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="158" x2="290" y2="158" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="136" x2="290" y2="136" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="114" x2="290" y2="114" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="92" x2="290" y2="92" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="70" x2="290" y2="70" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="48" x2="290" y2="48" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="26" x2="290" y2="26" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line class="eje-x" x1="22" y1="136" x2="302" y2="136" stroke-width="1.3"/>
+  <line class="eje-y" x1="180" y1="294" x2="180" y2="14" stroke-width="1.3"/>
+  <polygon points="308,136 299,131.5 299,140.5" fill="currentColor" stroke="none"/>
+  <polygon points="180,8 175.5,17 184.5,17" fill="currentColor" stroke="none"/>
+  <line x1="26" y1="132.5" x2="26" y2="139.5" stroke-width="1.3"/>
+  <line x1="48" y1="132.5" x2="48" y2="139.5" stroke-width="1.3"/>
+  <line x1="70" y1="132.5" x2="70" y2="139.5" stroke-width="1.3"/>
+  <line x1="92" y1="132.5" x2="92" y2="139.5" stroke-width="1.3"/>
+  <line x1="114" y1="132.5" x2="114" y2="139.5" stroke-width="1.3"/>
+  <line x1="136" y1="132.5" x2="136" y2="139.5" stroke-width="1.3"/>
+  <line x1="158" y1="132.5" x2="158" y2="139.5" stroke-width="1.3"/>
+  <line x1="202" y1="132.5" x2="202" y2="139.5" stroke-width="1.3"/>
+  <line x1="224" y1="132.5" x2="224" y2="139.5" stroke-width="1.3"/>
+  <line x1="246" y1="132.5" x2="246" y2="139.5" stroke-width="1.3"/>
+  <line x1="268" y1="132.5" x2="268" y2="139.5" stroke-width="1.3"/>
+  <line x1="290" y1="132.5" x2="290" y2="139.5" stroke-width="1.3"/>
+  <line x1="176.5" y1="290" x2="183.5" y2="290" stroke-width="1.3"/>
+  <line x1="176.5" y1="268" x2="183.5" y2="268" stroke-width="1.3"/>
+  <line x1="176.5" y1="246" x2="183.5" y2="246" stroke-width="1.3"/>
+  <line x1="176.5" y1="224" x2="183.5" y2="224" stroke-width="1.3"/>
+  <line x1="176.5" y1="202" x2="183.5" y2="202" stroke-width="1.3"/>
+  <line x1="176.5" y1="180" x2="183.5" y2="180" stroke-width="1.3"/>
+  <line x1="176.5" y1="158" x2="183.5" y2="158" stroke-width="1.3"/>
+  <line x1="176.5" y1="114" x2="183.5" y2="114" stroke-width="1.3"/>
+  <line x1="176.5" y1="92" x2="183.5" y2="92" stroke-width="1.3"/>
+  <line x1="176.5" y1="70" x2="183.5" y2="70" stroke-width="1.3"/>
+  <line x1="176.5" y1="48" x2="183.5" y2="48" stroke-width="1.3"/>
+  <line x1="176.5" y1="26" x2="183.5" y2="26" stroke-width="1.3"/>
+  <polygon class="figura" data-vertices="=1,2;=4,2;=1,4" points="202,92 268,92 202,48" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon class="figura" data-vertices="=-1,-2;=-4,-2;=-1,-4" points="158,180 92,180 158,224" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon class="figura" data-vertices="=1,-2;=4,-2;=1,-4" points="202,180 268,180 202,224" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon class="figura" data-vertices="=-2,1;=-2,4;=-4,1" points="136,114 136,48 92,114" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon class="figura" data-vertices="=-6,-6;=-3,-6;=-6,-4" points="48,268 114,268 48,224" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <text x="172" y="148" font-size="11" text-anchor="middle" dominant-baseline="central">0</text>
+  <text x="306" y="124" font-size="14" text-anchor="middle" dominant-baseline="central" font-style="italic">x</text>
+  <text x="192" y="14" font-size="14" text-anchor="middle" dominant-baseline="central" font-style="italic">y</text>
+  <text x="224" y="77.33" font-size="13" text-anchor="middle" dominant-baseline="central" font-style="italic">F</text>
+  <text x="136" y="194.67" font-size="13" text-anchor="middle" dominant-baseline="central">1</text>
+  <text x="224" y="194.67" font-size="13" text-anchor="middle" dominant-baseline="central">2</text>
+  <text x="121.33" y="92" font-size="13" text-anchor="middle" dominant-baseline="central">3</text>
+  <text x="70" y="253.33" font-size="13" text-anchor="middle" dominant-baseline="central">4</text>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 334 317.5" width="334" height="317.5" role="img" aria-label="Pentágono regular de centro O. Están dibujados el segmento OA, hasta un vértice, y el segmento OM, hasta el punto M del lado AB, con un ángulo recto en M." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="167,57 62.38,133.01 102.34,255.99 231.66,255.99 271.62,133.01" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="167" y1="167" x2="167" y2="57" stroke-width="1.2"/>
+  <line x1="167" y1="167" x2="114.69" y2="95" stroke-width="1.2"/>
+  <polyline points="120.51,103.01 112.5,108.83 106.68,100.82" fill="none" stroke-width="1.1"/>
+  <circle cx="167" cy="167" r="2.8" fill="currentColor" stroke="none"/>
+  <text x="167" y="39.4" font-size="14" text-anchor="middle" dominant-baseline="central">A</text>
+  <text x="45.65" y="127.57" font-size="14" text-anchor="middle" dominant-baseline="central">B</text>
+  <text x="104.99" y="81.66" font-size="13" text-anchor="middle" dominant-baseline="central">M</text>
+  <text x="180.75" y="178" font-size="13" text-anchor="middle" dominant-baseline="central">O</text>
+</svg>

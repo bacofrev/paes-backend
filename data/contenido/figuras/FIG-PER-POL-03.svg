@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 414 312" width="414" height="312" role="img" aria-label="Figura en forma de L, con todos sus ángulos rectos. Medidas rotuladas: abajo 10 cm, a la izquierda 7 cm, arriba 6 cm y el lado derecho de abajo 4 cm. Dos lados no tienen medida." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="60,258 360,258 360,138 240,138 240,48 60,48" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polyline points="70.5,258 70.5,247.5 60,247.5" fill="none" stroke-width="1.1"/>
+  <polyline points="360,247.5 349.5,247.5 349.5,258" fill="none" stroke-width="1.1"/>
+  <polyline points="349.5,138 349.5,148.5 360,148.5" fill="none" stroke-width="1.1"/>
+  <polyline points="229.5,48 229.5,58.5 240,58.5" fill="none" stroke-width="1.1"/>
+  <polyline points="60,58.5 70.5,58.5 70.5,48" fill="none" stroke-width="1.1"/>
+  <text x="210" y="274.5" font-size="13" text-anchor="middle" dominant-baseline="central">10 cm</text>
+  <text x="36" y="153" font-size="13" text-anchor="middle" dominant-baseline="central">7 cm</text>
+  <text x="150" y="31.5" font-size="13" text-anchor="middle" dominant-baseline="central">6 cm</text>
+  <text x="384" y="198" font-size="13" text-anchor="middle" dominant-baseline="central">4 cm</text>
+</svg>

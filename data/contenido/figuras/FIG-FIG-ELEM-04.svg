@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 342.92 294.17" width="342.92" height="294.17" role="img" aria-label="Trapecio ABCD, dibujado inclinado, con los lados AB y DC paralelos. Desde D salen los segmentos DH, DV y DM hasta el lado AB; en H hay un ángulo recto marcado." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="54,235.17 288.92,149.66 200.9,54 78.74,98.46" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="78.74" y1="98.46" x2="119.78" y2="211.23" stroke-width="1.2"/>
+  <line x1="78.74" y1="98.46" x2="78.74" y2="226.16" stroke-width="1.2"/>
+  <line x1="78.74" y1="98.46" x2="171.46" y2="192.41" stroke-width="1.2"/>
+  <polyline points="116.36,201.83 125.76,198.41 129.18,207.81" fill="none" stroke-width="1.1"/>
+  <text x="41.93" y="247.14" font-size="14" text-anchor="middle" dominant-baseline="central">A</text>
+  <text x="305.81" y="151.61" font-size="14" text-anchor="middle" dominant-baseline="central">B</text>
+  <text x="209.24" y="39.19" font-size="14" text-anchor="middle" dominant-baseline="central">C</text>
+  <text x="63.33" y="91.28" font-size="14" text-anchor="middle" dominant-baseline="central">D</text>
+  <text x="125.59" y="227.2" font-size="13" text-anchor="middle" dominant-baseline="central">H</text>
+  <text x="78.74" y="243.16" font-size="13" text-anchor="middle" dominant-baseline="central">V</text>
+  <text x="183.4" y="204.51" font-size="13" text-anchor="middle" dominant-baseline="central">M</text>
+</svg>

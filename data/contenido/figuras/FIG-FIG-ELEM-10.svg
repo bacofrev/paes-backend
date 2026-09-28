@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 458 363" width="458" height="363" role="img" aria-label="Paralelogramo ABCD con el lado AB inclinado. El lado AB se prolonga con una línea punteada hasta H. Desde D salen los segmentos DH, con un ángulo recto en H, y DM." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="204,244 404,164 254,54 54,134" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="204" y1="244" x2="112.62" y2="280.55" stroke-width="1.1" stroke-dasharray="5 4"/>
+  <line x1="54" y1="134" x2="112.62" y2="280.55" stroke-width="1.2"/>
+  <line x1="54" y1="134" x2="304" y2="204" stroke-width="1.2"/>
+  <polyline points="108.91,271.27 118.19,267.55 121.91,276.84" fill="none" stroke-width="1.1"/>
+  <text x="199.67" y="260.44" font-size="14" text-anchor="middle" dominant-baseline="central">A</text>
+  <text x="420.94" y="165.45" font-size="14" text-anchor="middle" dominant-baseline="central">B</text>
+  <text x="258.33" y="37.56" font-size="14" text-anchor="middle" dominant-baseline="central">C</text>
+  <text x="37.06" y="132.55" font-size="14" text-anchor="middle" dominant-baseline="central">D</text>
+  <text x="118.93" y="296.34" font-size="13" text-anchor="middle" dominant-baseline="central">H</text>
+  <text x="320.37" y="208.58" font-size="13" text-anchor="middle" dominant-baseline="central">M</text>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 298 303" width="298" height="303" role="img" aria-label="Hexágono regular de centro O, con el segmento OA dibujado hasta el vértice A." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="149,54 62.4,104 62.4,204 149,254 235.6,204 235.6,104" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="149" y1="154" x2="149" y2="54" stroke-width="1.2"/>
+  <circle cx="149" cy="154" r="2.8" fill="currentColor" stroke="none"/>
+  <text x="149" y="38" font-size="14" text-anchor="middle" dominant-baseline="central">A</text>
+  <text x="164" y="166.5" font-size="13" text-anchor="middle" dominant-baseline="central">O</text>
+</svg>

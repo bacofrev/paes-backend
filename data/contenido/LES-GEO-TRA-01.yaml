@@ -1,0 +1,734 @@
+# =====================================================================
+# LES-GEO-TRA-01 — El plano cartesiano, puntos y cuadrantes
+# Cubre GEO-PLA-COORD
+# =====================================================================
+# Clase sola y temprano: GEO-PLA-COORD es tronco (la piden SIS, FUN-REP,
+# VEC, ROT, REF, HOM, REC-DIST). Prerrequisito: NUM-ENT-REC
+# (LES-NUM-ENT-01). Decisión 4 del plan: los cuadrantes van acá, las
+# regiones (REG) en LES-GEO-TRA-07.
+#
+# Alcance (propuesto, sin control 1):
+#   entra   par ordenado (x, y), abscisa y ordenada; ubicar y leer puntos
+#           (cuadrícula de 1, de 2, de 3, de 5); cuadrantes y signos;
+#           puntos sobre los ejes (no son de ningún cuadrante); distancia
+#           entre dos puntos en una misma horizontal o vertical (contar
+#           saltos); vértice que falta de un rectángulo; contexto de mapas
+#           con norte y este.
+#   fuera   distancia entre puntos cualesquiera y punto medio
+#           (GEO-REC-DIST, M2); regiones del plano (GEO-PLA-REG);
+#           vectores y traslaciones (GEO-PLA-VEC, GEO-TRA-TRAS); simetrías
+#           (GEO-TRA-REF-EJE).
+#   recurso la recta numérica de NUM-ENT-REC: cada eje es una recta.
+#
+# Niveles:
+#   1  leer o ubicar un punto, reconocer el cuadrante o el eje
+#   2  figuras con escala 2, vértice que falta, coordenadas + cuadrante
+#      en contexto
+#   3  escala 5, I/II/III, enunciados con letras, recorridos en contexto
+# ---------------------------------------------------------------------
+
+unit: GEO-TRA
+
+lesson:
+  code: LES-GEO-TRA-01
+  title: El plano cartesiano, puntos y cuadrantes
+  position: 1
+  nodes:
+    - node: GEO-PLA-COORD
+      anchor: puntos-y-coordenadas
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== GEO-PLA-COORD · nivel 1 ===============================
+
+  # A ESCALA: cuenta cuadrados: 3 a la izquierda y 2 arriba
+  # C ORDEN: invierte el orden
+  # D SINSIGNO: la izquierda sin signo
+  - code: M1-TRA-001
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-PLA-COORD-01
+    stem: "¿Cuáles son las coordenadas del punto $P$?"
+    options:
+      - {label: A, body: "$(-3, 2)$", misconception: PLA-COORD-ESCALA}
+      - {label: B, body: "$(-6, 4)$", correct: true}
+      - {label: C, body: "$(4, -6)$", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$(6, 4)$", misconception: PLA-COORD-SINSIGNO}
+
+  # B CUADNUM: numera en sentido horario
+  # C EJECUAD: pone en un cuadrante un punto del eje
+  # D EJECERO: x = 0 le parece eje x
+  - code: M1-TRA-002
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "El punto $(-2, 7)$ está en el segundo cuadrante.", correct: true}
+      - {label: B, body: "El punto $(5, -1)$ está en el segundo cuadrante.", misconception: PLA-COORD-CUADNUM}
+      - {label: C, body: "El punto $(0, -4)$ está en el tercer cuadrante.", misconception: PLA-COORD-EJECUAD}
+      - {label: D, body: "El punto $(0, -4)$ está sobre el eje $x$.", misconception: PLA-COORD-EJECERO}
+
+  # A EJECERO: x = 0 le parece eje x
+  # B EJECUAD: pone en un cuadrante un punto del eje
+  # C ORDEN: lee la ordenada como abscisa
+  - code: M1-TRA-003
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "El punto $(0, 5)$ está sobre el eje $x$.", misconception: PLA-COORD-EJECERO}
+      - {label: B, body: "El punto $(-5, 0)$ está en el segundo cuadrante.", misconception: PLA-COORD-EJECUAD}
+      - {label: C, body: "El punto $(2, 7)$ está $7$ unidades a la derecha del eje $y$.", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "El punto $(0, 5)$ está sobre el eje $y$.", correct: true}
+
+  # A CUADNUM: numera en sentido horario
+  # B SINSIGNO: no mira el signo de la y
+  # D ORDEN: invierte el orden
+  - code: M1-TRA-004
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál descripción corresponde al punto $(5, -2)$?"
+    options:
+      - {label: A, body: "Está $5$ unidades a la derecha del eje $y$ y $2$ unidades bajo el eje $x$, en el segundo cuadrante.", misconception: PLA-COORD-CUADNUM}
+      - {label: B, body: "Está $5$ unidades a la derecha del eje $y$ y $2$ unidades sobre el eje $x$, en el primer cuadrante.", misconception: PLA-COORD-SINSIGNO}
+      - {label: C, body: "Está $5$ unidades a la derecha del eje $y$ y $2$ unidades bajo el eje $x$, en el cuarto cuadrante.", correct: true}
+      - {label: D, body: "Está $2$ unidades a la derecha del eje $y$ y $5$ unidades bajo el eje $x$, en el cuarto cuadrante.", misconception: PLA-COORD-ORDEN}
+
+  # de −4 a 6: 10 unidades (5 cuadrados de 2)
+  # A ESCALA: cuenta cuadrados
+  # B SINSIGNO: 6 − 4: resta los tamaños
+  # D CONTEO: cuenta líneas: 5 cuadrados, 6 líneas
+  - code: M1-TRA-005
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-PLA-COORD-02
+    stem: "¿Cuál es la distancia entre los puntos $A$ y $B$?"
+    options:
+      - {label: A, body: "$5$ unidades", misconception: PLA-COORD-ESCALA}
+      - {label: B, body: "$2$ unidades", misconception: PLA-COORD-SINSIGNO}
+      - {label: C, body: "$10$ unidades", correct: true}
+      - {label: D, body: "$6$ unidades", misconception: PLA-COORD-CONTEO}
+
+  # A CONTEO: cuenta el eje como la primera línea
+  # B ORDEN: invierte el orden
+  # C SINSIGNO: abajo sin signo
+  - code: M1-TRA-006
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-PLA-COORD-03
+    stem: "¿Cuáles son las coordenadas del punto $Q$?"
+    options:
+      - {label: A, body: "$(5, -4)$", misconception: PLA-COORD-CONTEO}
+      - {label: B, body: "$(-3, 4)$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$(4, 3)$", misconception: PLA-COORD-SINSIGNO}
+      - {label: D, body: "$(4, -3)$", correct: true}
+
+  # A EJECUAD: acepta III
+  # C CUADNUM: rechaza II: (+, −) le parece del segundo
+  # D EJECERO: rechaza I: (a, 0) le parece del eje y
+  - code: M1-TRA-007
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. El punto $(-3, 0)$ está sobre el eje $x$.
+
+      II. El punto $(4, -5)$ está en el cuarto cuadrante.
+
+      III. El punto $(0, 2)$ está en el primer cuadrante.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "I, II y III", misconception: PLA-COORD-EJECUAD}
+      - {label: B, body: "Solo I y II", correct: true}
+      - {label: C, body: "Solo I", misconception: PLA-COORD-CUADNUM}
+      - {label: D, body: "Solo II", misconception: PLA-COORD-EJECERO}
+
+  # B ORDEN: invierte el orden
+  # C CONTEO: cuenta el eje como la primera línea
+  # D SINSIGNO: abajo sin signo
+  - code: M1-TRA-008
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-PLA-COORD-04
+    stem: "¿Cuáles son las coordenadas del punto $R$?"
+    options:
+      - {label: A, body: "$(0, -4)$", correct: true}
+      - {label: B, body: "$(-4, 0)$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$(0, -5)$", misconception: PLA-COORD-CONTEO}
+      - {label: D, body: "$(0, 4)$", misconception: PLA-COORD-SINSIGNO}
+
+  # ===== GEO-PLA-COORD · nivel 2 ===============================
+
+  # A SINSIGNO: C = (2, 5): sin el signo
+  # B ORDEN: B = (5, −2): el orden al revés
+  # C CONTEO: D = (−1, 4): cuenta el eje como la primera línea
+  - code: M1-TRA-009
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-PLA-COORD-08
+    stem: >-
+      ¿Cuál de los puntos de la figura tiene coordenadas $(-2, 5)$?
+    options:
+      - {label: A, body: "El punto $C$", misconception: PLA-COORD-SINSIGNO}
+      - {label: B, body: "El punto $B$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "El punto $D$", misconception: PLA-COORD-CONTEO}
+      - {label: D, body: "El punto $A$", correct: true}
+
+  # A(−4, −2), B(6, −2), C(6, 4) ⇒ D(−4, 4)
+  # B ORDEN: invierte el orden
+  # C SINSIGNO: la izquierda sin signo
+  # D ESCALA: cuenta cuadrados
+  - code: M1-TRA-010
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-PLA-COORD-05
+    stem: >-
+      Los puntos $A$, $B$ y $C$ son tres vértices del rectángulo $ABCD$.
+      ¿Cuáles son las coordenadas del vértice $D$?
+    options:
+      - {label: A, body: "$(-4, 4)$", correct: true}
+      - {label: B, body: "$(4, -4)$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$(4, 4)$", misconception: PLA-COORD-SINSIGNO}
+      - {label: D, body: "$(-2, 2)$", misconception: PLA-COORD-ESCALA}
+
+  # de −6 a 4: 10 unidades
+  # A ESCALA: cuenta cuadrados
+  # B SINSIGNO: 6 − 4: resta los tamaños
+  # D CONTEO: cuenta líneas
+  - code: M1-TRA-011
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-PLA-COORD-06
+    stem: "¿Cuál es la distancia entre los puntos $A$ y $B$?"
+    options:
+      - {label: A, body: "$5$ unidades", misconception: PLA-COORD-ESCALA}
+      - {label: B, body: "$2$ unidades", misconception: PLA-COORD-SINSIGNO}
+      - {label: C, body: "$10$ unidades", correct: true}
+      - {label: D, body: "$6$ unidades", misconception: PLA-COORD-CONTEO}
+
+  # A ORDEN: rechaza II: lee 5 como la distancia al eje y
+  # C SINSIGNO: rechaza I: la y sin signo queda arriba
+  # D EJECUAD: acepta III
+  - code: M1-TRA-012
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. El punto $(3, -1)$ está $1$ unidad bajo el eje $x$.
+
+      II. El punto $(-2, 5)$ está $2$ unidades a la izquierda del eje $y$.
+
+      III. El punto $(0, -4)$ está en el tercer cuadrante.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", misconception: PLA-COORD-ORDEN}
+      - {label: B, body: "Solo I y II", correct: true}
+      - {label: C, body: "Solo II", misconception: PLA-COORD-SINSIGNO}
+      - {label: D, body: "I, II y III", misconception: PLA-COORD-EJECUAD}
+
+  # A ORDEN: invierte el orden
+  # C CUADNUM: numera en sentido horario
+  # D SINSIGNO: oeste sin signo
+  - code: M1-TRA-013
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      En el mapa de un pueblo se usa un plano cartesiano: la plaza está en
+      el origen, el eje $x$ apunta al este, el eje $y$ al norte y cada
+      cuadra mide $1$ unidad. La biblioteca está $3$ cuadras al oeste y $2$
+      cuadras al norte de la plaza. ¿Cuáles son sus coordenadas y en qué
+      cuadrante está?
+    options:
+      - {label: A, body: "$(2, -3)$, en el cuarto cuadrante.", misconception: PLA-COORD-ORDEN}
+      - {label: B, body: "$(-3, 2)$, en el segundo cuadrante.", correct: true}
+      - {label: C, body: "$(-3, 2)$, en el cuarto cuadrante.", misconception: PLA-COORD-CUADNUM}
+      - {label: D, body: "$(3, 2)$, en el primer cuadrante.", misconception: PLA-COORD-SINSIGNO}
+
+  # A CUADNUM: el segundo cuadrante abajo a la derecha
+  # B SINSIGNO: distancias sin signo
+  # C ORDEN: la distancia al eje x como abscisa
+  - code: M1-TRA-014
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un punto está en el segundo cuadrante, a $2$ unidades del eje $x$ y a
+      $5$ unidades del eje $y$. ¿Cuáles son sus coordenadas?
+    options:
+      - {label: A, body: "$(5, -2)$", misconception: PLA-COORD-CUADNUM}
+      - {label: B, body: "$(5, 2)$", misconception: PLA-COORD-SINSIGNO}
+      - {label: C, body: "$(-2, 5)$", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$(-5, 2)$", correct: true}
+
+  # A CUADNUM: numera en sentido horario
+  # B ORDEN: invierte el orden
+  # D SINSIGNO: abajo sin signo
+  - code: M1-TRA-015
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-PLA-COORD-07
+    stem: >-
+      ¿Cuáles son las coordenadas del vértice $C$ y en qué cuadrante está?
+    options:
+      - {label: A, body: "$(3, -2)$, en el segundo cuadrante.", misconception: PLA-COORD-CUADNUM}
+      - {label: B, body: "$(-2, 3)$, en el segundo cuadrante.", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$(3, -2)$, en el cuarto cuadrante.", correct: true}
+      - {label: D, body: "$(3, 2)$, en el primer cuadrante.", misconception: PLA-COORD-SINSIGNO}
+
+  # B ORDEN: intercambia abscisa y ordenada
+  # C EJECUAD: pone en un cuadrante un punto del eje
+  # D EJECERO: (a, 0) le parece del eje y
+  - code: M1-TRA-016
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un punto tiene abscisa negativa y ordenada igual a $0$. ¿Dónde está?
+    options:
+      - {label: A, body: "Sobre el eje $x$, a la izquierda del origen.", correct: true}
+      - {label: B, body: "Sobre el eje $y$, bajo el origen.", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "En el segundo cuadrante.", misconception: PLA-COORD-EJECUAD}
+      - {label: D, body: "Sobre el eje $y$, porque su ordenada es $0$.", misconception: PLA-COORD-EJECERO}
+
+  # ===== GEO-PLA-COORD · nivel 3 ===============================
+
+  # A EJECUAD: acepta III
+  # B EJECERO: acepta II
+  # C CUADNUM: rechaza I: su segundo cuadrante tiene abscisa positiva
+  - code: M1-TRA-017
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. Todos los puntos del segundo cuadrante tienen abscisa negativa.
+
+      II. Si un punto tiene ordenada $0$, está sobre el eje $y$.
+
+      III. El origen está en el primer cuadrante.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I y III", misconception: PLA-COORD-EJECUAD}
+      - {label: B, body: "Solo I y II", misconception: PLA-COORD-EJECERO}
+      - {label: C, body: "Ninguna de ellas", misconception: PLA-COORD-CUADNUM}
+      - {label: D, body: "Solo I", correct: true}
+
+  # A ORDEN: invierte el orden
+  # C ESCALA: cuenta cuadrados
+  # D SINSIGNO: abajo sin signo
+  - code: M1-TRA-018
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 3
+    source: propio
+    figure: FIG-PLA-COORD-09
+    stem: "¿Cuáles son las coordenadas del punto $P$?"
+    options:
+      - {label: A, body: "$(-10, 15)$", misconception: PLA-COORD-ORDEN}
+      - {label: B, body: "$(15, -10)$", correct: true}
+      - {label: C, body: "$(3, -2)$", misconception: PLA-COORD-ESCALA}
+      - {label: D, body: "$(15, 10)$", misconception: PLA-COORD-SINSIGNO}
+
+  # A EJECERO: acepta III
+  # B CONTEO: cuenta líneas: rechaza I (8) y acepta II (8)
+  # D SINSIGNO: rechaza I (4 − 3 = 1) y II
+  - code: M1-TRA-019
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. La distancia entre $(-4, 1)$ y $(3, 1)$ es $7$ unidades.
+
+      II. La distancia entre $(2, -3)$ y $(2, 4)$ es $8$ unidades.
+
+      III. El punto $(0, -4)$ está sobre el eje $x$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I y III", misconception: PLA-COORD-EJECERO}
+      - {label: B, body: "Solo II", misconception: PLA-COORD-CONTEO}
+      - {label: C, body: "Solo I", correct: true}
+      - {label: D, body: "Ninguna de ellas", misconception: PLA-COORD-SINSIGNO}
+
+  # B EJECUAD: pone en un cuadrante un punto del eje
+  # C CUADNUM: numera en sentido horario
+  # D EJECERO: confunde los ejes
+  - code: M1-TRA-020
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sean $a$ y $b$ números positivos. ¿Cuál de las siguientes afirmaciones
+      es correcta?
+    options:
+      - {label: A, body: "El punto $(-a, b)$ está en el segundo cuadrante.", correct: true}
+      - {label: B, body: "El punto $(0, b)$ está en el primer cuadrante.", misconception: PLA-COORD-EJECUAD}
+      - {label: C, body: "El punto $(a, -b)$ está en el segundo cuadrante.", misconception: PLA-COORD-CUADNUM}
+      - {label: D, body: "El punto $(a, 0)$ está sobre el eje $y$.", misconception: PLA-COORD-EJECERO}
+
+  # A CUADNUM: rechaza II: B abajo a la derecha le parece del segundo
+  # B ESCALA: rechaza I: cuenta cuadrados y lee A = (−2, 1)
+  # C ORDEN: lee cada par al revés: rechaza I y II, acepta III
+  - code: M1-TRA-021
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 3
+    source: propio
+    figure: FIG-PLA-COORD-10
+    stem: |-
+      Considera las siguientes afirmaciones sobre los puntos de la figura:
+
+      I. $A = (-4, 2)$
+
+      II. $B$ está en el cuarto cuadrante.
+
+      III. $C = (0, 6)$
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", misconception: PLA-COORD-CUADNUM}
+      - {label: B, body: "Solo II", misconception: PLA-COORD-ESCALA}
+      - {label: C, body: "Solo III", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "Solo I y II", correct: true}
+
+  # A CUADNUM: numera en sentido horario
+  # B SINSIGNO: 3 − 2: resta los tamaños
+  # D CONTEO: cuenta líneas
+  - code: M1-TRA-022
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Una hormiga camina en línea recta por la cuadrícula desde el punto
+      $(-3, 4)$ hasta el punto $(2, 4)$. ¿Cuántas unidades recorre y entre
+      qué cuadrantes se mueve?
+    options:
+      - {label: A, body: "$5$ unidades; pasa del cuarto al primer cuadrante.", misconception: PLA-COORD-CUADNUM}
+      - {label: B, body: "$1$ unidad; pasa del segundo al primer cuadrante.", misconception: PLA-COORD-SINSIGNO}
+      - {label: C, body: "$5$ unidades; pasa del segundo al primer cuadrante.", correct: true}
+      - {label: D, body: "$6$ unidades; pasa del segundo al primer cuadrante.", misconception: PLA-COORD-CONTEO}
+
+  # B ORDEN: confunde ordenada con abscisa
+  # C SINSIGNO: abajo sin signo
+  # D CONTEO: cuenta el eje como la primera línea
+  - code: M1-TRA-023
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 3
+    source: propio
+    figure: FIG-PLA-COORD-11
+    stem: "¿Cuál es la ordenada del punto $T$?"
+    options:
+      - {label: A, body: "$-5$", correct: true}
+      - {label: B, body: "$-3$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$5$", misconception: PLA-COORD-SINSIGNO}
+      - {label: D, body: "$-6$", misconception: PLA-COORD-CONTEO}
+
+  # A SINSIGNO: 4 − 3: resta los tamaños
+  # C CONTEO: cuenta líneas
+  # D CUADNUM: numera en sentido horario
+  - code: M1-TRA-024
+    node: GEO-PLA-COORD
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En un mapa cuadriculado, la casa de Ana está en el punto $(-3, -2)$ y
+      la de Beto en el punto $(4, -2)$. Cada unidad es una cuadra. ¿A
+      cuántas cuadras están una de otra y en qué cuadrante está cada casa?
+    options:
+      - {label: A, body: "A $1$ cuadra; la de Ana en el tercer cuadrante y la de Beto en el cuarto.", misconception: PLA-COORD-SINSIGNO}
+      - {label: B, body: "A $7$ cuadras; la de Ana en el tercer cuadrante y la de Beto en el cuarto.", correct: true}
+      - {label: C, body: "A $8$ cuadras; la de Ana en el tercer cuadrante y la de Beto en el cuarto.", misconception: PLA-COORD-CONTEO}
+      - {label: D, body: "A $7$ cuadras; la de Ana en el tercer cuadrante y la de Beto en el segundo.", misconception: PLA-COORD-CUADNUM}
+
+
+# ---------------------------------------------------------------------
+# REMEDIACIONES
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-PLA-COORD-ORDEN
+    misconception: PLA-COORD-ORDEN
+    title: Primero la x, después la y
+    body: |
+      Cambiaste el orden de las coordenadas. Por ejemplo, un punto que está
+      $1$ unidad a la derecha y $6$ abajo lo escribiste $(-6, 1)$.
+
+      **En el par $(x, y)$, la primera coordenada es la horizontal y la
+      segunda la vertical. Siempre en ese orden.**
+
+      Para el punto de arriba: camina por el eje $x$, $1$ a la derecha,
+      $x = 1$. Después baja $6$, $y = -6$. El punto es $(1, -6)$.
+
+      $(-6, 1)$ es otro punto: $6$ a la izquierda y $1$ arriba, en otro
+      cuadrante.
+
+      Un control rápido: lee el par en voz alta como «derecha o izquierda,
+      después arriba o abajo». Si el primer número te hace subir o bajar,
+      está al revés.
+    items: [M1-TRA-004, M1-TRA-006, M1-TRA-013, M1-TRA-014, M1-TRA-021, M1-TRA-023]
+
+  - code: REM-PLA-COORD-SINSIGNO
+    misconception: PLA-COORD-SINSIGNO
+    title: Izquierda y abajo llevan signo menos
+    body: |
+      Anotaste cuánto se aleja el punto de cada eje, pero no hacia dónde.
+      Por ejemplo, un punto que está $5$ a la izquierda y $7$ abajo lo
+      escribiste $(5, 7)$.
+
+      **Las coordenadas llevan signo: a la izquierda del eje $y$ la abscisa
+      es negativa, y bajo el eje $x$ la ordenada es negativa.**
+
+      Ese punto es $(-5, -7)$. $(5, 7)$ está en el cuadrante opuesto.
+
+      Lo mismo al medir distancias: entre $x = -7$ y $x = 1$ hay $7$ saltos
+      hasta el $0$ y $1$ más hasta el $1$. Son $8$ unidades, no $7 - 1 = 6$.
+
+      Un control rápido: si tu punto está a la izquierda o abajo del origen,
+      alguna de sus coordenadas tiene que ser negativa.
+    items: [M1-TRA-005, M1-TRA-006, M1-TRA-012, M1-TRA-013, M1-TRA-022, M1-TRA-023]
+
+  - code: REM-PLA-COORD-CUADNUM
+    misconception: PLA-COORD-CUADNUM
+    title: Los cuadrantes giran contra el reloj
+    body: |
+      Numeraste los cuadrantes en el orden equivocado. Por ejemplo, dijiste
+      que $(6, -2)$ está en el segundo cuadrante.
+
+      **Los cuadrantes se numeran en sentido contrario a los punteros del
+      reloj: I arriba a la derecha, II arriba a la izquierda, III abajo a la
+      izquierda, IV abajo a la derecha.**
+
+      Por signos:
+
+      - I: $(+, +)$
+      - II: $(-, +)$
+      - III: $(-, -)$
+      - IV: $(+, -)$
+
+      $(6, -2)$ tiene $x$ positiva e $y$ negativa: está en el IV.
+
+      Un control rápido: el II está **arriba**, sobre el I, pero a la
+      izquierda. Si tu «segundo cuadrante» está abajo, giraste al revés.
+    items: [M1-TRA-004, M1-TRA-007, M1-TRA-014, M1-TRA-015, M1-TRA-021, M1-TRA-022]
+
+  - code: REM-PLA-COORD-EJECERO
+    misconception: PLA-COORD-EJECERO
+    title: Si la x es 0, el punto está sobre el eje y
+    body: |
+      Confundiste sobre qué eje está un punto. Por ejemplo, dijiste que
+      $(0, 7)$ está sobre el eje $x$.
+
+      **Un punto con $x = 0$ está sobre el eje $y$. Un punto con $y = 0$
+      está sobre el eje $x$.**
+
+      $x = 0$ significa que no te moviste ni a la derecha ni a la izquierda:
+      sigues sobre la línea vertical que pasa por el origen, que es el eje
+      $y$. Después subes $7$: $(0, 7)$ queda sobre el eje $y$, arriba del
+      origen.
+
+      Un control rápido: el eje donde está el punto es el de la coordenada
+      que **no** es cero. En $(0, 7)$ la que no es cero es la $y$.
+    items: [M1-TRA-002, M1-TRA-003, M1-TRA-007, M1-TRA-016, M1-TRA-019, M1-TRA-020]
+
+  - code: REM-PLA-COORD-EJECUAD
+    misconception: PLA-COORD-EJECUAD
+    title: Los puntos de los ejes no son de ningún cuadrante
+    body: |
+      Pusiste en un cuadrante un punto que está sobre un eje. Por ejemplo,
+      dijiste que $(-8, 0)$ está en el segundo cuadrante.
+
+      **Los cuadrantes son las cuatro regiones que quedan entre los ejes.
+      Los ejes son la frontera, y sus puntos no pertenecen a ninguno.**
+
+      $(-8, 0)$ tiene $y = 0$: está justo sobre el eje $x$, a la izquierda
+      del origen. No está ni arriba (segundo cuadrante) ni abajo (tercero).
+
+      Un control rápido: antes de mirar los signos, revisa si alguna
+      coordenada es $0$. Si lo es, el punto está sobre un eje y no hay
+      cuadrante que buscar.
+    items: [M1-TRA-003, M1-TRA-007, M1-TRA-012, M1-TRA-016, M1-TRA-017, M1-TRA-020]
+
+  - code: REM-PLA-COORD-ESCALA
+    misconception: PLA-COORD-ESCALA
+    title: Primero averigua cuánto vale cada cuadrado
+    body: |
+      Contaste cuadrados como si cada uno valiera $1$. Por ejemplo, en una
+      cuadrícula donde los ejes marcan $4, 8, 12$, a un punto que está a
+      $3$ cuadrados a la derecha le diste abscisa $3$.
+
+      **La escala se deduce de dos marcas rotuladas: la diferencia entre
+      ellas, dividida por los cuadrados que las separan.**
+
+      Si el $4$ y el $8$ están a un cuadrado de distancia, cada cuadrado
+      vale $4$. Tres cuadrados a la derecha son $12$ unidades: la abscisa es
+      $12$.
+
+      Lo mismo para distancias: $4$ cuadrados de $4$ unidades son $16$
+      unidades.
+
+      Un control rápido: tu coordenada tiene que coincidir con los números
+      rotulados en los ejes. Si el punto está sobre la marca del $12$, su
+      coordenada no puede ser $3$.
+    items: [M1-TRA-001, M1-TRA-005, M1-TRA-010, M1-TRA-011, M1-TRA-018, M1-TRA-021]
+
+  - code: REM-PLA-COORD-CONTEO
+    misconception: PLA-COORD-CONTEO
+    title: Se cuentan saltos, no líneas
+    body: |
+      Contaste las líneas de la cuadrícula en vez de los espacios entre
+      ellas. Por ejemplo, entre $(-2, 1)$ y $(3, 1)$ contaste $6$.
+
+      **La distancia es la cantidad de saltos de una línea a la siguiente.
+      La línea de partida no cuenta, porque ahí todavía no has avanzado.**
+
+      De $x = -2$ a $x = 3$:
+
+      $$-2 \to -1 \to 0 \to 1 \to 2 \to 3$$
+
+      Son $6$ números, pero $5$ saltos. La distancia es $5$.
+
+      Lo mismo al leer un punto: el eje es la posición $0$, no la $1$.
+
+      Un control rápido: si cuentas números, réstale uno. Los saltos
+      siempre son uno menos que las líneas que tocas.
+    items: [M1-TRA-006, M1-TRA-008, M1-TRA-009, M1-TRA-011, M1-TRA-022, M1-TRA-023]
+
+
+# ---------------------------------------------------------------------
+# CUERPO DE LA CLASE
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  El plano cartesiano son dos rectas numéricas cruzadas. Con él cada punto
+  tiene una dirección exacta, y eso es lo que vas a usar en todas las
+  transformaciones, en los gráficos de funciones y en los sistemas de
+  ecuaciones.
+
+  ## Puntos y coordenadas
+
+  ### Dos rectas y un par ordenado
+
+  El eje horizontal es el **eje $x$** y el vertical, el **eje $y$**. Se
+  cruzan en el **origen**, el $(0, 0)$. Cada eje es una recta numérica:
+  en el eje $x$ los positivos van a la derecha; en el eje $y$, hacia
+  arriba.
+
+  Un punto se escribe como un **par ordenado** $(x, y)$:
+
+  - la primera coordenada, la **abscisa**, dice cuánto te mueves a la
+    derecha (positiva) o a la izquierda (negativa);
+  - la segunda, la **ordenada**, dice cuánto subes (positiva) o bajas
+    (negativa).
+
+  **Primero se camina por el eje $x$, después se sube o baja.** El orden
+  importa: $(2, 5)$ y $(5, 2)$ son puntos distintos.
+
+  ![](fig:FIG-PLA-COORD-13)
+
+  Para leer un punto, baja una línea hasta el eje $x$ (esa es la abscisa)
+  y lleva otra hasta el eje $y$ (esa es la ordenada). Si el punto está a
+  la izquierda o abajo, su coordenada lleva signo menos: la distancia al
+  eje no basta.
+
+  ### Los cuatro cuadrantes
+
+  Los ejes dividen el plano en cuatro **cuadrantes**, que se numeran en
+  sentido **contrario a los punteros del reloj**, partiendo arriba a la
+  derecha:
+
+  ![](fig:FIG-PLA-COORD-12)
+
+  El cuadrante lo deciden los signos: $(-7, 1)$ está en el segundo,
+  porque tiene $x$ negativa e $y$ positiva. Un control rápido: el cuarto
+  cuadrante está abajo a la derecha, al lado del primero, no al frente.
+
+  ### Puntos sobre los ejes
+
+  Si una coordenada es $0$, el punto está sobre un eje y **no pertenece a
+  ningún cuadrante**:
+
+  - $x = 0$: el punto está sobre el **eje $y$**. Por ejemplo, $(0, -7)$.
+  - $y = 0$: el punto está sobre el **eje $x$**. Por ejemplo, $(8, 0)$.
+
+  Este es el caso que más se confunde. Piénsalo así: si no te moviste a la
+  derecha ni a la izquierda ($x = 0$), sigues sobre la línea vertical, que
+  es el eje $y$.
+
+  ### Cuadrículas con otra escala
+
+  No siempre cada cuadrado vale $1$. **La escala se deduce de dos marcas
+  rotuladas.** Si en el eje aparecen el $3$ y el $6$, cada cuadrado vale
+  $3$:
+
+  ![](fig:FIG-PLA-COORD-14)
+
+  El punto $K$ está dos cuadrados a la izquierda y uno abajo: $K = (-6,
+  -3)$, no $(-2, -1)$.
+
+  ### Distancia entre puntos alineados
+
+  Si dos puntos tienen la misma ordenada, están en una misma horizontal, y
+  la distancia entre ellos es cuánto hay que caminar por el eje $x$. Entre
+  $(-1, 7)$ y $(5, 7)$ hay $6$ unidades: de $-1$ a $0$ es $1$ y de $0$ a
+  $5$ son $5$.
+
+  **Se cuentan saltos, no líneas.** De $-1$ a $5$ hay $7$ líneas de la
+  cuadrícula, pero $6$ saltos entre ellas. Y el signo importa: la
+  distancia no es $5 - 1 = 4$.
+
+  ### Mapas
+
+  En un mapa con el origen en un lugar de referencia, el este suele ser el
+  eje $x$ positivo y el norte el eje $y$ positivo. Si un almacén está $7$
+  cuadras al oeste y $3$ al sur de la plaza, sus coordenadas son
+  $(-7, -3)$: oeste es $x$ negativa, sur es $y$ negativa.

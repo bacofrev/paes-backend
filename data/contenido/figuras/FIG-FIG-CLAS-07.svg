@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 528 296" width="528" height="296" role="img" aria-label="Esquema: los cuadriláteros se dividen en trapezoides (ningún par de lados paralelos), trapecios (un par) y paralelogramos (dos pares). Los paralelogramos incluyen romboides, rectángulos y rombos. El cuadrado es a la vez rectángulo y rombo." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <line x1="264" y1="58" x2="88" y2="106" stroke-width="1.1"/>
+  <line x1="264" y1="58" x2="208" y2="106" stroke-width="1.1"/>
+  <line x1="264" y1="58" x2="380" y2="106" stroke-width="1.1"/>
+  <line x1="380" y1="126" x2="272" y2="174" stroke-width="1.1"/>
+  <line x1="380" y1="126" x2="380" y2="174" stroke-width="1.1"/>
+  <line x1="380" y1="126" x2="472" y2="174" stroke-width="1.1"/>
+  <line x1="380" y1="194" x2="424" y2="242" stroke-width="1.1"/>
+  <line x1="472" y1="194" x2="424" y2="242" stroke-width="1.1"/>
+  <text x="264" y="48" font-size="12" text-anchor="middle" dominant-baseline="central">Cuadriláteros</text>
+  <text x="88" y="116" font-size="12" text-anchor="middle" dominant-baseline="central">Trapezoides</text>
+  <text x="208" y="116" font-size="12" text-anchor="middle" dominant-baseline="central">Trapecios</text>
+  <text x="380" y="116" font-size="12" text-anchor="middle" dominant-baseline="central">Paralelogramos</text>
+  <text x="272" y="184" font-size="12" text-anchor="middle" dominant-baseline="central">Romboides</text>
+  <text x="380" y="184" font-size="12" text-anchor="middle" dominant-baseline="central">Rectángulos</text>
+  <text x="472" y="184" font-size="12" text-anchor="middle" dominant-baseline="central">Rombos</text>
+  <text x="424" y="252" font-size="12" text-anchor="middle" dominant-baseline="central">Cuadrados</text>
+</svg>

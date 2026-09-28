@@ -1,0 +1,1740 @@
+# =====================================================================
+# LES-GEO-TRA-04 — Rotaciones y simetría central
+# Cubre GEO-TRA-ROT-90, GEO-TRA-ROT-CEN, GEO-TRA-SIM-CEN
+# =====================================================================
+# ROT-90 pide GEO-PLA-COORD (LES-GEO-TRA-01). ROT-CEN pide ROT-90 y
+# GEO-TRA-TRAS (LES-GEO-TRA-02). SIM-CEN pide ROT-90 y GEO-TRA-REF-EJE
+# (LES-GEO-TRA-03). Simetría central = rotación de 180°.
+#
+# Alcance (propuesto, sin control 1):
+#   ROT-90  entra   giros de 90°, 180° y 270° alrededor del origen, en
+#                   sentido antihorario u horario (siempre se dice cuál);
+#                   imagen de puntos y figuras; preimagen; reconocer el
+#                   giro entre una figura y su imagen.
+#   ROT-CEN entra   giros de 90° y 180° alrededor de un centro C: restar
+#                   C, girar, sumar C; preimagen; encontrar el centro en
+#                   casos simples.
+#           fuera   ángulos que no son múltiplos de 90° (necesitan
+#                   trigonometría, M2).
+#   SIM-CEN entra   simétrico de un punto respecto del origen y de un
+#                   punto C (2C − P); centro de simetría como punto medio;
+#                   figuras con simetría central.
+#           fuera   composición general (GEO-TRA-COMP); propiedades
+#                   comparadas (GEO-TRA-PROP).
+#
+# Niveles:
+#   1  un punto, un giro, la regla
+#   2  figuras, preimagen, contexto de un paso
+#   3  I/II/III, letras, encontrar el centro, contexto de dos pasos
+# ---------------------------------------------------------------------
+
+unit: GEO-TRA
+
+lesson:
+  code: LES-GEO-TRA-04
+  title: Rotaciones y simetría central
+  position: 4
+  nodes:
+    - node: GEO-TRA-ROT-90
+      anchor: rotacion-en-multiplos-de-90
+    - node: GEO-TRA-ROT-CEN
+      anchor: rotacion-respecto-de-un-punto
+    - node: GEO-TRA-SIM-CEN
+      anchor: simetria-central
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== GEO-TRA-ROT-90 · nivel 1 ==============================
+
+  # A SOLOSIGNO: cambia un signo sin intercambiar
+  # C SENTIDO: gira en sentido horario
+  # D SOLOCAMBIA: intercambia sin cambiar signos
+  - code: M1-TRA-145
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es la imagen del punto $P(3, 1)$ al rotarlo $90°$ en sentido
+      antihorario alrededor del origen?
+    options:
+      - {label: A, body: "$(-3, 1)$", misconception: TRA-ROT90-SOLOSIGNO}
+      - {label: B, body: "$(-1, 3)$", correct: true}
+      - {label: C, body: "$(1, -3)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: D, body: "$(1, 3)$", misconception: TRA-ROT90-SOLOCAMBIA}
+
+  # B ANGULO: aplica el giro de 90° antihorario
+  # C SOLOCAMBIA: intercambia las coordenadas
+  # D SOLOSIGNO: cambia un solo signo
+  - code: M1-TRA-146
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es la imagen del punto $Q(-2, 5)$ al rotarlo $180°$ alrededor
+      del origen?
+    options:
+      - {label: A, body: "$(2, -5)$", correct: true}
+      - {label: B, body: "$(-5, -2)$", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(5, -2)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: D, body: "$(2, 5)$", misconception: TRA-ROT90-SOLOSIGNO}
+
+  # A SOLOCAMBIA: intercambia sin cambiar signos
+  # B SOLOSIGNO: cambia un signo sin intercambiar
+  # D SENTIDO: gira en sentido antihorario
+  - code: M1-TRA-147
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es la imagen del punto $(4, -3)$ al rotarlo $90°$ en sentido
+      horario alrededor del origen?
+    options:
+      - {label: A, body: "$(-3, 4)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: B, body: "$(-4, -3)$", misconception: TRA-ROT90-SOLOSIGNO}
+      - {label: C, body: "$(-3, -4)$", correct: true}
+      - {label: D, body: "$(3, 4)$", misconception: TRA-ROT90-SENTIDO}
+
+  # A SENTIDO: gira en sentido horario
+  # B ANGULO: gira 180°
+  # C SOLOCAMBIA: intercambia las coordenadas: refleja en y = x
+  - code: M1-TRA-148
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-ROT-90-01
+    stem: >-
+      ¿Cuál de las figuras numeradas es la imagen de $F$ al rotarla $90°$ en
+      sentido antihorario alrededor del origen?
+    options:
+      - {label: A, body: "La figura 2", misconception: TRA-ROT90-SENTIDO}
+      - {label: B, body: "La figura 3", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "La figura 4", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: D, body: "La figura 1", correct: true}
+
+  # A ANGULO: la regla de 180° para 90°
+  # C SOLOCAMBIA: olvida el signo
+  # D SENTIDO: gira en sentido horario
+  - code: M1-TRA-149
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "Al rotar un punto $90°$ alrededor del origen, sus dos coordenadas cambian de signo.", misconception: TRA-ROT90-ANGULO}
+      - {label: B, body: "Al rotar un punto $180°$ alrededor del origen, sus dos coordenadas cambian de signo.", correct: true}
+      - {label: C, body: "Al rotar un punto $90°$ alrededor del origen, sus coordenadas se intercambian sin cambiar de signo.", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: D, body: "Al rotar el punto $(1, 0)$ en $90°$ antihorario alrededor del origen, queda en $(0, -1)$.", misconception: TRA-ROT90-SENTIDO}
+
+  # A SOLOCAMBIA: intercambia sin cambiar signos
+  # B SENTIDO: gira en sentido horario
+  # C SOLOSIGNO: cambia un signo sin intercambiar
+  - code: M1-TRA-150
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Un brazo robótico está fijo en el origen y su extremo está en el punto
+      $(2, 4)$. Si el brazo gira $90°$ en sentido antihorario, ¿dónde queda
+      su extremo?
+    options:
+      - {label: A, body: "$(4, 2)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: B, body: "$(4, -2)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: C, body: "$(-2, 4)$", misconception: TRA-ROT90-SOLOSIGNO}
+      - {label: D, body: "$(-4, 2)$", correct: true}
+
+  # A(4, 2) → (−2, 4)
+  # A ORDEN: lee A como (2, 4) y lo gira
+  # B SOLOCAMBIA: intercambia sin cambiar signos
+  # D SENTIDO: gira en sentido horario
+  - code: M1-TRA-151
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-ROT-90-02
+    stem: >-
+      ¿Cuál es la imagen del punto $A$ al rotarlo $90°$ en sentido
+      antihorario alrededor del origen?
+    options:
+      - {label: A, body: "$(-4, 2)$", misconception: PLA-COORD-ORDEN}
+      - {label: B, body: "$(2, 4)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: C, body: "$(-2, 4)$", correct: true}
+      - {label: D, body: "$(2, -4)$", misconception: TRA-ROT90-SENTIDO}
+
+  # B SENTIDO: gira en sentido horario
+  # C ANGULO: gira 180°
+  # D SOLOCAMBIA: intercambia sin cambiar signos
+  - code: M1-TRA-152
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Un punto del primer cuadrante se rota $90°$ en sentido antihorario
+      alrededor del origen. ¿Dónde queda su imagen?
+    options:
+      - {label: A, body: "En el segundo cuadrante.", correct: true}
+      - {label: B, body: "En el cuarto cuadrante.", misconception: TRA-ROT90-SENTIDO}
+      - {label: C, body: "En el tercer cuadrante.", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "En el primer cuadrante.", misconception: TRA-ROT90-SOLOCAMBIA}
+
+  # ===== GEO-TRA-ROT-90 · nivel 2 ==============================
+
+  # A ANGULO: gira 180°
+  # B SENTIDO: gira en sentido horario
+  # C SOLOCAMBIA: intercambia sin cambiar signos
+  - code: M1-TRA-153
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El triángulo de vértices $A(1, 1)$, $B(3, 1)$ y $C(1, 4)$ se rota
+      $90°$ en sentido antihorario alrededor del origen. ¿Cuáles son los
+      vértices de la imagen?
+    options:
+      - {label: A, body: "$A'(-1, -1)$, $B'(-3, -1)$ y $C'(-1, -4)$", misconception: TRA-ROT90-ANGULO}
+      - {label: B, body: "$A'(1, -1)$, $B'(1, -3)$ y $C'(4, -1)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: C, body: "$A'(1, 1)$, $B'(1, 3)$ y $C'(4, 1)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: D, body: "$A'(-1, 1)$, $B'(-1, 3)$ y $C'(-4, 1)$", correct: true}
+
+  # P' = (−y, x) = (−5, 2) ⇒ P = (2, 5)
+  # A SOLOCAMBIA: deshace intercambiando sin cambiar signos
+  # B ANGULO: deshace con un giro de 180°
+  # D SENTIDO: vuelve a girar P' en sentido antihorario
+  - code: M1-TRA-154
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Al rotar un punto $P$ en $90°$ en sentido antihorario alrededor del
+      origen, se obtiene $P'(-5, 2)$. ¿Cuáles son las coordenadas de $P$?
+    options:
+      - {label: A, body: "$(2, -5)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: B, body: "$(5, -2)$", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(2, 5)$", correct: true}
+      - {label: D, body: "$(-2, -5)$", misconception: TRA-ROT90-SENTIDO}
+
+  # 270° antihorario = 90° horario: (y, −x) = (−2, −3)
+  # A SENTIDO: usa la regla de 90° antihorario
+  # C ANGULO: usa la regla de 180°
+  # D SOLOCAMBIA: intercambia sin cambiar signos
+  - code: M1-TRA-155
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      ¿Cuál es la imagen del punto $(3, -2)$ al rotarlo $270°$ en sentido
+      antihorario alrededor del origen?
+    options:
+      - {label: A, body: "$(2, 3)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: B, body: "$(-2, -3)$", correct: true}
+      - {label: C, body: "$(-3, 2)$", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "$(-2, 3)$", misconception: TRA-ROT90-SOLOCAMBIA}
+
+  # B ANGULO: rechaza las tres: usa (−x, −y)
+  # C SOLOCAMBIA: acepta II
+  # D SENTIDO: rechaza I (le da (0, −2)) y acepta III
+  - code: M1-TRA-156
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones sobre rotaciones de $90°$ en sentido antihorario alrededor del origen:
+
+      I. La imagen de $(2, 0)$ es $(0, 2)$.
+
+      II. La imagen de $(1, 3)$ es $(3, 1)$.
+
+      III. La imagen de $(4, 1)$ es $(1, -4)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", correct: true}
+      - {label: B, body: "Ninguna de ellas", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "Solo I y II", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: D, body: "Solo III", misconception: TRA-ROT90-SENTIDO}
+
+  # (−3, −5) → (5, −3)
+  # A SOLOCAMBIA: intercambia sin cambiar signos
+  # B ANGULO: gira 180°
+  # D SENTIDO: gira en sentido horario
+  - code: M1-TRA-157
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Una rueda de la fortuna tiene su centro en el origen. Una de sus
+      cabinas está en el punto $(-3, -5)$. Si la rueda gira $90°$ en sentido
+      antihorario, ¿dónde queda esa cabina?
+    options:
+      - {label: A, body: "$(-5, -3)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: B, body: "$(3, 5)$", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(5, -3)$", correct: true}
+      - {label: D, body: "$(-5, 3)$", misconception: TRA-ROT90-SENTIDO}
+
+  # B ANGULO: cada giro de 90° le parece de 180°
+  # C SOLOSIGNO: cada giro cambia un signo
+  # D SOLOCAMBIA: intercambiar dos veces vuelve al punto
+  - code: M1-TRA-158
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Rotar un punto dos veces seguidas en $90°$, en sentido antihorario y
+      alrededor del origen, es lo mismo que:
+    options:
+      - {label: A, body: "Rotarlo $180°$ alrededor del origen.", correct: true}
+      - {label: B, body: "Rotarlo $360°$ alrededor del origen.", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "Reflejarlo respecto de un eje.", misconception: TRA-ROT90-SOLOSIGNO}
+      - {label: D, body: "Dejarlo donde estaba.", misconception: TRA-ROT90-SOLOCAMBIA}
+
+  # A ANGULO: confunde el ángulo
+  # C SOLOSIGNO: ve que cambió de lado y lo toma por una reflexión (débil)
+  # D SENTIDO: confunde el sentido
+  - code: M1-TRA-159
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-ROT-90-03
+    stem: >-
+      $F'$ es la imagen de $F$ por una rotación con centro en el origen.
+      ¿Cuál es esa rotación?
+    options:
+      - {label: A, body: "Un giro de $180°$.", misconception: TRA-ROT90-ANGULO}
+      - {label: B, body: "Un giro de $90°$ en sentido antihorario.", correct: true}
+      - {label: C, body: "No es un giro: es un reflejo respecto del eje $y$.", misconception: TRA-ROT90-SOLOSIGNO}
+      - {label: D, body: "Un giro de $90°$ en sentido horario.", misconception: TRA-ROT90-SENTIDO}
+
+  # A SOLOCAMBIA: intercambia sin cambiar signos
+  # B ANGULO: gira 180°
+  # C SENTIDO: gira en sentido antihorario
+  - code: M1-TRA-160
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Sean $a$ y $b$ números positivos. ¿Cuál es la imagen de $(a, b)$ al
+      rotarlo $90°$ en sentido horario alrededor del origen, y en qué
+      cuadrante queda?
+    options:
+      - {label: A, body: "$(b, a)$, en el primer cuadrante.", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: B, body: "$(-a, -b)$, en el tercer cuadrante.", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(-b, a)$, en el segundo cuadrante.", misconception: TRA-ROT90-SENTIDO}
+      - {label: D, body: "$(b, -a)$, en el cuarto cuadrante.", correct: true}
+
+  # ===== GEO-TRA-ROT-90 · nivel 3 ==============================
+
+  # A SOLOCAMBIA: acepta III
+  # B SOLOSIGNO: rechaza II: en 180° cambia un solo signo
+  # C SENTIDO: rechaza I: le da (0, −3)
+  - code: M1-TRA-161
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones sobre rotaciones alrededor del origen:
+
+      I. Al rotar $(3, 0)$ en $90°$ en sentido antihorario, se obtiene $(0, 3)$.
+
+      II. Al rotar $(1, 2)$ en $180°$, se obtiene $(-1, -2)$.
+
+      III. Al rotar $(2, 5)$ en $90°$ en sentido antihorario, se obtiene $(5, 2)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "I, II y III", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: B, body: "Solo I", misconception: TRA-ROT90-SOLOSIGNO}
+      - {label: C, body: "Solo II", misconception: TRA-ROT90-SENTIDO}
+      - {label: D, body: "Solo I y II", correct: true}
+
+  # (−4, 1) horario → (y, −x) = (1, 4)
+  # B SOLOCAMBIA: intercambia sin cambiar signos
+  # C ANGULO: gira 180°
+  # D SENTIDO: gira en sentido antihorario
+  - code: M1-TRA-162
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En un juego, el tablero cuadriculado gira $90°$ en sentido horario
+      alrededor del origen. Una pieza estaba en el punto $(-4, 1)$. ¿Dónde
+      queda después del giro?
+    options:
+      - {label: A, body: "$(1, 4)$", correct: true}
+      - {label: B, body: "$(1, -4)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: C, body: "$(4, -1)$", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "$(-1, -4)$", misconception: TRA-ROT90-SENTIDO}
+
+  # P = horario(3, −6) = (−6, −3); 180° → (6, 3)
+  # A SENTIDO: recupera P girando al revés: P = (6, 3)
+  # B ANGULO: aplica el giro de 180° a la imagen
+  # D SOLOCAMBIA: recupera P intercambiando: P = (−6, 3)
+  - code: M1-TRA-163
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Al rotar un punto $P$ en $90°$ en sentido antihorario alrededor del
+      origen se obtiene $(3, -6)$. ¿Qué se obtiene si, en cambio, $P$ se
+      rota $180°$ alrededor del origen?
+    options:
+      - {label: A, body: "$(-6, -3)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: B, body: "$(-3, 6)$", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(6, 3)$", correct: true}
+      - {label: D, body: "$(6, -3)$", misconception: TRA-ROT90-SOLOCAMBIA}
+
+  # A ANGULO: gira (3, 1) en 90°
+  # C SOLOCAMBIA: intercambia las coordenadas de (3, 1)
+  # D SOLOSIGNO: cambia un solo signo a (3, 1)
+  - code: M1-TRA-164
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      El cuadrado de vértices $(1, 1)$, $(3, 1)$, $(3, 3)$ y $(1, 3)$ se
+      rota $180°$ alrededor del origen. ¿Cuál de los siguientes puntos es un
+      vértice de la imagen?
+    options:
+      - {label: A, body: "$(-1, 3)$", misconception: TRA-ROT90-ANGULO}
+      - {label: B, body: "$(-3, -3)$", correct: true}
+      - {label: C, body: "$(1, 3)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: D, body: "$(-3, 1)$", misconception: TRA-ROT90-SOLOSIGNO}
+
+  # P(−3, 2) horario → (2, 3)
+  # A SOLOCAMBIA: intercambia sin cambiar signos
+  # B SENTIDO: gira en sentido antihorario
+  # C ANGULO: gira 180°
+  - code: M1-TRA-165
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 3
+    source: propio
+    figure: FIG-ROT-90-04
+    stem: >-
+      El triángulo de la figura se rota $90°$ en sentido horario alrededor
+      del origen. ¿Dónde queda el vértice $P$?
+    options:
+      - {label: A, body: "$(2, -3)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: B, body: "$(-2, -3)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: C, body: "$(3, -2)$", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "$(2, 3)$", correct: true}
+
+  # B SOLOSIGNO: cambia el signo de la x, que es 0
+  # C ANGULO: gira 180°
+  # D SENTIDO: gira en sentido horario
+  - code: M1-TRA-166
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sea $b$ un número positivo. ¿Cuál es la imagen del punto $(0, b)$ al
+      rotarlo $90°$ en sentido antihorario alrededor del origen?
+    options:
+      - {label: A, body: "$(-b, 0)$", correct: true}
+      - {label: B, body: "$(0, b)$: el punto no se mueve.", misconception: TRA-ROT90-SOLOSIGNO}
+      - {label: C, body: "$(0, -b)$", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "$(b, 0)$", misconception: TRA-ROT90-SENTIDO}
+
+  # 270° horario = 90° antihorario: (4, 3) → (−3, 4)
+  # A SOLOCAMBIA: intercambia sin cambiar signos
+  # B SENTIDO: usa la regla de 90° horario
+  # D ANGULO: usa la regla de 180°
+  - code: M1-TRA-167
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      El centro de las aspas de un molino está en el origen y la punta de un
+      aspa está en $(4, 3)$. El molino gira $270°$ en sentido horario.
+      ¿Dónde queda la punta de esa aspa?
+    options:
+      - {label: A, body: "$(3, 4)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: B, body: "$(3, -4)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: C, body: "$(-3, 4)$", correct: true}
+      - {label: D, body: "$(-4, -3)$", misconception: TRA-ROT90-ANGULO}
+
+  # A SOLOCAMBIA: rechaza I: le da (−2, 0)
+  # C SOLOSIGNO: rechaza I y acepta III
+  # D SENTIDO: rechaza I y acepta II
+  - code: M1-TRA-168
+    node: GEO-TRA-ROT-90
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones sobre rotaciones alrededor del origen:
+
+      I. Al rotar $(0, -2)$ en $90°$ en sentido antihorario, se obtiene $(2, 0)$.
+
+      II. La regla del giro de $90°$ en sentido antihorario es $(x, y) \to (y, -x)$.
+
+      III. La regla del giro de $180°$ es $(x, y) \to (-x, y)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Ninguna de ellas", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: B, body: "Solo I", correct: true}
+      - {label: C, body: "Solo III", misconception: TRA-ROT90-SOLOSIGNO}
+      - {label: D, body: "Solo II", misconception: TRA-ROT90-SENTIDO}
+
+  # ===== GEO-TRA-ROT-CEN · nivel 1 =============================
+
+  # (4, 1) − (1, 1) = (3, 0) → (0, 3) → (1, 4)
+  # A NOVUELVE: no vuelve a sumar C
+  # B ORIGEN: gira alrededor del origen
+  # C VUELVEMAL: resta C otra vez al final
+  - code: M1-TRA-169
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es la imagen del punto $P(4, 1)$ al rotarlo $90°$ en sentido
+      antihorario alrededor del punto $C(1, 1)$?
+    options:
+      - {label: A, body: "$(0, 3)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: B, body: "$(-1, 4)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: C, body: "$(-1, 2)$", misconception: TRA-ROTCEN-VUELVEMAL}
+      - {label: D, body: "$(1, 4)$", correct: true}
+
+  # 180°: 2C − P = (−1, 0)
+  # A ORIGEN: gira alrededor del origen
+  # B NOVUELVE: no vuelve a sumar C
+  # D ANGULO: gira 90°: (3, 1) → (−1, 3) → (1, 4)
+  - code: M1-TRA-170
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es la imagen del punto $P(5, 2)$ al rotarlo $180°$ alrededor del
+      punto $C(2, 1)$?
+    options:
+      - {label: A, body: "$(-5, -2)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: B, body: "$(-3, -1)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: C, body: "$(-1, 0)$", correct: true}
+      - {label: D, body: "$(1, 4)$", misconception: TRA-ROT90-ANGULO}
+
+  # A(3, 2), C(1, −1): (2, 3) → (−3, 2) → (−2, 1)
+  # A ORIGEN: gira alrededor del origen
+  # C NOVUELVE: no vuelve a sumar C
+  # D SENTIDO: gira en sentido horario: (2, 3) → (3, −2)
+  - code: M1-TRA-171
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-ROT-CEN-01
+    stem: >-
+      ¿Cuál es la imagen del punto $A$ al rotarlo $90°$ en sentido
+      antihorario alrededor del punto $C$?
+    options:
+      - {label: A, body: "$(-2, 3)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: B, body: "$(-2, 1)$", correct: true}
+      - {label: C, body: "$(-3, 2)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: D, body: "$(4, -3)$", misconception: TRA-ROT90-SENTIDO}
+
+  # B ORIGEN: ignora el centro
+  # C NOVUELVE: le falta sumar C
+  # D VUELVEMAL: resta C dos veces
+  - code: M1-TRA-172
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál de las siguientes afirmaciones sobre la rotación alrededor de un
+      punto $C$ es correcta?
+    options:
+      - {label: A, body: "Al rotar un punto alrededor de $C$, su distancia a $C$ no cambia.", correct: true}
+      - {label: B, body: "Al rotar alrededor de $C$, se puede usar la misma regla que alrededor del origen.", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: C, body: "Para rotar alrededor de $C$, basta restar $C$ al punto y aplicar la regla del origen.", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: D, body: "Para rotar alrededor de $C$, se resta $C$, se aplica la regla del origen y se vuelve a restar $C$.", misconception: TRA-ROTCEN-VUELVEMAL}
+
+  # (5, 3) − (2, 3) = (3, 0) → (0, 3) → (2, 6)
+  # A ORIGEN: gira alrededor del origen
+  # B NOVUELVE: no vuelve a sumar el eje
+  # D VUELVEMAL: resta el eje otra vez al final
+  - code: M1-TRA-173
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Una puerta giratoria tiene su eje en el punto $(2, 3)$, y el borde de
+      una de sus hojas está en $(5, 3)$. Si la puerta gira $90°$ en sentido
+      antihorario, ¿dónde queda ese borde?
+    options:
+      - {label: A, body: "$(-3, 5)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: B, body: "$(0, 3)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: C, body: "$(2, 6)$", correct: true}
+      - {label: D, body: "$(-2, 0)$", misconception: TRA-ROTCEN-VUELVEMAL}
+
+  # 2C − P = (2, −1)
+  # A ANGULO: gira 90°: (−1, 2) → (−2, −1) → (−1, 0)
+  # C NOVUELVE: no vuelve a sumar C
+  # D ORIGEN: gira alrededor del origen
+  - code: M1-TRA-174
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es la imagen del punto $P(0, 3)$ al rotarlo $180°$ alrededor del
+      punto $C(1, 1)$?
+    options:
+      - {label: A, body: "$(-1, 0)$", misconception: TRA-ROT90-ANGULO}
+      - {label: B, body: "$(2, -1)$", correct: true}
+      - {label: C, body: "$(1, -2)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: D, body: "$(0, -3)$", misconception: TRA-ROTCEN-ORIGEN}
+
+  # (−1, 2) − (1, 0) = (−2, 2) → horario (2, 2) → (3, 2)
+  # B ORIGEN: gira alrededor del origen
+  # C NOVUELVE: no vuelve a sumar C
+  # D SENTIDO: gira en sentido antihorario
+  - code: M1-TRA-175
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es la imagen del punto $P(-1, 2)$ al rotarlo $90°$ en sentido
+      horario alrededor del punto $C(1, 0)$?
+    options:
+      - {label: A, body: "$(3, 2)$", correct: true}
+      - {label: B, body: "$(2, 1)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: C, body: "$(2, 2)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: D, body: "$(-1, -2)$", misconception: TRA-ROT90-SENTIDO}
+
+  # A ORIGEN: gira alrededor del origen
+  # B NOVUELVE: no vuelve a sumar C
+  # C SENTIDO: gira en sentido horario alrededor de C
+  - code: M1-TRA-176
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-ROT-CEN-02
+    stem: >-
+      ¿Cuál de las figuras numeradas es la imagen de $T$ al rotarla $90°$ en
+      sentido antihorario alrededor del punto $C$?
+    options:
+      - {label: A, body: "La figura 2", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: B, body: "La figura 4", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: C, body: "La figura 3", misconception: TRA-ROT90-SENTIDO}
+      - {label: D, body: "La figura 1", correct: true}
+
+  # ===== GEO-TRA-ROT-CEN · nivel 2 =============================
+
+  # centro A(2, 1): B (2, 0) → (0, 2) → (2, 3); D (0, 2) → (−2, 0) → (0, 1)
+  # B NOVUELVE: no vuelve a sumar A
+  # C ORIGEN: gira alrededor del origen
+  # D SENTIDO: gira en sentido horario
+  - code: M1-TRA-177
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El triángulo de vértices $A(2, 1)$, $B(4, 1)$ y $D(2, 3)$ se rota
+      $90°$ en sentido antihorario alrededor del vértice $A$. ¿Cuáles son
+      los vértices de la imagen?
+    options:
+      - {label: A, body: "$(2, 1)$, $(2, 3)$ y $(0, 1)$", correct: true}
+      - {label: B, body: "$(0, 0)$, $(0, 2)$ y $(-2, 0)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: C, body: "$(-1, 2)$, $(-1, 4)$ y $(-3, 2)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: D, body: "$(2, 1)$, $(2, -1)$ y $(4, 1)$", misconception: TRA-ROT90-SENTIDO}
+
+  # P' − C = (2, 3) = antihorario(P − C) ⇒ P − C = (3, −2) ⇒ P = (4, 0)
+  # A ORIGEN: deshace el giro alrededor del origen
+  # B NOVUELVE: no vuelve a sumar C
+  # C SENTIDO: vuelve a girar en sentido antihorario
+  - code: M1-TRA-178
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Al rotar un punto $P$ en $90°$ en sentido antihorario alrededor de
+      $C(1, 2)$ se obtiene $P'(3, 5)$. ¿Cuáles son las coordenadas de $P$?
+    options:
+      - {label: A, body: "$(5, -3)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: B, body: "$(3, -2)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: C, body: "$(-2, 4)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: D, body: "$(4, 0)$", correct: true}
+
+  # A ORIGEN: rechaza I y II; acepta III: es el giro alrededor del origen
+  # B ANGULO: rechaza II: gira 90° en vez de 180°
+  # D NOVUELVE: sin sumar C, ni C queda fijo
+  - code: M1-TRA-179
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. Al rotar alrededor de un punto $C$, el punto $C$ no se mueve.
+
+      II. Al rotar $(3, 1)$ en $180°$ alrededor de $(1, 1)$, se obtiene $(-1, 1)$.
+
+      III. Al rotar $(2, 0)$ en $90°$ en sentido antihorario alrededor de $(0, 1)$, se obtiene $(0, 2)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo III", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: B, body: "Solo I", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "Solo I y II", correct: true}
+      - {label: D, body: "Ninguna de ellas", misconception: TRA-ROTCEN-NOVUELVE}
+
+  # 2C − P = (−4, −1)
+  # A NOVUELVE: no vuelve a sumar el centro
+  # C ORIGEN: gira alrededor del origen
+  # D ANGULO: gira 90°: (3, 0) → (0, 3) → (−1, 2)
+  - code: M1-TRA-180
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un aspa de un ventilador gira alrededor del punto $(-1, -1)$ y su
+      punta está en $(2, -1)$. Si el aspa gira $180°$, ¿dónde queda la
+      punta?
+    options:
+      - {label: A, body: "$(-3, 0)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: B, body: "$(-4, -1)$", correct: true}
+      - {label: C, body: "$(-2, 1)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: D, body: "$(-1, 2)$", misconception: TRA-ROT90-ANGULO}
+
+  # punto medio de (1, 4) y (5, 0): (3, 2)
+  # B ORIGEN: cree que todo giro es alrededor del origen
+  # C SUMA: suma los puntos sin dividir
+  # D RESTA: da A' − A
+  - code: M1-TRA-181
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un giro de $180°$ lleva el punto $A(1, 4)$ al punto $A'(5, 0)$. ¿Cuál
+      es el centro del giro?
+    options:
+      - {label: A, body: "$(3, 2)$", correct: true}
+      - {label: B, body: "El origen", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: C, body: "$(6, 4)$", misconception: PLA-VEC-SUMA}
+      - {label: D, body: "$(4, -4)$", misconception: TRA-SIMCEN-RESTA}
+
+  # (−2, 4) − (−2, 1) = (0, 3) → (−3, 0) → (−5, 1)
+  # A ORIGEN: gira alrededor del origen
+  # B SENTIDO: gira en sentido horario: (0, 3) → (3, 0)
+  # C NOVUELVE: no vuelve a sumar C
+  - code: M1-TRA-182
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      ¿Cuál es la imagen del punto $P(-2, 4)$ al rotarlo $90°$ en sentido
+      antihorario alrededor del punto $C(-2, 1)$?
+    options:
+      - {label: A, body: "$(-4, -2)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: B, body: "$(1, 1)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: C, body: "$(-3, 0)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: D, body: "$(-5, 1)$", correct: true}
+
+  # (3, 7) − (3, 3) = (0, 4) → horario (4, 0) → (7, 3)
+  # A ORIGEN: gira alrededor del origen
+  # B NOVUELVE: no vuelve a sumar el centro
+  # D SENTIDO: gira en sentido antihorario
+  - code: M1-TRA-183
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un reloj está dibujado en un plano cuadriculado con su centro en
+      $(3, 3)$. A las 12:00, la punta del minutero está en $(3, 7)$. ¿Dónde
+      está la punta a las 12:15, cuando el minutero giró $90°$ en sentido
+      horario?
+    options:
+      - {label: A, body: "$(7, -3)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: B, body: "$(4, 0)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: C, body: "$(7, 3)$", correct: true}
+      - {label: D, body: "$(-1, 3)$", misconception: TRA-ROT90-SENTIDO}
+
+  # A ORIGEN: gira alrededor del origen
+  # C NOVUELVE: no vuelve a sumar C
+  # D ANGULO: gira 90° en vez de 180°
+  - code: M1-TRA-184
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Sea $C(a, b)$ un punto. ¿Cuál es la imagen de $(x, y)$ al rotarlo
+      $180°$ alrededor de $C$?
+    options:
+      - {label: A, body: "$(-x,\\ -y)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: B, body: "$(2a - x,\\ 2b - y)$", correct: true}
+      - {label: C, body: "$(a - x,\\ b - y)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: D, body: "$(a - y + b,\\ b + x - a)$", misconception: TRA-ROT90-ANGULO}
+
+  # ===== GEO-TRA-ROT-CEN · nivel 3 =============================
+
+  # B ORIGEN: acepta II
+  # C VUELVEMAL: (débil) acepta todo lo que se ve como una regla fija
+  # D NOVUELVE: acepta III: (0, 3) es el vector girado
+  - code: M1-TRA-185
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. Al rotar un punto alrededor de $C$, su imagen queda a la misma distancia de $C$ que el punto.
+
+      II. Rotar un punto alrededor de $C$ da el mismo resultado que rotarlo alrededor del origen.
+
+      III. Al rotar $(4, 2)$ en $90°$ en sentido antihorario alrededor de $(1, 2)$, se obtiene $(0, 3)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", correct: true}
+      - {label: B, body: "Solo I y II", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: C, body: "I, II y III", misconception: TRA-ROTCEN-VUELVEMAL}
+      - {label: D, body: "Solo I y III", misconception: TRA-ROTCEN-NOVUELVE}
+
+  # (0, 2) − (0, 10) = (0, −8) → (8, 0) → (8, 10)
+  # A NOVUELVE: no vuelve a sumar el centro
+  # B SENTIDO: gira en sentido horario
+  # D ORIGEN: gira alrededor del origen
+  - code: M1-TRA-186
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Una noria tiene su centro en $(0, 10)$ y una cabina está en su punto
+      más bajo, $(0, 2)$. Si la noria gira $90°$ en sentido antihorario,
+      ¿dónde queda esa cabina?
+    options:
+      - {label: A, body: "$(8, 0)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: B, body: "$(-8, 10)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: C, body: "$(8, 10)$", correct: true}
+      - {label: D, body: "$(-2, 0)$", misconception: TRA-ROTCEN-ORIGEN}
+
+  # C(1, 1): (3, 0) → (0, 3) → (1, 4)
+  # A SENTIDO: el centro de un giro horario
+  # C ORIGEN: cree que todo giro es alrededor del origen
+  # D ANGULO: busca el punto medio, como si fuera un giro de 180°
+  - code: M1-TRA-187
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un giro de $90°$ en sentido antihorario lleva el punto $A(4, 1)$ al
+      punto $A'(1, 4)$. ¿Cuál es el centro del giro?
+    options:
+      - {label: A, body: "$(4, 4)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: B, body: "$(1, 1)$", correct: true}
+      - {label: C, body: "$(0, 0)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: D, body: "$\\left(\\frac{5}{2}, \\frac{5}{2}\\right)$", misconception: TRA-ROT90-ANGULO}
+
+  # A SENTIDO: gira en sentido horario
+  # B ORIGEN: gira alrededor del origen
+  # C NOVUELVE: no vuelve a sumar C
+  - code: M1-TRA-188
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sea $C(a, b)$ un punto. ¿Cuál es la imagen de $(a + 2, b)$ al rotarlo
+      $90°$ en sentido antihorario alrededor de $C$?
+    options:
+      - {label: A, body: "$(a,\\ b - 2)$", misconception: TRA-ROT90-SENTIDO}
+      - {label: B, body: "$(-b,\\ a + 2)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: C, body: "$(0,\\ 2)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: D, body: "$(a,\\ b + 2)$", correct: true}
+
+  # A(−3, 4), C(1, 1): 2C − A = (5, −2)
+  # A ANGULO: gira 90°: (−4, 3) → (−3, −4) → (−2, −3)
+  # C ORIGEN: gira alrededor del origen
+  # D NOVUELVE: no vuelve a sumar C
+  - code: M1-TRA-189
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    figure: FIG-ROT-CEN-03
+    stem: >-
+      El triángulo de la figura se rota $180°$ alrededor del punto $C$.
+      ¿Dónde queda el vértice $A$?
+    options:
+      - {label: A, body: "$(-2, -3)$", misconception: TRA-ROT90-ANGULO}
+      - {label: B, body: "$(5, -2)$", correct: true}
+      - {label: C, body: "$(3, -4)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: D, body: "$(4, -3)$", misconception: TRA-ROTCEN-NOVUELVE}
+
+  # B NOVUELVE: acepta III: no vuelve a sumar C
+  # C ORIGEN: acepta II: giro alrededor del origen
+  # D SENTIDO: rechaza I: gira al revés
+  - code: M1-TRA-190
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. Al rotar $(3, 1)$ en $90°$ en sentido horario alrededor de $(1, 1)$, se obtiene $(1, -1)$.
+
+      II. Al rotar $(3, 1)$ en $90°$ en sentido antihorario alrededor de $(1, 1)$, se obtiene $(-1, 3)$.
+
+      III. Al rotar $(3, 1)$ en $180°$ alrededor de $(1, 1)$, se obtiene $(-2, 0)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", correct: true}
+      - {label: B, body: "Solo III", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: C, body: "Solo II", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: D, body: "Ninguna de ellas", misconception: TRA-ROT90-SENTIDO}
+
+  # 2C − P = (8 − 6, −4 + 1) = (2, −3)
+  # A ORIGEN: gira alrededor del origen
+  # B NOVUELVE: no vuelve a sumar el centro
+  # C ANGULO: gira 90°: (2, 1) → (−1, 2) → (3, 0)
+  - code: M1-TRA-191
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En el plano de una oficina, un escritorio rectangular se gira $180°$
+      alrededor de su centro, que está en $(4, -2)$. Una de sus esquinas
+      está en $(6, -1)$. ¿Dónde queda esa esquina?
+    options:
+      - {label: A, body: "$(-6, 1)$", misconception: TRA-ROTCEN-ORIGEN}
+      - {label: B, body: "$(-2, -1)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: C, body: "$(3, 0)$", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "$(2, -3)$", correct: true}
+
+  # (−3, 1) − (−1, −1) = (−2, 2) → (−2, −2) → (−3, −3)
+  # A VUELVEMAL: resta C otra vez al final
+  # B NOVUELVE: no vuelve a sumar C
+  # D ORIGEN: gira alrededor del origen
+  - code: M1-TRA-192
+    node: GEO-TRA-ROT-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      ¿Cuál es la imagen del punto $P(-3, 1)$ al rotarlo $90°$ en sentido
+      antihorario alrededor del punto $C(-1, -1)$?
+    options:
+      - {label: A, body: "$(-1, -1)$", misconception: TRA-ROTCEN-VUELVEMAL}
+      - {label: B, body: "$(-2, -2)$", misconception: TRA-ROTCEN-NOVUELVE}
+      - {label: C, body: "$(-3, -3)$", correct: true}
+      - {label: D, body: "$(-1, -3)$", misconception: TRA-ROTCEN-ORIGEN}
+
+  # ===== GEO-TRA-SIM-CEN · nivel 1 =============================
+
+  # A EJE: refleja en el eje x
+  # C ANGULO: gira 90° en vez de 180°
+  # D SOLOCAMBIA: intercambia las coordenadas
+  - code: M1-TRA-193
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es el simétrico del punto $P(4, -3)$ respecto del origen?
+    options:
+      - {label: A, body: "$(4, 3)$", misconception: TRA-SIMCEN-EJE}
+      - {label: B, body: "$(-4, 3)$", correct: true}
+      - {label: C, body: "$(3, 4)$", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "$(-3, 4)$", misconception: TRA-ROT90-SOLOCAMBIA}
+
+  # 2C − P = (4 − 5, 6 − 1) = (−1, 5)
+  # A RESTA: calcula C − P
+  # B ANGULO: gira 90°: (3, −2) → (2, 3) → (4, 6)
+  # D ORIGEN: usa el origen como centro
+  - code: M1-TRA-194
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es el simétrico del punto $P(5, 1)$ respecto del punto
+      $C(2, 3)$?
+    options:
+      - {label: A, body: "$(-3, 2)$", misconception: TRA-SIMCEN-RESTA}
+      - {label: B, body: "$(4, 6)$", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(-1, 5)$", correct: true}
+      - {label: D, body: "$(-5, -1)$", misconception: TRA-SIMCEN-ORIGEN}
+
+  # B SINGIRAR: la lleva al cuadrante opuesto sin girarla
+  # C ANGULO: gira 90°
+  # D EJE: refleja en el eje x
+  - code: M1-TRA-195
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-SIM-CEN-01
+    stem: >-
+      ¿Cuál de las figuras numeradas es la simétrica de $F$ respecto del
+      origen?
+    options:
+      - {label: A, body: "La figura 1", correct: true}
+      - {label: B, body: "La figura 4", misconception: TRA-SIMCEN-SINGIRAR}
+      - {label: C, body: "La figura 3", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "La figura 2", misconception: TRA-SIMCEN-EJE}
+
+  # A EJE: confunde con la simetría axial
+  # B SINGIRAR: cree que no la da vuelta
+  # C ANGULO: confunde el ángulo
+  - code: M1-TRA-196
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "La simetría respecto del origen equivale a reflejar en el eje $x$.", misconception: TRA-SIMCEN-EJE}
+      - {label: B, body: "La simetría respecto del origen lleva la figura al cuadrante opuesto sin girarla.", misconception: TRA-SIMCEN-SINGIRAR}
+      - {label: C, body: "La simetría respecto del origen equivale a una rotación de $90°$.", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "La simetría respecto del origen equivale a una rotación de $180°$ alrededor del origen.", correct: true}
+
+  # A EJE: refleja en el eje y
+  # B ANGULO: gira 90°
+  # C SOLOCAMBIA: intercambia las coordenadas
+  - code: M1-TRA-197
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es el simétrico del punto $A(-2, -6)$ respecto del origen?
+    options:
+      - {label: A, body: "$(-2, 6)$", misconception: TRA-SIMCEN-EJE}
+      - {label: B, body: "$(6, -2)$", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(-6, -2)$", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: D, body: "$(2, 6)$", correct: true}
+
+  # A ANGULO: gira 90°
+  # C INTERCAMBIA: intercambia las coordenadas
+  # D EJE: refleja en el eje y
+  - code: M1-TRA-198
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Un logotipo tiene simetría central respecto del origen. Si el punto
+      $(3, 5)$ pertenece al logotipo, ¿cuál de los siguientes puntos también
+      le pertenece?
+    options:
+      - {label: A, body: "$(-5, 3)$", misconception: TRA-ROT90-ANGULO}
+      - {label: B, body: "$(-3, -5)$", correct: true}
+      - {label: C, body: "$(5, 3)$", misconception: TRA-REFEJE-INTERCAMBIA}
+      - {label: D, body: "$(-3, 5)$", misconception: TRA-SIMCEN-EJE}
+
+  # 2C − P = (6 − 1, 0 − 2) = (5, −2)
+  # A RESTA: calcula C − P
+  # B ANGULO: gira 90°: (−2, 2) → (−2, −2) → (1, −2)
+  # D ORIGEN: usa el origen como centro
+  - code: M1-TRA-199
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál es el simétrico del punto $P(1, 2)$ respecto del punto
+      $C(3, 0)$?
+    options:
+      - {label: A, body: "$(2, -2)$", misconception: TRA-SIMCEN-RESTA}
+      - {label: B, body: "$(1, -2)$", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(5, -2)$", correct: true}
+      - {label: D, body: "$(-1, -2)$", misconception: TRA-SIMCEN-ORIGEN}
+
+  # punto medio de (−3, 2) y (5, −4): (1, −1)
+  # B RESTA: da A' − A
+  # C ORIGEN: cree que el centro siempre es el origen
+  # D EJE: cree que los simétricos comparten una coordenada, como en un eje
+  - code: M1-TRA-200
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Los puntos $A(-3, 2)$ y $A'(5, -4)$ son simétricos respecto de un
+      punto. ¿Cuál es ese punto?
+    options:
+      - {label: A, body: "$(1, -1)$", correct: true}
+      - {label: B, body: "$(8, -6)$", misconception: TRA-SIMCEN-RESTA}
+      - {label: C, body: "El origen", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: D, body: "No hay tal punto, porque $A$ y $A'$ no comparten ninguna coordenada.", misconception: TRA-SIMCEN-EJE}
+
+  # ===== GEO-TRA-SIM-CEN · nivel 2 =============================
+
+  # A SINGIRAR: lo lleva al tercer cuadrante sin girarlo
+  # B EJE: refleja en el eje y
+  # D ANGULO: gira 90°
+  - code: M1-TRA-201
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El triángulo de vértices $A(1, 1)$, $B(4, 1)$ y $C(1, 3)$ se
+      transforma por simetría central respecto del origen. ¿Cuáles son los
+      vértices de la imagen?
+    options:
+      - {label: A, body: "$A'(-4, -3)$, $B'(-1, -3)$ y $C'(-4, -1)$", misconception: TRA-SIMCEN-SINGIRAR}
+      - {label: B, body: "$A'(-1, 1)$, $B'(-4, 1)$ y $C'(-1, 3)$", misconception: TRA-SIMCEN-EJE}
+      - {label: C, body: "$A'(-1, -1)$, $B'(-4, -1)$ y $C'(-1, -3)$", correct: true}
+      - {label: D, body: "$A'(-1, 1)$, $B'(-1, 4)$ y $C'(-3, 1)$", misconception: TRA-ROT90-ANGULO}
+
+  # P = 2C − P' = (4 + 1, 2 − 4) = (5, −2)
+  # A RESTA: calcula C − P'
+  # B ORIGEN: usa el origen como centro
+  # C ANGULO: gira 90°: (−3, 3) → (−3, −3) → (−1, −2)
+  - code: M1-TRA-202
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El punto $P'(-1, 4)$ es el simétrico de un punto $P$ respecto de
+      $C(2, 1)$. ¿Cuáles son las coordenadas de $P$?
+    options:
+      - {label: A, body: "$(3, -3)$", misconception: TRA-SIMCEN-RESTA}
+      - {label: B, body: "$(1, -4)$", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: C, body: "$(-1, -2)$", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "$(5, -2)$", correct: true}
+
+  # A SOLOCAMBIA: acepta III: intercambia
+  # C ORIGEN: acepta II
+  # D EJE: rechaza I: cambia una sola coordenada
+  - code: M1-TRA-203
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. El simétrico de $(2, -5)$ respecto del origen es $(-2, 5)$.
+
+      II. El simétrico de $(3, 1)$ respecto de $(1, 1)$ es $(-3, -1)$.
+
+      III. El simétrico de $(0, 4)$ respecto del origen es $(4, 0)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I y III", misconception: TRA-ROT90-SOLOCAMBIA}
+      - {label: B, body: "Solo I", correct: true}
+      - {label: C, body: "Solo I y II", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: D, body: "Ninguna de ellas", misconception: TRA-SIMCEN-EJE}
+
+  # B EJE: refleja en el eje y
+  # C ANGULO: gira 90°
+  # D SOLOCAMBIA: intercambia las coordenadas
+  - code: M1-TRA-204
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El centro de una cancha rectangular está en el origen. Un jugador está
+      en $(-12, 5)$ y su compañero está en la posición simétrica respecto
+      del centro. ¿Dónde está el compañero?
+    options:
+      - {label: A, body: "$(12, -5)$", correct: true}
+      - {label: B, body: "$(12, 5)$", misconception: TRA-SIMCEN-EJE}
+      - {label: C, body: "$(-5, -12)$", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "$(5, -12)$", misconception: TRA-ROT90-SOLOCAMBIA}
+
+  # (0, 3) → (0, −3): distancia 6
+  # A EJE: lo refleja en el eje y y no se mueve
+  # C PROYECTA: el simétrico queda en el centro
+  # D CONTEO: cuenta líneas de la cuadrícula
+  - code: M1-TRA-205
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      ¿A qué distancia está el punto $(0, 3)$ de su simétrico respecto del
+      origen?
+    options:
+      - {label: A, body: "$0$ unidades", misconception: TRA-SIMCEN-EJE}
+      - {label: B, body: "$6$ unidades", correct: true}
+      - {label: C, body: "$3$ unidades", misconception: TRA-REFEJE-PROYECTA}
+      - {label: D, body: "$7$ unidades", misconception: PLA-COORD-CONTEO}
+
+  # P = 2C − P' = (−2 − 3, 4 − 2) = (−5, 2)
+  # B ANGULO: gira 90°: (4, 0) → (0, 4) → (−1, 6)
+  # C ORIGEN: usa el origen como centro
+  # D RESTA: calcula C − P'
+  - code: M1-TRA-206
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El simétrico de un punto $P$ respecto de $C(-1, 2)$ es $P'(3, 2)$.
+      ¿Cuáles son las coordenadas de $P$?
+    options:
+      - {label: A, body: "$(-5, 2)$", correct: true}
+      - {label: B, body: "$(-1, 6)$", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(-3, -2)$", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: D, body: "$(-4, 0)$", misconception: TRA-SIMCEN-RESTA}
+
+  # A(−2, 3), C(1, 1): 2C − A = (4, −1)
+  # A ORIGEN: usa el origen como centro
+  # B ANGULO: gira 90°: (−3, 2) → (−2, −3) → (−1, −2)
+  # C RESTA: calcula C − A
+  - code: M1-TRA-207
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-SIM-CEN-02
+    stem: "¿Cuál es el simétrico del punto $A$ respecto del punto $C$?"
+    options:
+      - {label: A, body: "$(2, -3)$", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: B, body: "$(-1, -2)$", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(3, -2)$", misconception: TRA-SIMCEN-RESTA}
+      - {label: D, body: "$(4, -1)$", correct: true}
+
+  # A EJE: cambia una sola coordenada
+  # B RESTA: calcula C − A
+  # D ORIGEN: usa el origen como centro
+  - code: M1-TRA-208
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Sean $A(a, b)$ y $C(c, d)$ dos puntos. ¿Cuál es el simétrico de $A$
+      respecto de $C$?
+    options:
+      - {label: A, body: "$(2c - a,\\ b)$", misconception: TRA-SIMCEN-EJE}
+      - {label: B, body: "$(c - a,\\ d - b)$", misconception: TRA-SIMCEN-RESTA}
+      - {label: C, body: "$(2c - a,\\ 2d - b)$", correct: true}
+      - {label: D, body: "$(-a,\\ -b)$", misconception: TRA-SIMCEN-ORIGEN}
+
+  # ===== GEO-TRA-SIM-CEN · nivel 3 =============================
+
+  # A ANGULO: acepta III
+  # C RESTA: rechaza II: el centro sería la diferencia
+  # D SINGIRAR: rechaza I: cree que no la da vuelta
+  - code: M1-TRA-209
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones sobre la simetría central:
+
+      I. Si un triángulo tiene su punta hacia arriba, su simétrico respecto de un punto tiene la punta hacia abajo.
+
+      II. El centro de simetría es el punto medio del segmento que une un punto con su simétrico.
+
+      III. La simetría central respecto del origen equivale a una rotación de $90°$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "I, II y III", misconception: TRA-ROT90-ANGULO}
+      - {label: B, body: "Solo I y II", correct: true}
+      - {label: C, body: "Solo I", misconception: TRA-SIMCEN-RESTA}
+      - {label: D, body: "Solo II", misconception: TRA-SIMCEN-SINGIRAR}
+
+  # 2C − P = (6 − 7, 2 + 2) = (−1, 4)
+  # B ANGULO: gira 90°: (4, −3) → (3, 4) → (6, 5)
+  # C ORIGEN: usa el origen como centro
+  # D RESTA: calcula C − P
+  - code: M1-TRA-210
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un robot de limpieza está en $(7, -2)$ y debe ir al punto simétrico
+      respecto de su estación de carga, que está en $(3, 1)$. ¿A qué punto
+      debe ir?
+    options:
+      - {label: A, body: "$(-1, 4)$", correct: true}
+      - {label: B, body: "$(6, 5)$", misconception: TRA-ROT90-ANGULO}
+      - {label: C, body: "$(-7, 2)$", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: D, body: "$(-4, 3)$", misconception: TRA-SIMCEN-RESTA}
+
+  # b = 2 − 4 = −2; 2 = 6 − a ⇒ a = 4; a + b = 2
+  # A EJE: cambia solo la x: b = −2 y a = 2
+  # B ORIGEN: usa el origen: b = −4 y a = −2
+  # C RESTA: usa C − P: b = −3 y a = 1
+  - code: M1-TRA-211
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      El simétrico del punto $(4, a)$ respecto de $(1, 3)$ es el punto
+      $(b, 2)$. ¿Cuál es el valor de $a + b$?
+    options:
+      - {label: A, body: "$0$", misconception: TRA-SIMCEN-EJE}
+      - {label: B, body: "$-6$", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: C, body: "$-2$", misconception: TRA-SIMCEN-RESTA}
+      - {label: D, body: "$2$", correct: true}
+
+  # C = 2M − A = (4, −1); D = 2M − B = (−2, −2)
+  # A RESTA: calcula M − A y M − B
+  # B ORIGEN: usa el origen como centro
+  # D EJE: cambia solo la x respecto de M
+  - code: M1-TRA-212
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      El cuadrilátero $ABCD$ tiene simetría central respecto del punto
+      $M(1, 1)$: $C$ es el simétrico de $A$ y $D$ es el simétrico de $B$. Si
+      $A(-2, 3)$ y $B(4, 4)$, ¿cuáles son $C$ y $D$?
+    options:
+      - {label: A, body: "$C(3, -2)$ y $D(-3, -3)$", misconception: TRA-SIMCEN-RESTA}
+      - {label: B, body: "$C(2, -3)$ y $D(-4, -4)$", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: C, body: "$C(4, -1)$ y $D(-2, -2)$", correct: true}
+      - {label: D, body: "$C(4, 3)$ y $D(-2, 4)$", misconception: TRA-SIMCEN-EJE}
+
+  # B EJE: refleja en el eje y
+  # C CUADNUM: numera los cuadrantes en sentido horario
+  # D ANGULO: gira 90°
+  - code: M1-TRA-213
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un punto $(a, b)$ está en el segundo cuadrante. ¿En qué cuadrante está
+      su simétrico respecto del origen?
+    options:
+      - {label: A, body: "En el cuarto cuadrante.", correct: true}
+      - {label: B, body: "En el primer cuadrante.", misconception: TRA-SIMCEN-EJE}
+      - {label: C, body: "En el segundo cuadrante.", misconception: PLA-COORD-CUADNUM}
+      - {label: D, body: "En el tercer cuadrante.", misconception: TRA-ROT90-ANGULO}
+
+  # A RESTA: rechaza I y acepta II: C − P
+  # B ORIGEN: rechaza I: usa el origen
+  # C EJE: acepta III
+  - code: M1-TRA-214
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. El simétrico de $(-1, 4)$ respecto de $(2, 2)$ es $(5, 0)$.
+
+      II. El simétrico de $(6, 0)$ respecto de $(3, 3)$ es $(-3, 3)$.
+
+      III. El simétrico de $(2, 5)$ respecto del origen es $(2, -5)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo II", misconception: TRA-SIMCEN-RESTA}
+      - {label: B, body: "Ninguna de ellas", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: C, body: "Solo I y III", misconception: TRA-SIMCEN-EJE}
+      - {label: D, body: "Solo I", correct: true}
+
+  # 2C − P = (−4 − 1, 0 − 4) = (−5, −4)
+  # A ORIGEN: usa el origen como centro
+  # C ANGULO: gira 90°: (3, 4) → (−4, 3) → (−6, 3)
+  # D RESTA: calcula C − P
+  - code: M1-TRA-215
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un mosaico tiene simetría central respecto del punto $(-2, 0)$. Una de
+      sus baldosas está en $(1, 4)$. ¿Dónde está la baldosa simétrica?
+    options:
+      - {label: A, body: "$(-1, -4)$", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: B, body: "$(-5, -4)$", correct: true}
+      - {label: C, body: "$(-6, 3)$", misconception: TRA-ROT90-ANGULO}
+      - {label: D, body: "$(-3, -4)$", misconception: TRA-SIMCEN-RESTA}
+
+  # A EJE: confunde con la simetría axial
+  # B ORIGEN: usa el origen como centro
+  # D ANGULO: confunde el ángulo
+  - code: M1-TRA-216
+    node: GEO-TRA-SIM-CEN
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      ¿Cuál de las siguientes afirmaciones sobre la simetría respecto de un
+      punto $C$ es correcta?
+    options:
+      - {label: A, body: "Equivale a reflejar respecto de la recta vertical que pasa por $C$.", misconception: TRA-SIMCEN-EJE}
+      - {label: B, body: "Equivale a rotar $180°$ alrededor del origen.", misconception: TRA-SIMCEN-ORIGEN}
+      - {label: C, body: "Equivale a rotar $180°$ alrededor de $C$.", correct: true}
+      - {label: D, body: "Equivale a rotar $90°$ alrededor de $C$.", misconception: TRA-ROT90-ANGULO}
+
+
+# ---------------------------------------------------------------------
+# REMEDIACIONES
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-TRA-ROT90-SENTIDO
+    misconception: TRA-ROT90-SENTIDO
+    title: Antihorario lleva el primer cuadrante al segundo
+    body: |
+      Giraste hacia el lado contrario. Por ejemplo, giraste $(6, 1)$ en $90°$
+      en sentido antihorario y escribiste $(1, -6)$.
+
+      **$90°$ antihorario: $(x, y) \to (-y, x)$. $90°$ horario:
+      $(x, y) \to (y, -x)$.**
+
+      $$(6, 1) \to (-1, 6)$$
+
+      $(6, 1)$ está en el primer cuadrante. Girando al contrario de los
+      punteros del reloj, sube y pasa al segundo cuadrante: la primera
+      coordenada queda negativa. $(1, -6)$ está en el cuarto: es el giro
+      horario.
+
+      Un control rápido: antes de calcular, decide a qué cuadrante tiene
+      que llegar el punto. Antihorario avanza I → II → III → IV.
+    items: [M1-TRA-150, M1-TRA-151, M1-TRA-159, M1-TRA-160, M1-TRA-167, M1-TRA-168]
+
+  - code: REM-TRA-ROT90-SOLOCAMBIA
+    misconception: TRA-ROT90-SOLOCAMBIA
+    title: En un giro de 90° también cambia un signo
+    body: |
+      Intercambiaste las coordenadas sin cambiar ningún signo. Por ejemplo,
+      giraste $(6, 1)$ en $90°$ antihorario y escribiste $(1, 6)$.
+
+      **Un giro de $90°$ intercambia las coordenadas y cambia el signo de
+      una de ellas.**
+
+      $$(6, 1) \to (-1, 6)$$
+
+      Solo intercambiar, $(x, y) \to (y, x)$, es reflejar en la recta
+      $y = x$: el punto $(1, 6)$ sigue en el primer cuadrante, y un giro de
+      $90°$ siempre cambia de cuadrante a los puntos que no están sobre un
+      eje.
+
+      Un control rápido: si tu imagen quedó en el mismo cuadrante que el
+      punto, no giraste $90°$.
+    items: [M1-TRA-149, M1-TRA-150, M1-TRA-157, M1-TRA-158, M1-TRA-164, M1-TRA-165]
+
+  - code: REM-TRA-ROT90-SOLOSIGNO
+    misconception: TRA-ROT90-SOLOSIGNO
+    title: Un giro no es una reflexión
+    body: |
+      Cambiaste un signo sin intercambiar las coordenadas. Por ejemplo,
+      giraste $(6, 1)$ en $90°$ antihorario y escribiste $(-6, 1)$.
+
+      **En un giro de $90°$ las coordenadas se intercambian y una cambia de
+      signo. En uno de $180°$ cambian las dos de signo.**
+
+      $$90°\ \text{antihorario}: (6, 1) \to (-1, 6) \qquad 180°: (6, 1) \to (-6, -1)$$
+
+      Cambiar un solo signo es reflejar en un eje: la figura queda dada
+      vuelta como en un espejo, y un giro nunca hace eso.
+
+      Un control rápido: en un giro la distancia al origen no cambia, pero
+      el punto rota; si tu imagen es el reflejo en un eje, revisa la regla.
+    items: [M1-TRA-146, M1-TRA-147, M1-TRA-158, M1-TRA-159, M1-TRA-164, M1-TRA-166]
+
+  - code: REM-TRA-ROT90-ANGULO
+    misconception: TRA-ROT90-ANGULO
+    title: 90° intercambia; 180° solo cambia signos
+    body: |
+      Usaste la regla de un ángulo para otro. Por ejemplo, giraste $(6, 1)$
+      en $90°$ y escribiste $(-6, -1)$, que es el giro de $180°$.
+
+      **$90°$: se intercambian las coordenadas y una cambia de signo.
+      $180°$: no se intercambian y cambian las dos de signo.**
+
+      $$90°\ \text{antihorario}: (6, 1) \to (-1, 6) \qquad 180°: (6, 1) \to (-6, -1)$$
+
+      Un giro de $180°$ son dos giros de $90°$ seguidos:
+      $(6, 1) \to (-1, 6) \to (-6, -1)$. Con los cuadrantes: $90°$ avanza uno;
+      $180°$ lleva al cuadrante opuesto.
+
+      Un control rápido: cuenta cuántos cuadrantes avanzó tu imagen. Tiene
+      que ser uno para $90°$ y dos para $180°$.
+    items: [M1-TRA-160, M1-TRA-179, M1-TRA-187, M1-TRA-189, M1-TRA-193, M1-TRA-194]
+
+  - code: REM-TRA-ROTCEN-ORIGEN
+    misconception: TRA-ROTCEN-ORIGEN
+    title: Gira alrededor del centro que te dan
+    body: |
+      Giraste respecto del origen aunque el centro era otro punto. Por
+      ejemplo, para girar $(6, 2)$ en $90°$ antihorario alrededor de
+      $C(3, 2)$ escribiste $(-2, 6)$.
+
+      **Para girar alrededor de $C$: resta $C$, gira con la regla del
+      origen y vuelve a sumar $C$.**
+
+      $$(6, 2) - (3, 2) = (3, 0) \to (0, 3) \to (0, 3) + (3, 2) = (3, 5)$$
+
+      La regla $(x, y) \to (-y, x)$ solo sirve cuando el centro es el
+      origen. Con otro centro, primero hay que mirar el punto «desde» $C$.
+
+      Un control rápido: el punto y su imagen tienen que estar a la misma
+      distancia de $C$. $(6, 2)$ está a $3$ de $C$; $(3, 5)$ también.
+    items: [M1-TRA-172, M1-TRA-173, M1-TRA-180, M1-TRA-181, M1-TRA-188, M1-TRA-189]
+
+  - code: REM-TRA-ROTCEN-NOVUELVE
+    misconception: TRA-ROTCEN-NOVUELVE
+    title: Después de girar, vuelve a sumar el centro
+    body: |
+      Restaste el centro y giraste, pero te faltó el último paso. Por
+      ejemplo, para girar $(6, 2)$ en $90°$ antihorario alrededor de
+      $C(3, 2)$ escribiste $(0, 3)$.
+
+      **Girar respecto de $C$ son tres pasos: restar $C$, girar y sumar
+      $C$.**
+
+      $(0, 3)$ es la posición de la imagen **vista desde $C$**. Para saber
+      dónde queda en el plano, se le suma $C$:
+
+      $$(0, 3) + (3, 2) = (3, 5)$$
+
+      Un control rápido: el centro no se mueve. Si tu imagen quedó cerca del
+      origen y el centro está lejos, te faltó sumar $C$.
+    items: [M1-TRA-172, M1-TRA-173, M1-TRA-180, M1-TRA-182, M1-TRA-189, M1-TRA-190]
+
+  - code: REM-TRA-ROTCEN-VUELVEMAL
+    misconception: TRA-ROTCEN-VUELVEMAL
+    title: Al volver se suma el centro
+    body: |
+      Restaste el centro dos veces: antes de girar y otra vez al final. Por
+      ejemplo, para $(6, 2)$ alrededor de $C(3, 2)$ llegaste a $(0, 3)$ y
+      después hiciste $(0, 3) - (3, 2) = (-3, 1)$.
+
+      **El primer paso resta $C$; el último paso lo suma. Así se deshace el
+      cambio de lugar del comienzo.**
+
+      $$(0, 3) + (3, 2) = (3, 5)$$
+
+      Es como una traslación de ida y vuelta: primero llevas todo para que
+      $C$ quede en el origen, giras, y después lo devuelves a su lugar.
+
+      Un control rápido: prueba con el propio $C$. Restar $C$ da $(0, 0)$,
+      girarlo da $(0, 0)$, y al final tiene que volver a $C$.
+    items: [M1-TRA-169, M1-TRA-172, M1-TRA-173, M1-TRA-185, M1-TRA-192]
+
+  - code: REM-TRA-SIMCEN-EJE
+    misconception: TRA-SIMCEN-EJE
+    title: En la simetría central cambian las dos coordenadas
+    body: |
+      Reflejaste en un eje en vez de hacer la simetría respecto de un
+      punto. Por ejemplo, para el simétrico de $(6, -2)$ respecto del origen
+      escribiste $(6, 2)$.
+
+      **El simétrico respecto del origen es $(-x, -y)$: cambian las dos
+      coordenadas. Respecto de $C$, es $2C - P$.**
+
+      $$(6, -2) \to (-6, 2)$$
+
+      El punto pasa al otro lado del origen, en la misma recta: queda en el
+      cuadrante opuesto. Cambiar una sola coordenada lo deja al otro lado de
+      un eje, que es otra transformación.
+
+      Un control rápido: el centro tiene que quedar justo al medio entre el
+      punto y su simétrico. El punto medio entre $(6, -2)$ y $(6, 2)$ es
+      $(6, 0)$, no el origen.
+    items: [M1-TRA-196, M1-TRA-197, M1-TRA-204, M1-TRA-205, M1-TRA-213, M1-TRA-214]
+
+  - code: REM-TRA-SIMCEN-ORIGEN
+    misconception: TRA-SIMCEN-ORIGEN
+    title: Usa el centro que te dan
+    body: |
+      Hiciste la simetría respecto del origen aunque el centro era otro
+      punto. Por ejemplo, para el simétrico de $(6, -2)$ respecto de
+      $C(1, 1)$ escribiste $(-6, 2)$.
+
+      **Respecto de un centro $C$, el simétrico es $P' = 2C - P$.**
+
+      $$2 \cdot (1, 1) - (6, -2) = (2 - 6,\ 2 + 2) = (-4, 4)$$
+
+      Cambiar los signos solo funciona cuando el centro es $(0, 0)$, porque
+      ahí $2C$ vale cero.
+
+      Un control rápido: calcula el punto medio entre $P$ y tu respuesta.
+      Tiene que dar $C$: entre $(6, -2)$ y $(-4, 4)$ da $(1, 1)$.
+    items: [M1-TRA-199, M1-TRA-200, M1-TRA-206, M1-TRA-207, M1-TRA-212, M1-TRA-214]
+
+  - code: REM-TRA-SIMCEN-RESTA
+    misconception: TRA-SIMCEN-RESTA
+    title: El centro queda al medio, no en un extremo
+    body: |
+      Calculaste $C - P$ y lo diste como el simétrico. Por ejemplo, para el
+      simétrico de $(6, -2)$ respecto de $C(1, 1)$ escribiste $(-5, 3)$.
+
+      **El simétrico está al otro lado de $C$, a la misma distancia: hay que
+      ir de $P$ a $C$ y seguir la misma cantidad. Eso es $P' = 2C - P$.**
+
+      De $(6, -2)$ a $(1, 1)$ se avanza $(-5, 3)$. Avanzando lo mismo desde
+      $C$:
+
+      $$(1, 1) + (-5, 3) = (-4, 4)$$
+
+      $C - P$ es solo el desplazamiento; falta sumarlo desde $C$.
+
+      Un control rápido: el punto medio entre $P$ y su simétrico es $C$. Si
+      no lo es, la respuesta está mal.
+    items: [M1-TRA-199, M1-TRA-200, M1-TRA-206, M1-TRA-207, M1-TRA-211, M1-TRA-212]
+
+  - code: REM-TRA-SIMCEN-SINGIRAR
+    misconception: TRA-SIMCEN-SINGIRAR
+    title: La simetría central deja la figura de cabeza
+    body: |
+      Llevaste la figura al lado opuesto sin girarla, como si la hubieras
+      trasladado.
+
+      **La simetría central es un giro de $180°$: cada punto pasa al otro
+      lado del centro, así que la figura queda de cabeza.**
+
+      Si un triángulo tiene la punta hacia arriba y el ángulo recto a la
+      izquierda, su simétrico respecto del origen tiene la punta hacia abajo
+      y el ángulo recto a la derecha.
+
+      Una figura que aparece en el cuadrante opuesto mirando hacia el mismo
+      lado fue trasladada, no reflejada respecto de un punto.
+
+      Un control rápido: calcula el simétrico de cada vértice con $(-x, -y)$
+      en vez de mover la figura entera.
+    items: [M1-TRA-195, M1-TRA-196, M1-TRA-201, M1-TRA-209]
+
+
+# ---------------------------------------------------------------------
+# CUERPO DE LA CLASE
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Rotar es girar una figura alrededor de un punto fijo sin deformarla. Con
+  giros de $90°$ las coordenadas se transforman con reglas simples, y la
+  simetría central resulta ser un giro de $180°$.
+
+  ## Rotación en múltiplos de 90°
+
+  ### Girar alrededor del origen
+
+  Al rotar un punto alrededor del origen, el punto se mueve sobre una
+  circunferencia: su distancia al origen no cambia. El **sentido
+  antihorario** es el contrario a los punteros del reloj.
+
+  ![](fig:FIG-ROT-90-05)
+
+  $P(5, 2)$ girado $90°$ en sentido antihorario llega a $P'(-2, 5)$.
+
+  ### Las tres reglas
+
+  **$90°$ antihorario: $(x, y) \to (-y,\ x)$.**
+
+  **$90°$ horario (o $270°$ antihorario): $(x, y) \to (y,\ -x)$.**
+
+  **$180°$ (en cualquier sentido): $(x, y) \to (-x,\ -y)$.**
+
+  En un giro de $90°$ las coordenadas **se intercambian y una cambia de
+  signo**. Si solo las intercambias, reflejaste en la recta $y = x$; si
+  solo cambias un signo, reflejaste en un eje. Ninguna de las dos es un
+  giro.
+
+  El error más común es girar hacia el lado contrario. Un control rápido
+  con los cuadrantes: un giro de $90°$ antihorario lleva el primer
+  cuadrante al segundo, el segundo al tercero, y así. Por ejemplo,
+  $(-6, 1)$ girado $90°$ en sentido horario queda en $(1, 6)$: pasó del
+  segundo cuadrante al primero, que es el giro al revés.
+
+  Y $180°$ no es $90°$: con $180°$ cambian los dos signos y las
+  coordenadas no se intercambian. $(-7, 3) \to (7, -3)$.
+
+  ### Figuras
+
+  Para girar una figura se gira cada vértice con la misma regla. La imagen
+  tiene la misma forma, el mismo tamaño y la misma orientación de su
+  recorrido: un giro no la da vuelta como un espejo.
+
+  ## Rotación respecto de un punto
+
+  ### Tres pasos
+
+  Si el centro de giro es un punto $C$ distinto del origen, se hace así:
+
+  1. **Resta $C$** al punto: obtienes su posición vista desde $C$.
+  2. **Gira** ese vector con la regla del origen.
+  3. **Suma $C$** al resultado.
+
+  ![](fig:FIG-ROT-CEN-04)
+
+  Para girar $P(2, 1)$ en $90°$ antihorario alrededor de $C(-1, 0)$:
+
+  $$P - C = (3, 1) \quad\to\quad (-1, 3) \quad\to\quad (-1, 3) + (-1, 0) = (-2, 3)$$
+
+  El paso que más se olvida es el tercero. Sin él, el resultado queda
+  girado alrededor del origen, lejos de $C$.
+
+  Un control rápido: el centro $C$ no se mueve, y el punto y su imagen
+  tienen que quedar a la misma distancia de $C$.
+
+  ## Simetría central
+
+  ### Un giro de 180°
+
+  El simétrico de $P$ respecto de un punto $C$ es el punto $P'$ que queda
+  al otro lado de $C$, en la misma recta y a la misma distancia. **Es lo
+  mismo que girar $P$ en $180°$ alrededor de $C$.**
+
+  ![](fig:FIG-SIM-CEN-03)
+
+  **Respecto del origen: $(x, y) \to (-x, -y)$. Respecto de $C$:
+  $P' = 2C - P$.**
+
+  En la figura, $2 \cdot (0, 1) - (3, 3) = (-3, -1)$.
+
+  No es una reflexión en un eje: en la simetría central cambian **las
+  dos** coordenadas (respecto del origen). Y como es un giro, la figura
+  queda «de cabeza»: lo que apuntaba hacia arriba apunta hacia abajo.
+
+  ### El centro está al medio
+
+  $C$ es el **punto medio** entre $P$ y $P'$. Si conoces un punto y su
+  simétrico, el centro es el promedio de sus coordenadas. Por ejemplo,
+  para $(-4, 7)$ y $(2, -1)$ el centro es $(-1, 3)$.

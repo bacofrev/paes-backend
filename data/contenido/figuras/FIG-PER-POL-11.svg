@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 279.8 264.6" width="279.8" height="264.6" role="img" aria-label="Cuadrilátero con sus cuatro lados marcados como iguales y un ángulo recto; un lado mide 9 cm." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="73.4,198.8 225.4,198.8 225.4,46.8 73.4,46.8" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="149.4" y1="192.72" x2="149.4" y2="204.88" stroke-width="1.2"/>
+  <line x1="219.32" y1="122.8" x2="231.48" y2="122.8" stroke-width="1.2"/>
+  <line x1="149.4" y1="52.88" x2="149.4" y2="40.72" stroke-width="1.2"/>
+  <line x1="79.48" y1="122.8" x2="67.32" y2="122.8" stroke-width="1.2"/>
+  <polyline points="84.8,198.8 84.8,187.4 73.4,187.4" fill="none" stroke-width="1.1"/>
+  <text x="149.4" y="217.8" font-size="13" text-anchor="middle" dominant-baseline="central">9 cm</text>
+</svg>

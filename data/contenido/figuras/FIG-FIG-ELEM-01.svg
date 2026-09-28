@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 336 296" width="336" height="296" role="img" aria-label="Triángulo ABC con el lado AB inclinado. Desde C salen tres segmentos hasta el lado AB: CD, CV y CM. En D hay un ángulo recto marcado." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="48,248 288,168 228,48" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="228" y1="48" x2="270" y2="174" stroke-width="1.2"/>
+  <line x1="228" y1="48" x2="228" y2="188" stroke-width="1.2"/>
+  <line x1="228" y1="48" x2="168" y2="208" stroke-width="1.2"/>
+  <polyline points="267.22,165.65 275.57,162.87 278.35,171.22" fill="none" stroke-width="1.1"/>
+  <text x="36.68" y="255.54" font-size="14" text-anchor="middle" dominant-baseline="central">A</text>
+  <text x="301.48" y="169.8" font-size="14" text-anchor="middle" dominant-baseline="central">B</text>
+  <text x="232.78" y="35.27" font-size="14" text-anchor="middle" dominant-baseline="central">C</text>
+  <text x="274.8" y="188" font-size="13" text-anchor="middle" dominant-baseline="central">D</text>
+  <text x="228" y="204" font-size="13" text-anchor="middle" dominant-baseline="central">V</text>
+  <text x="174" y="223.2" font-size="13" text-anchor="middle" dominant-baseline="central">M</text>
+</svg>

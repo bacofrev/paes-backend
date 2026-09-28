@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 308 298" width="308" height="298" role="img" aria-label="Hexágono con sus seis lados marcados como iguales; uno de ellos mide 7 cm." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="154,54 67.4,104 67.4,204 154,254 240.6,204 240.6,104" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="114.7" y1="85.93" x2="106.7" y2="72.07" stroke-width="1.2"/>
+  <line x1="75.4" y1="154" x2="59.4" y2="154" stroke-width="1.2"/>
+  <line x1="114.7" y1="222.07" x2="106.7" y2="235.93" stroke-width="1.2"/>
+  <line x1="193.3" y1="222.07" x2="201.3" y2="235.93" stroke-width="1.2"/>
+  <line x1="232.6" y1="154" x2="248.6" y2="154" stroke-width="1.2"/>
+  <line x1="193.3" y1="85.93" x2="201.3" y2="72.07" stroke-width="1.2"/>
+  <text x="206.8" y="245.45" font-size="13" text-anchor="middle" dominant-baseline="central">7 cm</text>
+</svg>

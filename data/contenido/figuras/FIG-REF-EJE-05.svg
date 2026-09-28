@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 326 218" width="326" height="218" role="img" aria-label="Una bandera que apunta a la derecha y su reflejo respecto del eje y, que apunta a la izquierda: la reflexión invierte la orientación." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <line x1="26" y1="26" x2="26" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="52" y1="26" x2="52" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="78" y1="26" x2="78" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="104" y1="26" x2="104" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="130" y1="26" x2="130" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="156" y1="26" x2="156" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="182" y1="26" x2="182" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="208" y1="26" x2="208" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="234" y1="26" x2="234" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="260" y1="26" x2="260" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="286" y1="26" x2="286" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="182" x2="286" y2="182" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="156" x2="286" y2="156" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="130" x2="286" y2="130" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="104" x2="286" y2="104" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="78" x2="286" y2="78" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="52" x2="286" y2="52" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line x1="26" y1="26" x2="286" y2="26" stroke-width="0.6" stroke-opacity="0.3"/>
+  <line class="eje-x" x1="22" y1="156" x2="298" y2="156" stroke-width="1.3"/>
+  <line class="eje-y" x1="156" y1="186" x2="156" y2="14" stroke-width="1.3"/>
+  <polygon points="304,156 295,151.5 295,160.5" fill="currentColor" stroke="none"/>
+  <polygon points="156,8 151.5,17 160.5,17" fill="currentColor" stroke="none"/>
+  <line x1="26" y1="152.5" x2="26" y2="159.5" stroke-width="1.3"/>
+  <line x1="52" y1="152.5" x2="52" y2="159.5" stroke-width="1.3"/>
+  <line x1="78" y1="152.5" x2="78" y2="159.5" stroke-width="1.3"/>
+  <line x1="104" y1="152.5" x2="104" y2="159.5" stroke-width="1.3"/>
+  <line x1="130" y1="152.5" x2="130" y2="159.5" stroke-width="1.3"/>
+  <line x1="182" y1="152.5" x2="182" y2="159.5" stroke-width="1.3"/>
+  <line x1="208" y1="152.5" x2="208" y2="159.5" stroke-width="1.3"/>
+  <line x1="234" y1="152.5" x2="234" y2="159.5" stroke-width="1.3"/>
+  <line x1="260" y1="152.5" x2="260" y2="159.5" stroke-width="1.3"/>
+  <line x1="286" y1="152.5" x2="286" y2="159.5" stroke-width="1.3"/>
+  <line x1="152.5" y1="182" x2="159.5" y2="182" stroke-width="1.3"/>
+  <line x1="152.5" y1="130" x2="159.5" y2="130" stroke-width="1.3"/>
+  <line x1="152.5" y1="104" x2="159.5" y2="104" stroke-width="1.3"/>
+  <line x1="152.5" y1="78" x2="159.5" y2="78" stroke-width="1.3"/>
+  <line x1="152.5" y1="52" x2="159.5" y2="52" stroke-width="1.3"/>
+  <line x1="152.5" y1="26" x2="159.5" y2="26" stroke-width="1.3"/>
+  <polygon class="figura" data-vertices="=-4,0;=-4,4;=-1,3;=-4,2" points="52,156 52,52 130,78 52,104" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <polygon class="figura" data-vertices="=4,0;=4,4;=1,3;=4,2" points="260,156 260,52 182,78 260,104" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <text x="148" y="168" font-size="11" text-anchor="middle" dominant-baseline="central">0</text>
+  <text x="302" y="144" font-size="14" text-anchor="middle" dominant-baseline="central" font-style="italic">x</text>
+  <text x="168" y="14" font-size="14" text-anchor="middle" dominant-baseline="central" font-style="italic">y</text>
+</svg>

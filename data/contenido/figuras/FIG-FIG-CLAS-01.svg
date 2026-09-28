@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 224 224" width="224" height="224" role="img" aria-label="Un cuadrilátero apoyado sobre uno de sus vértices, con sus cuatro lados marcados como iguales y un ángulo recto marcado." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="112,48 48,112 112,176 176,112" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="84.53" y1="84.53" x2="75.47" y2="75.47" stroke-width="1.2"/>
+  <line x1="84.53" y1="139.47" x2="75.47" y2="148.53" stroke-width="1.2"/>
+  <line x1="139.47" y1="139.47" x2="148.53" y2="148.53" stroke-width="1.2"/>
+  <line x1="139.47" y1="84.53" x2="148.53" y2="75.47" stroke-width="1.2"/>
+  <polyline points="104.08,55.92 112,63.84 119.92,55.92" fill="none" stroke-width="1.1"/>
+</svg>

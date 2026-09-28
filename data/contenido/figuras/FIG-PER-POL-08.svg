@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 337 291.1" width="337" height="291.1" role="img" aria-label="Triángulo de lados 13 cm, 14 cm y 15 cm, con la altura sobre el lado de 14 cm dibujada punteada; la altura mide 12 cm." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="134.5,41 49.5,245 287.5,245" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="134.5" y1="41" x2="134.5" y2="245" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <polyline points="134.5,231.4 148.1,231.4 148.1,245" fill="none" stroke-width="1.1"/>
+  <text x="168.5" y="260.3" font-size="13" text-anchor="middle" dominant-baseline="central">14 cm</text>
+  <text x="110.83" y="150.85" font-size="13" text-anchor="middle" dominant-baseline="central">13 cm</text>
+  <text x="194.68" y="155.24" font-size="13" text-anchor="middle" dominant-baseline="central">15 cm</text>
+  <text x="112.4" y="190.6" font-size="13" text-anchor="middle" dominant-baseline="central">12 cm</text>
+</svg>

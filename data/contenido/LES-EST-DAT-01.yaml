@@ -1,0 +1,2263 @@
+# =====================================================================
+# LES-EST-DAT-01 — Variables y tablas de frecuencia
+# Cubre EST-DAT-VAR, EST-TAB-ABS, EST-TAB-ACUM
+# =====================================================================
+# Cadena VAR -> ABS -> ACUM. VAR es `pre` y raíz del grafo; ABS y ACUM
+# son M1. Primera clase del eje EST.
+#
+# Alcance (propuesto, sin control 1):
+#   VAR  entra   variable, individuo y población en un estudio; cualitativa
+#                y cuantitativa; discreta y continua; categorías con orden
+#                siguen siendo cualitativas (sin exigir "nominal" y
+#                "ordinal" como nombres); números que solo identifican
+#                (camiseta, RUT) son cualitativos.
+#        fuera   muestra y población como técnica de muestreo (no hay
+#                nodo); gráficos (EST-GRA-*).
+#   ABS  entra   frecuencia absoluta de un valor, contar desde datos
+#                sueltos, total de datos n = suma de frecuencias, total de
+#                la variable (suma de valor · frecuencia), frecuencia que
+#                falta, datos agrupados en intervalos [a, b).
+#        fuera   frecuencia relativa y porcentual (EST-TAB-REL); moda y
+#                promedio como conceptos (EST-PRO-*): el total de la
+#                variable se pide, el promedio no.
+#   ACUM entra   construir F, leer F, "a lo sumo", "menos de", "más de",
+#                "al menos", "entre", recuperar f desde F, F del último
+#                valor = n, intervalos.
+#        fuera   mediana desde F (EST-POS-MEDIANA).
+#   formato  las tablas van como arreglo de KaTeX ($$\begin{array}...$$):
+#            el front no tiene remark-gfm y una tabla markdown no se
+#            dibuja.
+#
+# Niveles:
+#   1  una lectura o una clasificación
+#   2  dos pasos, tablas con F, datos sueltos que hay que agrupar
+#   3  I/II/III, contexto, errores de otro para detectar
+# ---------------------------------------------------------------------
+
+unit: EST-DAT
+
+lesson:
+  code: LES-EST-DAT-01
+  title: Variables y tablas de frecuencia
+  position: 1
+  nodes:
+    - node: EST-DAT-VAR
+      anchor: tipos-de-variables
+    - node: EST-TAB-ABS
+      anchor: frecuencia-absoluta
+    - node: EST-TAB-ACUM
+      anchor: frecuencia-acumulada
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== EST-DAT-VAR · nivel 1 =================================
+
+  # B NUMERO: número = cantidad
+  # C ORDINAL: ordenada = cantidad
+  # D DISCATEG: categorías separadas = discreta
+  - code: M1-DAT-001
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "La cantidad de mascotas de una familia es una variable cuantitativa discreta.", correct: true}
+      - {label: B, body: "El número de RUT de una persona es una variable cuantitativa.", misconception: DAT-VAR-NUMERO}
+      - {label: C, body: "El nivel de inglés de una persona (básico, intermedio o avanzado) es una variable cuantitativa.", misconception: DAT-VAR-ORDINAL}
+      - {label: D, body: "El color de un auto es una variable discreta.", misconception: DAT-VAR-DISCATEG}
+
+  # A ORDINAL: ordenada = cantidad
+  # B ENTERO: sin decimales = discreta
+  # D NUMERO: número = cantidad
+  - code: M1-DAT-002
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes variables es cuantitativa discreta?"
+    options:
+      - {label: A, body: "La talla de polera (S, M, L o XL).", misconception: DAT-VAR-ORDINAL}
+      - {label: B, body: "La estatura de una persona, anotada en centímetros enteros.", misconception: DAT-VAR-ENTERO}
+      - {label: C, body: "La cantidad de hermanos de una persona.", correct: true}
+      - {label: D, body: "El número de camiseta de un jugador.", misconception: DAT-VAR-NUMERO}
+
+  # A NUMERO: número = cantidad
+  # C CANTIDAD: «cantidad» = discreta
+  # D ENTERO: sin decimales = discreta
+  - code: M1-DAT-003
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "El código postal de una casa es una variable cuantitativa.", misconception: DAT-VAR-NUMERO}
+      - {label: B, body: "El tiempo que tarda un corredor en recorrer $100$ metros es una variable continua.", correct: true}
+      - {label: C, body: "La cantidad de lluvia caída en un día es una variable discreta.", misconception: DAT-VAR-CANTIDAD}
+      - {label: D, body: "La masa de una persona, anotada en kilogramos enteros, es una variable discreta.", misconception: DAT-VAR-ENTERO}
+
+  # A DISCATEG: categorías = discreta
+  # B ORDINAL: ordenada = cantidad
+  # C NUMERO: codificada con números = cantidad
+  - code: M1-DAT-004
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Qué tipo de variable es el nivel educacional de una persona (básica,
+      media o superior)?
+    options:
+      - {label: A, body: "Discreta, porque tiene categorías separadas.", misconception: DAT-VAR-DISCATEG}
+      - {label: B, body: "Cuantitativa, porque sus categorías se pueden ordenar.", misconception: DAT-VAR-ORDINAL}
+      - {label: C, body: "Cuantitativa, porque se puede codificar como $1$, $2$ y $3$.", misconception: DAT-VAR-NUMERO}
+      - {label: D, body: "Cualitativa, aunque sus categorías tengan un orden.", correct: true}
+
+  # A NUMERO: número = cantidad
+  # C ORDINAL: ordenable = cantidad
+  # D DISCATEG: aplica «discreta» a una cualitativa
+  - code: M1-DAT-005
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Qué tipo de variable es el número de camiseta de un jugador de
+      fútbol?
+    options:
+      - {label: A, body: "Cuantitativa discreta, porque sus valores son números enteros.", misconception: DAT-VAR-NUMERO}
+      - {label: B, body: "Cualitativa, porque el número solo identifica al jugador.", correct: true}
+      - {label: C, body: "Cuantitativa, porque los números se pueden ordenar.", misconception: DAT-VAR-ORDINAL}
+      - {label: D, body: "Cualitativa y discreta, porque cada jugador tiene un número distinto.", misconception: DAT-VAR-DISCATEG}
+
+  # B ORDINAL: rechaza I
+  # C CANTIDAD: acepta III
+  # D NUMERO: acepta II
+  - code: M1-DAT-006
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. La talla de polera (S, M, L) es una variable cualitativa.
+
+      II. El número de teléfono de una persona es una variable cuantitativa.
+
+      III. La cantidad de azúcar de un queque, en gramos, es una variable discreta.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", correct: true}
+      - {label: B, body: "Ninguna de ellas", misconception: DAT-VAR-ORDINAL}
+      - {label: C, body: "Solo I y III", misconception: DAT-VAR-CANTIDAD}
+      - {label: D, body: "Solo I y II", misconception: DAT-VAR-NUMERO}
+
+  # A NUMERO: número = cantidad
+  # B DISCATEG: categorías = discreta
+  # D ENTERO: sin decimales = discreta
+  - code: M1-DAT-007
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "El número de la sala donde estudia un curso es una variable cuantitativa.", misconception: DAT-VAR-NUMERO}
+      - {label: B, body: "La marca de celular que usa una persona es una variable discreta.", misconception: DAT-VAR-DISCATEG}
+      - {label: C, body: "La marca de celular que usa una persona es una variable cualitativa.", correct: true}
+      - {label: D, body: "La duración de una canción, en segundos enteros, es una variable discreta.", misconception: DAT-VAR-ENTERO}
+
+  # A NUMERO: número = cantidad
+  # B ORDINAL: ordenada = cantidad
+  # C CANTIDAD: «cantidad» = discreta
+  - code: M1-DAT-008
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "El número de serie de un computador es una variable cuantitativa.", misconception: DAT-VAR-NUMERO}
+      - {label: B, body: "El nivel de picante de una salsa (suave, medio o fuerte) es una variable cuantitativa.", misconception: DAT-VAR-ORDINAL}
+      - {label: C, body: "La cantidad de leche que produce una vaca en un día es una variable discreta.", misconception: DAT-VAR-CANTIDAD}
+      - {label: D, body: "El tiempo que demora un bus entre dos paraderos es una variable continua.", correct: true}
+
+  # ===== EST-DAT-VAR · nivel 2 =================================
+
+  # A ENTERO: sin decimales = discreta
+  # B VALOR: responde con un valor
+  # C POBLACION: responde con los individuos
+  - code: M1-DAT-009
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      En un colegio se midió la estatura de $40$ estudiantes y se anotó en
+      centímetros, redondeada al entero. La estatura más repetida fue $165$
+      cm. ¿Cuál afirmación es correcta?
+    options:
+      - {label: A, body: "La variable es la estatura, y es cuantitativa discreta, porque se anotó en centímetros enteros.", misconception: DAT-VAR-ENTERO}
+      - {label: B, body: "La variable es $165$ cm, la estatura más repetida.", misconception: DAT-VAR-VALOR}
+      - {label: C, body: "La variable son los $40$ estudiantes.", misconception: DAT-VAR-POBLACION}
+      - {label: D, body: "La variable es la estatura, y es cuantitativa continua.", correct: true}
+
+  # A VALOR: responde con valores
+  # B POBLACION: responde con los individuos
+  # D DISCATEG: aplica «discreta» a una cualitativa
+  - code: M1-DAT-010
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      En un estudio se registró, para cada uno de los $50$ árboles de una
+      plaza, su especie y su altura. ¿Cuál afirmación es correcta?
+    options:
+      - {label: A, body: "Las variables son «pino» y «$15$ metros».", misconception: DAT-VAR-VALOR}
+      - {label: B, body: "Las variables son los $50$ árboles de la plaza.", misconception: DAT-VAR-POBLACION}
+      - {label: C, body: "La especie es cualitativa y la altura es cuantitativa continua.", correct: true}
+      - {label: D, body: "La especie es cualitativa discreta y la altura es cuantitativa continua.", misconception: DAT-VAR-DISCATEG}
+
+  # B ENTERO: acepta II
+  # C NUMERO: rechaza I
+  # D CANTIDAD: rechaza III
+  - code: M1-DAT-011
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. El número de recorrido de un bus (por ejemplo, $210$) es una variable cualitativa.
+
+      II. La temperatura máxima de un día, anotada en grados enteros, es una variable discreta.
+
+      III. La cantidad de harina de una receta, en gramos, es una variable continua.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I y III", correct: true}
+      - {label: B, body: "I, II y III", misconception: DAT-VAR-ENTERO}
+      - {label: C, body: "Solo III", misconception: DAT-VAR-NUMERO}
+      - {label: D, body: "Solo I", misconception: DAT-VAR-CANTIDAD}
+
+  # A VALOR: responde con un valor
+  # C POBLACION: responde con los individuos
+  # D DISCATEG: aplica «discreta» a una cualitativa
+  - code: M1-DAT-012
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Se preguntó a los $28$ estudiantes de un curso por su deporte
+      favorito, y $12$ respondieron fútbol. ¿Cuál es la variable y de qué
+      tipo es?
+    options:
+      - {label: A, body: "El fútbol, que es una variable cualitativa.", misconception: DAT-VAR-VALOR}
+      - {label: B, body: "El deporte favorito de cada estudiante, que es una variable cualitativa.", correct: true}
+      - {label: C, body: "Los $28$ estudiantes, que son una variable cuantitativa discreta.", misconception: DAT-VAR-POBLACION}
+      - {label: D, body: "El deporte favorito de cada estudiante, que es una variable cualitativa discreta.", misconception: DAT-VAR-DISCATEG}
+
+  # A DISCATEG: aplica «discreta» a una cualitativa
+  # B VALOR: responde con un valor
+  # C POBLACION: responde con los individuos
+  - code: M1-DAT-013
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "El género literario favorito de una persona es una variable discreta.", misconception: DAT-VAR-DISCATEG}
+      - {label: B, body: "Si $12$ estudiantes leyeron $3$ libros, la variable es «$3$ libros».", misconception: DAT-VAR-VALOR}
+      - {label: C, body: "Si se registra cuántos libros leyó cada estudiante de un curso, la variable son los estudiantes.", misconception: DAT-VAR-POBLACION}
+      - {label: D, body: "Si se registra cuántos libros leyó cada estudiante de un curso, la variable es cuantitativa discreta.", correct: true}
+
+  # B DISCATEG: acepta III
+  # C NUMERO: acepta II
+  # D ORDINAL: rechaza I
+  - code: M1-DAT-014
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. Una variable cualitativa puede tener categorías ordenadas.
+
+      II. Toda variable cuyos valores son números es cuantitativa.
+
+      III. Una variable cualitativa puede ser discreta o continua.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", correct: true}
+      - {label: B, body: "Solo I y III", misconception: DAT-VAR-DISCATEG}
+      - {label: C, body: "Solo I y II", misconception: DAT-VAR-NUMERO}
+      - {label: D, body: "Ninguna de ellas", misconception: DAT-VAR-ORDINAL}
+
+  # A NUMERO: los dos le parecen cuantitativos discretos
+  # B ORDINAL: los dos le parecen cuantitativos
+  # D CANTIDAD: los dos le parecen discretos por la palabra «cantidad»
+  - code: M1-DAT-015
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      ¿En cuál de los siguientes pares las dos variables son del mismo tipo?
+    options:
+      - {label: A, body: "Número de camiseta y cantidad de goles en un partido.", misconception: DAT-VAR-NUMERO}
+      - {label: B, body: "Nivel de inglés y cantidad de idiomas que habla una persona.", misconception: DAT-VAR-ORDINAL}
+      - {label: C, body: "Cantidad de hermanos y cantidad de goles en un partido.", correct: true}
+      - {label: D, body: "Cantidad de lluvia caída y cantidad de hermanos.", misconception: DAT-VAR-CANTIDAD}
+
+  # A NUMERO: número = cantidad
+  # C DISCATEG: categorías = discreta
+  # D ENTERO: sin decimales = discreta
+  - code: M1-DAT-016
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "El número de pasaporte de una persona es una variable cuantitativa.", misconception: DAT-VAR-NUMERO}
+      - {label: B, body: "El puntaje obtenido en una prueba de $60$ preguntas es una variable cuantitativa discreta.", correct: true}
+      - {label: C, body: "El sabor de helado favorito de una persona es una variable discreta.", misconception: DAT-VAR-DISCATEG}
+      - {label: D, body: "La duración de una llamada, anotada en minutos enteros, es una variable discreta.", misconception: DAT-VAR-ENTERO}
+
+  # ===== EST-DAT-VAR · nivel 3 =================================
+
+  # B DISCATEG: aplica «discreta» a una cualitativa
+  # C POBLACION: responde con los individuos
+  # D ENTERO: la masa sin decimales le parece discreta
+  - code: M1-DAT-017
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Una nutricionista registra, para cada uno de sus $60$ pacientes, el
+      sexo, la masa en kilogramos redondeada al entero y la cantidad de
+      comidas que hace al día. ¿Cuál afirmación es correcta?
+    options:
+      - {label: A, body: "La masa es cuantitativa continua y la cantidad de comidas es cuantitativa discreta.", correct: true}
+      - {label: B, body: "El sexo es discreto, la masa es continua y la cantidad de comidas es discreta.", misconception: DAT-VAR-DISCATEG}
+      - {label: C, body: "Las variables del estudio son los $60$ pacientes.", misconception: DAT-VAR-POBLACION}
+      - {label: D, body: "La masa y la cantidad de comidas son cuantitativas discretas.", misconception: DAT-VAR-ENTERO}
+
+  # A ENTERO: rechaza I
+  # C POBLACION: rechaza III
+  # D NUMERO: acepta II
+  - code: M1-DAT-018
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      De cada uno de los $30$ estudiantes de un curso se registró su
+      estatura (en centímetros enteros) y su número de lista. Considera
+      las siguientes afirmaciones:
+
+      I. La estatura es continua, aunque se haya anotado en centímetros enteros.
+
+      II. El número de lista es una variable cuantitativa discreta.
+
+      III. Los $30$ estudiantes no son una variable: son los individuos del estudio.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo III", misconception: DAT-VAR-ENTERO}
+      - {label: B, body: "Solo I y III", correct: true}
+      - {label: C, body: "Solo I", misconception: DAT-VAR-POBLACION}
+      - {label: D, body: "I, II y III", misconception: DAT-VAR-NUMERO}
+
+  # A DISCATEG: el estado del cielo le parece discreto
+  # B POBLACION: responde con los individuos
+  # C CANTIDAD: la lluvia, por ser «cantidad», le parece discreta
+  - code: M1-DAT-019
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Una estación meteorológica registra cada día la temperatura mínima (en
+      °C, con un decimal), la cantidad de lluvia caída (en mm) y el estado
+      del cielo (despejado, nublado o lluvioso). ¿Cuál afirmación es
+      correcta?
+    options:
+      - {label: A, body: "Hay dos variables continuas y una discreta.", misconception: DAT-VAR-DISCATEG}
+      - {label: B, body: "Las variables son los días del año en que se midió.", misconception: DAT-VAR-POBLACION}
+      - {label: C, body: "Hay una variable continua, una discreta y una cualitativa.", misconception: DAT-VAR-CANTIDAD}
+      - {label: D, body: "Hay dos variables cuantitativas continuas y una cualitativa.", correct: true}
+
+  # A ENTERO: cree que esta es la incorrecta: la ve discreta
+  # B ORDINAL: cree que esta es la incorrecta: la ve cuantitativa
+  # D CANTIDAD: cree que esta es la incorrecta: la ve discreta
+  - code: M1-DAT-020
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Tomás clasificó cuatro variables y se equivocó en una sola. ¿En cuál
+      se equivocó?
+    options:
+      - {label: A, body: "Estatura, anotada en centímetros enteros: cuantitativa continua.", misconception: DAT-VAR-ENTERO}
+      - {label: B, body: "Nivel educacional de una persona: cualitativa.", misconception: DAT-VAR-ORDINAL}
+      - {label: C, body: "Código postal de una casa: cuantitativa discreta.", correct: true}
+      - {label: D, body: "Cantidad de lluvia caída en un día: cuantitativa continua.", misconception: DAT-VAR-CANTIDAD}
+
+  # A CANTIDAD: rechaza I
+  # B DISCATEG: acepta II
+  # C POBLACION: rechaza III: la variable serían las 40 personas
+  - code: M1-DAT-021
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. La cantidad de agua de un estanque es una variable continua.
+
+      II. El color de ojos es una variable discreta.
+
+      III. Si se pregunta a $40$ personas en qué comuna viven, la variable es la comuna.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo III", misconception: DAT-VAR-CANTIDAD}
+      - {label: B, body: "I, II y III", misconception: DAT-VAR-DISCATEG}
+      - {label: C, body: "Solo I", misconception: DAT-VAR-POBLACION}
+      - {label: D, body: "Solo I y III", correct: true}
+
+  # A FRECUENCIA: confunde la variable con su frecuencia
+  # B ENTERO: sin decimales = discreta
+  # D POBLACION: responde con los individuos
+  - code: M1-DAT-022
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Una profesora registró el tiempo que tardó cada estudiante en resolver
+      un ejercicio, redondeado al segundo, y después contó cuántos
+      estudiantes tardaron cada tiempo. ¿Cuál afirmación es correcta?
+    options:
+      - {label: A, body: "La variable es cuántos estudiantes tardaron cada tiempo.", misconception: DAT-VAR-FRECUENCIA}
+      - {label: B, body: "La variable es el tiempo, y es cuantitativa discreta, porque se anotó en segundos enteros.", misconception: DAT-VAR-ENTERO}
+      - {label: C, body: "La variable es el tiempo, y es cuantitativa continua.", correct: true}
+      - {label: D, body: "La variable son los estudiantes del curso.", misconception: DAT-VAR-POBLACION}
+
+  # B FRECUENCIA: confunde la variable con su frecuencia
+  # C DISCATEG: el medio de transporte le parece discreto
+  # D POBLACION: confunde variables con individuos
+  - code: M1-DAT-023
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En un estudio sobre transporte se pregunta a $200$ personas por su
+      medio de transporte principal, el tiempo de viaje y la cantidad de
+      transbordos que hacen. ¿Cuál afirmación es correcta?
+    options:
+      - {label: A, body: "Hay una variable cualitativa, una cuantitativa continua y una cuantitativa discreta.", correct: true}
+      - {label: B, body: "La variable es cuántas personas usan cada medio de transporte.", misconception: DAT-VAR-FRECUENCIA}
+      - {label: C, body: "Hay dos variables discretas y una continua.", misconception: DAT-VAR-DISCATEG}
+      - {label: D, body: "Hay $200$ variables, una por cada persona.", misconception: DAT-VAR-POBLACION}
+
+  # A ENTERO: sin decimales = discreta
+  # C NUMERO: número = cantidad
+  # D FRECUENCIA: confunde la variable con una frecuencia
+  - code: M1-DAT-024
+    node: EST-DAT-VAR
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "La distancia de la casa al colegio, anotada en kilómetros enteros, es una variable discreta.", misconception: DAT-VAR-ENTERO}
+      - {label: B, body: "La cantidad de estudiantes presentes en una clase es una variable discreta.", correct: true}
+      - {label: C, body: "El número de la línea de metro que usa una persona es una variable cuantitativa.", misconception: DAT-VAR-NUMERO}
+      - {label: D, body: "Si $8$ estudiantes llegan en bus al colegio, la variable del estudio es $8$.", misconception: DAT-VAR-FRECUENCIA}
+
+  # ===== EST-TAB-ABS · nivel 1 =================================
+
+  # A FILAS: cuenta las filas
+  # B SUMAF: suma valor por frecuencia: el total de hermanos
+  # C SUMAX: 0 + 1 + 2 + 3 + 4
+  - code: M1-DAT-025
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra la cantidad de hermanos de los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Cantidad de hermanos} & \text{Cantidad de estudiantes} \\
+      \hline 0 & 6 \\ \hline 1 & 10 \\ \hline 2 & 8 \\ \hline 3 & 4 \\ \hline 4 & 2 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos estudiantes respondieron?
+    options:
+      - {label: A, body: "$5$", misconception: TAB-ABS-FILAS}
+      - {label: B, body: "$46$", misconception: TAB-ABS-SUMAF}
+      - {label: C, body: "$10$", misconception: TAB-ABS-SUMAX}
+      - {label: D, body: "$30$", correct: true}
+
+  # B FRECUENCIA: confunde la frecuencia con la variable
+  # C SUMAF: lee la frecuencia como total de la variable
+  # D COLUMNA: invierte valor y frecuencia
+  - code: M1-DAT-026
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra la cantidad de hermanos de los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Cantidad de hermanos} & \text{Cantidad de estudiantes} \\
+      \hline 0 & 6 \\ \hline 1 & 10 \\ \hline 2 & 8 \\ \hline 3 & 4 \\ \hline 4 & 2 \\ \hline
+      \end{array}
+      $$
+
+      ¿Qué indica el número $4$ que aparece en la fila del $3$?
+    options:
+      - {label: A, body: "Que $4$ estudiantes tienen $3$ hermanos.", correct: true}
+      - {label: B, body: "Que la variable del estudio vale $4$ en esa fila.", misconception: DAT-VAR-FRECUENCIA}
+      - {label: C, body: "Que los estudiantes con $3$ hermanos suman $4$ hermanos entre todos.", misconception: TAB-ABS-SUMAF}
+      - {label: D, body: "Que $3$ estudiantes tienen $4$ hermanos.", misconception: TAB-ABS-COLUMNA}
+
+  # A DISCATEG: aplica «discreta» a una cualitativa
+  # B POBLACION: responde con los individuos
+  # D FRECUENCIA: confunde la variable con su frecuencia
+  - code: M1-DAT-027
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra el deporte favorito de los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Deporte favorito} & \text{Cantidad de estudiantes} \\
+      \hline \text{Fútbol} & 14 \\ \hline \text{Básquetbol} & 8 \\ \hline \text{Vóleibol} & 5 \\ \hline \text{Natación} & 3 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuál es la variable y de qué tipo es?
+    options:
+      - {label: A, body: "El deporte favorito, que es una variable cualitativa discreta.", misconception: DAT-VAR-DISCATEG}
+      - {label: B, body: "Los $30$ estudiantes, que son una variable cuantitativa discreta.", misconception: DAT-VAR-POBLACION}
+      - {label: C, body: "El deporte favorito, que es una variable cualitativa.", correct: true}
+      - {label: D, body: "La cantidad de estudiantes por deporte, que es cuantitativa discreta.", misconception: DAT-VAR-FRECUENCIA}
+
+  # [20, 30): 20, 25, 20, 22
+  # A FILAS: cuenta los valores distintos: 20, 22 y 25
+  # C LIMITE: deja fuera los 20: solo 25 y 22
+  # D SUMAF: suma los tiempos del intervalo: 20 + 25 + 20 + 22
+  - code: M1-DAT-028
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Los tiempos, en minutos, que tardaron $10$ estudiantes en llegar al
+      colegio fueron: $8,\ 12,\ 20,\ 25,\ 19,\ 30,\ 20,\ 14,\ 35,\ 22$. Si
+      se agrupan en intervalos de $10$ minutos, ¿cuál es la frecuencia del
+      intervalo $[20, 30)$?
+    options:
+      - {label: A, body: "$3$", misconception: TAB-ABS-FILAS}
+      - {label: B, body: "$4$", correct: true}
+      - {label: C, body: "$2$", misconception: TAB-ABS-LIMITE}
+      - {label: D, body: "$87$", misconception: TAB-ABS-SUMAF}
+
+  # 30 − (9 + 12 + 2) = 7
+  # A COLUMNA: responde con el valor
+  # B SUMAF: 30 − (0·9 + 1·12 + 3·2): resta los totales de mascotas
+  # C SUMAX: 30 − (0 + 1 + 3): resta los valores
+  - code: M1-DAT-029
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra la cantidad de mascotas de $30$ familias, pero se borró una frecuencia.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Cantidad de mascotas} & \text{Cantidad de familias} \\
+      \hline 0 & 9 \\ \hline 1 & 12 \\ \hline 2 & ? \\ \hline 3 & 2 \\ \hline \text{Total} & 30 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántas familias tienen $2$ mascotas?
+    options:
+      - {label: A, body: "$2$", misconception: TAB-ABS-COLUMNA}
+      - {label: B, body: "$12$", misconception: TAB-ABS-SUMAF}
+      - {label: C, body: "$26$", misconception: TAB-ABS-SUMAX}
+      - {label: D, body: "$7$", correct: true}
+
+  # B FILAS: cuenta las filas
+  # C DISCATEG: aplica «discreta» a una cualitativa
+  # D ORDINAL: ordenada = cantidad
+  - code: M1-DAT-030
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra la talla de polera de los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Talla de polera} & \text{Cantidad de estudiantes} \\
+      \hline \text{S} & 8 \\ \hline \text{M} & 12 \\ \hline \text{L} & 7 \\ \hline \text{XL} & 3 \\ \hline
+      \end{array}
+      $$
+
+      ¿Qué tipo de variable es y cuántos datos hay?
+    options:
+      - {label: A, body: "Cualitativa; hay $30$ datos.", correct: true}
+      - {label: B, body: "Cualitativa; hay $4$ datos.", misconception: TAB-ABS-FILAS}
+      - {label: C, body: "Cualitativa discreta; hay $30$ datos.", misconception: DAT-VAR-DISCATEG}
+      - {label: D, body: "Cuantitativa; hay $30$ datos.", misconception: DAT-VAR-ORDINAL}
+
+  # A VALOR: responde con un valor
+  # B FRECUENCIA: confunde la variable con su frecuencia
+  # D POBLACION: responde con los individuos
+  - code: M1-DAT-031
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra los goles marcados en los partidos de un campeonato.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Goles en el partido} & \text{Cantidad de partidos} \\
+      \hline 0 & 3 \\ \hline 1 & 7 \\ \hline 2 & 5 \\ \hline 3 & 2 \\ \hline 4 & 2 \\ \hline 5 & 1 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuál es la variable estudiada?
+    options:
+      - {label: A, body: "$1$ gol, el resultado más frecuente.", misconception: DAT-VAR-VALOR}
+      - {label: B, body: "La cantidad de partidos.", misconception: DAT-VAR-FRECUENCIA}
+      - {label: C, body: "La cantidad de goles marcados en cada partido.", correct: true}
+      - {label: D, body: "Los $20$ partidos del campeonato.", misconception: DAT-VAR-POBLACION}
+
+  # A LIMITE: el 30 al intervalo que termina en 30
+  # C DISCATEG: los intervalos le parecen categorías (débil)
+  # D ENTERO: los tiempos son enteros: discreta
+  - code: M1-DAT-032
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra el tiempo que tardaron los estudiantes de un curso en resolver una guía.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Tiempo (minutos)} & \text{Cantidad de estudiantes} \\
+      \hline [0, 10) & 4 \\ \hline [10, 20) & 9 \\ \hline [20, 30) & 12 \\ \hline [30, 40) & 5 \\ \hline
+      \end{array}
+      $$
+
+      ¿Qué tipo de variable es y en qué intervalo se cuenta a un estudiante que tardó exactamente $30$ minutos?
+    options:
+      - {label: A, body: "Cuantitativa continua; en $[20, 30)$.", misconception: TAB-ABS-LIMITE}
+      - {label: B, body: "Cuantitativa continua; en $[30, 40)$.", correct: true}
+      - {label: C, body: "Cualitativa discreta, porque está agrupada en intervalos; en $[30, 40)$.", misconception: DAT-VAR-DISCATEG}
+      - {label: D, body: "Cuantitativa discreta; en $[30, 40)$.", misconception: DAT-VAR-ENTERO}
+
+  # ===== EST-TAB-ABS · nivel 2 =================================
+
+  # A FILAS: cuenta las filas (débil)
+  # B SUMAF: da cuántos datos hay
+  # D SUMAX: suma los valores sin frecuencias
+  - code: M1-DAT-033
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra los goles marcados en los partidos de un campeonato.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Goles en el partido} & \text{Cantidad de partidos} \\
+      \hline 0 & 3 \\ \hline 1 & 7 \\ \hline 2 & 5 \\ \hline 3 & 2 \\ \hline 4 & 2 \\ \hline 5 & 1 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos goles se marcaron en total y por qué?
+    options:
+      - {label: A, body: "$6$, porque hay seis cantidades distintas de goles.", misconception: TAB-ABS-FILAS}
+      - {label: B, body: "$20$, porque se suman las cantidades de partidos.", misconception: TAB-ABS-SUMAF}
+      - {label: C, body: "$36$, porque cada cantidad de goles se multiplica por su cantidad de partidos y se suma.", correct: true}
+      - {label: D, body: "$15$, porque se suman las cantidades de goles.", misconception: TAB-ABS-SUMAX}
+
+  # 12 + 7 + 2 = 21
+  # B SUMAF: 1·12 + 2·7 + 3·2: cuenta mascotas, no familias
+  # C SUMAX: 1 + 2 + 3
+  # D FILAS: cuenta las filas con mascotas
+  - code: M1-DAT-034
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra la cantidad de mascotas de las familias de un edificio.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Cantidad de mascotas} & \text{Cantidad de familias} \\
+      \hline 0 & 9 \\ \hline 1 & 12 \\ \hline 2 & 7 \\ \hline 3 & 2 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántas familias tienen al menos una mascota?
+    options:
+      - {label: A, body: "$21$", correct: true}
+      - {label: B, body: "$32$", misconception: TAB-ABS-SUMAF}
+      - {label: C, body: "$6$", misconception: TAB-ABS-SUMAX}
+      - {label: D, body: "$3$", misconception: TAB-ABS-FILAS}
+
+  # 3·4 + 4·2 = 20
+  # A FILAS: cuenta las dos filas (débil)
+  # B SUMAX: 3 + 4
+  # C SUMAF: 4 + 2: cuenta estudiantes, no hermanos
+  - code: M1-DAT-035
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra la cantidad de hermanos de los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Cantidad de hermanos} & \text{Cantidad de estudiantes} \\
+      \hline 0 & 6 \\ \hline 1 & 10 \\ \hline 2 & 8 \\ \hline 3 & 4 \\ \hline 4 & 2 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos hermanos tienen, en total, los estudiantes que tienen $3$ o $4$ hermanos?
+    options:
+      - {label: A, body: "$2$", misconception: TAB-ABS-FILAS}
+      - {label: B, body: "$7$", misconception: TAB-ABS-SUMAX}
+      - {label: C, body: "$6$", misconception: TAB-ABS-SUMAF}
+      - {label: D, body: "$20$", correct: true}
+
+  # 0: 1, 1: 3, 2: 2, 3: 4
+  # A FILAS: cuenta las filas
+  # C SUMAF: 3 · 4: el total de autos de esas familias
+  # D COLUMNA: invierte valor y frecuencia
+  - code: M1-DAT-036
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Se preguntó a $10$ familias cuántos autos tienen y respondieron:
+      $3,\ 1,\ 2,\ 3,\ 0,\ 1,\ 3,\ 2,\ 3,\ 1$. ¿Cuál afirmación sobre la
+      tabla de frecuencias de estos datos es correcta?
+    options:
+      - {label: A, body: "La tabla muestra $4$ datos.", misconception: TAB-ABS-FILAS}
+      - {label: B, body: "El valor $3$ tiene frecuencia $4$.", correct: true}
+      - {label: C, body: "El valor $3$ tiene frecuencia $12$.", misconception: TAB-ABS-SUMAF}
+      - {label: D, body: "El valor $4$ tiene frecuencia $3$.", misconception: TAB-ABS-COLUMNA}
+
+  # A POBLACION: responde con los individuos
+  # B FILAS: cuenta las filas
+  # C DISCATEG: aplica «discreta» a una cualitativa
+  - code: M1-DAT-037
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra el deporte favorito de los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Deporte favorito} & \text{Cantidad de estudiantes} \\
+      \hline \text{Fútbol} & 14 \\ \hline \text{Básquetbol} & 8 \\ \hline \text{Vóleibol} & 5 \\ \hline \text{Natación} & 3 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuál afirmación es correcta?
+    options:
+      - {label: A, body: "Respondieron $30$ estudiantes y la variable son esos estudiantes.", misconception: DAT-VAR-POBLACION}
+      - {label: B, body: "Respondieron $4$ estudiantes y la variable es cualitativa.", misconception: TAB-ABS-FILAS}
+      - {label: C, body: "Respondieron $30$ estudiantes y la variable es discreta.", misconception: DAT-VAR-DISCATEG}
+      - {label: D, body: "Respondieron $30$ estudiantes y la variable es cualitativa.", correct: true}
+
+  # [150, 155): 150 y 152
+  # A COLUMNA: responde con el límite del intervalo (débil)
+  # C LIMITE: cuenta también el 155
+  # D SUMAF: suma las estaturas: 150 + 152
+  - code: M1-DAT-038
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Las estaturas, en cm, de $10$ personas son:
+      $148,\ 150,\ 155,\ 160,\ 152,\ 165,\ 160,\ 158,\ 149,\ 170$. Se
+      agrupan en los intervalos $[145, 150)$, $[150, 155)$, $[155, 160)$,
+      $[160, 165)$ y $[165, 170]$. ¿Cuál es la frecuencia del intervalo
+      $[150, 155)$?
+    options:
+      - {label: A, body: "$150$", misconception: TAB-ABS-COLUMNA}
+      - {label: B, body: "$2$", correct: true}
+      - {label: C, body: "$3$", misconception: TAB-ABS-LIMITE}
+      - {label: D, body: "$302$", misconception: TAB-ABS-SUMAF}
+
+  # A FILAS: (débil)
+  # B SUMAF: confunde total de la variable con cantidad de datos
+  # D COLUMNA: lee el producto como frecuencia
+  - code: M1-DAT-039
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra la cantidad de mascotas de las familias de un edificio.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Cantidad de mascotas} & \text{Cantidad de familias} \\
+      \hline 0 & 9 \\ \hline 1 & 12 \\ \hline 2 & 7 \\ \hline 3 & 2 \\ \hline
+      \end{array}
+      $$
+
+      ¿Qué representa el producto $2 \cdot 7 = 14$?
+    options:
+      - {label: A, body: "La cantidad de valores distintos que tiene la tabla.", misconception: TAB-ABS-FILAS}
+      - {label: B, body: "La cantidad de familias que tienen $2$ mascotas.", misconception: TAB-ABS-SUMAF}
+      - {label: C, body: "La cantidad total de mascotas de las familias que tienen $2$ mascotas.", correct: true}
+      - {label: D, body: "Que $14$ familias tienen $2$ mascotas.", misconception: TAB-ABS-COLUMNA}
+
+  # B LIMITE: lee el intervalo que termina en 3
+  # C ENTERO: los límites son enteros: discreta
+  # D COLUMNA: responde con el valor
+  - code: M1-DAT-040
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra la masa de los recién nacidos de una clínica durante una semana.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Masa (kg)} & \text{Cantidad de recién nacidos} \\
+      \hline [2, 3) & 5 \\ \hline [3, 4) & 18 \\ \hline [4, 5) & 7 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos recién nacidos tuvieron una masa de al menos $3$ kg y menos de $4$ kg, y qué tipo de variable es la masa?
+    options:
+      - {label: A, body: "$18$; cuantitativa continua.", correct: true}
+      - {label: B, body: "$5$; cuantitativa continua.", misconception: TAB-ABS-LIMITE}
+      - {label: C, body: "$18$; cuantitativa discreta.", misconception: DAT-VAR-ENTERO}
+      - {label: D, body: "$3$; cuantitativa continua.", misconception: TAB-ABS-COLUMNA}
+
+  # ===== EST-TAB-ABS · nivel 3 =================================
+
+  # B FILAS: rechaza I y acepta II
+  # C LIMITE: rechaza III
+  # D SUMAX: rechaza I: el total sería la suma de los valores; y rechaza II
+  - code: M1-DAT-041
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones sobre una tabla de frecuencias:
+
+      I. El total de datos es la suma de la columna de frecuencias.
+
+      II. El número de filas indica cuántos datos hay.
+
+      III. Si un dato es igual al extremo derecho de un intervalo $[a, b)$, se cuenta en el intervalo siguiente.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I y III", correct: true}
+      - {label: B, body: "Solo II y III", misconception: TAB-ABS-FILAS}
+      - {label: C, body: "Solo I", misconception: TAB-ABS-LIMITE}
+      - {label: D, body: "Solo III", misconception: TAB-ABS-SUMAX}
+
+  # A SUMAX: suma los valores sin frecuencias
+  # B FILAS: cuenta las filas
+  # C SUMAF: da cuántos datos hay
+  - code: M1-DAT-042
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      La tabla muestra la cantidad de mascotas de las familias de un edificio.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Cantidad de mascotas} & \text{Cantidad de familias} \\
+      \hline 0 & 9 \\ \hline 1 & 12 \\ \hline 2 & 7 \\ \hline 3 & 2 \\ \hline
+      \end{array}
+      $$
+
+      Un vecino dice: «En el edificio hay $32$ mascotas». ¿Tiene razón?
+    options:
+      - {label: A, body: "No: hay $6$, que es $0 + 1 + 2 + 3$.", misconception: TAB-ABS-SUMAX}
+      - {label: B, body: "No: hay $4$, uno por cada fila.", misconception: TAB-ABS-FILAS}
+      - {label: C, body: "No: hay $30$, que es la suma de las familias.", misconception: TAB-ABS-SUMAF}
+      - {label: D, body: "Sí: $0 \\cdot 9 + 1 \\cdot 12 + 2 \\cdot 7 + 3 \\cdot 2 = 32$.", correct: true}
+
+  # A ENTERO: los tiempos son enteros: discreta
+  # B DISCATEG: los intervalos le parecen categorías (débil)
+  # D LIMITE: el borde al intervalo que termina en él
+  - code: M1-DAT-043
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Los tiempos de un grupo se agruparon en los intervalos $[0, 10)$,
+      $[10, 20)$, $[20, 30)$ y $[30, 40)$. Un estudiante tardó exactamente
+      $10$ minutos y otro exactamente $30$ minutos. ¿Cuál afirmación es
+      correcta?
+    options:
+      - {label: A, body: "El primero se cuenta en $[10, 20)$, el segundo en $[30, 40)$, y la variable es discreta.", misconception: DAT-VAR-ENTERO}
+      - {label: B, body: "El primero se cuenta en $[10, 20)$, el segundo en $[30, 40)$, y la variable es cualitativa, porque quedó en categorías.", misconception: DAT-VAR-DISCATEG}
+      - {label: C, body: "El primero se cuenta en $[10, 20)$, el segundo en $[30, 40)$, y la variable es continua.", correct: true}
+      - {label: D, body: "El primero se cuenta en $[0, 10)$, el segundo en $[20, 30)$, y la variable es continua.", misconception: TAB-ABS-LIMITE}
+
+  # A SUMAF: rechaza III: cree que el total es 30
+  # C FILAS: acepta II
+  # D COLUMNA: rechaza I: lee «1 familia tiene 12 mascotas»
+  - code: M1-DAT-044
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      La tabla muestra la cantidad de mascotas de las familias de un edificio.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Cantidad de mascotas} & \text{Cantidad de familias} \\
+      \hline 0 & 9 \\ \hline 1 & 12 \\ \hline 2 & 7 \\ \hline 3 & 2 \\ \hline
+      \end{array}
+      $$
+
+      Considera las siguientes afirmaciones:
+
+      I. $12$ familias tienen $1$ mascota.
+
+      II. En el edificio hay $4$ familias encuestadas.
+
+      III. En total hay $32$ mascotas.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", misconception: TAB-ABS-SUMAF}
+      - {label: B, body: "Solo I y III", correct: true}
+      - {label: C, body: "I, II y III", misconception: TAB-ABS-FILAS}
+      - {label: D, body: "Solo III", misconception: TAB-ABS-COLUMNA}
+
+  # 1·15 + 2·20 + 3·10 + 4·5 = 105 productos
+  # A SUMAX: 1 + 2 + 3 + 4 productos
+  # C SUMAF: cuenta boletas, no productos
+  # D FILAS: cuenta las filas
+  - code: M1-DAT-045
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Una tienda registró cuántos productos lleva cada boleta.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Productos en la boleta} & \text{Cantidad de boletas} \\
+      \hline 1 & 15 \\ \hline 2 & 20 \\ \hline 3 & 10 \\ \hline 4 & 5 \\ \hline
+      \end{array}
+      $$
+
+      Si cada producto cuesta $\$1.000$, ¿cuánto dinero recibió la tienda?
+    options:
+      - {label: A, body: "$\\$10.000$", misconception: TAB-ABS-SUMAX}
+      - {label: B, body: "$\\$105.000$", correct: true}
+      - {label: C, body: "$\\$50.000$", misconception: TAB-ABS-SUMAF}
+      - {label: D, body: "$\\$4.000$", misconception: TAB-ABS-FILAS}
+
+  # 20 − (3 + 7 + 5 + 2 + 1) = 2
+  # B FILAS: 20 − 5: resta las filas conocidas (débil)
+  # C COLUMNA: responde con el valor
+  # D SUMAX: 20 − (0 + 1 + 2 + 4 + 5): resta los valores
+  - code: M1-DAT-046
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      La tabla muestra los goles de $20$ partidos, pero se borró una frecuencia.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Goles en el partido} & \text{Cantidad de partidos} \\
+      \hline 0 & 3 \\ \hline 1 & 7 \\ \hline 2 & 5 \\ \hline 3 & ? \\ \hline 4 & 2 \\ \hline 5 & 1 \\ \hline
+      \end{array}
+      $$
+
+      ¿En cuántos partidos se marcaron $3$ goles?
+    options:
+      - {label: A, body: "$2$", correct: true}
+      - {label: B, body: "$15$", misconception: TAB-ABS-FILAS}
+      - {label: C, body: "$3$", misconception: TAB-ABS-COLUMNA}
+      - {label: D, body: "$8$", misconception: TAB-ABS-SUMAX}
+
+  # goles: 1 + 3 + 0 + 2 + 1 + 1 + 4 + 2 = 14; partidos: 8; valores distintos: 5
+  # A SUMAX: 0 + 1 + 2 + 3 + 4: suma cada valor una vez
+  # B FILAS: cuenta los valores distintos como partidos
+  # D SUMAF: intercambia cantidad de datos y total
+  - code: M1-DAT-047
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Los goles de un equipo en sus últimos partidos fueron:
+      $1,\ 3,\ 0,\ 2,\ 1,\ 1,\ 4,\ 2$. ¿Cuál afirmación es correcta?
+    options:
+      - {label: A, body: "Marcó $10$ goles en $8$ partidos.", misconception: TAB-ABS-SUMAX}
+      - {label: B, body: "Marcó $14$ goles en $5$ partidos.", misconception: TAB-ABS-FILAS}
+      - {label: C, body: "Marcó $14$ goles en $8$ partidos.", correct: true}
+      - {label: D, body: "Marcó $8$ goles en $14$ partidos.", misconception: TAB-ABS-SUMAF}
+
+  # A FILAS: cuenta las filas
+  # B NUMERO: número = cantidad
+  # C SUMAX: 101 + 102 + 103
+  - code: M1-DAT-048
+    node: EST-TAB-ABS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      La tabla muestra en qué sala estudia cada estudiante de tercero medio.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Número de sala} & \text{Cantidad de estudiantes} \\
+      \hline 101 & 32 \\ \hline 102 & 30 \\ \hline 103 & 28 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuál afirmación es correcta?
+    options:
+      - {label: A, body: "La variable es cualitativa y hay $3$ estudiantes.", misconception: TAB-ABS-FILAS}
+      - {label: B, body: "La variable es cuantitativa discreta y hay $90$ estudiantes.", misconception: DAT-VAR-NUMERO}
+      - {label: C, body: "La variable es cualitativa y hay $306$ estudiantes.", misconception: TAB-ABS-SUMAX}
+      - {label: D, body: "La variable es cualitativa y hay $90$ estudiantes.", correct: true}
+
+  # ===== EST-TAB-ACUM · nivel 1 ================================
+
+  # F(2) = 5 + 9 + 8 = 22
+  # B SOLOF: solo los que leyeron exactamente 2
+  # C BORDE: deja fuera el 2: F(1)
+  # D PAR: 9 + 8: solo la fila anterior
+  - code: M1-DAT-049
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra cuántos libros leyeron en el verano los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Libros leídos} & \text{Cantidad de estudiantes} \\
+      \hline 0 & 5 \\ \hline 1 & 9 \\ \hline 2 & 8 \\ \hline 3 & 5 \\ \hline 4 & 3 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos estudiantes leyeron a lo sumo $2$ libros?
+    options:
+      - {label: A, body: "$22$", correct: true}
+      - {label: B, body: "$8$", misconception: TAB-ACUM-SOLOF}
+      - {label: C, body: "$14$", misconception: TAB-ACUM-BORDE}
+      - {label: D, body: "$17$", misconception: TAB-ACUM-PAR}
+
+  # 30 − 22 = 8
+  # A SOLOF: solo los que leyeron 3
+  # B COMPLEMENTO: usa F(2) directo
+  # C BORDE: incluye el 2: 30 − 14
+  - code: M1-DAT-050
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra cuántos libros leyeron en el verano los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|c|}
+      \hline \text{Libros leídos} & f & F \\
+      \hline 0 & 5 & 5 \\ \hline 1 & 9 & 14 \\ \hline 2 & 8 & 22 \\ \hline 3 & 5 & 27 \\ \hline 4 & 3 & 30 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos estudiantes leyeron más de $2$ libros?
+    options:
+      - {label: A, body: "$5$", misconception: TAB-ACUM-SOLOF}
+      - {label: B, body: "$22$", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: C, body: "$16$", misconception: TAB-ACUM-BORDE}
+      - {label: D, body: "$8$", correct: true}
+
+  # 19 − 13 = 6
+  # A FCOMOF: lee F(17) como f(17)
+  # B BORDE: toma la fila de los menores de 17
+  # D COLUMNA: responde con el valor
+  - code: M1-DAT-051
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra la frecuencia acumulada de las edades de los integrantes de un taller.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Edad (años)} & F \\
+      \hline 15 & 5 \\ \hline 16 & 13 \\ \hline 17 & 19 \\ \hline 18 & 22 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos integrantes tienen exactamente $17$ años?
+    options:
+      - {label: A, body: "$19$", misconception: TAB-ACUM-FCOMOF}
+      - {label: B, body: "$13$", misconception: TAB-ACUM-BORDE}
+      - {label: C, body: "$6$", correct: true}
+      - {label: D, body: "$17$", misconception: TAB-ABS-COLUMNA}
+
+  # A COMPLEMENTO: cree que F cuenta hacia arriba
+  # C FCOMOF: lee F como f
+  # D BORDE: deja fuera el 2
+  - code: M1-DAT-052
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra cuántos libros leyeron en el verano los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|c|}
+      \hline \text{Libros leídos} & f & F \\
+      \hline 0 & 5 & 5 \\ \hline 1 & 9 & 14 \\ \hline 2 & 8 & 22 \\ \hline 3 & 5 & 27 \\ \hline 4 & 3 & 30 \\ \hline
+      \end{array}
+      $$
+
+      ¿Qué indica el número $22$ de la columna $F$?
+    options:
+      - {label: A, body: "Que $22$ estudiantes leyeron más de $2$ libros.", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: B, body: "Que $22$ estudiantes leyeron $2$ libros o menos.", correct: true}
+      - {label: C, body: "Que $22$ estudiantes leyeron exactamente $2$ libros.", misconception: TAB-ACUM-FCOMOF}
+      - {label: D, body: "Que $22$ estudiantes leyeron menos de $2$ libros.", misconception: TAB-ACUM-BORDE}
+
+  # F(3) = 5 + 9 + 8 + 5 = 27
+  # B BORDE: acumula hasta la fila anterior, sin la propia
+  # C PAR: 8 + 5: solo la fila anterior
+  # D SOLOF: copia f(3)
+  - code: M1-DAT-053
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra cuántos libros leyeron en el verano los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Libros leídos} & \text{Cantidad de estudiantes} \\
+      \hline 0 & 5 \\ \hline 1 & 9 \\ \hline 2 & 8 \\ \hline 3 & 5 \\ \hline 4 & 3 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuál es la frecuencia acumulada del valor $3$?
+    options:
+      - {label: A, body: "$27$", correct: true}
+      - {label: B, body: "$22$", misconception: TAB-ACUM-BORDE}
+      - {label: C, body: "$13$", misconception: TAB-ACUM-PAR}
+      - {label: D, body: "$5$", misconception: TAB-ACUM-SOLOF}
+
+  # A FILAS: cuenta las filas
+  # B SUMAX: 0 + 1 + 2 + 3 + 4
+  # D FCOMOF: suma la columna F
+  - code: M1-DAT-054
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra la frecuencia acumulada de los libros leídos por los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Libros leídos} & F \\
+      \hline 0 & 5 \\ \hline 1 & 14 \\ \hline 2 & 22 \\ \hline 3 & 27 \\ \hline 4 & 30 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos estudiantes respondieron?
+    options:
+      - {label: A, body: "$5$", misconception: TAB-ABS-FILAS}
+      - {label: B, body: "$10$", misconception: TAB-ABS-SUMAX}
+      - {label: C, body: "$30$", correct: true}
+      - {label: D, body: "$98$", misconception: TAB-ACUM-FCOMOF}
+
+  # 4 + 9 = 13
+  # A BORDE: cuenta también el intervalo que parte en 20
+  # B SOLOF: solo el intervalo [10, 20)
+  # C COMPLEMENTO: 30 − 13: calcula los de 20 o más
+  - code: M1-DAT-055
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra el tiempo que tardaron los estudiantes de un curso en resolver una guía.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Tiempo (minutos)} & \text{Cantidad de estudiantes} \\
+      \hline [0, 10) & 4 \\ \hline [10, 20) & 9 \\ \hline [20, 30) & 12 \\ \hline [30, 40) & 5 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos estudiantes tardaron menos de $20$ minutos?
+    options:
+      - {label: A, body: "$25$", misconception: TAB-ACUM-BORDE}
+      - {label: B, body: "$9$", misconception: TAB-ACUM-SOLOF}
+      - {label: C, body: "$17$", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: D, body: "$13$", correct: true}
+
+  # 30 − 5 = 25
+  # A COMPLEMENTO: usa F(1) directo
+  # C BORDE: deja fuera el 1: 30 − 14
+  # D SOLOF: solo los que leyeron exactamente 1
+  - code: M1-DAT-056
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: |-
+      La tabla muestra cuántos libros leyeron en el verano los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|c|}
+      \hline \text{Libros leídos} & f & F \\
+      \hline 0 & 5 & 5 \\ \hline 1 & 9 & 14 \\ \hline 2 & 8 & 22 \\ \hline 3 & 5 & 27 \\ \hline 4 & 3 & 30 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos estudiantes leyeron al menos $1$ libro?
+    options:
+      - {label: A, body: "$14$", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: B, body: "$25$", correct: true}
+      - {label: C, body: "$16$", misconception: TAB-ACUM-BORDE}
+      - {label: D, body: "$9$", misconception: TAB-ACUM-SOLOF}
+
+  # ===== EST-TAB-ACUM · nivel 2 ================================
+
+  # F(16) = 5 + 8 = 13
+  # A COMPLEMENTO: 22 − 13: calcula los de 17 o más
+  # B SOLOF: solo los de 16
+  # D BORDE: incluye el 17
+  - code: M1-DAT-057
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra las edades de los integrantes de un taller.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Edad (años)} & \text{Cantidad de personas} \\
+      \hline 15 & 5 \\ \hline 16 & 8 \\ \hline 17 & 6 \\ \hline 18 & 3 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos integrantes tienen menos de $17$ años?
+    options:
+      - {label: A, body: "$9$", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: B, body: "$8$", misconception: TAB-ACUM-SOLOF}
+      - {label: C, body: "$13$", correct: true}
+      - {label: D, body: "$19$", misconception: TAB-ACUM-BORDE}
+
+  # A PAR: suma solo la fila anterior
+  # B SOLOF: copia las frecuencias
+  # C COMPLEMENTO: acumula desde abajo
+  - code: M1-DAT-058
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra las edades de los integrantes de un taller.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Edad (años)} & \text{Cantidad de personas} \\
+      \hline 15 & 5 \\ \hline 16 & 8 \\ \hline 17 & 6 \\ \hline 18 & 3 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuál es la columna de frecuencias acumuladas, de $15$ a $18$ años?
+    options:
+      - {label: A, body: "$5,\\ 13,\\ 14,\\ 9$", misconception: TAB-ACUM-PAR}
+      - {label: B, body: "$5,\\ 8,\\ 6,\\ 3$", misconception: TAB-ACUM-SOLOF}
+      - {label: C, body: "$22,\\ 17,\\ 9,\\ 3$", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: D, body: "$5,\\ 13,\\ 19,\\ 22$", correct: true}
+
+  # 30 − 13 = 17
+  # B BORDE: deja fuera el intervalo que parte en 20
+  # C COMPLEMENTO: usa F del intervalo [10, 20) directo
+  # D SOLOF: solo el intervalo [20, 30)
+  - code: M1-DAT-059
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra el tiempo que tardaron los estudiantes de un curso en resolver una guía.
+
+      $$
+      \begin{array}{|c|c|c|}
+      \hline \text{Tiempo (minutos)} & f & F \\
+      \hline [0, 10) & 4 & 4 \\ \hline [10, 20) & 9 & 13 \\ \hline [20, 30) & 12 & 25 \\ \hline [30, 40) & 5 & 30 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos estudiantes tardaron $20$ minutos o más?
+    options:
+      - {label: A, body: "$17$", correct: true}
+      - {label: B, body: "$5$", misconception: TAB-ACUM-BORDE}
+      - {label: C, body: "$13$", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: D, body: "$12$", misconception: TAB-ACUM-SOLOF}
+
+  # 26 − 20 = 6
+  # A FCOMOF: lee F(2) como f(2)
+  # C BORDE: toma la fila de los que llegaron menos de 2 veces
+  # D COLUMNA: responde con el valor
+  - code: M1-DAT-060
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra la frecuencia acumulada de los atrasos de los estudiantes de un curso durante un mes.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Atrasos en el mes} & F \\
+      \hline 0 & 12 \\ \hline 1 & 20 \\ \hline 2 & 26 \\ \hline 3 & 30 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos estudiantes llegaron atrasados exactamente $2$ veces?
+    options:
+      - {label: A, body: "$26$", misconception: TAB-ACUM-FCOMOF}
+      - {label: B, body: "$6$", correct: true}
+      - {label: C, body: "$20$", misconception: TAB-ACUM-BORDE}
+      - {label: D, body: "$2$", misconception: TAB-ABS-COLUMNA}
+
+  # A BORDE: acepta II
+  # B COMPLEMENTO: rechaza III: más de 2 serían 22
+  # D SOLOF: rechaza I: a lo sumo 2 serían 8
+  - code: M1-DAT-061
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra cuántos libros leyeron en el verano los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|c|}
+      \hline \text{Libros leídos} & f & F \\
+      \hline 0 & 5 & 5 \\ \hline 1 & 9 & 14 \\ \hline 2 & 8 & 22 \\ \hline 3 & 5 & 27 \\ \hline 4 & 3 & 30 \\ \hline
+      \end{array}
+      $$
+
+      Considera las siguientes afirmaciones:
+
+      I. $22$ estudiantes leyeron a lo sumo $2$ libros.
+
+      II. $22$ estudiantes leyeron menos de $2$ libros.
+
+      III. $8$ estudiantes leyeron más de $2$ libros.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "I, II y III", misconception: TAB-ACUM-BORDE}
+      - {label: B, body: "Solo I", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: C, body: "Solo I y III", correct: true}
+      - {label: D, body: "Solo III", misconception: TAB-ACUM-SOLOF}
+
+  # 8 + 6 + 3 = 17 = F(18) − F(15)
+  # B BORDE: deja fuera el 16: 22 − 13
+  # C FCOMOF: suma F(16) + F(17) + F(18)
+  # D COMPLEMENTO: usa F(18) sin restar los de abajo
+  - code: M1-DAT-062
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra la frecuencia acumulada de las edades de los integrantes de un taller.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Edad (años)} & F \\
+      \hline 15 & 5 \\ \hline 16 & 13 \\ \hline 17 & 19 \\ \hline 18 & 22 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos integrantes tienen entre $16$ y $18$ años, ambos incluidos?
+    options:
+      - {label: A, body: "$17$", correct: true}
+      - {label: B, body: "$9$", misconception: TAB-ACUM-BORDE}
+      - {label: C, body: "$54$", misconception: TAB-ACUM-FCOMOF}
+      - {label: D, body: "$22$", misconception: TAB-ACUM-COMPLEMENTO}
+
+  # F([20, 30)) = 4 + 9 + 12 = 25
+  # A SOLOF: copia f
+  # C PAR: 9 + 12: solo la fila anterior
+  # D BORDE: acumula hasta la fila anterior, sin la propia
+  - code: M1-DAT-063
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra el tiempo que tardaron los estudiantes de un curso en resolver una guía.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Tiempo (minutos)} & \text{Cantidad de estudiantes} \\
+      \hline [0, 10) & 4 \\ \hline [10, 20) & 9 \\ \hline [20, 30) & 12 \\ \hline [30, 40) & 5 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuál es la frecuencia acumulada del intervalo $[20, 30)$?
+    options:
+      - {label: A, body: "$12$", misconception: TAB-ACUM-SOLOF}
+      - {label: B, body: "$25$", correct: true}
+      - {label: C, body: "$21$", misconception: TAB-ACUM-PAR}
+      - {label: D, body: "$13$", misconception: TAB-ACUM-BORDE}
+
+  # 22 − 5 = 17
+  # A COMPLEMENTO: usa F(15) directo
+  # B SOLOF: solo los de 16
+  # C BORDE: incluye el 15: todos
+  - code: M1-DAT-064
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      La tabla muestra la frecuencia acumulada de las edades de los integrantes de un taller.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Edad (años)} & F \\
+      \hline 15 & 5 \\ \hline 16 & 13 \\ \hline 17 & 19 \\ \hline 18 & 22 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos integrantes tienen más de $15$ años?
+    options:
+      - {label: A, body: "$5$", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: B, body: "$8$", misconception: TAB-ACUM-SOLOF}
+      - {label: C, body: "$22$", misconception: TAB-ACUM-BORDE}
+      - {label: D, body: "$17$", correct: true}
+
+  # ===== EST-TAB-ACUM · nivel 3 ================================
+
+  # B BORDE: acepta III: F(17) para «menos de 17»
+  # C FCOMOF: rechaza I: el total sería la suma de las F
+  # D PAR: acepta II
+  - code: M1-DAT-065
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      La tabla muestra las edades de los integrantes de un taller.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Edad (años)} & \text{Cantidad de personas} \\
+      \hline 15 & 5 \\ \hline 16 & 8 \\ \hline 17 & 6 \\ \hline 18 & 3 \\ \hline
+      \end{array}
+      $$
+
+      Considera las siguientes afirmaciones:
+
+      I. La frecuencia acumulada de $18$ años es igual al total de integrantes.
+
+      II. La frecuencia acumulada de $17$ años es $f(17) + f(16)$.
+
+      III. $19$ integrantes tienen menos de $17$ años.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", correct: true}
+      - {label: B, body: "Solo I y III", misconception: TAB-ACUM-BORDE}
+      - {label: C, body: "Ninguna de ellas", misconception: TAB-ACUM-FCOMOF}
+      - {label: D, body: "Solo I y II", misconception: TAB-ACUM-PAR}
+
+  # F(6) − F(4) = 33 − 8 = 25
+  # A COMPLEMENTO: usa F(6) sin restar los de abajo
+  # C BORDE: deja fuera el 5: 33 − 20
+  # D FCOMOF: suma F(5) + F(6)
+  - code: M1-DAT-066
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      La tabla muestra la frecuencia acumulada de las notas, enteras de $4$ a $7$, de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Nota} & F \\
+      \hline 4 & 8 \\ \hline 5 & 20 \\ \hline 6 & 33 \\ \hline 7 & 40 \\ \hline
+      \end{array}
+      $$
+
+      ¿Cuántos estudiantes obtuvieron nota $5$ o $6$?
+    options:
+      - {label: A, body: "$33$", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: B, body: "$25$", correct: true}
+      - {label: C, body: "$13$", misconception: TAB-ACUM-BORDE}
+      - {label: D, body: "$53$", misconception: TAB-ACUM-FCOMOF}
+
+  # 10 + 3 = 13
+  # A SOLOF: solo el intervalo [30, 45)
+  # B BORDE: deja fuera el intervalo que parte en 30
+  # D COMPLEMENTO: acumula hasta [15, 30) y no resta del total
+  - code: M1-DAT-067
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Un consultorio registró cuánto esperaron sus pacientes en un día.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Espera (minutos)} & \text{Cantidad de pacientes} \\
+      \hline [0, 15) & 8 \\ \hline [15, 30) & 14 \\ \hline [30, 45) & 10 \\ \hline [45, 60) & 3 \\ \hline
+      \end{array}
+      $$
+
+      Un paciente puede presentar un reclamo si esperó $30$ minutos o más. ¿Cuántos pacientes pueden reclamar?
+    options:
+      - {label: A, body: "$10$", misconception: TAB-ACUM-SOLOF}
+      - {label: B, body: "$3$", misconception: TAB-ACUM-BORDE}
+      - {label: C, body: "$13$", correct: true}
+      - {label: D, body: "$22$", misconception: TAB-ACUM-COMPLEMENTO}
+
+  # A PAR: construye F igual que Tomás
+  # B SOLOF: cree que F es f
+  # C BORDE: deja fuera el borde
+  - code: M1-DAT-068
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      La tabla muestra cuántos libros leyeron en el verano los estudiantes de un curso.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Libros leídos} & \text{Cantidad de estudiantes} \\
+      \hline 0 & 5 \\ \hline 1 & 9 \\ \hline 2 & 8 \\ \hline 3 & 5 \\ \hline 4 & 3 \\ \hline
+      \end{array}
+      $$
+
+      Tomás construyó la columna de frecuencias acumuladas así: $5,\ 14,\ 17,\ 13,\ 8$. ¿Qué error cometió?
+    options:
+      - {label: A, body: "No cometió ningún error.", misconception: TAB-ACUM-PAR}
+      - {label: B, body: "Debió copiar la columna de frecuencias, sin sumar.", misconception: TAB-ACUM-SOLOF}
+      - {label: C, body: "Debió sumar solo las filas anteriores, sin incluir la propia.", misconception: TAB-ACUM-BORDE}
+      - {label: D, body: "Sumó a cada frecuencia solo la de la fila anterior, en vez de todas las anteriores.", correct: true}
+
+  # A COMPLEMENTO: acepta II: usa F de [20, 30)
+  # B SOLOF: acepta III (lee f de [20, 30)) y rechaza I (lee f de [10, 20))
+  # D BORDE: rechaza I (serían 25), II (serían 5) y III (serían 30)
+  - code: M1-DAT-069
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      La tabla muestra el tiempo que tardaron los estudiantes de un curso en resolver una guía.
+
+      $$
+      \begin{array}{|c|c|c|}
+      \hline \text{Tiempo (minutos)} & f & F \\
+      \hline [0, 10) & 4 & 4 \\ \hline [10, 20) & 9 & 13 \\ \hline [20, 30) & 12 & 25 \\ \hline [30, 40) & 5 & 30 \\ \hline
+      \end{array}
+      $$
+
+      Considera las siguientes afirmaciones:
+
+      I. $13$ estudiantes tardaron menos de $20$ minutos.
+
+      II. $25$ estudiantes tardaron $20$ minutos o más.
+
+      III. $12$ estudiantes tardaron menos de $30$ minutos.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I y II", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: B, body: "Solo III", misconception: TAB-ACUM-SOLOF}
+      - {label: C, body: "Solo I", correct: true}
+      - {label: D, body: "Ninguna de ellas", misconception: TAB-ACUM-BORDE}
+
+  # F(1) = F(2) − f(2) = 32 − 12 = 20
+  # A SOLOF: responde con f(2)
+  # C COMPLEMENTO: 50 − 32: calcula los de más de 2
+  # D BORDE: usa F(2): incluye el 2
+  - code: M1-DAT-070
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En una biblioteca se registró cuántos libros pidió cada uno de sus
+      $50$ socios en un mes. En la fila de $2$ libros, la frecuencia es $12$
+      y la frecuencia acumulada es $32$. ¿Cuántos socios pidieron menos de
+      $2$ libros?
+    options:
+      - {label: A, body: "$12$", misconception: TAB-ACUM-SOLOF}
+      - {label: B, body: "$20$", correct: true}
+      - {label: C, body: "$18$", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: D, body: "$32$", misconception: TAB-ACUM-BORDE}
+
+  # 17 o más: 6 + 3 = 9
+  # B COMPLEMENTO: calcula F(16), los que sí pueden
+  # C SOLOF: solo los de 17
+  # D BORDE: cree que los de 17 sí pueden: solo excluye a los de 18
+  - code: M1-DAT-071
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      La tabla muestra las edades de los integrantes de un taller.
+
+      $$
+      \begin{array}{|c|c|}
+      \hline \text{Edad (años)} & \text{Cantidad de personas} \\
+      \hline 15 & 5 \\ \hline 16 & 8 \\ \hline 17 & 6 \\ \hline 18 & 3 \\ \hline
+      \end{array}
+      $$
+
+      Para un campeonato solo pueden inscribirse quienes tengan menos de $17$ años. ¿Cuántos integrantes del taller **no** pueden inscribirse?
+    options:
+      - {label: A, body: "$9$", correct: true}
+      - {label: B, body: "$13$", misconception: TAB-ACUM-COMPLEMENTO}
+      - {label: C, body: "$6$", misconception: TAB-ACUM-SOLOF}
+      - {label: D, body: "$3$", misconception: TAB-ACUM-BORDE}
+
+  # A FILAS: confunde datos con filas
+  # B FCOMOF: cree que el total sale de sumar F
+  # C SOLOF: cree que F es f
+  - code: M1-DAT-072
+    node: EST-TAB-ACUM
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En cualquier tabla de frecuencias ordenada de menor a mayor, ¿a qué
+      corresponde la frecuencia acumulada del último valor?
+    options:
+      - {label: A, body: "A la cantidad de valores distintos.", misconception: TAB-ABS-FILAS}
+      - {label: B, body: "A la suma de todas las frecuencias acumuladas.", misconception: TAB-ACUM-FCOMOF}
+      - {label: C, body: "A la frecuencia del último valor.", misconception: TAB-ACUM-SOLOF}
+      - {label: D, body: "Al total de datos.", correct: true}
+
+
+# ---------------------------------------------------------------------
+# REMEDIACIONES
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-DAT-VAR-NUMERO
+    misconception: DAT-VAR-NUMERO
+    title: Un número que solo identifica no es una cantidad
+    body: |
+      Clasificaste como cuantitativa una variable solo porque sus valores
+      se escriben con números. Por ejemplo, dijiste que el número de
+      pasaporte es cuantitativo.
+
+      **Una variable es cuantitativa si sus valores miden o cuentan algo.
+      Si el número solo sirve para identificar, la variable es
+      cualitativa.**
+
+      La prueba: ¿tiene sentido sumar o promediar esos valores? La suma de
+      dos números de pasaporte no significa nada, como tampoco el promedio
+      de los números de las micros. En cambio, la suma de dos cantidades de
+      hijos sí tiene sentido.
+
+      Lo mismo si una categoría se codifica: anotar «1 = sí, 2 = no» no
+      convierte la respuesta en una cantidad.
+
+      Un control rápido: reemplaza el número por un nombre. Si la variable
+      sigue funcionando igual, era una etiqueta.
+    items: [M1-DAT-004, M1-DAT-005, M1-DAT-014, M1-DAT-015, M1-DAT-024, M1-DAT-048]
+
+  - code: REM-DAT-VAR-ORDINAL
+    misconception: DAT-VAR-ORDINAL
+    title: Tener orden no es ser una cantidad
+    body: |
+      Clasificaste como cuantitativa una variable porque sus categorías
+      tienen un orden. Por ejemplo, dijiste que el nivel de picante de una
+      salsa (suave, medio, fuerte) es cuantitativo.
+
+      **Si los valores son categorías, la variable es cualitativa, aunque
+      esas categorías se puedan ordenar.**
+
+      Suave, medio y fuerte van de menos a más, pero no son cantidades: no
+      se puede decir cuánto más picante es «fuerte» que «medio», ni sumar
+      un «suave» con un «medio».
+
+      Lo mismo pasa con las tallas S, M y L o con «insuficiente, suficiente,
+      bueno». Ordenadas, sí. Medidas, no.
+
+      Un control rápido: pregúntate si podrías calcular un promedio. Si la
+      respuesta sería una palabra y no un número, es cualitativa.
+    items: [M1-DAT-004, M1-DAT-005, M1-DAT-006, M1-DAT-014, M1-DAT-015, M1-DAT-020]
+
+  - code: REM-DAT-VAR-ENTERO
+    misconception: DAT-VAR-ENTERO
+    title: Continua depende de qué se mide, no de cómo se anota
+    body: |
+      Decidiste que una variable era discreta porque sus datos se anotaron
+      sin decimales. Por ejemplo, dijiste que el tiempo en segundos enteros
+      es discreto.
+
+      **Una variable es continua si lo que mide puede tomar cualquier valor
+      dentro de un intervalo, aunque al anotarlo se redondee.**
+
+      El tiempo corre de manera continua: entre $12$ y $13$ segundos hay
+      $12{,}5$, $12{,}51$ y muchos más. Que alguien lo haya anotado como
+      $12$ es una decisión de quien mide, no una propiedad del tiempo.
+
+      Discreta es la que se obtiene contando: goles, personas, pasajeros.
+      Ahí entre $12$ y $13$ no hay nada.
+
+      Un control rápido: pregúntate si se obtiene contando o midiendo con
+      un instrumento. Si se mide, es continua.
+    items: [M1-DAT-003, M1-DAT-007, M1-DAT-011, M1-DAT-016, M1-DAT-020, M1-DAT-022]
+
+  - code: REM-DAT-VAR-CANTIDAD
+    misconception: DAT-VAR-CANTIDAD
+    title: Contar es discreto; medir es continuo
+    body: |
+      Decidiste que una variable era discreta porque su nombre empieza con
+      «cantidad de». Por ejemplo, dijiste que la cantidad de combustible de
+      un estanque es discreta.
+
+      **La palabra «cantidad» no decide. Lo que decide es si el valor se
+      obtiene contando (discreta) o midiendo (continua).**
+
+      - Cantidad de hijos: se cuentan. Discreta.
+      - Cantidad de combustible: se mide en litros y puede ser $31{,}7$ L.
+        Continua.
+
+      Muchas magnitudes que se miden se nombran como «cantidad»: de agua, de
+      lluvia, de azúcar. Todas son continuas.
+
+      Un control rápido: piensa si puede haber un valor entre dos valores
+      seguidos. Si puede haber $31{,}7$ entre $31$ y $32$, es continua.
+    items: [M1-DAT-006, M1-DAT-008, M1-DAT-011, M1-DAT-015, M1-DAT-020, M1-DAT-021]
+
+  - code: REM-DAT-VAR-DISCATEG
+    misconception: DAT-VAR-DISCATEG
+    title: Discreta y continua son solo para cantidades
+    body: |
+      Llamaste discreta a una variable cualitativa. Por ejemplo, dijiste
+      que la marca de un auto es una variable discreta porque tiene
+      categorías separadas.
+
+      **Primero se decide si la variable es cualitativa o cuantitativa. Solo
+      las cuantitativas se dividen en discretas y continuas.**
+
+      - Cualitativa: sus valores son categorías (marca, color, comuna). No
+        es discreta ni continua.
+      - Cuantitativa discreta: se cuenta (cantidad de autos de una familia).
+      - Cuantitativa continua: se mide (velocidad de un auto).
+
+      Que las categorías estén separadas no las vuelve «discretas»: esa
+      palabra habla de números.
+
+      Un control rápido: si la variable es cualitativa, ya terminaste de
+      clasificarla.
+    items: [M1-DAT-007, M1-DAT-013, M1-DAT-014, M1-DAT-021, M1-DAT-023, M1-DAT-027]
+
+  - code: REM-DAT-VAR-POBLACION
+    misconception: DAT-VAR-POBLACION
+    title: La variable es lo que se pregunta, no a quién
+    body: |
+      Respondiste con los individuos del estudio en vez de con la variable.
+      Por ejemplo, para una encuesta a $50$ vecinos sobre su color favorito,
+      dijiste que la variable eran los $50$ vecinos.
+
+      **Los individuos son a quienes se estudia. La variable es la
+      característica que se registra de cada uno.**
+
+      En esa encuesta:
+
+      - individuos: los $50$ vecinos;
+      - variable: el color favorito;
+      - valores: rojo, azul, verde...
+
+      Una pista: la variable siempre se puede escribir como «el/la ___ de
+      cada vecino». «Los vecinos de cada vecino» no tiene sentido; «el color
+      favorito de cada vecino» sí.
+
+      Un control rápido: si tu respuesta es un grupo de personas u objetos,
+      eso es a quién se estudió, no qué se midió.
+    items: [M1-DAT-012, M1-DAT-013, M1-DAT-019, M1-DAT-021, M1-DAT-027, M1-DAT-031]
+
+  - code: REM-DAT-VAR-VALOR
+    misconception: DAT-VAR-VALOR
+    title: Una respuesta no es la variable
+    body: |
+      Nombraste un valor de la variable como si fuera la variable. Por
+      ejemplo, en una encuesta sobre el color favorito, dijiste que la
+      variable es «azul».
+
+      **La variable es la característica completa; cada respuesta es solo
+      uno de sus valores.**
+
+      «Azul» es lo que respondió alguien. La variable es lo que se le
+      preguntó a todos: el color favorito. Otros respondieron rojo o verde,
+      y todas esas respuestas son valores de la misma variable.
+
+      Aunque «azul» sea la respuesta más repetida, sigue siendo un valor.
+
+      Un control rápido: la variable tiene que servir para todos los
+      individuos. Si tu respuesta solo describe a algunos, es un valor.
+    items: [M1-DAT-009, M1-DAT-010, M1-DAT-012, M1-DAT-013, M1-DAT-031]
+
+  - code: REM-DAT-VAR-FRECUENCIA
+    misconception: DAT-VAR-FRECUENCIA
+    title: Cuántos responden algo no es la variable
+    body: |
+      Confundiste la variable con cuántos individuos tienen cada valor. Por
+      ejemplo, dijiste que la variable es «cuántos vecinos prefieren cada
+      color».
+
+      **La variable es lo que se registra de cada individuo. Contar cuántos
+      tienen cada valor es un paso posterior: la frecuencia.**
+
+      A cada vecino se le pregunta su color favorito. Eso es la variable.
+      Después, al ordenar los datos, cuentas: $12$ eligieron azul, $8$ rojo.
+      Esos conteos son frecuencias, y van en la tabla, no en la definición de
+      la variable.
+
+      Un control rápido: la variable se puede preguntar a una sola persona.
+      «¿Cuántos prefieren azul?» no se le puede preguntar a un individuo.
+    items: [M1-DAT-022, M1-DAT-023, M1-DAT-024, M1-DAT-026, M1-DAT-027, M1-DAT-031]
+
+  - code: REM-TAB-ABS-COLUMNA
+    misconception: TAB-ABS-COLUMNA
+    title: A la izquierda el valor, a la derecha cuántos
+    body: |
+      Leíste la columna equivocada. Por ejemplo, en una tabla donde la fila
+      «$2$ | $9$» indica que $9$ personas tienen $2$ bicicletas, dijiste que
+      $2$ personas tienen $9$.
+
+      **En una tabla de frecuencias, la primera columna tiene los valores de
+      la variable y la segunda cuántas veces aparece cada valor.**
+
+      Lee cada fila completa, como una frase: «$9$ personas tienen $2$
+      bicicletas». El valor es lo que tienen; la frecuencia es cuántos lo
+      tienen.
+
+      Si te preguntan «¿cuántas personas...?», la respuesta está en la
+      columna de frecuencias. Si te preguntan «¿qué cantidad de
+      bicicletas...?», está en la columna de valores.
+
+      Un control rápido: pon las unidades. «$9$ personas» y «$2$ bicicletas»
+      no se pueden intercambiar.
+    items: [M1-DAT-029, M1-DAT-039, M1-DAT-040, M1-DAT-044, M1-DAT-046, M1-DAT-051]
+
+  - code: REM-TAB-ABS-FILAS
+    misconception: TAB-ABS-FILAS
+    title: Los datos se cuentan sumando frecuencias, no filas
+    body: |
+      Contaste las filas de la tabla como si fueran los datos. Por ejemplo,
+      en una tabla con $3$ valores distintos dijiste que había $3$ datos.
+
+      **El total de datos es la suma de las frecuencias. Cada fila agrupa a
+      todos los que tienen el mismo valor.**
+
+      Si una tabla dice:
+
+      $$1 \to 6 \qquad 2 \to 9 \qquad 3 \to 5$$
+
+      hay tres valores distintos, pero $6 + 9 + 5 = 20$ datos: $20$
+      personas respondieron. Las filas indican cuántas respuestas
+      **distintas** hubo, no cuántas personas respondieron.
+
+      Un control rápido: el total de datos tiene que ser al menos tan grande
+      como la mayor frecuencia de la tabla.
+    items: [M1-DAT-028, M1-DAT-030, M1-DAT-035, M1-DAT-036, M1-DAT-045, M1-DAT-046]
+
+  - code: REM-TAB-ABS-SUMAX
+    misconception: TAB-ABS-SUMAX
+    title: Cada valor cuenta tantas veces como su frecuencia
+    body: |
+      Sumaste los valores de la variable sin mirar sus frecuencias. Por
+      ejemplo, en una tabla de bicicletas por hogar con valores $0, 1, 2$ y
+      $3$, dijiste que el total era $0 + 1 + 2 + 3 = 6$.
+
+      **Para saber cuántos datos hay, se suman las frecuencias. Para saber
+      cuánto suma la variable, cada valor se multiplica por su frecuencia.**
+
+      Si $7$ hogares tienen $2$ bicicletas, esos hogares aportan
+      $2 \cdot 7 = 14$ bicicletas, no $2$. El valor $2$ se repite $7$
+      veces.
+
+      Sumar solo la columna de valores trata cada valor como si lo tuviera
+      un solo individuo.
+
+      Un control rápido: si en tu cálculo no aparece ninguna frecuencia, te
+      faltó la mitad de la tabla.
+    items: [M1-DAT-029, M1-DAT-034, M1-DAT-035, M1-DAT-045, M1-DAT-046, M1-DAT-054]
+
+  - code: REM-TAB-ABS-SUMAF
+    misconception: TAB-ABS-SUMAF
+    title: Cuántos datos hay no es cuánto suman
+    body: |
+      Confundiste la cantidad de datos con la suma de sus valores. Por
+      ejemplo, a «¿cuántas bicicletas hay en total?» respondiste con la
+      cantidad de hogares.
+
+      **Sumar las frecuencias da cuántos individuos hay. Sumar valor por
+      frecuencia da el total de la variable.**
+
+      Con la tabla
+
+      $$0 \to 4 \qquad 1 \to 8 \qquad 2 \to 6$$
+
+      hay $4 + 8 + 6 = 18$ hogares, y
+      $0 \cdot 4 + 1 \cdot 8 + 2 \cdot 6 = 20$ bicicletas. Son dos
+      preguntas distintas con dos respuestas distintas.
+
+      Un control rápido: fíjate en qué cuenta la pregunta. Si pregunta por
+      personas u hogares, suma frecuencias. Si pregunta por lo que tienen,
+      multiplica y suma.
+    items: [M1-DAT-026, M1-DAT-028, M1-DAT-035, M1-DAT-036, M1-DAT-044, M1-DAT-045]
+
+  - code: REM-TAB-ABS-LIMITE
+    misconception: TAB-ABS-LIMITE
+    title: El intervalo [a, b) incluye a y deja fuera b
+    body: |
+      Ubicaste un dato del borde en el intervalo equivocado. Por ejemplo,
+      pusiste una carrera de $50$ minutos en el intervalo $[40, 50)$.
+
+      **En un intervalo $[a, b)$ el corchete incluye al $a$ y el paréntesis
+      deja fuera al $b$.**
+
+      $[40, 50)$ son los tiempos desde $40$ minutos hasta **antes** de $50$.
+      Una carrera de exactamente $50$ minutos va en el intervalo siguiente,
+      $[50, 60)$.
+
+      Así, cada dato cae en un solo intervalo. Si el $50$ fuera en los dos,
+      se contaría dos veces.
+
+      Un control rápido: el número del borde siempre pertenece al intervalo
+      que **empieza** con él.
+    items: [M1-DAT-028, M1-DAT-032, M1-DAT-038, M1-DAT-040, M1-DAT-041, M1-DAT-043]
+
+  - code: REM-TAB-ACUM-BORDE
+    misconception: TAB-ACUM-BORDE
+    title: Decide primero si el valor del borde entra
+    body: |
+      Contaste el valor del borde cuando no correspondía, o lo dejaste fuera
+      cuando sí. Por ejemplo, para «menos de $3$ hijos» usaste $F(3)$.
+
+      **«Menos de» y «más de» dejan fuera el borde. «A lo sumo» y «al
+      menos» lo incluyen.**
+
+      Con $k = 3$:
+
+      - menos de $3$: $0$, $1$ o $2$ hijos. Es $F(2)$.
+      - a lo sumo $3$: $0$, $1$, $2$ o $3$. Es $F(3)$.
+      - más de $3$: $4$ o más. Es $n - F(3)$.
+      - al menos $3$: $3$ o más. Es $n - F(2)$.
+
+      Un control rápido: antes de mirar la tabla, escribe la lista de
+      valores que entran. Así no dependes de la palabra.
+    items: [M1-DAT-052, M1-DAT-053, M1-DAT-061, M1-DAT-062, M1-DAT-068, M1-DAT-069]
+
+  - code: REM-TAB-ACUM-SOLOF
+    misconception: TAB-ACUM-SOLOF
+    title: A lo sumo es acumular, no leer una fila
+    body: |
+      Respondiste con la frecuencia de un solo valor cuando la pregunta
+      incluía varios. Por ejemplo, para «a lo sumo $2$ hijos» diste solo los
+      que tienen exactamente $2$.
+
+      **«A lo sumo $2$» incluye a los que tienen $0$, $1$ y $2$. Hay que
+      sumar todas esas frecuencias, que es justamente la acumulada $F(2)$.**
+
+      Si $f(0) = 4$, $f(1) = 10$ y $f(2) = 7$, entonces a lo sumo $2$ hijos
+      tienen
+
+      $$4 + 10 + 7 = 21$$
+
+      familias, no $7$.
+
+      Un control rápido: si la pregunta usa «a lo sumo», «menos de», «más
+      de» o «al menos», la respuesta casi nunca es una sola frecuencia.
+    items: [M1-DAT-053, M1-DAT-055, M1-DAT-059, M1-DAT-061, M1-DAT-069, M1-DAT-070]
+
+  - code: REM-TAB-ACUM-COMPLEMENTO
+    misconception: TAB-ACUM-COMPLEMENTO
+    title: La acumulada cuenta hacia abajo
+    body: |
+      Usaste la frecuencia acumulada para una pregunta sobre los valores
+      mayores. Por ejemplo, para «más de $2$ hijos» respondiste $F(2)$.
+
+      **$F(k)$ cuenta los datos menores o iguales a $k$. Para los mayores,
+      se resta del total: más de $k$ es $n - F(k)$.**
+
+      Si hay $35$ familias y $F(2) = 21$, entonces $21$ familias tienen $2$
+      hijos o menos. Las que tienen más de $2$ son las demás:
+
+      $$35 - 21 = 14$$
+
+      Un control rápido: si la pregunta es por los que tienen más, y tu
+      respuesta es una $F$ sin restar, estás contando a los que tienen menos.
+    items: [M1-DAT-052, M1-DAT-055, M1-DAT-059, M1-DAT-061, M1-DAT-069, M1-DAT-070]
+
+  - code: REM-TAB-ACUM-FCOMOF
+    misconception: TAB-ACUM-FCOMOF
+    title: Para un solo valor, se resta la acumulada anterior
+    body: |
+      Leíste una frecuencia acumulada como si fuera la de un solo valor. Por
+      ejemplo, con $F(2) = 21$ dijiste que $21$ familias tienen exactamente
+      $2$ hijos.
+
+      **$F(2)$ incluye a todos los que tienen $2$ o menos. Los que tienen
+      exactamente $2$ son $F(2) - F(1)$.**
+
+      Si $F(1) = 14$ y $F(2) = 21$, las que tienen exactamente $2$ hijos son
+
+      $$21 - 14 = 7$$
+
+      Por la misma razón, sumar la columna $F$ no da el total: cada familia
+      quedaría contada varias veces. El total es la última $F$.
+
+      Un control rápido: si la tabla solo tiene $F$, cualquier pregunta por
+      un valor exacto se responde con una resta.
+    items: [M1-DAT-052, M1-DAT-054, M1-DAT-060, M1-DAT-062, M1-DAT-066, M1-DAT-072]
+
+  - code: REM-TAB-ACUM-PAR
+    misconception: TAB-ACUM-PAR
+    title: La acumulada suma todas las filas anteriores
+    body: |
+      Para construir $F$ sumaste solo la frecuencia de la fila con la de la
+      fila anterior. Por ejemplo, con $f = 4, 10, 7, 3$ escribiste
+      $F = 4, 14, 17, 10$.
+
+      **Cada $F$ es la suma de todas las frecuencias desde la primera fila
+      hasta la suya. Dicho de otra forma: el $F$ anterior más el $f$ de la
+      fila.**
+
+      $$F = 4, \quad 4 + 10 = 14, \quad 14 + 7 = 21, \quad 21 + 3 = 24$$
+
+      La acumulada nunca baja: cada fila agrega gente, no la quita. Si tu
+      columna $F$ baja en algún momento, sumaste solo un par de filas.
+
+      Un control rápido: la última $F$ tiene que ser igual al total de
+      datos.
+    items: [M1-DAT-049, M1-DAT-053, M1-DAT-058, M1-DAT-063, M1-DAT-065, M1-DAT-068]
+
+
+# ---------------------------------------------------------------------
+# CUERPO DE LA CLASE
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Antes de calcular cualquier cosa con datos hay que saber qué se midió y
+  ordenarlo. Esta clase es ese primer paso: reconocer el tipo de variable
+  y armar y leer tablas de frecuencia, que es de donde salen los gráficos,
+  los promedios y la mediana.
+
+  ## Tipos de variables
+
+  ### Individuos y variable
+
+  En un estudio se observa a un grupo de **individuos** (personas,
+  árboles, días, partidos) y de cada uno se registra una característica:
+  esa característica es la **variable**. Lo que se anota de cada individuo
+  es un **valor** de la variable.
+
+  Si se pregunta a los $40$ trabajadores de una empresa qué fruta
+  prefieren, los individuos son los trabajadores, la variable es la fruta
+  preferida, y «manzana» o «plátano» son valores. La variable no son los
+  $40$ trabajadores, ni «manzana», ni cuántos eligieron manzana.
+
+  ### Cualitativa o cuantitativa
+
+  **Una variable es cuantitativa si sus valores son cantidades: tiene
+  sentido sumarlos o sacar su promedio. Si sus valores son categorías, es
+  cualitativa.**
+
+  - Cualitativas: fruta preferida, signo zodiacal, país de nacimiento.
+  - Cuantitativas: cantidad de primos, tiempo de espera, largo de un pez.
+
+  Cuidado con dos trampas:
+
+  - **Un número que solo identifica es cualitativo.** El número de un
+    carnet de biblioteca o el de un departamento son etiquetas: sumar dos
+    de ellos no mide nada.
+  - **Tener orden no convierte en cantidad.** El tamaño de un café (chico,
+    mediano, grande) está ordenado, pero sigue siendo una categoría: la
+    variable es cualitativa.
+
+  ### Discreta o continua
+
+  Esta división es **solo para variables cuantitativas**. Una variable
+  cualitativa no es discreta ni continua.
+
+  - **Discreta**: se obtiene contando. Entre dos valores seguidos no hay
+    otros posibles: cantidad de primos, goles, pasajeros.
+  - **Continua**: se obtiene midiendo. Puede tomar cualquier valor dentro
+    de un intervalo: tiempo, largo, masa, temperatura.
+
+  Lo que decide es qué se mide, no cómo se anotó. El largo de un pez sigue
+  siendo continuo aunque lo anotes en milímetros enteros: el pez puede
+  medir $212{,}4$ mm, solo que redondeaste. Y la palabra «cantidad» no
+  decide nada: la cantidad de jugo de un vaso se mide, así que es
+  continua.
+
+  ## Frecuencia absoluta
+
+  ### De los datos a la tabla
+
+  La **frecuencia absoluta** de un valor es cuántas veces aparece. Se
+  anota $f$. Si se pregunta a $25$ familias cuántos celulares hay en su
+  casa, la tabla queda así:
+
+  $$
+  \begin{array}{|c|c|}
+  \hline \text{Celulares en la casa} & \text{Cantidad de familias } (f) \\
+  \hline 1 & 3 \\ \hline 2 & 7 \\ \hline 3 & 11 \\ \hline 4 & 4 \\ \hline
+  \end{array}
+  $$
+
+  **La columna de la izquierda son los valores; la de la derecha, cuántas
+  veces aparece cada uno.** La fila «$3$ | $11$» dice que $11$ familias
+  tienen $3$ celulares, no al revés.
+
+  ### Cuántos datos hay y cuánto suman
+
+  Son dos preguntas distintas:
+
+  - **Cuántos datos hay** ($n$): se suman las frecuencias.
+    $3 + 7 + 11 + 4 = 25$ familias. No es el número de filas ($4$) ni la
+    suma de los valores ($1 + 2 + 3 + 4$).
+  - **Cuánto suma la variable**: cada valor se multiplica por su
+    frecuencia y se suma. En total hay
+    $1 \cdot 3 + 2 \cdot 7 + 3 \cdot 11 + 4 \cdot 4 = 66$ celulares.
+
+  Si falta una frecuencia y conoces $n$, réstale a $n$ las frecuencias
+  conocidas.
+
+  ### Datos agrupados en intervalos
+
+  Cuando la variable es continua o tiene muchos valores, se agrupa en
+  intervalos. **$[a, b)$ incluye al $a$ y no incluye al $b$**. En una
+  tabla de distancias con intervalos $[0, 2)$, $[2, 4)$, $[4, 6)$, una
+  distancia de exactamente $4$ km va en $[4, 6)$, no en $[2, 4)$.
+
+  ## Frecuencia acumulada
+
+  ### Qué es
+
+  La **frecuencia acumulada** $F$ de un valor es cuántos datos son
+  **menores o iguales** a ese valor. Se obtiene sumando las frecuencias
+  desde la primera fila hasta esa:
+
+  $$
+  \begin{array}{|c|c|c|}
+  \hline \text{Celulares} & f & F \\
+  \hline 1 & 3 & 3 \\ \hline 2 & 7 & 10 \\ \hline 3 & 11 & 21 \\ \hline 4 & 4 & 25 \\ \hline
+  \end{array}
+  $$
+
+  **Cada $F$ es el $F$ anterior más el $f$ de su fila.** No es la suma de
+  las dos últimas frecuencias: $F(3) = 3 + 7 + 11$, no $7 + 11$. La última
+  $F$ siempre es el total de datos.
+
+  El $21$ de la tabla se lee: $21$ familias tienen $3$ celulares **o
+  menos**. No «exactamente $3$».
+
+  ### Traducir la pregunta
+
+  Este es el paso donde más se equivoca. Antes de mirar la tabla, decide si
+  el valor del borde entra:
+
+  - «a lo sumo $2$», «como máximo $2$», «$2$ o menos»: entra el $2$. Es
+    $F(2) = 10$.
+  - «menos de $2$»: no entra el $2$. Es $F(1) = 3$.
+  - «más de $2$»: no entra el $2$. Es $n - F(2) = 25 - 10 = 15$.
+  - «al menos $2$», «$2$ o más»: entra el $2$. Es $n - F(1) = 25 - 3 = 22$.
+
+  La acumulada cuenta **hacia abajo** (los valores menores). Si la pregunta
+  es por los mayores, hay que restar del total.
+
+  ### Volver a la frecuencia absoluta
+
+  Si solo tienes $F$, la frecuencia de un valor es su $F$ menos el $F$
+  anterior: los que tienen exactamente $3$ celulares son
+  $F(3) - F(2) = 21 - 10 = 11$.

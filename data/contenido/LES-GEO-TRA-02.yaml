@@ -1,0 +1,1742 @@
+# =====================================================================
+# LES-GEO-TRA-02 — Vectores y traslación
+# Cubre GEO-PLA-VEC, GEO-PLA-VEC-OP, GEO-TRA-TRAS
+# =====================================================================
+# Cadena VEC -> VEC-OP -> TRAS. VEC pide GEO-PLA-COORD (LES-GEO-TRA-01);
+# VEC-OP pide además NUM-ENT-ADI (LES-NUM-ENT-02).
+#
+# Alcance (propuesto, sin control 1):
+#   VEC    entra   vector como desplazamiento; componentes desde una
+#                  figura (escala 1 y 2) y desde dos puntos (B − A);
+#                  extremo u origen conocido el vector; vectores iguales
+#                  en distintas posiciones; vector opuesto.
+#          fuera   módulo de un vector (Pitágoras, GEO-PIT-* y
+#                  GEO-REC-DIST); ponderación por un número distinto de 1
+#                  y −1 (no hay nodo: decisión para Ben).
+#   VEC-OP entra   suma y resta por componentes; suma gráfica (a
+#                  continuación y paralelogramo); vector que falta;
+#                  desplazamientos sucesivos en contexto (este/oeste,
+#                  norte/sur).
+#   TRAS   entra   imagen de puntos y figuras según un vector; vector de
+#                  una traslación a partir de un punto y su imagen;
+#                  preimagen; composición de dos traslaciones; propiedades
+#                  (conserva forma, tamaño y orientación).
+#          fuera   composición con otras isometrías (GEO-TRA-COMP);
+#                  propiedades comparadas entre isometrías (GEO-TRA-PROP).
+#
+# Niveles:
+#   1  leer un vector, calcular B − A, una suma, una imagen
+#   2  escala 2, vector que falta, suma gráfica, contexto de dos pasos
+#   3  I/II/III, composición, preimagen, afirmaciones generales
+# ---------------------------------------------------------------------
+
+unit: GEO-TRA
+
+lesson:
+  code: LES-GEO-TRA-02
+  title: Vectores y traslación
+  position: 2
+  nodes:
+    - node: GEO-PLA-VEC
+      anchor: vectores-y-sus-componentes
+    - node: GEO-PLA-VEC-OP
+      anchor: suma-y-resta-de-vectores
+    - node: GEO-TRA-TRAS
+      anchor: traslacion
+
+
+# ---------------------------------------------------------------------
+# ITEMS
+# ---------------------------------------------------------------------
+
+items:
+
+  # ===== GEO-PLA-VEC · nivel 1 =================================
+
+  # A SINSIGNO: hacia abajo sin signo
+  # C PUNTO: da el punto donde termina
+  # D ORIGEN: cuenta de la punta a la cola
+  - code: M1-TRA-025
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-PLA-VEC-01
+    stem: "¿Cuáles son las componentes del vector $u$?"
+    options:
+      - {label: A, body: "$(5, 2)$", misconception: PLA-VEC-SINSIGNO}
+      - {label: B, body: "$(5, -2)$", correct: true}
+      - {label: C, body: "$(4, 1)$", misconception: PLA-VEC-PUNTO}
+      - {label: D, body: "$(-5, 2)$", misconception: PLA-VEC-ORIGEN}
+
+  # A PUNTO: las coordenadas de B
+  # B ORIGEN: A − B
+  # D SUMA: A + B
+  - code: M1-TRA-026
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuáles son las componentes del vector que va de $A(2, -1)$ a
+      $B(5, 3)$?
+    options:
+      - {label: A, body: "$(5, 3)$", misconception: PLA-VEC-PUNTO}
+      - {label: B, body: "$(-3, -4)$", misconception: PLA-VEC-ORIGEN}
+      - {label: C, body: "$(3, 4)$", correct: true}
+      - {label: D, body: "$(7, 2)$", misconception: PLA-VEC-SUMA}
+
+  # A POSICION: el vector depende del lugar
+  # B PUNTO: extremo = componentes
+  # C ORIGEN: resta al revés
+  - code: M1-TRA-027
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes afirmaciones es correcta?"
+    options:
+      - {label: A, body: "Dos vectores son iguales solo si parten del mismo punto.", misconception: PLA-VEC-POSICION}
+      - {label: B, body: "Las componentes de un vector son las coordenadas de su extremo.", misconception: PLA-VEC-PUNTO}
+      - {label: C, body: "Las componentes del vector de $A$ a $B$ se calculan como $A - B$.", misconception: PLA-VEC-ORIGEN}
+      - {label: D, body: "Dos vectores con las mismas componentes son iguales, aunque partan de puntos distintos.", correct: true}
+
+  # B ORDEN: c = (2, −3): lee las componentes al revés
+  # C ORIGEN: b = (3, −2): lo cuenta de la punta a la cola
+  # D SINSIGNO: d = (3, 2): sin signos
+  - code: M1-TRA-028
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-PLA-VEC-02
+    stem: >-
+      ¿Cuál de los vectores de la figura tiene componentes $(-3, 2)$?
+    options:
+      - {label: A, body: "El vector $a$", correct: true}
+      - {label: B, body: "El vector $c$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "El vector $b$", misconception: PLA-VEC-ORIGEN}
+      - {label: D, body: "El vector $d$", misconception: PLA-VEC-SINSIGNO}
+
+  # (−2, 3) + (4, −1) = (2, 2)
+  # A ORIGEN: resta el vector
+  # B PUNTO: cree que termina en sus componentes
+  # C ORDEN: suma las componentes cruzadas
+  - code: M1-TRA-029
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      El vector $v = (4, -1)$ se dibuja partiendo del punto $(-2, 3)$. ¿En
+      qué punto termina?
+    options:
+      - {label: A, body: "$(-6, 4)$", misconception: PLA-VEC-ORIGEN}
+      - {label: B, body: "$(4, -1)$", misconception: PLA-VEC-PUNTO}
+      - {label: C, body: "$(-3, 7)$", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$(2, 2)$", correct: true}
+
+  # A SINSIGNO: hacia abajo sin signo
+  # B ORIGEN: A − B
+  # D PUNTO: las coordenadas de B
+  - code: M1-TRA-030
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuáles son las componentes del vector que va de $A(0, 4)$ a
+      $B(3, 0)$?
+    options:
+      - {label: A, body: "$(3, 4)$", misconception: PLA-VEC-SINSIGNO}
+      - {label: B, body: "$(-3, 4)$", misconception: PLA-VEC-ORIGEN}
+      - {label: C, body: "$(3, -4)$", correct: true}
+      - {label: D, body: "$(3, 0)$", misconception: PLA-VEC-PUNTO}
+
+  # (4 − 1, 3 − 1) = (3, 2); (1 − (−2), 2 − 0) = (3, 2)
+  # B ORIGEN: el recorrido al revés le parece el mismo
+  # C POSICION: el vector depende del lugar
+  # D PUNTO: termina en el mismo punto
+  - code: M1-TRA-031
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál de los siguientes vectores es igual al vector que va de $(1, 1)$
+      a $(4, 3)$?
+    options:
+      - {label: A, body: "El que va de $(-2, 0)$ a $(1, 2)$.", correct: true}
+      - {label: B, body: "El que va de $(4, 3)$ a $(1, 1)$.", misconception: PLA-VEC-ORIGEN}
+      - {label: C, body: "Ninguno: solo es igual el que parte de $(1, 1)$.", misconception: PLA-VEC-POSICION}
+      - {label: D, body: "El que va de $(0, 0)$ a $(4, 3)$.", misconception: PLA-VEC-PUNTO}
+
+  # A ORIGEN: de la punta a la cola
+  # C PUNTO: da el punto donde termina
+  # D ORDEN: pone el avance horizontal en la segunda componente
+  - code: M1-TRA-032
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-PLA-VEC-05
+    stem: "¿Cuáles son las componentes del vector $v$?"
+    options:
+      - {label: A, body: "$(-5, 0)$", misconception: PLA-VEC-ORIGEN}
+      - {label: B, body: "$(5, 0)$", correct: true}
+      - {label: C, body: "$(1, 2)$", misconception: PLA-VEC-PUNTO}
+      - {label: D, body: "$(0, 5)$", misconception: PLA-COORD-ORDEN}
+
+  # ===== GEO-PLA-VEC · nivel 2 =================================
+
+  # B ESCALA: cuenta cuadrados
+  # C ORIGEN: de la punta a la cola
+  # D SINSIGNO: hacia abajo sin signo
+  - code: M1-TRA-033
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-PLA-VEC-03
+    stem: "¿Cuáles son las componentes del vector $w$?"
+    options:
+      - {label: A, body: "$(8, -4)$", correct: true}
+      - {label: B, body: "$(4, -2)$", misconception: PLA-COORD-ESCALA}
+      - {label: C, body: "$(-8, 4)$", misconception: PLA-VEC-ORIGEN}
+      - {label: D, body: "$(8, 4)$", misconception: PLA-VEC-SINSIGNO}
+
+  # B = A + v = (3 − 2, −1 + 5) = (1, 4)
+  # A ORIGEN: usa A − B = v: B = A − v
+  # C ORDEN: suma las componentes cruzadas
+  # D PUNTO: cree que B son las componentes
+  - code: M1-TRA-034
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El vector que va de $A$ a $B$ es $(-2, 5)$. Si $A = (3, -1)$, ¿cuáles
+      son las coordenadas de $B$?
+    options:
+      - {label: A, body: "$(5, -6)$", misconception: PLA-VEC-ORIGEN}
+      - {label: B, body: "$(1, 4)$", correct: true}
+      - {label: C, body: "$(8, -3)$", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$(-2, 5)$", misconception: PLA-VEC-PUNTO}
+
+  # A = B − v = (1 − 4, 2 + 3) = (−3, 5)
+  # A ORIGEN: usa A − B = v: A = B + v
+  # B PUNTO: cree que el punto son las componentes
+  # C SINSIGNO: resta (4, 3): el vector sin signo
+  - code: M1-TRA-035
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El vector que va de $A$ a $B$ es $(4, -3)$. Si $B = (1, 2)$, ¿cuáles
+      son las coordenadas de $A$?
+    options:
+      - {label: A, body: "$(5, -1)$", misconception: PLA-VEC-ORIGEN}
+      - {label: B, body: "$(4, -3)$", misconception: PLA-VEC-PUNTO}
+      - {label: C, body: "$(-3, -1)$", misconception: PLA-VEC-SINSIGNO}
+      - {label: D, body: "$(-3, 5)$", correct: true}
+
+  # A SINSIGNO: b es el opuesto de a: sin sentido le parecen iguales
+  # B PUNTO: terminan en el mismo punto
+  # D POSICION: el vector depende del lugar
+  - code: M1-TRA-036
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-PLA-VEC-04
+    stem: "¿Cuáles de los vectores de la figura son iguales?"
+    options:
+      - {label: A, body: "$a$ y $b$", misconception: PLA-VEC-SINSIGNO}
+      - {label: B, body: "$a$ y $d$", misconception: PLA-VEC-PUNTO}
+      - {label: C, body: "$a$ y $c$", correct: true}
+      - {label: D, body: "Ninguno, porque parten de puntos distintos.", misconception: PLA-VEC-POSICION}
+
+  # A PUNTO: acepta II
+  # C ORIGEN: rechaza I: calcula (−3, 2)
+  # D POSICION: acepta III
+  - code: M1-TRA-037
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. El vector que va de $(1, 2)$ a $(4, 0)$ es $(3, -2)$.
+
+      II. El vector que va de $(2, 3)$ a $(6, 4)$ es $(6, 4)$.
+
+      III. Los vectores que van de $(0, 0)$ a $(2, 1)$ y de $(3, 3)$ a $(5, 4)$ son distintos.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I y II", misconception: PLA-VEC-PUNTO}
+      - {label: B, body: "Solo I", correct: true}
+      - {label: C, body: "Ninguna de ellas", misconception: PLA-VEC-ORIGEN}
+      - {label: D, body: "Solo I y III", misconception: PLA-VEC-POSICION}
+
+  # (4 − (−3), −1 − 2) = (7, −3)
+  # A ORIGEN: estación − bodega
+  # B SUMA: suma las posiciones
+  # D SINSIGNO: hacia abajo sin signo
+  - code: M1-TRA-038
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un robot se mueve en línea recta desde la estación $(-3, 2)$ hasta la
+      bodega $(4, -1)$. ¿Qué vector describe su desplazamiento?
+    options:
+      - {label: A, body: "$(-7, 3)$", misconception: PLA-VEC-ORIGEN}
+      - {label: B, body: "$(1, 1)$", misconception: PLA-VEC-SUMA}
+      - {label: C, body: "$(7, -3)$", correct: true}
+      - {label: D, body: "$(7, 3)$", misconception: PLA-VEC-SINSIGNO}
+
+  # (−5 − (−2), 1 − (−3)) = (−3, 4)
+  # B SUMA: P + Q
+  # C ORIGEN: P − Q
+  # D ORDEN: componentes al revés
+  - code: M1-TRA-039
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "¿Cuál es el vector que va de $P(-2, -3)$ a $Q(-5, 1)$?"
+    options:
+      - {label: A, body: "$(-3, 4)$", correct: true}
+      - {label: B, body: "$(-7, -2)$", misconception: PLA-VEC-SUMA}
+      - {label: C, body: "$(3, -4)$", misconception: PLA-VEC-ORIGEN}
+      - {label: D, body: "$(4, -3)$", misconception: PLA-COORD-ORDEN}
+
+  # a = 4 − 1 = 3; b = 2 − 2 = 0
+  # A ORIGEN: inicio − final
+  # B ORDEN: componentes al revés
+  # C PUNTO: el punto de llegada
+  - code: M1-TRA-040
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El vector $v = (a, b)$ va de $(1, 2)$ a $(4, 2)$. ¿Qué se puede
+      afirmar?
+    options:
+      - {label: A, body: "$a = -3$ y $b = 0$", misconception: PLA-VEC-ORIGEN}
+      - {label: B, body: "$a = 0$ y $b = 3$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$a = 4$ y $b = 2$", misconception: PLA-VEC-PUNTO}
+      - {label: D, body: "$a = 3$ y $b = 0$", correct: true}
+
+  # ===== GEO-PLA-VEC · nivel 3 =================================
+
+  # A SINSIGNO: rechaza I: el de ida y el de vuelta le parecen iguales
+  # B POSICION: rechaza II
+  # C PUNTO: acepta III
+  - code: M1-TRA-041
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. El vector que va de $A$ a $B$ es el opuesto del que va de $B$ a $A$.
+
+      II. Las componentes de un vector no dependen del punto donde se dibuja.
+
+      III. Las componentes del vector que va de $A$ a $B$ son las coordenadas de $B$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo II", misconception: PLA-VEC-SINSIGNO}
+      - {label: B, body: "Solo I", misconception: PLA-VEC-POSICION}
+      - {label: C, body: "I, II y III", misconception: PLA-VEC-PUNTO}
+      - {label: D, body: "Solo I y II", correct: true}
+
+  # AB = (4, 3); D = C + (4, 3) = (4, 1)
+  # A PUNTO: toma AB = B, y entonces D = B
+  # C POSICION: el vector depende del lugar
+  # D ORDEN: suma a C el vector con las componentes al revés, (3, 4)
+  - code: M1-TRA-042
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Los puntos $A(-1, 2)$, $B(3, 5)$ y $C(0, -2)$ son vértices de un
+      paralelogramo $ABDC$, de modo que el vector de $A$ a $B$ es igual al
+      vector de $C$ a $D$. ¿Cuáles son las coordenadas de $D$?
+    options:
+      - {label: A, body: "$(3, 5)$", misconception: PLA-VEC-PUNTO}
+      - {label: B, body: "$(4, 1)$", correct: true}
+      - {label: C, body: "No existe, porque dos vectores que parten de puntos distintos no pueden ser iguales.", misconception: PLA-VEC-POSICION}
+      - {label: D, body: "$(3, 2)$", misconception: PLA-COORD-ORDEN}
+
+  # origen = extremo − v = (−1 + 6, −4 − 2) = (5, −6)
+  # A SINSIGNO: resta (6, 2): el vector sin signo
+  # B PUNTO: toma las componentes como punto
+  # D ORIGEN: suma el vector al extremo
+  - code: M1-TRA-043
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un vector tiene componentes $(-6, 2)$ y su extremo está en el punto
+      $(-1, -4)$. ¿Dónde está su origen?
+    options:
+      - {label: A, body: "$(-7, -6)$", misconception: PLA-VEC-SINSIGNO}
+      - {label: B, body: "$(-6, 2)$", misconception: PLA-VEC-PUNTO}
+      - {label: C, body: "$(5, -6)$", correct: true}
+      - {label: D, body: "$(-7, -2)$", misconception: PLA-VEC-ORIGEN}
+
+  # B CONTEO: cuenta líneas de la cuadrícula
+  # C ORDEN: componentes al revés
+  # D ORIGEN: inicio − final
+  - code: M1-TRA-044
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En un patio cuadriculado en metros, una grúa mueve un contenedor desde
+      el punto $(2, 7)$ hasta el punto $(-4, 7)$. ¿Qué vector representa el
+      movimiento y cuántos metros se desplazó el contenedor?
+    options:
+      - {label: A, body: "$(-6, 0)$; se desplazó $6$ metros.", correct: true}
+      - {label: B, body: "$(-6, 0)$; se desplazó $7$ metros.", misconception: PLA-COORD-CONTEO}
+      - {label: C, body: "$(0, -6)$; se desplazó $6$ metros.", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$(6, 0)$; se desplazó $6$ metros.", misconception: PLA-VEC-ORIGEN}
+
+  # B POSICION: el vector depende del lugar
+  # C PUNTO: da los puntos de llegada
+  # D ORIGEN: ve que son iguales, pero cuenta de la punta a la cola
+  - code: M1-TRA-045
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 3
+    source: propio
+    figure: FIG-PLA-VEC-06
+    stem: >-
+      ¿Cuál afirmación sobre los vectores $u$ y $v$ de la figura es
+      correcta?
+    options:
+      - {label: A, body: "$u = v = (3, 2)$", correct: true}
+      - {label: B, body: "$u$ y $v$ son distintos, porque parten de puntos distintos.", misconception: PLA-VEC-POSICION}
+      - {label: C, body: "$u = (0, 1)$ y $v = (4, 4)$, así que son distintos.", misconception: PLA-VEC-PUNTO}
+      - {label: D, body: "$u = v = (-3, -2)$", misconception: PLA-VEC-ORIGEN}
+
+  # A ORIGEN: inicio − final
+  # B SUMA: suma los puntos
+  # C PUNTO: da el punto de llegada
+  - code: M1-TRA-046
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un dron está en el punto $(-2, -5)$ y debe llegar al punto $(3, 1)$.
+      ¿Cuál es el vector de su desplazamiento y hacia dónde se mueve?
+    options:
+      - {label: A, body: "$(-5, -6)$; hacia la izquierda y hacia abajo.", misconception: PLA-VEC-ORIGEN}
+      - {label: B, body: "$(1, -4)$; hacia la derecha y hacia abajo.", misconception: PLA-VEC-SUMA}
+      - {label: C, body: "$(3, 1)$; hacia la derecha y hacia arriba.", misconception: PLA-VEC-PUNTO}
+      - {label: D, body: "$(5, 6)$; hacia la derecha y hacia arriba.", correct: true}
+
+  # A SUMA: acepta III: suma los puntos
+  # C ORIGEN: acepta II: inicio − final
+  # D SINSIGNO: rechaza I (le parecen iguales) y acepta II (sin signos)
+  - code: M1-TRA-047
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. $(3, -2)$ y $(-3, 2)$ son vectores opuestos.
+
+      II. El vector que va de $(5, 5)$ a $(2, 1)$ es $(3, 4)$.
+
+      III. El vector que va de $(1, 1)$ a $(3, 4)$ es $(4, 5)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I y III", misconception: PLA-VEC-SUMA}
+      - {label: B, body: "Solo I", correct: true}
+      - {label: C, body: "Solo I y II", misconception: PLA-VEC-ORIGEN}
+      - {label: D, body: "Solo II", misconception: PLA-VEC-SINSIGNO}
+
+  # (3, −2) + (3, −2) = (6, −4); (−5, 2) + (6, −4) = (1, −2)
+  # A ORIGEN: resta el desplazamiento al punto de partida
+  # B PUNTO: cree que termina en las componentes del desplazamiento
+  # D SINSIGNO: suma (6, 4): el vector sin signo
+  - code: M1-TRA-048
+    node: GEO-PLA-VEC
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Una lancha parte del muelle $A(-5, 2)$. Su desplazamiento es el doble
+      del vector $(3, -2)$, es decir, $(3, -2) + (3, -2)$. ¿En qué punto
+      termina?
+    options:
+      - {label: A, body: "$(-11, 6)$", misconception: PLA-VEC-ORIGEN}
+      - {label: B, body: "$(6, -4)$", misconception: PLA-VEC-PUNTO}
+      - {label: C, body: "$(1, -2)$", correct: true}
+      - {label: D, body: "$(1, 6)$", misconception: PLA-VEC-SINSIGNO}
+
+  # ===== GEO-PLA-VEC-OP · nivel 1 ==============================
+
+  # A MAGNOP: suma tamaños con el signo del negativo
+  # C RESTAORDEN: resta al revés
+  # D REGLAMUL: −2 + (−4): menos con menos da más
+  - code: M1-TRA-049
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál de las siguientes igualdades es correcta?"
+    options:
+      - {label: A, body: "$(-1, 6) + (4, -2) = (-5, -8)$", misconception: ENT-ADI-MAGNOP}
+      - {label: B, body: "$(3, -2) + (-5, 4) = (-2, 2)$", correct: true}
+      - {label: C, body: "$(5, 1) - (2, 3) = (-3, 2)$", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: D, body: "$(-2, -3) + (-4, 1) = (6, -2)$", misconception: ENT-ADI-REGLAMUL}
+
+  # B SINSENTIDO: suma los tamaños sin el signo del −1
+  # C ORIGEN: lee cada flecha de la punta a la cola
+  # D PUNTAS: calcula v − u
+  - code: M1-TRA-050
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-VEC-OP-01
+    stem: "¿Cuáles son las componentes de $u + v$?"
+    options:
+      - {label: A, body: "$(6, 2)$", correct: true}
+      - {label: B, body: "$(6, 4)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: C, body: "$(-6, -2)$", misconception: PLA-VEC-ORIGEN}
+      - {label: D, body: "$(2, -4)$", misconception: PLA-VECOP-PUNTAS}
+
+  # A SINSENTIDO: suma lo que mide cada tramo
+  # B MAGNOP: 5 + (−8): suma tamaños con el signo del negativo
+  # D ORDEN: pone el movimiento este-oeste en la segunda componente
+  - code: M1-TRA-051
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Un bote avanza $5$ km hacia el este y luego $8$ km hacia el oeste. Si
+      el este es la dirección positiva del eje $x$, ¿qué vector representa
+      su desplazamiento total?
+    options:
+      - {label: A, body: "$(13, 0)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: B, body: "$(-13, 0)$", misconception: ENT-ADI-MAGNOP}
+      - {label: C, body: "$(-3, 0)$", correct: true}
+      - {label: D, body: "$(0, -3)$", misconception: PLA-COORD-ORDEN}
+
+  # (4 − (−2), 1 − 3) = (6, −2)
+  # A DOBLENEG: 4 − (−2) leído como 4 − 2
+  # B RESTAORDEN: v − u
+  # C ORDEN: escribe las componentes al revés
+  - code: M1-TRA-052
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "Si $u = (4, 1)$ y $v = (-2, 3)$, ¿cuál es $u - v$?"
+    options:
+      - {label: A, body: "$(2, -2)$", misconception: ENT-ADI-DOBLENEG}
+      - {label: B, body: "$(-6, 2)$", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: C, body: "$(-2, 6)$", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$(6, -2)$", correct: true}
+
+  # (−3 − 1, −4 + 2) = (−4, −2)
+  # A REGLAMUL: −3 + (−1): menos con menos da más
+  # C SINSENTIDO: suma los tamaños sin signos
+  # D MAGNOP: −4 + 2: suma tamaños con el signo del negativo
+  - code: M1-TRA-053
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "¿Cuál es el resultado de $(-3, -4) + (-1, 2)$?"
+    options:
+      - {label: A, body: "$(4, -2)$", misconception: ENT-ADI-REGLAMUL}
+      - {label: B, body: "$(-4, -2)$", correct: true}
+      - {label: C, body: "$(4, 6)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: D, body: "$(-4, -6)$", misconception: ENT-ADI-MAGNOP}
+
+  # w = (−1, 3) − (2, −5) = (−3, 8)
+  # B RESTAORDEN: resta al revés: (2, −5) − (−1, 3)
+  # C DOBLENEG: 3 − (−5) leído como 3 − 5
+  # D MAGNOP: −1 − 2: resta tamaños con el signo del negativo
+  - code: M1-TRA-054
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: "El vector $w$ cumple $(2, -5) + w = (-1, 3)$. ¿Cuál es $w$?"
+    options:
+      - {label: A, body: "$(-3, 8)$", correct: true}
+      - {label: B, body: "$(3, -8)$", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: C, body: "$(-3, -2)$", misconception: ENT-ADI-DOBLENEG}
+      - {label: D, body: "$(-1, 8)$", misconception: ENT-ADI-MAGNOP}
+
+  # (0, 3) + (0, −7) + (0, 2) = (0, −2)
+  # A SINSENTIDO: suma lo que mide cada tramo
+  # B ORDEN: pone el movimiento vertical en la primera componente
+  # C MAGNOP: 3 + (−7) = −10 y −10 + 2 = −12: suma tamaños con el signo del negativo
+  - code: M1-TRA-055
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      Una ardilla sube $3$ metros por un árbol, baja $7$ metros y vuelve a
+      subir $2$ metros. Si hacia arriba es la dirección positiva del eje
+      $y$, ¿qué vector representa su desplazamiento total?
+    options:
+      - {label: A, body: "$(0, 12)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: B, body: "$(-2, 0)$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$(0, -12)$", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "$(0, -2)$", correct: true}
+
+  # A MAGNOP: 3 + (−1) y −1 + 3: suma tamaños con el signo del negativo
+  # B PUNTAS: la diagonal que une las puntas: v − u
+  # D SINSENTIDO: suma los tamaños sin signos
+  - code: M1-TRA-056
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-VEC-OP-02
+    stem: "¿Cuáles son las componentes de $u + v$?"
+    options:
+      - {label: A, body: "$(-4, -4)$", misconception: ENT-ADI-MAGNOP}
+      - {label: B, body: "$(-4, 4)$", misconception: PLA-VECOP-PUNTAS}
+      - {label: C, body: "$(2, 2)$", correct: true}
+      - {label: D, body: "$(4, 4)$", misconception: PLA-VECOP-SINSENTIDO}
+
+  # ===== GEO-PLA-VEC-OP · nivel 2 ==============================
+
+  # (−2 + 3 − 1, 5 − 1 − 1) = (0, 3)
+  # B ORDEN: escribe las componentes al revés
+  # C RESTAORDEN: calcula w − (u + v)
+  # D SINSENTIDO: suma todos los tamaños
+  - code: M1-TRA-057
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Si $u = (-2, 5)$, $v = (3, -1)$ y $w = (1, 1)$, ¿cuál es el resultado
+      de $u + v - w$?
+    options:
+      - {label: A, body: "$(0, 3)$", correct: true}
+      - {label: B, body: "$(3, 0)$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$(0, -3)$", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: D, body: "$(6, 7)$", misconception: PLA-VECOP-SINSENTIDO}
+
+  # (4, 2) + (−6, −5) = (−2, −3)
+  # A ORDEN: componentes al revés
+  # C MAGNOP: 4 + (−6) y 2 + (−5): suma tamaños con el signo del negativo
+  # D SINSENTIDO: suma lo que mide cada tramo
+  - code: M1-TRA-058
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Un repartidor sale del local, avanza $4$ cuadras al este y $2$ al
+      norte, y luego $6$ cuadras al oeste y $5$ al sur. Con el este y el
+      norte como direcciones positivas, ¿dónde queda respecto del local?
+    options:
+      - {label: A, body: "$(-3, -2)$", misconception: PLA-COORD-ORDEN}
+      - {label: B, body: "$(-2, -3)$", correct: true}
+      - {label: C, body: "$(-10, -7)$", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "$(10, 7)$", misconception: PLA-VECOP-SINSENTIDO}
+
+  # u = (1, 3), v = (4, 1): u − v = (−3, 2)
+  # A RESTAORDEN: v − u
+  # B PUNTAS: confunde la diferencia con la suma
+  # D SINSENTIDO: resta los tamaños y deja todo positivo
+  - code: M1-TRA-059
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-VEC-OP-03
+    stem: "¿Cuáles son las componentes de $u - v$?"
+    options:
+      - {label: A, body: "$(3, -2)$", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: B, body: "$(5, 4)$", misconception: PLA-VECOP-PUNTAS}
+      - {label: C, body: "$(-3, 2)$", correct: true}
+      - {label: D, body: "$(3, 2)$", misconception: PLA-VECOP-SINSENTIDO}
+
+  # v = (1, −2) − (4, 3) = (−3, −5)
+  # A REGLAMUL: −2 − 3: menos con menos da más
+  # B ORDEN: componentes al revés
+  # C RESTAORDEN: u − (u + v)
+  - code: M1-TRA-060
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: "Si $u + v = (1, -2)$ y $u = (4, 3)$, ¿cuál es $v$?"
+    options:
+      - {label: A, body: "$(-3, 5)$", misconception: ENT-ADI-REGLAMUL}
+      - {label: B, body: "$(-5, -3)$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$(3, 5)$", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: D, body: "$(-3, -5)$", correct: true}
+
+  # B RESTAORDEN: acepta II
+  # C MAGNOP: rechaza I (le da (−4, −6)) y III (le da (−6, 0))
+  # D SINSENTIDO: rechaza I (le da (4, 6)) y acepta III
+  - code: M1-TRA-061
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. Si $u = (2, -3)$ y $v = (-2, 3)$, entonces $u + v = (0, 0)$.
+
+      II. Para cualquier par de vectores, $u - v = v - u$.
+
+      III. $(3, 0) + (-3, 0) = (6, 0)$
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", correct: true}
+      - {label: B, body: "Solo I y II", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: C, body: "Ninguna de ellas", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "Solo III", misconception: PLA-VECOP-SINSENTIDO}
+
+  # AB = (3, 3), BC = (4, −2), AC = (7, 1)
+  # A MAGNOP: 3 + (−2): suma tamaños con el signo del negativo
+  # B ORIGEN: cuenta de C hacia A
+  # C SINSENTIDO: suma los tamaños sin el signo del −2
+  - code: M1-TRA-062
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-VEC-OP-04
+    stem: "¿Cuáles son las componentes del vector $u + v$?"
+    options:
+      - {label: A, body: "$(7, -5)$", misconception: ENT-ADI-MAGNOP}
+      - {label: B, body: "$(-7, -1)$", misconception: PLA-VEC-ORIGEN}
+      - {label: C, body: "$(7, 5)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: D, body: "$(7, 1)$", correct: true}
+
+  # (5 − 3, 2 + 4) = (2, 6)
+  # A MAGNOP: 5 + (−3): suma tamaños con el signo del negativo
+  # C SINSENTIDO: suma los tamaños sin signos
+  # D PUNTAS: calcula la diferencia
+  - code: M1-TRA-063
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Dos remolcadores tiran de un bote. Uno ejerce una fuerza representada
+      por el vector $(5, 2)$ y el otro por el vector $(-3, 4)$. ¿Qué vector
+      representa la fuerza total?
+    options:
+      - {label: A, body: "$(-8, 6)$", misconception: ENT-ADI-MAGNOP}
+      - {label: B, body: "$(2, 6)$", correct: true}
+      - {label: C, body: "$(8, 6)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: D, body: "$(-8, 2)$", misconception: PLA-VECOP-PUNTAS}
+
+  # u = (2, −1), v = (−1, 3): v − u = (−3, 4)
+  # A RESTAORDEN: u − v
+  # B PUNTAS: confunde la diferencia con la suma
+  # D DOBLENEG: 3 − (−1) leído como 3 − 1
+  - code: M1-TRA-064
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-VEC-OP-05
+    stem: "¿Cuáles son las componentes de $v - u$?"
+    options:
+      - {label: A, body: "$(3, -4)$", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: B, body: "$(1, 2)$", misconception: PLA-VECOP-PUNTAS}
+      - {label: C, body: "$(-3, 4)$", correct: true}
+      - {label: D, body: "$(-3, 2)$", misconception: ENT-ADI-DOBLENEG}
+
+  # ===== GEO-PLA-VEC-OP · nivel 3 ==============================
+
+  # A REGLAMUL: rechaza II: −2 + (−2) = 4
+  # C PUNTAS: rechaza I: la suma sería la que une las puntas
+  # D SINSENTIDO: acepta III
+  - code: M1-TRA-065
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. Si $u$ y $v$ parten del mismo punto, la diagonal del paralelogramo que sale de ese punto representa $u + v$.
+
+      II. Si $u = (-2, 1)$, entonces $u + u = (-4, 2)$.
+
+      III. Moverse $6$ unidades al norte y luego $6$ al sur equivale al vector $(0, 12)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I", misconception: ENT-ADI-REGLAMUL}
+      - {label: B, body: "Solo I y II", correct: true}
+      - {label: C, body: "Solo II", misconception: PLA-VECOP-PUNTAS}
+      - {label: D, body: "I, II y III", misconception: PLA-VECOP-SINSENTIDO}
+
+  # (3 − 5 + 1, −1 + 2 + 4) = (−1, 5); (−2, 0) + (−1, 5) = (−3, 5)
+  # B MAGNOP: cada suma con signos distintos junta tamaños con el signo del negativo
+  # C ORDEN: componentes al revés
+  # D SINSENTIDO: suma los tamaños: (9, 7) y le suma el punto de partida
+  - code: M1-TRA-066
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un robot parte del punto $(-2, 0)$ y recibe tres órdenes de movimiento
+      seguidas: $(3, -1)$, $(-5, 2)$ y $(1, 4)$. ¿En qué punto termina?
+    options:
+      - {label: A, body: "$(-3, 5)$", correct: true}
+      - {label: B, body: "$(-11, -7)$", misconception: ENT-ADI-MAGNOP}
+      - {label: C, body: "$(5, -3)$", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$(7, 7)$", misconception: PLA-VECOP-SINSENTIDO}
+
+  # u = (5, −1) + (−2, 3) = (3, 2)
+  # A SINSENTIDO: suma los tamaños sin signos
+  # B RESTAORDEN: lee v − u = (5, −1): u = v − (5, −1)
+  # C MAGNOP: 5 + (−2) y −1 + 3: suma tamaños con el signo del negativo
+  - code: M1-TRA-067
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: "Si $u - v = (5, -1)$ y $v = (-2, 3)$, ¿cuál es $u$?"
+    options:
+      - {label: A, body: "$(7, 4)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: B, body: "$(-7, 4)$", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: C, body: "$(-7, -4)$", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "$(3, 2)$", correct: true}
+
+  # (3, 1) + (−1, 3) + (−2, −3) = (0, 1)
+  # A SINSENTIDO: suma todos los tamaños
+  # B ORDEN: componentes al revés
+  # D MAGNOP: 3 + (−1) = −4 y 4 + (−3) = −7: suma tamaños con el signo del negativo
+  - code: M1-TRA-068
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Si $u = (3, 1)$, $v = (-1, 3)$ y $w = (-2, -3)$, ¿cuál es $u + v + w$?
+    options:
+      - {label: A, body: "$(6, 7)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: B, body: "$(1, 0)$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$(0, 1)$", correct: true}
+      - {label: D, body: "$(-6, -7)$", misconception: ENT-ADI-MAGNOP}
+
+  # B RESTAORDEN: calcula v − u
+  # C SINSENTIDO: suma los tamaños
+  # D DOBLENEG: a − (−a) leído como a − a
+  - code: M1-TRA-069
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Sean $u = (a, b)$ y $v = (-a, -b)$, con $a$ y $b$ distintos de cero.
+      ¿Cuál de las siguientes afirmaciones es correcta?
+    options:
+      - {label: A, body: "$u + v = (0, 0)$", correct: true}
+      - {label: B, body: "$u - v = (-2a, -2b)$", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: C, body: "$u + v = (2a, 2b)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: D, body: "$u - v = (0, 0)$", misconception: ENT-ADI-DOBLENEG}
+
+  # (400 − 30, 0 + 40) = (370, 40)
+  # A PUNTAS: calcula la diferencia
+  # B MAGNOP: 400 + (−30): suma tamaños con el signo del negativo
+  # C SINSENTIDO: suma los tamaños sin signos
+  - code: M1-TRA-070
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un avión vuela con una velocidad representada por el vector
+      $(400, 0)$, en km/h, y el viento sopla con una velocidad representada
+      por $(-30, 40)$. ¿Qué vector representa la velocidad del avión
+      respecto del suelo?
+    options:
+      - {label: A, body: "$(430, -40)$", misconception: PLA-VECOP-PUNTAS}
+      - {label: B, body: "$(-430, 40)$", misconception: ENT-ADI-MAGNOP}
+      - {label: C, body: "$(430, 40)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: D, body: "$(370, 40)$", correct: true}
+
+  # A RESTAORDEN: acepta II: v − u
+  # B REGLAMUL: acepta III: −3 + (−4) = 7
+  # D DOBLENEG: rechaza I: 4 − (−2) = 2
+  - code: M1-TRA-071
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes igualdades:
+
+      I. $(1, 4) - (3, -2) = (-2, 6)$
+
+      II. $(6, 0) - (2, 5) = (-4, 5)$
+
+      III. $(-3, 2) + (-4, 1) = (7, 3)$
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I y II", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: B, body: "Solo I y III", misconception: ENT-ADI-REGLAMUL}
+      - {label: C, body: "Solo I", correct: true}
+      - {label: D, body: "Ninguna de ellas", misconception: ENT-ADI-DOBLENEG}
+
+  # u = (4, 1), v = (1, 3): w = v − u = (−3, 2)
+  # A PUNTAS: suma los dos vectores
+  # C RESTAORDEN: u − v
+  # D SINSENTIDO: resta los tamaños y deja todo positivo
+  - code: M1-TRA-072
+    node: GEO-PLA-VEC-OP
+    pool: curated
+    difficulty: 3
+    source: propio
+    figure: FIG-VEC-OP-06
+    stem: "¿Qué vector $w$ cumple $u + w = v$?"
+    options:
+      - {label: A, body: "$(5, 4)$", misconception: PLA-VECOP-PUNTAS}
+      - {label: B, body: "$(-3, 2)$", correct: true}
+      - {label: C, body: "$(3, -2)$", misconception: PLA-VECOP-RESTAORDEN}
+      - {label: D, body: "$(3, 2)$", misconception: PLA-VECOP-SINSENTIDO}
+
+  # ===== GEO-TRA-TRAS · nivel 1 ================================
+
+  # (2 − 4, −3 + 5) = (−2, 2)
+  # B ORDEN: suma las componentes cruzadas
+  # C SENTIDO: resta el vector
+  # D MAGNOP: 2 + (−4) y −3 + 5: suma tamaños con el signo del negativo
+  - code: M1-TRA-073
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      El punto $P(2, -3)$ se traslada según el vector $(-4, 5)$. ¿Cuáles son
+      las coordenadas de su imagen?
+    options:
+      - {label: A, body: "$(-2, 2)$", correct: true}
+      - {label: B, body: "$(7, -7)$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$(6, -8)$", misconception: TRA-TRAS-SENTIDO}
+      - {label: D, body: "$(-6, -8)$", misconception: ENT-ADI-MAGNOP}
+
+  # A(−4, 1) → A'(1, −1): (5, −2)
+  # A ORIGEN: cuenta de la imagen hacia el original
+  # B PUNTO: da el punto A'
+  # C SINSIGNO: hacia abajo sin signo
+  - code: M1-TRA-074
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-TRA-TRAS-01
+    stem: >-
+      El triángulo $A'B'C'$ es la imagen del triángulo $ABC$ por una
+      traslación. ¿Cuál es el vector de la traslación?
+    options:
+      - {label: A, body: "$(-5, 2)$", misconception: PLA-VEC-ORIGEN}
+      - {label: B, body: "$(1, -1)$", misconception: PLA-VEC-PUNTO}
+      - {label: C, body: "$(5, 2)$", misconception: PLA-VEC-SINSIGNO}
+      - {label: D, body: "$(5, -2)$", correct: true}
+
+  # A SENTIDO: aplica el vector al revés
+  # B FORMA: la traslación puede girar
+  # D ORDEN: lee las componentes al revés
+  - code: M1-TRA-075
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Cuál de las siguientes afirmaciones sobre las traslaciones es
+      correcta?
+    options:
+      - {label: A, body: "Trasladar según $(3, -2)$ es mover $3$ unidades a la izquierda y $2$ hacia arriba.", misconception: TRA-TRAS-SENTIDO}
+      - {label: B, body: "Al trasladar una figura, puede quedar girada.", misconception: TRA-TRAS-FORMA}
+      - {label: C, body: "Al trasladar una figura, conserva su forma, su tamaño y su orientación.", correct: true}
+      - {label: D, body: "Trasladar según $(3, -2)$ es mover $3$ unidades hacia abajo y $2$ a la derecha.", misconception: PLA-COORD-ORDEN}
+
+  # Q = Q' − v = (1 − 3, 4 + 2) = (−2, 6)
+  # A DOBLENEG: 4 − (−2) leído como 4 − 2
+  # C ORDEN: resta el vector con las componentes al revés
+  # D SENTIDO: vuelve a sumar el vector
+  - code: M1-TRA-076
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      El punto $Q' = (1, 4)$ es la imagen de $Q$ por la traslación según el
+      vector $(3, -2)$. ¿Cuáles son las coordenadas de $Q$?
+    options:
+      - {label: A, body: "$(-2, 2)$", misconception: ENT-ADI-DOBLENEG}
+      - {label: B, body: "$(-2, 6)$", correct: true}
+      - {label: C, body: "$(3, 1)$", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$(4, 2)$", misconception: TRA-TRAS-SENTIDO}
+
+  # A SENTIDO: traslada según (−4, 2)
+  # B SINSIGNO: traslada según (4, 2)
+  # C FORMA: acepta una imagen girada
+  - code: M1-TRA-077
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 1
+    source: propio
+    figure: FIG-TRA-TRAS-02
+    stem: >-
+      ¿Cuál de las figuras numeradas es la imagen de $F$ por la traslación
+      según el vector $(4, -2)$?
+    options:
+      - {label: A, body: "La figura 3", misconception: TRA-TRAS-SENTIDO}
+      - {label: B, body: "La figura 4", misconception: PLA-VEC-SINSIGNO}
+      - {label: C, body: "La figura 2", misconception: TRA-TRAS-FORMA}
+      - {label: D, body: "La figura 1", correct: true}
+
+  # (−1 + 4, 3 − 6) = (3, −3)
+  # A PUNTO: queda en las componentes del vector
+  # C MAGNOP: −1 + 4 y 3 + (−6): suma tamaños con el signo del negativo
+  # D SENTIDO: resta el vector
+  - code: M1-TRA-078
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      En un juego de tablero cuadriculado, una ficha está en la casilla
+      $(-1, 3)$ y se mueve según el vector $(4, -6)$. ¿En qué casilla queda?
+    options:
+      - {label: A, body: "$(4, -6)$", misconception: PLA-VEC-PUNTO}
+      - {label: B, body: "$(3, -3)$", correct: true}
+      - {label: C, body: "$(-5, -9)$", misconception: ENT-ADI-MAGNOP}
+      - {label: D, body: "$(-5, 9)$", misconception: TRA-TRAS-SENTIDO}
+
+  # A PUNTO: da el punto A'
+  # B SUMA: A + A'
+  # D ORIGEN: A − A'
+  - code: M1-TRA-079
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      ¿Qué vector traslada el punto $A(-2, 5)$ al punto $A'(3, 1)$?
+    options:
+      - {label: A, body: "$(3, 1)$", misconception: PLA-VEC-PUNTO}
+      - {label: B, body: "$(1, 6)$", misconception: PLA-VEC-SUMA}
+      - {label: C, body: "$(5, -4)$", correct: true}
+      - {label: D, body: "$(-5, 4)$", misconception: PLA-VEC-ORIGEN}
+
+  # B ORDEN: suma las componentes cruzadas
+  # C FORMA: traslada A pero acomoda los otros vértices girando el triángulo
+  # D SENTIDO: resta el vector
+  - code: M1-TRA-080
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 1
+    source: propio
+    stem: >-
+      El triángulo de vértices $A(0, 0)$, $B(3, 0)$ y $C(0, 2)$ se traslada
+      según el vector $(-1, 4)$. ¿Cuáles son los vértices de la imagen?
+    options:
+      - {label: A, body: "$A'(-1, 4)$, $B'(2, 4)$ y $C'(-1, 6)$", correct: true}
+      - {label: B, body: "$A'(4, -1)$, $B'(7, -1)$ y $C'(4, 1)$", misconception: PLA-COORD-ORDEN}
+      - {label: C, body: "$A'(-1, 4)$, $B'(-1, 7)$ y $C'(1, 4)$", misconception: TRA-TRAS-FORMA}
+      - {label: D, body: "$A'(1, -4)$, $B'(4, -4)$ y $C'(1, -2)$", misconception: TRA-TRAS-SENTIDO}
+
+  # ===== GEO-TRA-TRAS · nivel 2 ================================
+
+  # (2, −3) + (−5, 1) = (−3, −2)
+  # A PUNTAS: calcula la diferencia de los vectores
+  # B MAGNOP: 2 + (−5) y −3 + 1: suma tamaños con el signo del negativo
+  # C SINSENTIDO: suma los tamaños
+  - code: M1-TRA-081
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Una figura se traslada según el vector $(2, -3)$ y después según el
+      vector $(-5, 1)$. ¿Qué única traslación produce el mismo resultado?
+    options:
+      - {label: A, body: "La traslación según $(-7, 4)$", misconception: PLA-VECOP-PUNTAS}
+      - {label: B, body: "La traslación según $(-7, -4)$", misconception: ENT-ADI-MAGNOP}
+      - {label: C, body: "La traslación según $(7, 4)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: D, body: "La traslación según $(-3, -2)$", correct: true}
+
+  # v = (1 + 3, −5 + 2) = (4, −3); R' = (8, −3)
+  # B SUMA: usa Q + Q' = (−2, −7) como vector
+  # C PUNTO: usa Q' como vector
+  # D ORIGEN: vector Q − Q' = (−4, 3)
+  - code: M1-TRA-082
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Una traslación lleva el punto $Q(-3, -2)$ al punto $Q'(1, -5)$. ¿Dónde
+      queda el punto $R(4, 0)$ con la misma traslación?
+    options:
+      - {label: A, body: "$(8, -3)$", correct: true}
+      - {label: B, body: "$(2, -7)$", misconception: PLA-VEC-SUMA}
+      - {label: C, body: "$(5, -5)$", misconception: PLA-VEC-PUNTO}
+      - {label: D, body: "$(0, 3)$", misconception: PLA-VEC-ORIGEN}
+
+  # A ORDEN: componentes al revés
+  # B SINSIGNO: sin signos
+  # D ORIGEN: cuenta de F' hacia F
+  - code: M1-TRA-083
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-TRA-TRAS-03
+    stem: >-
+      $F'$ es la imagen de $F$ por una traslación. ¿Cuál es el vector de la
+      traslación?
+    options:
+      - {label: A, body: "$(5, -6)$", misconception: PLA-COORD-ORDEN}
+      - {label: B, body: "$(6, 5)$", misconception: PLA-VEC-SINSIGNO}
+      - {label: C, body: "$(-6, 5)$", correct: true}
+      - {label: D, body: "$(6, -5)$", misconception: PLA-VEC-ORIGEN}
+
+  # A FORMA: rechaza I
+  # C SENTIDO: rechaza II: para volver aplicaría v otra vez
+  # D ORDEN: acepta III: lee la segunda componente como horizontal
+  - code: M1-TRA-084
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. Una traslación conserva la longitud de los lados de una figura.
+
+      II. Si $P'$ es la imagen de $P$ según el vector $v$, entonces $P$ es la imagen de $P'$ según el vector opuesto de $v$.
+
+      III. Trasladar según $(0, -3)$ mueve la figura $3$ unidades hacia la izquierda.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo II", misconception: TRA-TRAS-FORMA}
+      - {label: B, body: "Solo I y II", correct: true}
+      - {label: C, body: "Solo I", misconception: TRA-TRAS-SENTIDO}
+      - {label: D, body: "I, II y III", misconception: PLA-COORD-ORDEN}
+
+  # v = (−1 − 6, 3 + 2) = (−7, 5); (2, 2) + v = (−5, 7)
+  # A DOBLENEG: 3 − (−2) leído como 3 − 2: vector (−7, 1)
+  # B PUNTO: usa (−1, 3) como vector
+  # D ORIGEN: vector (6, −2) − (−1, 3) = (7, −5)
+  - code: M1-TRA-085
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      Una grúa traslada un contenedor cuyo centro está en $(6, -2)$ hasta el
+      punto $(-1, 3)$. Si otro contenedor, con centro en $(2, 2)$, se
+      traslada con el mismo vector, ¿dónde queda su centro?
+    options:
+      - {label: A, body: "$(-5, 3)$", misconception: ENT-ADI-DOBLENEG}
+      - {label: B, body: "$(1, 5)$", misconception: PLA-VEC-PUNTO}
+      - {label: C, body: "$(-5, 7)$", correct: true}
+      - {label: D, body: "$(9, -3)$", misconception: PLA-VEC-ORIGEN}
+
+  # (a, b) = (−1 − 3, 2 + 4) = (−4, 6); a + b = 2
+  # A DOBLENEG: 2 − (−4) leído como 2 − 4: (−4, −2)
+  # B MAGNOP: −1 − 3 como −2 (resta tamaños con el signo del negativo): (−2, 6)
+  # C SENTIDO: suma el vector a la imagen: (2, −2)
+  - code: M1-TRA-086
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 2
+    source: propio
+    stem: >-
+      El punto $(a, b)$ se traslada según el vector $(3, -4)$ y su imagen es
+      $(-1, 2)$. ¿Cuál es el valor de $a + b$?
+    options:
+      - {label: A, body: "$-6$", misconception: ENT-ADI-DOBLENEG}
+      - {label: B, body: "$4$", misconception: ENT-ADI-MAGNOP}
+      - {label: C, body: "$0$", misconception: TRA-TRAS-SENTIDO}
+      - {label: D, body: "$2$", correct: true}
+
+  # A SINSIGNO: hacia abajo sin signo
+  # C ORIGEN: cuenta de la imagen hacia el original
+  # D ESCALA: cuenta cuadrados
+  - code: M1-TRA-087
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-TRA-TRAS-04
+    stem: >-
+      El triángulo $A'B'C'$ es la imagen de $ABC$ por una traslación. ¿Cuál
+      es el vector de la traslación?
+    options:
+      - {label: A, body: "$(10, 4)$", misconception: PLA-VEC-SINSIGNO}
+      - {label: B, body: "$(10, -4)$", correct: true}
+      - {label: C, body: "$(-10, 4)$", misconception: PLA-VEC-ORIGEN}
+      - {label: D, body: "$(5, -2)$", misconception: PLA-COORD-ESCALA}
+
+  # P = P' − v = (−1 + 3, 4 − 2) = (2, 2)
+  # B SENTIDO: vuelve a sumar el vector
+  # C ORDEN: resta el vector con las componentes al revés
+  # D SINSIGNO: resta (3, 2): el vector sin signos
+  - code: M1-TRA-088
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 2
+    source: propio
+    figure: FIG-TRA-TRAS-05
+    stem: >-
+      El punto $P'$ de la figura es la imagen de un punto $P$ por la
+      traslación según el vector $(-3, 2)$. ¿Cuáles son las coordenadas de
+      $P$?
+    options:
+      - {label: A, body: "$(2, 2)$", correct: true}
+      - {label: B, body: "$(-4, 6)$", misconception: TRA-TRAS-SENTIDO}
+      - {label: C, body: "$(-3, 7)$", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$(-4, 2)$", misconception: PLA-VEC-SINSIGNO}
+
+  # ===== GEO-TRA-TRAS · nivel 3 ================================
+
+  # total (1 − 3, −4 + 2) = (−2, −2); origen = (0, 5) − (−2, −2) = (2, 7)
+  # B SINSENTIDO: vector total (4, 6), sumando tamaños
+  # C SENTIDO: suma el vector total en vez de restarlo
+  # D MAGNOP: vector total (−4, −6): suma tamaños con el signo del negativo
+  - code: M1-TRA-089
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Una figura se traslada según el vector $(1, -4)$ y después según el
+      vector $(-3, 2)$. Al final, uno de sus vértices queda en $(0, 5)$.
+      ¿Dónde estaba ese vértice al comienzo?
+    options:
+      - {label: A, body: "$(2, 7)$", correct: true}
+      - {label: B, body: "$(-4, -1)$", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: C, body: "$(-2, 3)$", misconception: TRA-TRAS-SENTIDO}
+      - {label: D, body: "$(4, 11)$", misconception: ENT-ADI-MAGNOP}
+
+  # A SINSENTIDO: acepta II
+  # B REGLAMUL: rechaza I: −2 + (−1) = 3
+  # D SENTIDO: acepta III
+  - code: M1-TRA-090
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. Trasladar según $(-2, 3)$ y después según $(-1, -5)$ equivale a trasladar según $(-3, -2)$.
+
+      II. Trasladar según $(3, 0)$ y después según $(-3, 0)$ equivale a trasladar según $(6, 0)$.
+
+      III. Si $P$ se traslada según $(1, 5)$, para volver a $P$ hay que trasladar de nuevo según $(1, 5)$.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo I y II", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: B, body: "Ninguna de ellas", misconception: ENT-ADI-REGLAMUL}
+      - {label: C, body: "Solo I", correct: true}
+      - {label: D, body: "Solo I y III", misconception: TRA-TRAS-SENTIDO}
+
+  # (3 − (−4), 0) = (7, 0) y (0, −5 − 1) = (0, −6)
+  # A PUNTO: usa las coordenadas del destino
+  # C ORIGEN: inicio − final
+  # D ORDEN: intercambia qué se mueve en horizontal y en vertical
+  - code: M1-TRA-091
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      En una bodega cuadriculada, un robot debe llevar una caja desde
+      $(-4, 1)$ hasta $(3, -5)$, pero solo puede moverse con órdenes del
+      tipo $(a, 0)$ o $(0, b)$. Si primero da una orden $(a, 0)$ y después
+      una $(0, b)$, ¿cuáles son esas órdenes?
+    options:
+      - {label: A, body: "$(3, 0)$ y después $(0, -5)$", misconception: PLA-VEC-PUNTO}
+      - {label: B, body: "$(7, 0)$ y después $(0, -6)$", correct: true}
+      - {label: C, body: "$(-7, 0)$ y después $(0, 6)$", misconception: PLA-VEC-ORIGEN}
+      - {label: D, body: "$(-6, 0)$ y después $(0, 7)$", misconception: PLA-COORD-ORDEN}
+
+  # A SENTIDO: aplica el vector al revés
+  # B SINSENTIDO: suma las componentes como si fueran tramos
+  # C ORDEN: cruza las componentes
+  - code: M1-TRA-092
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      El punto $P(x, y)$ se traslada según el vector $(a, b)$ y su imagen es
+      $P'(x', y')$. ¿Cuál de las siguientes afirmaciones es **siempre**
+      correcta?
+    options:
+      - {label: A, body: "$x - x' = a$ y $y - y' = b$", misconception: TRA-TRAS-SENTIDO}
+      - {label: B, body: "La distancia entre $P$ y $P'$ es $a + b$.", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: C, body: "$x' - x = b$ y $y' - y = a$", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$x' - x = a$ y $y' - y = b$", correct: true}
+
+  # v = (−2 − 1, 4 − 1) = (−3, 3); (3, 3) + v = (0, 6)
+  # B ORIGEN: vector (1, 1) − (−2, 4) = (3, −3)
+  # C SUMA: usa (1, 1) + (−2, 4) = (−1, 5) como vector
+  # D PUNTO: usa (−2, 4) como vector
+  - code: M1-TRA-093
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un cuadrado tiene vértices $(1, 1)$, $(3, 1)$, $(3, 3)$ y $(1, 3)$.
+      Después de una traslación, el vértice $(1, 1)$ queda en $(-2, 4)$.
+      ¿Dónde queda el vértice $(3, 3)$?
+    options:
+      - {label: A, body: "$(0, 6)$", correct: true}
+      - {label: B, body: "$(6, 0)$", misconception: PLA-VEC-ORIGEN}
+      - {label: C, body: "$(2, 8)$", misconception: PLA-VEC-SUMA}
+      - {label: D, body: "$(1, 7)$", misconception: PLA-VEC-PUNTO}
+
+  # A FORMA: rechaza I
+  # B SENTIDO: rechaza II: lo lee al revés
+  # C SINSENTIDO: acepta III: 4 + 1 = 5
+  - code: M1-TRA-094
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: |-
+      Considera las siguientes afirmaciones:
+
+      I. La imagen de un triángulo rectángulo por una traslación es un triángulo rectángulo.
+
+      II. Trasladar según $(-3, 2)$ mueve cada punto $3$ unidades a la izquierda y $2$ hacia arriba.
+
+      III. Una traslación según $(4, -1)$ aleja cada punto $5$ unidades de su posición.
+
+      ¿Cuál o cuáles son correctas?
+    options:
+      - {label: A, body: "Solo II", misconception: TRA-TRAS-FORMA}
+      - {label: B, body: "Solo I", misconception: TRA-TRAS-SENTIDO}
+      - {label: C, body: "I, II y III", misconception: PLA-VECOP-SINSENTIDO}
+      - {label: D, body: "Solo I y II", correct: true}
+
+  # v = (0 − 2, 0 + 1) = (−2, 1); (−3, 4) + v = (−5, 5)
+  # A ORDEN: suma el vector (−2, 1) con las componentes cruzadas
+  # B SENTIDO: aplica (2, −1) en vez de (−2, 1)
+  # D DOBLENEG: 0 − (−1) leído como −1: vector (−2, −1)
+  - code: M1-TRA-095
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Un parque se diseñó sobre un plano cuadriculado. La fuente está en
+      $(2, -1)$ y se decide trasladar todo el diseño para que la fuente
+      quede en el origen. ¿Dónde queda un árbol que estaba en $(-3, 4)$?
+    options:
+      - {label: A, body: "$(-2, 2)$", misconception: PLA-COORD-ORDEN}
+      - {label: B, body: "$(-1, 3)$", misconception: TRA-TRAS-SENTIDO}
+      - {label: C, body: "$(-5, 5)$", correct: true}
+      - {label: D, body: "$(-5, 3)$", misconception: ENT-ADI-DOBLENEG}
+
+  # (−1, 2) → (4, −1): (5, −3); de vuelta (−5, 3)
+  # A SENTIDO: para volver aplica el mismo vector
+  # C ORDEN: componentes al revés
+  # D ORIGEN: calcula cada vector inicio − final
+  - code: M1-TRA-096
+    node: GEO-TRA-TRAS
+    pool: curated
+    difficulty: 3
+    source: propio
+    stem: >-
+      Una traslación lleva el vértice $(-1, 2)$ del triángulo $T_1$ al
+      vértice $(4, -1)$ del triángulo $T_2$. ¿Qué vector lleva $T_1$ a $T_2$
+      y cuál lleva $T_2$ de vuelta a $T_1$?
+    options:
+      - {label: A, body: "$(5, -3)$ y $(5, -3)$", misconception: TRA-TRAS-SENTIDO}
+      - {label: B, body: "$(5, -3)$ y $(-5, 3)$", correct: true}
+      - {label: C, body: "$(-3, 5)$ y $(3, -5)$", misconception: PLA-COORD-ORDEN}
+      - {label: D, body: "$(-5, 3)$ y $(5, -3)$", misconception: PLA-VEC-ORIGEN}
+
+
+# ---------------------------------------------------------------------
+# REMEDIACIONES
+# ---------------------------------------------------------------------
+
+remediations:
+
+  - code: REM-PLA-VEC-ORIGEN
+    misconception: PLA-VEC-ORIGEN
+    title: El vector va de donde partes a donde llegas
+    body: |
+      Restaste al revés: calculaste inicio menos final. Por ejemplo, para
+      el vector de $A(6, 1)$ a $B(2, 4)$ escribiste $(4, -3)$.
+
+      **El vector de $A$ a $B$ es $B - A$: coordenadas del final menos
+      coordenadas del inicio.**
+
+      $$\vec{AB} = (2 - 6,\ 4 - 1) = (-4,\ 3)$$
+
+      Tiene sentido: de $A$ a $B$ te mueves $4$ a la izquierda (negativo) y
+      $3$ hacia arriba (positivo). Con $A - B$ obtienes el movimiento de
+      vuelta, de $B$ a $A$.
+
+      Un control rápido: antes de restar, decide solo mirando si te mueves a
+      la derecha o a la izquierda, arriba o abajo. Los signos de tu
+      resultado tienen que calzar.
+    items: [M1-TRA-030, M1-TRA-031, M1-TRA-039, M1-TRA-040, M1-TRA-047, M1-TRA-048]
+
+  - code: REM-PLA-VEC-PUNTO
+    misconception: PLA-VEC-PUNTO
+    title: Las componentes no son el punto de llegada
+    body: |
+      Diste como componentes las coordenadas del punto donde termina el
+      vector. Por ejemplo, para el vector de $(3, 5)$ a $(7, 6)$
+      respondiste $(7, 6)$.
+
+      **Las componentes dicen cuánto te moviste, no dónde llegaste. Se
+      calculan como final menos inicio.**
+
+      $$(7 - 3,\ 6 - 5) = (4,\ 1)$$
+
+      Solo cuando el vector parte del origen $(0, 0)$ las dos cosas
+      coinciden, porque ahí restar el inicio no cambia nada.
+
+      Un control rápido: si el vector es corto y tu respuesta tiene números
+      grandes, estás dando una posición y no un desplazamiento.
+    items: [M1-TRA-030, M1-TRA-031, M1-TRA-037, M1-TRA-040, M1-TRA-045, M1-TRA-046]
+
+  - code: REM-PLA-VEC-SUMA
+    misconception: PLA-VEC-SUMA
+    title: Para el vector se restan los puntos
+    body: |
+      Sumaste las coordenadas de los dos puntos. Por ejemplo, para el vector
+      de $(3, 5)$ a $(7, 6)$ escribiste $(10, 11)$.
+
+      **El vector de un punto a otro es la diferencia: final menos inicio.**
+
+      Pregúntate cuánto hay que avanzar para ir de $3$ a $7$: $4$. Y de $5$ a
+      $6$: $1$. El vector es $(4, 1)$.
+
+      Sumar los puntos no describe ningún movimiento entre ellos.
+
+      Un control rápido: el vector que une dos puntos cercanos tiene
+      componentes pequeñas. Si tu respuesta es más grande que las dos
+      coordenadas, sumaste.
+    items: [M1-TRA-026, M1-TRA-039, M1-TRA-047, M1-TRA-079, M1-TRA-082, M1-TRA-093]
+
+  - code: REM-PLA-VEC-POSICION
+    misconception: PLA-VEC-POSICION
+    title: Un vector es el movimiento, no el lugar
+    body: |
+      Pensaste que dos flechas son vectores distintos porque están dibujadas
+      en lugares distintos. Por ejemplo, dijiste que la flecha de $(0, 0)$ a
+      $(4, 2)$ y la de $(-3, 1)$ a $(1, 3)$ son distintas.
+
+      **Un vector queda definido por sus componentes. Dos flechas con las
+      mismas componentes son el mismo vector, estén donde estén.**
+
+      $$(4 - 0,\ 2 - 0) = (4, 2) \qquad (1 - (-3),\ 3 - 1) = (4, 2)$$
+
+      Las dos describen el mismo movimiento: $4$ a la derecha y $2$ hacia
+      arriba. Es como la instrucción «avanza dos cuadras al norte»: sirve
+      igual desde cualquier esquina.
+
+      Un control rápido: para comparar vectores, calcula las componentes de
+      cada uno y compara los números, no la posición de las flechas.
+    items: [M1-TRA-027, M1-TRA-031, M1-TRA-036, M1-TRA-037, M1-TRA-042, M1-TRA-045]
+
+  - code: REM-PLA-VEC-SINSIGNO
+    misconception: PLA-VEC-SINSIGNO
+    title: Hacia la izquierda y hacia abajo es negativo
+    body: |
+      Contaste cuántos cuadrados avanza la flecha, pero no hacia dónde. Por
+      ejemplo, a una flecha que va $3$ a la izquierda y $4$ hacia arriba le
+      diste $(3, 4)$.
+
+      **Cada componente lleva signo: positiva hacia la derecha o hacia
+      arriba, negativa hacia la izquierda o hacia abajo.**
+
+      Esa flecha es $(-3, 4)$. El vector $(3, 4)$ iría hacia la derecha: es
+      otro vector.
+
+      Por la misma razón, un vector y su opuesto no son iguales: $(2, -5)$ y
+      $(-2, 5)$ miden lo mismo pero apuntan en sentidos contrarios.
+
+      Un control rápido: mira la punta de la flecha. Si apunta a la
+      izquierda, la primera componente es negativa; si apunta hacia abajo, la
+      segunda.
+    items: [M1-TRA-030, M1-TRA-038, M1-TRA-043, M1-TRA-047, M1-TRA-074, M1-TRA-083]
+
+  - code: REM-PLA-VECOP-RESTAORDEN
+    misconception: PLA-VECOP-RESTAORDEN
+    title: u − v y v − u son opuestos
+    body: |
+      Restaste los vectores en el orden contrario. Por ejemplo, para
+      $u - v$ con $u = (6, 2)$ y $v = (1, 5)$ calculaste $(-5, 3)$.
+
+      **$u - v$ es cada componente de $u$ menos la de $v$, en ese orden.**
+
+      $$u - v = (6 - 1,\ 2 - 5) = (5, -3)$$
+
+      El resultado que obtuviste es $v - u$, el opuesto. Las restas no
+      conmutan: cambiar el orden cambia el signo de las dos componentes.
+
+      Para despejar un vector que falta, lo mismo: si $u + w = v$, entonces
+      $w = v - u$.
+
+      Un control rápido: comprueba sumando. Si $u - v = r$, entonces
+      $v + r$ tiene que dar $u$.
+    items: [M1-TRA-052, M1-TRA-054, M1-TRA-060, M1-TRA-061, M1-TRA-069, M1-TRA-071]
+
+  - code: REM-PLA-VECOP-SINSENTIDO
+    misconception: PLA-VECOP-SINSENTIDO
+    title: Movimientos contrarios se descuentan
+    body: |
+      Sumaste lo que mide cada movimiento sin mirar hacia dónde iba. Por
+      ejemplo, $6$ pasos al este y $9$ al oeste te dieron $15$ al este.
+
+      **Al sumar desplazamientos, los que van en sentidos contrarios se
+      restan. Por eso cada uno se escribe con su signo antes de sumar.**
+
+      Con el este positivo:
+
+      $$(6, 0) + (-9, 0) = (-3, 0)$$
+
+      Terminaste $3$ pasos al oeste del punto de partida. Caminaste $15$
+      pasos, pero el desplazamiento es $(-3, 0)$.
+
+      Un control rápido: si hay movimientos hacia lados opuestos, el
+      resultado tiene que ser **menor** que el movimiento más grande, no
+      mayor.
+    items: [M1-TRA-053, M1-TRA-055, M1-TRA-061, M1-TRA-062, M1-TRA-070, M1-TRA-072]
+
+  - code: REM-PLA-VECOP-PUNTAS
+    misconception: PLA-VECOP-PUNTAS
+    title: La suma sale del punto común
+    body: |
+      Tomaste la diagonal equivocada. Por ejemplo, con $u = (4, 0)$ y
+      $v = (1, 3)$ dibujados desde un mismo punto, diste como suma el
+      segmento que une sus puntas.
+
+      **Con dos vectores desde un mismo punto, la suma es la diagonal del
+      paralelogramo que parte de ese punto. La que une las puntas es la
+      diferencia.**
+
+      $$u + v = (5, 3) \qquad v - u = (-3, 3)$$
+
+      Otra forma de verlo: dibuja $v$ a continuación de $u$. La suma va del
+      inicio de $u$ al final de $v$, y ese es justamente el lado largo del
+      paralelogramo que sale del punto común.
+
+      Un control rápido: calcula las componentes de la diagonal que elegiste
+      y compáralas con la suma de las componentes.
+    items: [M1-TRA-050, M1-TRA-056, M1-TRA-063, M1-TRA-064, M1-TRA-070, M1-TRA-072]
+
+  - code: REM-TRA-TRAS-SENTIDO
+    misconception: TRA-TRAS-SENTIDO
+    title: Trasladar según v es sumar v
+    body: |
+      Moviste el punto en el sentido contrario al vector. Por ejemplo,
+      trasladaste $(2, 6)$ según $(3, -5)$ y obtuviste $(-1, 11)$.
+
+      **La imagen de $P$ por la traslación según $v$ es $P + v$.**
+
+      $$(2, 6) + (3, -5) = (5, 1)$$
+
+      $3$ a la derecha y $5$ hacia abajo, como dice el vector.
+
+      Al revés, si conoces la imagen y quieres el punto original, **ahí** se
+      resta el vector: $P = P' - v$. Sumar para ir, restar para volver.
+
+      Un control rápido: el vector $(3, -5)$ apunta a la derecha y hacia
+      abajo. Tu imagen tiene que quedar a la derecha y más abajo que el
+      punto original.
+    items: [M1-TRA-076, M1-TRA-077, M1-TRA-086, M1-TRA-088, M1-TRA-092, M1-TRA-094]
+
+  - code: REM-TRA-TRAS-FORMA
+    misconception: TRA-TRAS-FORMA
+    title: La traslación solo desplaza
+    body: |
+      Aceptaste como traslación una figura girada o dada vuelta, o pensaste
+      que al trasladar cambian los lados. Por ejemplo, elegiste como imagen
+      un triángulo que apuntaba hacia el otro lado.
+
+      **Al trasladar, todos los puntos de la figura se mueven con el mismo
+      vector. Por eso la imagen tiene la misma forma, el mismo tamaño y la
+      misma orientación.**
+
+      Si el vértice de arriba estaba a la izquierda, en la imagen sigue
+      arriba a la izquierda. Cada lado queda paralelo a su lado original.
+
+      Girar o reflejar son otras transformaciones: la traslación nunca las
+      hace.
+
+      Un control rápido: une cada vértice con su imagen. En una traslación
+      todos esos segmentos son iguales y paralelos.
+    items: [M1-TRA-075, M1-TRA-077, M1-TRA-080, M1-TRA-084, M1-TRA-094]
+
+
+# ---------------------------------------------------------------------
+# CUERPO DE LA CLASE
+# ---------------------------------------------------------------------
+
+lesson_body: |
+  Un vector dice cuánto y hacia dónde moverse. Con él se describen los
+  desplazamientos, se suman movimientos y se trasladan figuras sin
+  deformarlas, que es la primera de las transformaciones que vas a ver.
+
+  ## Vectores y sus componentes
+
+  ### Un vector es un desplazamiento
+
+  Un **vector** se dibuja como una flecha: parte en un punto (su
+  **origen**) y termina en otro (su **extremo**). Lo que importa es el
+  movimiento que describe, y ese movimiento se resume en dos números, sus
+  **componentes**: cuánto avanza en horizontal y cuánto en vertical.
+
+  ![](fig:FIG-PLA-VEC-07)
+
+  El vector $v$ de la figura avanza $5$ a la derecha y $3$ hacia arriba:
+  $v = (5, 3)$. Igual que en las coordenadas, izquierda y abajo llevan
+  signo menos.
+
+  ### Componentes a partir de dos puntos
+
+  **El vector que va de $A$ a $B$ se calcula como final menos inicio:
+  $B - A$.**
+
+  Si $A = (6, -2)$ y $B = (1, 3)$:
+
+  $$\vec{AB} = (1 - 6,\ 3 - (-2)) = (-5,\ 5)$$
+
+  El error más común es restar al revés ($A - B$), que da el vector
+  contrario. Un control rápido: mira la figura o imagina el movimiento. De
+  $A$ a $B$ te mueves a la izquierda, así que la primera componente tiene
+  que ser negativa.
+
+  Tampoco son las coordenadas de $B$: esas solo coinciden con las
+  componentes cuando el vector parte del origen.
+
+  ### Vectores iguales
+
+  **Dos vectores son iguales si tienen las mismas componentes, aunque
+  estén dibujados en lugares distintos.**
+
+  ![](fig:FIG-PLA-VEC-08)
+
+  Las tres flechas son el mismo vector, $(3, -1)$. Un vector con las
+  componentes cambiadas de signo, $(-3, 1)$, es su **opuesto**: mismo largo
+  y misma dirección, pero sentido contrario. No es igual.
+
+  ## Suma y resta de vectores
+
+  ### Sumar por componentes
+
+  **Para sumar vectores, se suman las primeras componentes entre sí y las
+  segundas entre sí.** Para restar, se restan.
+
+  $$(6, -1) + (-2, 5) = (4, 4) \qquad (6, -1) - (-2, 5) = (8, -6)$$
+
+  Cuidado con los signos: son sumas y restas de enteros. Restar $-2$ es
+  sumar $2$.
+
+  El orden de la resta importa: $u - v$ es el opuesto de $v - u$.
+
+  ### Sumar dibujando
+
+  Hay dos maneras equivalentes:
+
+  - **Uno a continuación del otro**: dibuja $v$ partiendo donde termina
+    $u$. La suma va desde el inicio de $u$ hasta el final de $v$.
+
+  ![](fig:FIG-VEC-OP-07)
+
+  - **Paralelogramo**: si $u$ y $v$ parten del mismo punto, completa el
+    paralelogramo. La suma es la diagonal que **sale del punto común**. La
+    otra diagonal, la que une las puntas, es la diferencia.
+
+  ![](fig:FIG-VEC-OP-08)
+
+  ### Desplazamientos en contexto
+
+  Movimientos en sentidos contrarios se compensan. Si un bote avanza $7$
+  km al norte y luego $10$ km al sur, su desplazamiento total es
+  $(0, 7) + (0, -10) = (0, -3)$: quedó $3$ km al sur de donde partió. No
+  recorrió $3$ km (recorrió $17$), pero su desplazamiento es $(0, -3)$.
+
+  ## Traslación
+
+  ### Trasladar es sumar el vector
+
+  **Trasladar un punto $P$ según el vector $v$ es sumarle $v$: la imagen es
+  $P' = P + v$.** Para trasladar una figura, se traslada cada vértice con
+  el mismo vector.
+
+  ![](fig:FIG-TRA-TRAS-06)
+
+  Si $P = (-5, 0)$ se traslada según $(3, -4)$, su imagen es
+  $P' = (-2, -4)$: $3$ a la derecha y $4$ hacia abajo.
+
+  ### El vector de una traslación
+
+  Si conoces un punto y su imagen, el vector es **imagen menos punto**,
+  igual que $B - A$. Con ese vector puedes trasladar cualquier otro punto
+  de la figura.
+
+  ### Volver atrás
+
+  Si conoces la imagen $P'$ y el vector $v$, el punto original se obtiene
+  **restando** el vector, que es trasladar según el opuesto:
+  $P = P' - v$.
+
+  ![](fig:FIG-TRA-TRAS-07)
+
+  Un control rápido: después de calcular $P$, trasládalo según $v$. Tienes
+  que llegar a $P'$.
+
+  ### Dos traslaciones seguidas
+
+  Trasladar según $u$ y después según $v$ es lo mismo que trasladar una
+  sola vez según $u + v$.
+
+  ### Qué conserva una traslación
+
+  La figura trasladada tiene la misma forma, el mismo tamaño y la **misma
+  orientación**: no gira ni se da vuelta. Cada lado queda paralelo a su
+  lado original. Si una figura aparece girada o reflejada, no es una
+  traslación.

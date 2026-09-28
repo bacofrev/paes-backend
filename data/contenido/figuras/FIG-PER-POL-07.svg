@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 394.8 306.4" width="394.8" height="306.4" role="img" aria-label="Rombo con sus cuatro lados marcados como iguales; un lado mide 5 cm. Sus diagonales, punteadas, miden 8 cm y 6 cm." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="58,153.2 194,255.2 330,153.2 194,51.2" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="58" y1="153.2" x2="330" y2="153.2" stroke-width="1.1" stroke-dasharray="5 4"/>
+  <line x1="194" y1="255.2" x2="194" y2="51.2" stroke-width="1.1" stroke-dasharray="5 4"/>
+  <line x1="129.26" y1="199.85" x2="122.74" y2="208.55" stroke-width="1.2"/>
+  <line x1="258.74" y1="199.85" x2="265.26" y2="208.55" stroke-width="1.2"/>
+  <line x1="258.74" y1="106.55" x2="265.26" y2="97.85" stroke-width="1.2"/>
+  <line x1="129.26" y1="106.55" x2="122.74" y2="97.85" stroke-width="1.2"/>
+  <text x="250.78" y="117.16" font-size="13" text-anchor="middle" dominant-baseline="central">5 cm</text>
+  <text x="126" y="141.3" font-size="13" text-anchor="middle" dominant-baseline="central">8 cm</text>
+  <text x="219.5" y="204.2" font-size="13" text-anchor="middle" dominant-baseline="central">6 cm</text>
+</svg>

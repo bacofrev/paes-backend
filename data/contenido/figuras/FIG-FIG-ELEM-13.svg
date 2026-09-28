@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 298" width="288" height="298" role="img" aria-label="Hexágono con las tres diagonales que salen de uno de sus vértices: van a todos los vértices salvo a él mismo y a sus dos vecinos." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="144,54 57.4,104 57.4,204 144,254 230.6,204 230.6,104" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="144" y1="54" x2="57.4" y2="204" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <line x1="144" y1="54" x2="144" y2="254" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <line x1="144" y1="54" x2="230.6" y2="204" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <circle cx="144" cy="54" r="2.8" fill="currentColor" stroke="none"/>
+</svg>

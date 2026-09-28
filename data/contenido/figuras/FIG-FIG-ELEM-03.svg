@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 289.26 328.47" width="289.26" height="328.47" role="img" aria-label="Triángulo ABC con un ángulo recto marcado en C, dibujado inclinado. Desde A salen los segmentos AV y AM hasta el lado BC." fill="currentColor" font-family="Manrope, Verdana, sans-serif" stroke="currentColor" stroke-linecap="round">
+  <polygon points="117.39,54 235.26,274.47 54,189.95" fill="none" stroke-width="1.5" stroke-linejoin="round"/>
+  <line x1="117.39" y1="54" x2="117.39" y2="219.51" stroke-width="1.2"/>
+  <line x1="117.39" y1="54" x2="144.63" y2="232.21" stroke-width="1.2"/>
+  <polyline points="59.28,178.62 70.61,183.9 65.33,195.23" fill="none" stroke-width="1.1"/>
+  <text x="114.82" y="37.2" font-size="14" text-anchor="middle" dominant-baseline="central">A</text>
+  <text x="247.17" y="286.61" font-size="14" text-anchor="middle" dominant-baseline="central">B</text>
+  <text x="37.36" y="193.44" font-size="14" text-anchor="middle" dominant-baseline="central">C</text>
+  <text x="117.39" y="235.51" font-size="13" text-anchor="middle" dominant-baseline="central">V</text>
+  <text x="147.05" y="248.02" font-size="13" text-anchor="middle" dominant-baseline="central">M</text>
+</svg>
