@@ -77,8 +77,14 @@ export default function PracticeScreen({
   const [isBusy, setIsBusy] = useState(false);
   const started = useRef(false);
 
+  // Back to the lesson lands on the slide of this node (LessonView reads
+  // a node code in the hash).
   const backHref =
-    courseCode && lessonCode ? `/cursos/${courseCode}/clases/${lessonCode}` : courseCode ? `/cursos/${courseCode}` : "/cursos";
+    courseCode && lessonCode
+      ? `/cursos/${courseCode}/clases/${lessonCode}#${nodeCode}`
+      : courseCode
+        ? `/cursos/${courseCode}`
+        : "/cursos";
 
   useEffect(() => {
     let cancelled = false;

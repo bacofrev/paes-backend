@@ -65,10 +65,6 @@ export function LessonSkeleton() {
       <Bar w={180} h={12} />
       <Bar w="80%" h={30} />
       <Bar w={220} h={24} r={99} />
-      <div className="section-chips">
-        <Bar w={180} h={36} r={12} />
-        <Bar w={200} h={36} r={12} />
-      </div>
       {["100%", "95%", "88%", "60%"].map((w, i) => (
         <Bar key={i} w={w} h={16} />
       ))}

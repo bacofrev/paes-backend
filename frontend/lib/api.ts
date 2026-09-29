@@ -56,6 +56,8 @@ export type LessonCard = LessonSummary & {
   code: string;
   title: string;
   position: number;
+  // Optional until every backend serving the app sends it.
+  read_minutes?: number;
   nodes: LessonNode[];
 };
 

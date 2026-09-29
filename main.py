@@ -163,6 +163,7 @@ async def get_course(course_code: str, reads: StudentReads = Depends(read_as_stu
                 "code": row["lesson_code"],
                 "title": row["lesson_title"],
                 "position": row["lesson_position"],
+                "read_minutes": row["read_minutes"],
                 "nodes": [],
             })
         lessons[-1]["nodes"].append(serialize_lesson_node(row))

@@ -430,10 +430,15 @@ where c.code = %(course_code)s and sc.student_id = %(student_id)s::uuid
 # come from _PENDING_PREREQS. Keyed by course code, not id, so it can
 # travel in the same round trip as COURSE_FOR_STUDENT: ownership is
 # decided there, and these rows are discarded when it says no.
+# read_minutes: words at 100 per minute (math reads slower than prose),
+# at least 1.
 COURSE_CONTENT = """
 select ua.code as area_code, ua.name as area_name,
        u.code as unit_code, u.name as unit_name,
        l.code as lesson_code, l.title as lesson_title, l.position as lesson_position,
+       greatest(1, round(
+         coalesce(array_length(regexp_split_to_array(btrim(l.body), '\\s+'), 1), 0) / 100.0
+       ))::int as read_minutes,
        n.code as node_code, n.name as node_name, n.exam_level, ln.anchor,
        coalesce(vm.effective_status, 'not_started') as status,
        pp.pending_prereqs
